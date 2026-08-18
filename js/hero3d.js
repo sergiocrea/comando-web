@@ -279,6 +279,10 @@ function startAllAnimations() {
   const HERO_FILL_DESKTOP = 0.40;
   const HERO_FILL_MOBILE = 0.5;
   const HERO_Y_OFFSET = 0.004; // lift the device slightly above center at rest
+  // Visual size ratio between the device when it lands in #target (About) and
+  // in the hero. The original grows an internally tiny base scale by 2.47; our
+  // base scale is already calibrated to the hero, so we use the net visual ratio.
+  const ARRIVAL_SCALE = 0.7;
   function computeScale() {
     if (!model || !modelHolder) return;
     // measure the model unrotated/unscaled and center its geometry in the holder
@@ -411,7 +415,7 @@ function startAllAnimations() {
     // finalOffsetGroup extra rot + scale on arrival (desktop)
     if (!isMobile()) {
       finalOffsetGroup.rotation.set(0.13 * arrival, -0.198 * arrival, -0.005 * arrival);
-      finalOffsetGroup.scale.setScalar(lerp(1, 2.47, arrival));
+      finalOffsetGroup.scale.setScalar(lerp(1, ARRIVAL_SCALE, arrival));
     }
 
     // lights lerp by rotP
