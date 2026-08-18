@@ -281,20 +281,30 @@ function initNav() {
         zIndex: '0', transformOrigin: 'top left', pointerEvents: 'none',
       });
 
+      // The nav logo slot occupies width 0 at rest (so it doesn't push the nav
+      // links) and grows to its full width as the hero wordmark morphs in.
+      // overflow:visible keeps its image showing while the box is collapsed.
+      const destFullW = dest.getBoundingClientRect().width || 192;
+      dest.style.overflow = 'visible';
+      dest.style.flex = '0 0 auto';
+
       let prog = 0;
       const place = () => {
+        dest.style.width = (destFullW * prog) + 'px';
         const d = dest.getBoundingClientRect();
-        const targetScale = Math.min(d.width / startW, 1);
+        const dCenterX = d.left + destFullW / 2; // real image center even when box is collapsed
+        const targetScale = Math.min(destFullW / startW, 1);
         const sc = lerp(1, targetScale, prog);
         // start position scrolls with the hero; end position is the fixed nav slot
         const startY = startDocTop - window.scrollY;
-        const x = lerp(startLeft, d.left, prog);
+        const x = lerp(startLeft, dCenterX - (startW * sc) / 2, prog);
         const y = lerp(startY, d.top, prog);
         logo.style.transform = `translate(${x}px, ${y}px) scale(${sc})`;
-        const atNav = prog >= 0.999;
-        logo.style.opacity = atNav ? '0' : '1';
-        if (dummy) dummy.style.opacity = atNav ? '1' : '0';
+        // The nav's own logo image stays visible; the morphing wordmark fades
+        // out as it lands so the two never both show at full size.
+        logo.style.opacity = String(1 - prog);
       };
+      if (dummy) dummy.style.opacity = '1';
 
       const st = ScrollTrigger.create({
         trigger: '#hero', start: 'top top', end: 'center top+=30%', scrub: true,

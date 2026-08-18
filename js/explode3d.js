@@ -135,12 +135,9 @@ const LABELS = [
     LABELS.forEach((def) => {
       const obj = layers.find((l) => (l.obj.name || '').toLowerCase().includes(def.match));
       const el = document.createElement('div');
-      el.className = 'hotspot';
+      el.className = 'hotspot ' + def.side;
       el.innerHTML = `
-        <div class="hotspot-content">
-          <div class="hotspot-dot"></div>
-          <div class="hotspot-title">${def.name}</div>
-        </div>
+        <div class="hotspot-content"><div class="hotspot-title">${def.name}</div></div>
         <div class="hotspot-line"></div>
         <div class="hotspot-number">${def.num}</div>`;
       labelsContainer.appendChild(el);
@@ -210,15 +207,13 @@ const LABELS = [
       const x = (tmp.x * 0.5 + 0.5) * W;
       const y = (-tmp.y * 0.5 + 0.5) * H + (L.def.dy || 0);
       const left = L.def.side === 'left';
-      const colX = left ? W * 0.22 : W * 0.78;
+      const colX = left ? W * 0.14 : W * 0.86;
       L.el.style.left = colX + 'px';
       L.el.style.top = y + 'px';
       const line = L.el.querySelector('.hotspot-line');
       if (line) {
-        const lw = Math.abs(x - colX);
-        line.style.width = lw + 'px';
-        line.style.left = left ? '100%' : 'auto';
-        line.style.right = left ? 'auto' : '100%';
+        if (left) { line.style.left = '0'; line.style.right = 'auto'; line.style.width = Math.max(0, x - colX) + 'px'; }
+        else { line.style.right = '0'; line.style.left = 'auto'; line.style.width = Math.max(0, colX - x) + 'px'; }
       }
     });
   }
