@@ -274,9 +274,11 @@ function initNav() {
       logo.style.width = startW + 'px';
       logo.style.height = startH + 'px';
       document.body.appendChild(logo);
+      // z=0 keeps the wordmark above the background grid but BEHIND the 3D
+      // device canvas (#app, z=1), matching the original stacking.
       Object.assign(logo.style, {
         position: 'fixed', left: '0', top: '0', margin: '0',
-        zIndex: '40', transformOrigin: 'top left', pointerEvents: 'none',
+        zIndex: '0', transformOrigin: 'top left', pointerEvents: 'none',
       });
 
       let prog = 0;

@@ -254,7 +254,7 @@ function startAllAnimations() {
       const emo = isMobile()
         ? new THREE.MeshBasicMaterial({ map: heroVid.tex, side: THREE.FrontSide })
         : new THREE.MeshStandardMaterial({
-            map: heroVid.tex, emissive: 0xffffff, emissiveMap: heroVid.tex, emissiveIntensity: 1.0,
+            map: heroVid.tex, emissive: 0xffffff, emissiveMap: heroVid.tex, emissiveIntensity: 1.6,
             roughness: 1, metalness: 0, envMapIntensity: 0, toneMapped: false,
             transparent: true, side: THREE.DoubleSide,
           });
@@ -276,8 +276,9 @@ function startAllAnimations() {
   }, () => setTask('model', 1));
 
   // Fraction of the visible frame the device should occupy in the hero.
-  const HERO_FILL_DESKTOP = 0.42;
+  const HERO_FILL_DESKTOP = 0.40;
   const HERO_FILL_MOBILE = 0.5;
+  const HERO_Y_OFFSET = 0.004; // lift the device slightly above center at rest
   function computeScale() {
     if (!model || !modelHolder) return;
     // measure the model unrotated/unscaled and center its geometry in the holder
@@ -398,7 +399,7 @@ function startAllAnimations() {
     // position lerp origin -> target
     const finalPos = targetWorldPos();
     flipScaleGroup.position.x = lerp(0.0025, finalPos.x, arrival);
-    flipScaleGroup.position.y = lerp(0, finalPos.y, arrival) + (isMobile() ? 0 : 0);
+    flipScaleGroup.position.y = lerp(isMobile() ? 0 : HERO_Y_OFFSET, finalPos.y, arrival);
 
     // rotation
     const rx = lerp(77, isMobile() ? 90 : 85, rotP) * DEG;
