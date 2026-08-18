@@ -222,6 +222,7 @@ function startAllAnimations() {
   const termVid = makeVideo(VIDEO_TERM);
 
   let model = null;
+  let modelHolder = null; // rotates + scales around the model's geometric center
   let screenMat = null, screenMatB = null;
   let targetScale = 1;
 
@@ -254,45 +255,47 @@ function startAllAnimations() {
         ? new THREE.MeshBasicMaterial({ map: heroVid.tex, side: THREE.FrontSide })
         : new THREE.MeshStandardMaterial({
             map: heroVid.tex, emissive: 0xffffff, emissiveMap: heroVid.tex, emissiveIntensity: 1.0,
-            roughness: 0, metalness: 0, toneMapped: false, transparent: true, side: THREE.DoubleSide,
+            roughness: 1, metalness: 0, envMapIntensity: 0, toneMapped: false,
+            transparent: true, side: THREE.DoubleSide,
           });
       screenMat = emo;
       best.material = emo;
       best.renderOrder = 30;
     }
 
-    finalOffsetGroup.add(model);
+    modelHolder = new THREE.Group();
+    modelHolder.add(model);
+    finalOffsetGroup.add(modelHolder);
     computeScale();
-    model.rotation.set(77 * DEG, -11 * DEG, 16 * DEG);
+    modelHolder.rotation.set(77 * DEG, -11 * DEG, 16 * DEG);
     renderer.compile(scene, camera);
     renderer.render(scene, camera);
   }, (ev) => {
     if (ev.total) setTask('model', ev.loaded / ev.total);
   }, () => setTask('model', 1));
 
+  // Fraction of the visible frame the device should occupy in the hero.
+  const HERO_FILL_DESKTOP = 0.42;
+  const HERO_FILL_MOBILE = 0.5;
   function computeScale() {
-    if (!model) return;
+    if (!model || !modelHolder) return;
+    // measure the model unrotated/unscaled and center its geometry in the holder
+    modelHolder.rotation.set(0, 0, 0);
+    modelHolder.scale.setScalar(1);
+    model.position.set(0, 0, 0);
     const box = new THREE.Box3().setFromObject(model);
     const size = new THREE.Vector3(); box.getSize(size);
     const center = new THREE.Vector3(); box.getCenter(center);
-    model.position.sub(center);
-    // fit into hero rect at cameraZ, fov 13
-    const heroRect = (document.getElementById('hero') || document.body).getBoundingClientRect();
+    model.position.sub(center); // geometric center now sits at the holder origin
+    // visible frame size at the camera distance for fov 13
     const vFov = 13 * DEG;
     const visH = 2 * Math.tan(vFov / 2) * CAM_Z;
     const visW = visH * camera.aspect;
-    const fit = Math.min(visW / size.x, visH / size.y) * 0.5;
-    let base = fit * (isMobile() ? 1.5 : 1);
-    // responsive multiplier (condensed from spec)
-    const w = window.innerWidth;
-    if (isMobile()) base *= 0.365 / fit * fit * 0.9025;
-    else {
-      const diag = Math.hypot(window.innerWidth, window.innerHeight);
-      base *= 0.06 * (2203 / diag) / (0.06) ; // proportional term
-      base *= (w < 1500 ? 1.04 : w > 1920 ? lerp(1.15, 1.45, clamp((w - 1920) / 1120, 0, 1)) : 1.06);
-    }
-    targetScale = base;
-    model.scale.setScalar(targetScale);
+    const fill = isMobile() ? HERO_FILL_MOBILE : HERO_FILL_DESKTOP;
+    // scale so the model's largest footprint fills `fill` of the frame
+    const maxXY = Math.max(size.x, size.y);
+    targetScale = (Math.min(visW, visH) * fill) / maxXY;
+    modelHolder.scale.setScalar(targetScale);
   }
 
   // material apply for screen video swap
@@ -401,7 +404,7 @@ function startAllAnimations() {
     const ry = lerp(-11, isMobile() ? 0 : 1, rotP) * DEG;
     const rz = lerp(16, isMobile() ? 0 : -13.6, rotP) * DEG;
     const extraZ = isMobile() ? 0 : Math.PI * 2 * rotP;
-    model.rotation.set(rx, ry, rz + extraZ);
+    modelHolder.rotation.set(rx, ry, rz + extraZ);
 
     // finalOffsetGroup extra rot + scale on arrival (desktop)
     if (!isMobile()) {
@@ -442,8 +445,8 @@ function startAllAnimations() {
       started = true;
       heroVid.v.play().catch(() => {});
       initTriggers();
-      if (model && window.scrollY < 100) {
-        gsap.fromTo(model.scale,
+      if (modelHolder && window.scrollY < 100) {
+        gsap.fromTo(modelHolder.scale,
           { x: targetScale * 0.18, y: targetScale * 0.18, z: targetScale * 0.18 },
           { x: targetScale, y: targetScale, z: targetScale, duration: 1.35, ease: 'power3.out' });
       }
