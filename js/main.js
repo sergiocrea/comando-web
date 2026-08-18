@@ -17,6 +17,7 @@ ScrollTrigger.config({ ignoreMobileResize: true });
 const mm = window.matchMedia;
 const isMobile = () => window.innerWidth <= 767;
 const isTouch = () => matchMedia('(hover: none), (pointer: coarse)').matches;
+const lerp = (a, b, t) => a + (b - a) * t;
 
 /* ---------- run once the preloader has been removed ---------- */
 function runAfterPreloader(cb) {
@@ -258,14 +259,51 @@ function initNav() {
       const dummy = document.getElementById('dummy');
       if (!logo || !source || !dest) return;
 
-      document.body.appendChild(logo);
-      logo.style.position = 'fixed';
-      logo.style.top = '0';
-      logo.style.left = '0';
-      logo.style.zIndex = '900';
-      logo.style.transformOrigin = 'top left';
-      logo.style.pointerEvents = 'none';
+      // Measure the logo IN PLACE (real size + document-space position) before detaching.
+      const lRect = logo.getBoundingClientRect();
+      if (lRect.width < 40 || lRect.height < 8) return; // safety: leave it centered in the hero
+      const startW = lRect.width;
+      const startH = lRect.height;
+      const startLeft = lRect.left;
+      const startDocTop = lRect.top + window.scrollY; // where it sits at scrollY = 0
 
+      // Reserve the vacated space so the hero layout doesn't collapse.
+      source.style.minHeight = startH + 'px';
+
+      // Detach to <body> as a fixed layer, preserving its rendered size.
+      logo.style.width = startW + 'px';
+      logo.style.height = startH + 'px';
+      document.body.appendChild(logo);
+      Object.assign(logo.style, {
+        position: 'fixed', left: '0', top: '0', margin: '0',
+        zIndex: '40', transformOrigin: 'top left', pointerEvents: 'none',
+      });
+
+      let prog = 0;
+      const place = () => {
+        const d = dest.getBoundingClientRect();
+        const targetScale = Math.min(d.width / startW, 1);
+        const sc = lerp(1, targetScale, prog);
+        // start position scrolls with the hero; end position is the fixed nav slot
+        const startY = startDocTop - window.scrollY;
+        const x = lerp(startLeft, d.left, prog);
+        const y = lerp(startY, d.top, prog);
+        logo.style.transform = `translate(${x}px, ${y}px) scale(${sc})`;
+        const atNav = prog >= 0.999;
+        logo.style.opacity = atNav ? '0' : '1';
+        if (dummy) dummy.style.opacity = atNav ? '1' : '0';
+      };
+
+      const st = ScrollTrigger.create({
+        trigger: '#hero', start: 'top top', end: 'center top+=30%', scrub: true,
+        onUpdate: (self) => { prog = self.progress; place(); },
+        onRefresh: () => place(),
+      });
+      // keep following the scroll while progress is 0 (logo still scrolling with hero)
+      window.addEventListener('scroll', place, { passive: true });
+      place();
+
+      // nav link x-shifts scrubbed over the same range
       const links = {
         home: document.querySelector('a[href="#hero"]'),
         about: document.querySelector('a[href="#about"]'),
@@ -273,39 +311,16 @@ function initNav() {
         spec: document.getElementById('spec'),
         order: document.getElementById('mailing-list'),
       };
-
-      const st = ScrollTrigger.create({
-        trigger: '#hero', start: 'top top', end: 'center top+=30%', scrub: true,
-        onUpdate: (self) => {
-          const p = self.progress;
-          const s = source.getBoundingClientRect();
-          const d = dest.getBoundingClientRect();
-          const lw = s.width || logo.offsetWidth;
-          const lh = s.height || logo.offsetHeight;
-          const scale = Math.min(d.width / lw, d.height / lh, 1);
-          const x = s.left + (d.left + d.width / 2 - (s.left + lw / 2)) * p;
-          const y = s.top + (d.top + d.height / 2 - (s.top + lh / 2)) * p;
-          const sc = 1 + (scale - 1) * p;
-          logo.style.transform = `translate(${x}px, ${y}px) scale(${sc})`;
-          dest.style.width = (d.width || 0) === 0 ? '' : '';
-          if (p >= 0.999) { logo.style.opacity = '0'; if (dummy) dummy.style.opacity = '1'; }
-          else { logo.style.opacity = '1'; if (dummy) dummy.style.opacity = '0'; }
-        },
-      });
-
-      // nav link x-shifts scrubbed over the same range
       const shift = (el, x) => el && gsap.to(el, {
         x, ease: 'none',
         scrollTrigger: { trigger: '#hero', start: 'top top', end: 'center top+=30%', scrub: true },
       });
-      shift(links.home, 0);
       shift(links.about, -40);
       shift(links.features, -80);
       shift(links.spec, 21);
-      shift(links.order, 0);
       shift(dest, -50);
 
-      return () => st.kill();
+      return () => { st.kill(); window.removeEventListener('scroll', place); };
     },
   });
 }

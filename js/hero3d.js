@@ -268,6 +268,7 @@ function startAllAnimations() {
     finalOffsetGroup.add(modelHolder);
     computeScale();
     modelHolder.rotation.set(77 * DEG, -11 * DEG, 16 * DEG);
+    modelHolder.visible = false; // stay hidden until the entrance zoom starts (no flash)
     renderer.compile(scene, camera);
     renderer.render(scene, camera);
   }, (ev) => {
@@ -445,6 +446,7 @@ function startAllAnimations() {
       started = true;
       heroVid.v.play().catch(() => {});
       initTriggers();
+      if (modelHolder) modelHolder.visible = true;
       if (modelHolder && window.scrollY < 100) {
         gsap.fromTo(modelHolder.scale,
           { x: targetScale * 0.18, y: targetScale * 0.18, z: targetScale * 0.18 },
