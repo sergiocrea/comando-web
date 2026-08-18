@@ -1,0 +1,179 @@
+/* ============================================================
+   Neoconda replica — custom styles
+   Reconstructed from the original inline <style> blocks plus the
+   component styles our rewritten JS relies on (preloader, grid
+   canvas, explode hotspots). Layout/typography come from the
+   Webflow shared stylesheet linked in <head>.
+   ============================================================ */
+
+/* ---------- Webflow utility helpers (were inline) ---------- */
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+*[tabindex]:focus-visible,
+input[type='file']:focus-visible {
+  outline: 0.125rem solid #4d65ff;
+  outline-offset: 0.125rem;
+}
+.inherit-color * { color: inherit; }
+.container-medium,
+.container-small,
+.container-large {
+  margin-right: auto !important;
+  margin-left: auto !important;
+}
+.text-style-3lines {
+  display: -webkit-box; overflow: hidden;
+  -webkit-line-clamp: 3; -webkit-box-orient: vertical;
+}
+.text-style-2lines {
+  display: -webkit-box; overflow: hidden;
+  -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+}
+
+/* Responsive hide helpers (Webflow standard breakpoints) */
+.hide { display: none !important; }
+@media screen and (max-width: 991px) {
+  .hide, .hide-tablet { display: none !important; }
+  .nav_menu_link { opacity: 0; transform: translateY(30px); }
+}
+@media screen and (max-width: 767px) {
+  .hide-mobile-landscape { display: none !important; }
+}
+@media screen and (max-width: 479px) {
+  .hide-mobile { display: none !important; }
+}
+.no-scroll { overflow: hidden !important; }
+
+/* ---------- Grid backgrounds & vignettes ---------- */
+.grid-container {
+  background-image:
+    linear-gradient(to right, rgba(255, 255, 255, 0.15) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.15) 1px, transparent 1px);
+  background-size: 30px 30px;
+  background-color: #0e0e0e;
+}
+.overlay-left {
+  background: radial-gradient(circle at 10% 45%, transparent 10%, #0e0e0e 40%);
+}
+.overlay-both {
+  background-image:
+    radial-gradient(circle at 10% 50%, transparent 10%, #0e0e0e 40%),
+    radial-gradient(circle at 90% 50%, transparent 10%, #0e0e0e 40%);
+  background-position: left top, right top;
+  background-size: 51% 100%;
+  background-repeat: no-repeat;
+}
+
+/* ---------- Polygon (notched) buttons ---------- */
+.polygon-border-wrapper {
+  clip-path: polygon(10% 0, 100% 0, 100% 71%, 90% 100%, 0 100%, 0 30%);
+  cursor: pointer;
+  display: inline-block;
+  transition: transform 0.2s ease, clip-path 0.4s cubic-bezier(0.19, 1, 0.22, 1);
+}
+.polygon-btn {
+  clip-path: polygon(10% 0, 100% 0, 100% 71%, 90% 100%, 0 100%, 0 30%);
+  background-position: 0% 0%;
+  transition:
+    background-position 0.5s cubic-bezier(0.19, 1, 0.22, 1),
+    color 0.3s ease,
+    clip-path 0.4s cubic-bezier(0.19, 1, 0.22, 1);
+}
+.polygon-border-wrapper:hover .polygon-btn { background-color: white; }
+.card-number-wrap {
+  clip-path: polygon(21.6% 0, 100% 0, 100% 70.4%, 77.8% 100%, 0 100%, 0 29.4%);
+  cursor: pointer;
+  display: inline-block;
+  transition: transform 0.2s ease, clip-path 0.4s cubic-bezier(0.19, 1, 0.22, 1);
+}
+.card-num-btn {
+  clip-path: polygon(21.6% 0, 100% 0, 100% 70.4%, 77.8% 100%, 0 100%, 0 29.4%);
+  background-position: 0% 0%;
+  transition:
+    background-position 0.5s cubic-bezier(0.19, 1, 0.22, 1),
+    color 0.3s ease,
+    clip-path 0.4s cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+/* ---------- Background grid canvas ---------- */
+#gridCanvas {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: -1;
+  display: block;
+}
+
+.lottie-container { width: 100%; }
+
+@media screen and (min-width: 1921px) {
+  html { font-size: 110%; }
+}
+
+/* ---------- Hero 3D canvas host (renderer canvas is injected by JS) ---------- */
+#app.canvas { pointer-events: none; }
+#app.canvas canvas { display: block; width: 100%; height: 100%; }
+
+/* ---------- Explode view: hotspot labels (built by explode3d.js) ---------- */
+.home-labels-container {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 5;
+}
+.hotspot {
+  position: absolute;
+  top: 0;
+  left: 0;
+  opacity: 0;
+  transition: opacity 0.5s ease-in-out;
+  will-change: opacity, transform;
+}
+.hotspot.visible { opacity: 1; }
+.hotspot-line {
+  position: absolute;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.5);
+  top: 50%;
+}
+.hotspot-content {
+  font-family: var(--_fonts---jetbrains-mono, "Jetbrainsmono Variable"), monospace;
+  color: #fff;
+  white-space: nowrap;
+}
+.hotspot-title {
+  font-size: 0.95rem;
+  letter-spacing: 0.02em;
+  color: #fff;
+}
+.hotspot-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #1fe477;
+  box-shadow: 0 0 10px rgba(31, 228, 119, 0.8);
+}
+/* Mobile: numbered circles pinned to screen edges */
+.hotspot-number {
+  display: none;
+  width: 30px;
+  height: 30px;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  border-radius: 50%;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--_fonts---jetbrains-mono, "Jetbrainsmono Variable"), monospace;
+  font-size: 0.75rem;
+  color: #1fe477;
+}
+@media screen and (max-width: 767px) {
+  .hotspot-content, .hotspot-line { display: none; }
+  .hotspot-number { display: flex; }
+}
+
+/* SplitText line wrapper used by the reveal engine */
+.split-line { display: block; }

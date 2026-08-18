@@ -1,0 +1,610 @@
+/* ============================================================
+   main.js — site UI logic (rewritten from scratch)
+   Replaces the original neoconda-script + the page's inline scripts:
+   Lenis smooth scroll, data-reveal engine, divider lines, grid
+   canvas spotlight, nav background + hero-logo->nav morph, mobile
+   menu, scroll-scrubbed feature video + Lottie, countdown, footer
+   globe. Uses GSAP/ScrollTrigger/SplitText/ScrambleText/Lenis from
+   the global scope (loaded via <script> in index.html).
+   ============================================================ */
+const gsap = window.gsap;
+const ScrollTrigger = window.ScrollTrigger;
+gsap.registerPlugin(ScrollTrigger);
+if (window.SplitText) gsap.registerPlugin(window.SplitText);
+if (window.ScrambleTextPlugin) gsap.registerPlugin(window.ScrambleTextPlugin);
+ScrollTrigger.config({ ignoreMobileResize: true });
+
+const mm = window.matchMedia;
+const isMobile = () => window.innerWidth <= 767;
+const isTouch = () => matchMedia('(hover: none), (pointer: coarse)').matches;
+
+/* ---------- run once the preloader has been removed ---------- */
+function runAfterPreloader(cb) {
+  const pre = document.getElementById('preloader');
+  if (!pre) { cb(); return; }
+  const obs = new MutationObserver(() => {
+    if (!document.getElementById('preloader')) { obs.disconnect(); cb(); }
+  });
+  obs.observe(document.body, { childList: true, subtree: true });
+}
+
+/* ============================================================
+   1. Lenis smooth scroll (>=480px desktop, or landscape mobile)
+   ============================================================ */
+(function initLenis() {
+  const Lenis = window.Lenis;
+  if (!Lenis) return;
+  const ua = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+  const landscape = window.innerWidth > window.innerHeight;
+  const allow = (window.innerWidth >= 480 && !ua) || (window.innerWidth >= 480 && landscape && ua);
+  if (!allow) return;
+
+  const lenis = new Lenis({
+    duration: 1.25,
+    easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+    direction: 'vertical',
+    gestureDirection: 'vertical',
+    smooth: true,
+    wheelMultiplier: 0.8,
+    mouseMultiplier: 0.8,
+    smoothTouch: true,
+    touchMultiplier: 2,
+    infinite: false,
+    lerp: 0.15,
+  });
+  window.__lenis = lenis;
+  function raf(time) { lenis.raf(time); requestAnimationFrame(raf); }
+  requestAnimationFrame(raf);
+})();
+
+/* ============================================================
+   2. data-reveal engine (block / text / scramble / fade)
+   trigger: top 85%, defaults duration 1, delay 0.25, stagger 0.1
+   ============================================================ */
+function initReveals() {
+  const els = document.querySelectorAll('[data-reveal]');
+  els.forEach((el) => {
+    if (el.dataset._revealed) return;
+    el.dataset._revealed = '1';
+    const mode = el.getAttribute('data-reveal');
+    const duration = parseFloat(el.getAttribute('data-duration')) || 1;
+    const delay = parseFloat(el.getAttribute('data-delay')) || 0.25;
+    const stagger = parseFloat(el.getAttribute('data-stagger')) || 0.1;
+    const st = { trigger: el, start: 'top 85%', toggleActions: 'play none none none' };
+
+    if (mode === 'fade') {
+      gsap.set(el, { opacity: 0, visibility: 'visible' });
+      gsap.to(el, { opacity: 1, duration, delay, ease: 'power2.out', scrollTrigger: st });
+
+    } else if (mode === 'block') {
+      gsap.set(el, { y: 40, opacity: 0 });
+      gsap.to(el, { y: 0, opacity: 1, duration, delay, ease: 'power2.out', scrollTrigger: st });
+
+    } else if (mode === 'text') {
+      if (isTouch() || !window.SplitText) {
+        gsap.set(el, { opacity: 0 });
+        gsap.to(el, { opacity: 1, duration, delay, ease: 'power2.out', scrollTrigger: st });
+      } else {
+        const run = () => {
+          const split = new window.SplitText(el, { type: 'lines', linesClass: 'split-line' });
+          gsap.set(split.lines, { yPercent: 100, opacity: 0 });
+          gsap.to(split.lines, {
+            yPercent: 0, opacity: 1, duration, delay, stagger,
+            ease: 'power2.out', scrollTrigger: st,
+          });
+        };
+        if (document.fonts && document.fonts.ready) document.fonts.ready.then(run);
+        else run();
+      }
+
+    } else if (mode === 'scramble') {
+      const text = el.innerText;
+      gsap.set(el, { opacity: 0 });
+      gsap.to(el, {
+        opacity: 1, duration, delay, ease: 'power2.out', scrollTrigger: st,
+        scrambleText: { text, chars: 'upperCase', revealDelay: 0.1, speed: 0.3 },
+      });
+    }
+  });
+}
+
+/* ---------- divider lines: width 0 -> natural ---------- */
+function initDividers() {
+  document.querySelectorAll('.divider-line').forEach((line) => {
+    if (line.dataset._div) return;
+    line.dataset._div = '1';
+    const target = line.getBoundingClientRect().width || line.offsetWidth;
+    gsap.fromTo(line, { width: 0 }, {
+      width: target, duration: 1, ease: 'power2.out',
+      scrollTrigger: { trigger: line, start: 'top 85%', toggleActions: 'play none none none' },
+    });
+  });
+}
+
+/* ============================================================
+   3. Interactive grid background canvas (>=992px only)
+   ============================================================ */
+function initGridCanvas() {
+  const canvas = document.getElementById('gridCanvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const CFG = {
+    gridSize: 30, baseLineColor: '#0e0e0e', highlightColor: '#FAFAFA',
+    highlightOpacity: 0.46, blurAmount: 100, spotlightRadius: 200,
+    wobbleSpeed: 0.003, mouseLag: 0.1,
+  };
+  const mask = document.createElement('canvas');
+  const mctx = mask.getContext('2d');
+  const ua = navigator.userAgent;
+  const needsFallback = /^((?!chrome|android).)*safari/i.test(ua) || /iPad|iPhone|iPod/.test(ua);
+
+  let W = 0, H = 0, raf = 0, running = false, t = 0;
+  const mouse = { x: 0, y: 0 };
+  const cur = { x: 0, y: 0 };
+
+  function resize() {
+    W = canvas.width = mask.width = window.innerWidth;
+    H = canvas.height = mask.height = window.innerHeight;
+  }
+  function drawGrid(context, color) {
+    context.strokeStyle = color;
+    context.lineWidth = 1;
+    context.beginPath();
+    for (let x = 0; x <= W; x += CFG.gridSize) { context.moveTo(x + 0.5, 0); context.lineTo(x + 0.5, H); }
+    for (let y = 0; y <= H; y += CFG.gridSize) { context.moveTo(0, y + 0.5); context.lineTo(W, y + 0.5); }
+    context.stroke();
+  }
+  function frame() {
+    t += CFG.wobbleSpeed;
+    cur.x += (mouse.x - cur.x) * CFG.mouseLag;
+    cur.y += (mouse.y - cur.y) * CFG.mouseLag;
+
+    ctx.clearRect(0, 0, W, H);
+    drawGrid(ctx, CFG.baseLineColor);
+
+    // spotlight mask
+    mctx.clearRect(0, 0, W, H);
+    mctx.save();
+    if (needsFallback) {
+      const wob = { x: Math.sin(3 * t) * 12 + Math.cos(5 * t) * 8, y: Math.cos(3 * t) * 10 };
+      const g = mctx.createRadialGradient(cur.x + wob.x, cur.y + wob.y, 0, cur.x + wob.x, cur.y + wob.y, 300);
+      g.addColorStop(0, `rgba(255,255,255,${CFG.highlightOpacity})`);
+      g.addColorStop(0.45, `rgba(255,255,255,${CFG.highlightOpacity * 0.6})`);
+      g.addColorStop(1, 'rgba(255,255,255,0)');
+      mctx.fillStyle = g;
+      mctx.fillRect(0, 0, W, H);
+    } else {
+      mctx.filter = `blur(${CFG.blurAmount}px)`;
+      mctx.beginPath();
+      const steps = 64;
+      for (let i = 0; i <= steps; i++) {
+        const a = (i / steps) * Math.PI * 2;
+        const r = CFG.spotlightRadius +
+          Math.sin(a * 3 + t) * 20 + Math.cos(a * 5 - t) * 15 + Math.sin(2 * t) * 5;
+        const px = cur.x + Math.cos(a) * r;
+        const py = cur.y + Math.sin(a) * r;
+        i === 0 ? mctx.moveTo(px, py) : mctx.lineTo(px, py);
+      }
+      mctx.closePath();
+      mctx.fillStyle = `rgba(255,255,255,${CFG.highlightOpacity})`;
+      mctx.fill();
+    }
+    mctx.restore();
+
+    // composite highlight-colored grid into the mask
+    mctx.globalCompositeOperation = 'source-in';
+    drawGrid(mctx, CFG.highlightColor);
+    mctx.globalCompositeOperation = 'source-over';
+
+    ctx.drawImage(mask, 0, 0);
+    raf = requestAnimationFrame(frame);
+  }
+  function onMove(e) { mouse.x = e.clientX; mouse.y = e.clientY; }
+  function start() {
+    if (running) return;
+    running = true;
+    resize();
+    mouse.x = cur.x = W / 2; mouse.y = cur.y = H / 2;
+    window.addEventListener('mousemove', onMove);
+    window.addEventListener('resize', resize);
+    frame();
+  }
+  function stop() {
+    running = false;
+    cancelAnimationFrame(raf);
+    window.removeEventListener('mousemove', onMove);
+    window.removeEventListener('resize', resize);
+    ctx.clearRect(0, 0, W, H);
+  }
+  const q = mm('(min-width: 992px)');
+  const apply = () => (q.matches ? start() : stop());
+  q.addEventListener('change', apply);
+  apply();
+}
+
+/* ============================================================
+   4. Nav: background on scroll + hero logo -> nav morph
+   ============================================================ */
+function initNav() {
+  const nav = document.querySelector('.nav_component');
+  if (nav) {
+    const threshold = () => (window.innerWidth > 991 ? window.innerHeight * 2 : window.innerHeight * 0.05);
+    const grad = 'linear-gradient(to bottom, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0) 100%)';
+    nav.style.transition = 'background 0.3s ease';
+    let menuOpen = false;
+    const update = () => {
+      if (menuOpen) { nav.style.backgroundImage = 'none'; nav.style.backgroundColor = '#000'; return; }
+      nav.style.backgroundColor = 'transparent';
+      nav.style.backgroundImage = window.scrollY > threshold() ? grad : 'none';
+    };
+    window.addEventListener('scroll', update, { passive: true });
+    update();
+    // watch the Webflow nav button open/close to force solid bg
+    const btn = document.querySelector('.w-nav-button');
+    if (btn) {
+      new MutationObserver(() => {
+        menuOpen = btn.classList.contains('w--open');
+        update();
+      }).observe(btn, { attributes: true, attributeFilter: ['class'] });
+    }
+  }
+
+  // hero logo -> nav logo morph (desktop >=992px)
+  ScrollTrigger.matchMedia({
+    '(min-width: 992px)': () => {
+      const logo = document.getElementById('hero-logo-large-to-move');
+      const source = document.getElementById('hero-logo-source');
+      const dest = document.getElementById('nav-logo-destination');
+      const dummy = document.getElementById('dummy');
+      if (!logo || !source || !dest) return;
+
+      document.body.appendChild(logo);
+      logo.style.position = 'fixed';
+      logo.style.top = '0';
+      logo.style.left = '0';
+      logo.style.zIndex = '900';
+      logo.style.transformOrigin = 'top left';
+      logo.style.pointerEvents = 'none';
+
+      const links = {
+        home: document.querySelector('a[href="#hero"]'),
+        about: document.querySelector('a[href="#about"]'),
+        features: document.getElementById('nav-logo'),
+        spec: document.getElementById('spec'),
+        order: document.getElementById('mailing-list'),
+      };
+
+      const st = ScrollTrigger.create({
+        trigger: '#hero', start: 'top top', end: 'center top+=30%', scrub: true,
+        onUpdate: (self) => {
+          const p = self.progress;
+          const s = source.getBoundingClientRect();
+          const d = dest.getBoundingClientRect();
+          const lw = s.width || logo.offsetWidth;
+          const lh = s.height || logo.offsetHeight;
+          const scale = Math.min(d.width / lw, d.height / lh, 1);
+          const x = s.left + (d.left + d.width / 2 - (s.left + lw / 2)) * p;
+          const y = s.top + (d.top + d.height / 2 - (s.top + lh / 2)) * p;
+          const sc = 1 + (scale - 1) * p;
+          logo.style.transform = `translate(${x}px, ${y}px) scale(${sc})`;
+          dest.style.width = (d.width || 0) === 0 ? '' : '';
+          if (p >= 0.999) { logo.style.opacity = '0'; if (dummy) dummy.style.opacity = '1'; }
+          else { logo.style.opacity = '1'; if (dummy) dummy.style.opacity = '0'; }
+        },
+      });
+
+      // nav link x-shifts scrubbed over the same range
+      const shift = (el, x) => el && gsap.to(el, {
+        x, ease: 'none',
+        scrollTrigger: { trigger: '#hero', start: 'top top', end: 'center top+=30%', scrub: true },
+      });
+      shift(links.home, 0);
+      shift(links.about, -40);
+      shift(links.features, -80);
+      shift(links.spec, 21);
+      shift(links.order, 0);
+      shift(dest, -50);
+
+      return () => st.kill();
+    },
+  });
+}
+
+/* ============================================================
+   5. Mobile menu link stagger (<=991px)
+   ============================================================ */
+function initMobileMenu() {
+  ScrollTrigger.matchMedia; // (no-op guard so treeshakers keep import)
+  const links = gsap.utils.toArray('.nav_menu_link');
+  const btn = document.querySelector('.w-nav-button');
+  if (!btn || !links.length) return;
+
+  mmGSAP('(max-width: 991px)', () => {
+    gsap.set(links, { opacity: 0, y: 50, scale: 0.95, filter: 'blur(10px)' });
+    const open = () => {
+      document.body.classList.add('no-scroll');
+      gsap.to(links, {
+        opacity: 1, y: 0, scale: 1, filter: 'blur(0px)',
+        duration: 0.8, ease: 'expo.out', stagger: { each: 0.08, from: 'start' }, delay: 0.2,
+      });
+    };
+    const close = () => {
+      document.body.classList.remove('no-scroll');
+      gsap.to(links, {
+        opacity: 0, y: 50, scale: 0.95,
+        duration: 0.35, ease: 'power2.inOut', stagger: { each: 0.04, from: 'end' },
+      });
+    };
+    new MutationObserver(() => {
+      btn.classList.contains('w--open') ? open() : close();
+    }).observe(btn, { attributes: true, attributeFilter: ['class'] });
+  });
+}
+function mmGSAP(query, fn) {
+  const m = gsap.matchMedia();
+  m.add(query, fn);
+}
+
+/* ============================================================
+   6. Feature video scrub (5 phases) + Lottie sync
+   VIDEO_FPS 30; frames driven by ScrollTrigger
+   ============================================================ */
+function initFeatureVideo() {
+  const video = document.getElementById('scroll-video');
+  if (!video) return;
+  const FPS = 30;
+  const target = { frame: 0 };
+  let pending = false;
+  const applyFrame = () => {
+    pending = false;
+    if (video.duration) video.currentTime = Math.min(target.frame / FPS, video.duration - 0.001);
+  };
+  const setFrame = (f) => { target.frame = f; if (!pending) { pending = true; requestAnimationFrame(applyFrame); } };
+  video.pause();
+
+  // ---- Lottie player control ----
+  const lottieEl = document.querySelector('dotlottie-player');
+  let lottie = null;
+  const grabLottie = () => {
+    if (!lottieEl) return;
+    const inst = lottieEl.getLottie && lottieEl.getLottie();
+    if (inst) { lottie = inst; lottie.pause(); }
+  };
+  [0, 100, 300, 700, 1200, 2000, 3500, 5000].forEach((d) => setTimeout(grabLottie, d));
+  if (lottieEl) {
+    lottieEl.addEventListener('ready', grabLottie);
+    lottieEl.addEventListener('load', grabLottie);
+  }
+  const setLottiePct = (pct) => {
+    if (!lottie) return;
+    const total = lottie.totalFrames || 0;
+    lottie.goToAndStop(Math.max(0, (pct / 100) * (total - 1)), true);
+  };
+
+  const lottieCont = document.querySelector('.lottie-container');
+  const fadeLottie = (o) => lottieCont && gsap.to(lottieCont, { opacity: o, duration: 0.45, ease: 'power2.out' });
+
+  // desktop phase logic
+  mmGSAP('(min-width: 767px)', () => {
+    // PHASE 1: autoplay 0->50 over 2s when sticky grid hits top 50%
+    gsap.to(target, {
+      frame: 50, duration: 2, ease: 'power1.inOut', onUpdate: () => setFrame(target.frame),
+      scrollTrigger: { trigger: '.sticky-block-grid', start: 'top 50%', once: true },
+    });
+    // PHASE 2: 50->160
+    gsap.to(target, {
+      frame: 160, ease: 'none', onUpdate: () => setFrame(target.frame),
+      scrollTrigger: { trigger: '.sticky-block-grid', start: 'top 20%', end: 'bottom top', scrub: true },
+    });
+    // PHASE 3: 160->200
+    gsap.to(target, {
+      frame: 200, ease: 'none', onUpdate: () => setFrame(target.frame),
+      scrollTrigger: { trigger: '#lottiee-section', start: 'top bottom', end: 'top top', scrub: true },
+    });
+    // PHASE 4: video 200->500 + lottie 0->50%, on #trigger-2 over +2vh
+    const t2 = document.getElementById('trigger-2');
+    if (t2) {
+      const p4 = { v: 200, l: 0 };
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: t2, start: 'top bottom', end: () => '+=' + window.innerHeight * 2, scrub: true,
+          onEnter: () => fadeLottie(1), onLeaveBack: () => fadeLottie(0),
+        },
+      });
+      tl.to(p4, {
+        v: 409, l: 20, ease: 'none', duration: 209 / 300,
+        onUpdate: () => { setFrame(p4.v); setLottiePct(p4.l); },
+      });
+      tl.to(p4, {
+        v: 500, l: 50, ease: 'none', duration: 91 / 300,
+        onUpdate: () => { setFrame(p4.v); setLottiePct(p4.l); },
+      });
+    }
+    // PHASE 5: 500->680
+    gsap.to(target, {
+      frame: 680, ease: 'none', onUpdate: () => setFrame(target.frame),
+      scrollTrigger: { trigger: '#router-details', start: 'top center', end: '70% top', scrub: true },
+    });
+    // LOTTIE 50->100%
+    const lp = { l: 50 };
+    gsap.to(lp, {
+      l: 100, ease: 'none', onUpdate: () => setLottiePct(lp.l),
+      scrollTrigger: { trigger: '#router-details', start: 'top 80%', end: 'top top', scrub: true },
+    });
+    // PHASE 5 GUARD: hide lottie under router
+    ScrollTrigger.create({
+      trigger: '#router-details', start: 'top 92%', end: 'bottom top',
+      onEnter: () => fadeLottie(0), onLeaveBack: () => fadeLottie(1),
+    });
+  });
+
+  // mobile: scrub the whole lottie
+  mmGSAP('(max-width: 766px)', () => {
+    if (!lottieCont) return;
+    const lp = { l: 0 };
+    gsap.to(lp, {
+      l: 100, ease: 'none', onUpdate: () => setLottiePct(lp.l),
+      scrollTrigger: { trigger: '.lottie-container', start: 'top 90%', end: 'bottom 10%', scrub: 0.5 },
+    });
+  });
+}
+
+/* ============================================================
+   7. Feature slider parallax (rAF on scroll)
+   ============================================================ */
+function initSliderParallax() {
+  const trigger = document.getElementById('trigger-1');
+  const left = document.querySelector('.section_left-slider-wrap');
+  const bottom = document.querySelector('.section_bottom-slider');
+  const mobRes = document.getElementById('mob-res');
+  if (!trigger) return;
+
+  function frame() {
+    const rect = trigger.getBoundingClientRect();
+    const p = Math.min(1, Math.max(0, (window.innerHeight - rect.top) / window.innerHeight));
+    if (window.innerWidth > 767) {
+      const y = 50 - p * 100; // 50% -> -50%
+      if (left) left.style.transform = `translateY(${y}%)`;
+      if (bottom) bottom.style.transform = `translateY(${y}%)`;
+    } else {
+      const y = -p * 50; // 0 -> -50%
+      if (left) left.style.transform = `translateY(${y}%)`;
+      if (bottom) bottom.style.transform = `translateY(${y}%)`;
+      if (mobRes) {
+        const wrap = mobRes.parentElement;
+        const over = mobRes.offsetHeight - (wrap ? wrap.offsetHeight : 0);
+        if (over > 0) mobRes.style.transform = `translateY(${-(over / mobRes.offsetHeight) * 100 * p}%)`;
+      }
+    }
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+}
+
+/* ============================================================
+   8. Countdown to launch (America/New_York)
+   ============================================================ */
+function initCountdown() {
+  const targetStr = 'August 4, 2026 10:00:00';
+  const target = new Date(targetStr + ' GMT-0400').getTime(); // EDT
+  const set = (cls, val) => {
+    document.querySelectorAll(cls).forEach((e) => { e.textContent = String(val).padStart(2, '0'); });
+  };
+  function tick() {
+    const now = Date.now();
+    let diff = Math.max(0, target - now);
+    const days = Math.floor(diff / 86400000);
+    const months = Math.floor(days / 30.44);
+    const hours = Math.floor((diff % 86400000) / 3600000);
+    set('.timer-month', months);
+    set('.timer-days', days % 31);
+    set('.timer-hours', hours);
+  }
+  tick();
+  setInterval(tick, 1000);
+}
+
+/* ============================================================
+   9. Footer wireframe globe (2D canvas)
+   ============================================================ */
+function initGlobe() {
+  const canvas = document.getElementById('wf-globe');
+  const wrap = canvas && canvas.parentElement;
+  if (!canvas || !wrap) return;
+  const ctx = canvas.getContext('2d');
+  const LAT = 15, LON = 15, SEG = 180, SPEED = 0.005;
+  let size = 0, R = 0, rot = 0, raf = 0;
+  const rad = (d) => (d * Math.PI) / 180;
+  function resize() {
+    size = Math.min(wrap.clientWidth, wrap.clientHeight) || 300;
+    canvas.width = canvas.height = size;
+    R = size * 0.41;
+  }
+  function project(latDeg, lonDeg) {
+    const la = rad(latDeg), lo = rad(lonDeg) + rot;
+    const x = R * Math.cos(la) * Math.sin(lo);
+    const y = R * Math.sin(la);
+    const z = R * Math.cos(la) * Math.cos(lo);
+    return { x: size / 2 + x, y: size / 2 - y, z };
+  }
+  function stroke(pts) {
+    for (let i = 0; i < pts.length - 1; i++) {
+      const a = pts[i], b = pts[i + 1];
+      const front = (a.z + b.z) / 2 >= 0;
+      ctx.strokeStyle = front ? 'rgba(255,255,255,0.90)' : 'rgba(255,255,255,0.18)';
+      ctx.lineWidth = 0.5;
+      ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke();
+    }
+  }
+  function frame() {
+    ctx.clearRect(0, 0, size, size);
+    ctx.save();
+    ctx.beginPath(); ctx.arc(size / 2, size / 2, R, 0, Math.PI * 2); ctx.clip();
+    for (let lat = -90 + LAT; lat < 90; lat += LAT) {
+      const pts = [];
+      for (let i = 0; i <= SEG; i++) pts.push(project(lat, (i / SEG) * 360));
+      stroke(pts);
+    }
+    for (let lon = 0; lon < 360; lon += LON) {
+      const pts = [];
+      for (let i = 0; i <= SEG; i++) pts.push(project(-90 + (i / SEG) * 180, lon));
+      stroke(pts);
+    }
+    ctx.restore();
+    rot += SPEED;
+    raf = requestAnimationFrame(frame);
+  }
+  resize();
+  window.addEventListener('resize', resize);
+  frame();
+  void raf;
+}
+
+/* ============================================================
+   10. About / hero-canvas fade-out (>=768px)
+   ============================================================ */
+function initAboutFade() {
+  mmGSAP('(min-width: 768px)', () => {
+    const about = document.getElementById('about');
+    const app = document.getElementById('app');
+    const targets = [about, app].filter(Boolean);
+    if (!targets.length) return;
+    gsap.fromTo(targets, { opacity: 1 }, {
+      opacity: 0, ease: 'none',
+      scrollTrigger: { trigger: '#features-padding', start: 'top 30%', end: 'top top', scrub: true },
+    });
+  });
+
+  // router-details content reveal (>=768px)
+  mmGSAP('(min-width: 768px)', () => {
+    const wrap = document.querySelector('.home_defence-content-wrap');
+    if (!wrap) return;
+    const heading = wrap.querySelector('.home_defence-heading') || wrap.children[0];
+    const desc = wrap.querySelector('.home_defence-description') || wrap.children[1];
+    const targets = [heading, desc].filter(Boolean);
+    gsap.to(targets, {
+      yPercent: -20, opacity: 0, duration: 0.45, ease: 'power2.out', stagger: 0.2,
+      scrollTrigger: { trigger: '#router-details', start: 'top 76%', toggleActions: 'play none none reverse' },
+    });
+  });
+}
+
+/* ============================================================
+   Boot
+   ============================================================ */
+function boot() {
+  initGridCanvas();
+  initNav();
+  initMobileMenu();
+  initFeatureVideo();
+  initSliderParallax();
+  initCountdown();
+  initGlobe();
+  initAboutFade();
+  initReveals();
+  initDividers();
+  ScrollTrigger.refresh();
+}
+
+if (document.readyState === 'complete') runAfterPreloader(boot);
+else window.addEventListener('load', () => runAfterPreloader(boot));
