@@ -25,7 +25,7 @@ Debe servirse por HTTP (no abrir el `index.html` con `file://`), porque usa mód
 
 - `models/` — `explode-device.glb` (vista explosionada, comprimido con meshopt). El dispositivo del héroe ya no es un `.glb`: es un iPhone procedural construido en Three.js (`buildPhone()` en `js/hero3d.js`).
 - `hdri/` — `studio_small_08_1k.exr` (iluminación de la escena).
-- `videos/benefits-v1.mp4` (+ `img/benefits-poster-v1.jpg`) — video de fondo de la sección "Modo automático" (personas usando Comando: gimnasio, auto, etc.). **Pendiente de aportar**: mientras no exista, se ve un fondo degradado. Recomendado: 1920×1080, H.264, sin audio, 10–20 s en loop, < 6 MB.
+- `videos/benefits-v2.mp4` (+ `img/benefits-poster-v1.jpg`) — video de fondo de la sección "Modo automático" (personas usando Comando: gimnasio, auto, etc.). **Pendiente de aportar**: mientras no exista, se ve un fondo degradado. Recomendado: 1920×1080, H.264, sin audio, 10–20 s en loop, < 6 MB.
 - `img/` — `comando-mark.svg` / `comando-logo.svg` (marca), favicon/webclip/og generados, íconos de features, marcos/fondos.
 - `fonts/` — Inter y Space Grotesk (libres; sustituyen a Neue Haas Unica / Neue Machina bajo los mismos nombres de `font-family`), Digital 7 Mono, JetBrains Mono.
 - `css/webflow.css` — stylesheet base exportado de Webflow.
