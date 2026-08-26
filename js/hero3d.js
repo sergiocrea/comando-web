@@ -509,7 +509,8 @@ function startAllAnimations() {
     const vFov = 13 * DEG;
     const visH = 2 * Math.tan(vFov / 2) * CAM_Z;
     const visW = visH * camera.aspect;
-    const fill = isMobile() ? HERO_FILL_MOBILE : HERO_FILL_DESKTOP;
+    // short desktop viewports: keep the phone clear of the nav and the subtitle
+    const fill = isMobile() ? HERO_FILL_MOBILE : (window.innerHeight < 780 ? 0.56 : HERO_FILL_DESKTOP);
     // scale so the model's largest footprint fills `fill` of the frame
     const maxDim = Math.max(size.x, size.y, size.z);
     // mobile: size by viewport HEIGHT so the phone fits between the nav and the subtitle on short screens
