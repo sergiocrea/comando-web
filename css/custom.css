@@ -374,3 +374,21 @@ input[type='file']:focus-visible {
 .pricing-note b { font-weight: 600; }
 .pricing-note a { color: #0a0a0a; text-decoration: underline; font-weight: 600; }
 .price-note { font-size: .8rem; color: #8a8a8a; margin: -.75rem 0 1rem; line-height: 1.4; }
+
+/* features: phone on the left, feature cards in two columns on the right */
+@media (min-width: 768px) {
+  .home_grid-wrapper { justify-content: flex-start; gap: 2.5rem; }
+  .section_middle-slider { order: -1; width: 26%; margin-left: 0; margin-right: 1rem; }
+  .section_left-slider-wrap.hide-mobile-landscape, .section_bottom-slider.hide-mobile-landscape { width: 34%; }
+  .section_slider-card { max-width: 34ch; }
+}
+@media (min-width: 768px) { .section_left-slider-wrap, .section_bottom-slider { transform: translateY(25%); } }
+/* features: the sticky phone sits at the left edge of the container; cards fill the right in 2 columns */
+@media (min-width: 768px) {
+  .sticky-block-grid { align-items: flex-start; padding-left: max(1.88rem, calc((100% - 90rem) / 2 + 1.88rem)); }
+  .sticky-block-grid .section_middle-slider { width: min(26%, 23rem); margin: 0; }
+  #scope-1 .home_grid-wrapper { padding-left: 29%; gap: 2rem; justify-content: flex-start; }
+  #scope-1 .section_left-slider-wrap.hide-mobile-landscape, #scope-1 .section_bottom-slider.hide-mobile-landscape { width: 33%; }
+}
+@media (min-width: 768px) { #scope-1 .home_grid-wrapper { padding-left: 27%; } }
+@media (min-width: 768px) { #scope-1 .home_grid-wrapper > .section_middle-slider { display: none; } }

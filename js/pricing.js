@@ -7,12 +7,12 @@ const PRICING_CONFIG = {
   billing: { annualFreeMonths: 2 },          // anual = precio mensual × 10 / 12
   featuredPlan: 'pro',
   cta: { trialBase: 'https://app.comando.pro/registro', trialLabel: 'Elegir plan', freeLabel: 'Empezar gratis', enterpriseHref: '#pricing-form', enterpriseLabel: 'Habla con ventas' },
-  title: 'Precios simples. Desde $2 al mes.',
+  title: 'Precios simples. Desde $3 al mes.',
   subtitle: 'Vendedores ilimitados. Paga según el tamaño de tu CRM. Empieza gratis con 50 comandos, sin tarjeta.',
   // Cada plan muestra solo 4 líneas: contactos, comandos, vendedores y un diferencial.
   plans: [
-    { id: 'gratis',   name: 'Gratis',   price: 0,  contacts: null,  commands: 50,    highlight: '1 CRM conectado', note: 'Prueba Comando con tu CRM real, del tamaño que sea. Sin tarjeta.' },
-    { id: 'basico',   name: 'Básico',   price: 2,  contacts: 1000,  commands: 300,   highlight: '1 CRM conectado' },
+    { id: 'gratis',   name: 'Gratis',   price: 0,  contacts: null,  commands: 50,    highlight: '1 CRM conectado', note: 'Cupo total de prueba, sin tarjeta. Sin sincronización continua ni automatizaciones; expira a los 30 días sin uso.' },
+    { id: 'basico',   name: 'Básico',   price: 3,  contacts: 1000,  commands: 300,   highlight: '1 CRM conectado' },
     { id: 'starter',  name: 'Starter',  price: 6,  contacts: 5000,  commands: 1000,  highlight: 'Automatizaciones ilimitadas' },
     { id: 'pro',      name: 'Pro',      price: 19, contacts: 20000, commands: 4000,  highlight: 'Hasta 3 CRM + ecommerce · soporte por WhatsApp' },
     { id: 'business', name: 'Business', price: 49, contacts: 50000, commands: 10000, highlight: 'CRM ilimitados · onboarding incluido' },
@@ -38,7 +38,7 @@ const PRICING_CONFIG = {
     title: '¿Cuánto es esto frente a tu CRM?',
     intro: 'Comando complementa a tu CRM, no lo sustituye. Referencia: precios de lista de HubSpot 2026, facturación anual.',
     rows: [
-      { contacts: '1 000',           hubspot: 'Marketing Hub Starter: $20/asiento/mes (1 000 contactos; +$50 por cada 1 000)', comando: 'Básico: $2/mes, vendedores ilimitados' },
+      { contacts: '1 000',           hubspot: 'Marketing Hub Starter: $20/asiento/mes (1 000 contactos; +$50 por cada 1 000)', comando: 'Básico: $3/mes, vendedores ilimitados' },
       { contacts: '2 000 – 10 000',  hubspot: 'Marketing Hub Professional: desde $890/mes (2 000 contactos; +$250 por 5 000)', comando: 'Starter: $6/mes' },
       { contacts: '10 000 – 50 000', hubspot: 'Marketing Hub Enterprise: desde $3 600/mes (10 000 contactos)',                  comando: 'Pro $19/mes · Business $49/mes' },
       { contacts: 'Asiento de ventas', hubspot: 'Sales Hub Professional: $90/asiento/mes',                                      comando: 'Sin costo por asiento' },
@@ -51,6 +51,7 @@ const PRICING_CONFIG = {
     { q: '¿Qué cuenta como «contacto»?', a: 'Los contactos de tu CRM que Comando vigila. Se mide una vez al día; no se cobra por leads que entran y salen el mismo día.' },
     { q: '¿Qué cuenta como comando?', a: 'Cada pedido que le haces a Comando por WhatsApp, por texto o por audio. Las confirmaciones («sí», «ok») y las respuestas de Comando no cuentan.' },
     { q: '¿Qué pasa si uso más comandos de los incluidos?', a: 'Te avisamos al 80 %. Puedes sumar paquetes de 1 000 comandos por $2 o subir de plan.' },
+    { q: '¿Qué incluye el plan Gratis?', a: '50 comandos de cupo total con 1 CRM de cualquier tamaño y vendedores ilimitados, sin tarjeta. No incluye sincronización continua ni automatizaciones; al agotar el cupo (o tras 30 días sin uso) deja de ejecutar hasta que elijas un plan.' },
     { q: '¿Qué CRM soportan?', a: 'HubSpot, Salesforce, Zoho, Pipedrive, Dynamics 365 y más.' },
     { q: '¿Necesito contratar la API de WhatsApp Business?', a: 'No para empezar.' },
     { q: '¿Dónde quedan las credenciales de mi CRM?', a: 'En infraestructura de Comando, cifradas; nunca en terceros. En planes a medida, en la tuya.' },

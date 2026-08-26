@@ -25,14 +25,16 @@ sección debe sentirse parte de la misma página.
 - **Sin cobro por usuarios: operadores/vendedores ilimitados en todos los planes.**
 - Uso justo en **comandos** (texto o audio; paquete incluido por plan + add-on).
 - Alertas en **tiempo real** por eventos del CRM en todos los planes.
-- Sin plan gratuito permanente: **14 días de prueba gratis en cualquier plan, sin tarjeta**.
+- Plan **Gratis permanente como prueba con cupo**: 50 comandos en total, 1 CRM de cualquier
+  tamaño, vendedores ilimitados, sin tarjeta. Al agotar el cupo deja de ejecutar (y se pausa
+  la sincronización de su CRM) hasta que elija un plan.
 - Moneda: USD con toggle a PEN (tipo de cambio referencial; mostrar "aprox.").
 
-| | Básico | Starter | Pro | Business | Enterprise |
-|---|---|---|---|---|---|
-| Precio mensual | **$2/mes** | $6/mes | $19/mes | $49/mes | A medida |
-| Contactos en el CRM | hasta 500 | hasta 2,500 | hasta 10,000 | hasta 50,000 | Ilimitados |
-| Comandos incluidos / mes (texto o audio) | 300 | 1,000 | 4,000 | 10,000 | Negociados |
+| | Gratis | Básico | Starter | Pro | Business | Enterprise |
+|---|---|---|---|---|---|---|
+| Precio mensual | $0 | **$2/mes** | $6/mes | $19/mes | $49/mes | A medida |
+| Contactos en el CRM | cualquier tamaño (1 CRM) | hasta 1,000 | hasta 5,000 | hasta 20,000 | hasta 50,000 | Ilimitados |
+| Comandos incluidos (texto o audio) | 50 en total (cupo de prueba) | 300 / mes | 1,000 / mes | 4,000 / mes | 10,000 / mes | Negociados |
 | Operadores (vendedores) | Ilimitados | Ilimitados | Ilimitados | Ilimitados | Ilimitados |
 | CRMs conectados | 1 | 1 | 3 | Ilimitados | Ilimitados |
 | Automatizaciones activas | 5 | Ilimitadas | Ilimitadas | Ilimitadas | Ilimitadas |
@@ -115,16 +117,19 @@ sincronización del CRM cada 6 h):
 | 1,000 comandos | $1.50 texto · $2.17 audio (Groq) · $7.50 audio si se usara OpenAI Whisper — **usar Groq** |
 | Notificaciones WhatsApp vía Evolution | $0 (sin tarifas de Meta) |
 
-Márgenes por plan con TODOS los comandos incluidos consumidos:
+Márgenes por plan con TODOS los comandos incluidos consumidos y el CRM al tope del plan:
 
 | Plan | Precio | Costo si todo es texto | Margen | Costo si todo es audio 60 s | Margen (peor caso) |
 |---|---|---|---|---|---|
-| Básico | $2 | $0.52 | 74% | $0.72 | 64% |
-| Starter | $6 | $1.69 | 72% | $2.36 | 61% |
-| Pro | $19 | $6.64 | 65% | $9.31 | 51% |
-| Business | $49 | $18.06 | 63% | $24.7 | 50% |
+| Básico | $2 | $0.55 | 72% | $0.76 | 62% |
+| Starter | $6 | $1.84 | 69% | $2.54 | 58% |
+| Pro | $19 | $7.24 | 62% | $10.04 | 47% |
+| Business | $49 | $18.04 | 63% | $25.04 | 49% |
+| Gratis | $0 | ~$0.11 una vez (50 comandos) + ~$0.10-0.60/mes de sincronización mientras el cupo esté activo | — | — | — |
 
-Uso real esperado (60% de los comandos consumidos, 30% audio): márgenes 78-85%.
+Uso real esperado (60% de los comandos consumidos, 30% audio): márgenes 75-85%.
+Regla del plan Gratis: la sincronización del CRM se pausa al agotar los 50 comandos; sin esa
+regla, un free con un CRM de 50,000 contactos costaría ~$3/mes indefinidamente.
 Plataforma fija ~$175/mes (Temporal Cloud piso $100, VM ~$65, Redis $5, Neon ~$5) →
 cubierta con ~12 clientes de pago. Reglas para el agente: no bajar precios ni subir
 comandos incluidos sin recalcular esta tabla; el add-on de comandos ($2/1,000) debe
