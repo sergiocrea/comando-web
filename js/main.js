@@ -493,10 +493,10 @@ function initSliderParallax() {
     const rect = trigger.getBoundingClientRect();
     const p = Math.min(1, Math.max(0, (window.innerHeight - rect.top) / window.innerHeight));
     if (window.innerWidth > 767) {
-      // desktop: spread the movement over the whole pinned range (dummy entering + leaving),
-      // so the rows keep sliding until the block unpins and the phone is never left alone
-      const p2 = Math.min(1, Math.max(0, (window.innerHeight - rect.top) / (window.innerHeight * 2)));
-      const y = 45 - p2 * 62; // start with row 1 in the readable band, end with the last row still visible
+      // desktop: the block stays pinned while #trigger-1 (150svh) scrolls through;
+      // spread the movement over that whole pinned range
+      const p2 = Math.min(1, Math.max(0, (window.innerHeight - rect.top) / rect.height));
+      const y = 34 - p2 * 62; // row 1 enters just below the top band; the last rows end near the middle // start with row 1 in the readable band, end with the last row still visible
       if (left) left.style.transform = `translateY(${y}%)`;
       if (bottom) bottom.style.transform = `translateY(${y}%)`;
     } else {

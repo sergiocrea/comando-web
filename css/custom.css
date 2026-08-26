@@ -382,7 +382,7 @@ input[type='file']:focus-visible {
   .section_left-slider-wrap.hide-mobile-landscape, .section_bottom-slider.hide-mobile-landscape { width: 34%; }
   .section_slider-card { max-width: 34ch; }
 }
-@media (min-width: 768px) { .section_left-slider-wrap, .section_bottom-slider { transform: translateY(45%); } }
+@media (min-width: 768px) { .section_left-slider-wrap, .section_bottom-slider { transform: translateY(34%); } }
 /* features: the sticky phone sits at the left edge of the container; cards fill the right in 2 columns */
 @media (min-width: 768px) {
   .sticky-block-grid { align-items: flex-start; padding-left: max(1.88rem, calc((100% - 90rem) / 2 + 1.88rem)); }
@@ -395,5 +395,15 @@ input[type='file']:focus-visible {
 
 /* features: narrower dark bands so ~2 rows stay readable at once */
 @media (min-width: 768px) {
-  .section_lineargrad-overlay, .section_lineargrad-overlay.hide-mobile-landscape { background-image: linear-gradient(#060606 0%, rgba(6,6,6,.92) 7%, rgba(6,6,6,0) 22%, rgba(6,6,6,0) 78%, rgba(6,6,6,.92) 93%, #060606 100%); }
+  .section_lineargrad-overlay, .section_lineargrad-overlay.hide-mobile-landscape { background-image: linear-gradient(#060606 0%, rgba(6,6,6,.9) 5%, rgba(6,6,6,0) 15%, rgba(6,6,6,0) 85%, rgba(6,6,6,.9) 95%, #060606 100%); }
 }
+
+/* "Modo automático": full-bleed background video (people using Comando) behind the phone */
+.benefits-video { position: absolute; inset: 0; overflow: hidden; z-index: 0; pointer-events: none; background: radial-gradient(ellipse at 50% 40%, #16213a 0%, #0a0a0a 65%); }
+.benefits-video-el { width: 100%; height: 100%; object-fit: cover; display: block; opacity: .55; filter: saturate(.85); }
+.benefits-video-shade { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(6,6,6,.85) 0%, rgba(6,6,6,.25) 35%, rgba(6,6,6,.25) 65%, rgba(6,6,6,.95) 100%); }
+/* pricing head clears the band's top-left notch; form label spacing */
+@media (min-width: 992px) { .pricing-head { padding-top: 9rem; } }
+.pricing-form .getupdate-text { margin-bottom: 1.25rem; }
+.pricing-form { margin-top: 1rem; }
+@media (min-width: 768px) { #trigger-1.section-dummy { min-height: 150svh; } }
