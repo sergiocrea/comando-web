@@ -426,6 +426,20 @@ function initFeatureVideo() {
       frame: 160, ease: 'none', onUpdate: () => setFrame(target.frame),
       scrollTrigger: { trigger: '.sticky-block-grid', start: 'top 20%', end: 'bottom top', scrub: true },
     });
+    // phone: slide from the left column (Funciones) to the center (Modo automático)
+    const phoneWrap = document.querySelector('.sticky-block-grid .section_middle-slider');
+    if (phoneWrap) {
+      gsap.fromTo(phoneWrap, { x: 0 }, {
+        x: () => {
+          const g = phoneWrap.parentElement.getBoundingClientRect();
+          const r = phoneWrap.getBoundingClientRect();
+          const curX = Number(gsap.getProperty(phoneWrap, 'x')) || 0;
+          return (g.left + g.width / 2) - ((r.left - curX) + r.width / 2);
+        },
+        ease: 'none',
+        scrollTrigger: { trigger: '#lottiee-section', start: 'top bottom', end: 'top top', scrub: true, invalidateOnRefresh: true },
+      });
+    }
     // PHASE 3: 160->200
     gsap.to(target, {
       frame: 200, ease: 'none', onUpdate: () => setFrame(target.frame),
