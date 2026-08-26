@@ -646,7 +646,7 @@ function startAllAnimations() {
     // position lerp origin -> target
     const finalPos = targetWorldPos();
     flipScaleGroup.position.x = lerp(0.0025, finalPos.x, arrival);
-    flipScaleGroup.position.y = lerp(isMobile() ? -0.006 : HERO_Y_OFFSET, finalPos.y, arrival); // mobile: sit over the wordmark
+    flipScaleGroup.position.y = lerp(isMobile() ? -0.0025 : HERO_Y_OFFSET, finalPos.y, arrival); // mobile: sit over the wordmark
 
     // rotation
     const rx = lerp(77, isMobile() ? 90 : 85, rotP) * DEG;
