@@ -286,3 +286,17 @@ input[type='file']:focus-visible {
   .w-nav-overlay .nav_menu, .nav_menu.w--nav-menu-open { padding-top: 6rem; min-height: 100vh; }
 }
 .w-nav-button.w--open, .w-nav-button:focus { background: transparent; box-shadow: none; outline: none; }
+
+/* pricing v2: five plans + enterprise strip */
+.pricing-grid.is-five { grid-template-columns: repeat(5, 1fr); gap: 1rem; }
+.pricing-grid.is-five .price-card { padding: 1.4rem 1.25rem; }
+.pricing-grid.is-five .price-amount { font-size: 2rem; }
+.pricing-grid.is-five .price-list { font-size: .88rem; gap: .4rem; }
+.price-card.is-free .price-cta { background: #fff; color: #0a0a0a; }
+.pricing-enterprise { z-index: 2; position: relative; display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; background: #0b0b0b; color: #fff; border: 1px solid #222; border-radius: 1rem; padding: 1.5rem 1.75rem; }
+.pricing-enterprise-title { font-family: Neuemachina, "Space Grotesk", Inter, sans-serif; font-weight: 600; font-size: 1.25rem; margin-top: .35rem; }
+.pricing-enterprise-text { color: #9a9a9a; margin-top: .25rem; font-size: .95rem; }
+.pricing-enterprise .price-cta { white-space: nowrap; padding: .9rem 1.5rem; }
+@media (max-width: 1200px) { .pricing-grid.is-five { grid-template-columns: repeat(3, 1fr); } }
+@media (max-width: 991px) { .pricing-grid.is-five { grid-template-columns: 1fr 1fr; } .pricing-enterprise { flex-direction: column; align-items: flex-start; } }
+@media (max-width: 600px) { .pricing-grid.is-five { grid-template-columns: 1fr; } }
