@@ -2,13 +2,12 @@
    hero3d.js — preloader + hero Three.js scene (rewritten)
    Reproduces the original heroScript behaviour: a weighted load
    registry driving the preloader counter and its staggered exit,
-   then the floating device model that flies from the hero into the
+   then the floating iPhone (procedural) that flies from the hero into the
    #target slot as you scroll, with mouse tilt, idle float, a full
    Z spin and a logo->terminal crossfade on its (canvas-drawn) screen.
    ============================================================ */
 import * as THREE from 'three';
-import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
-import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js';
+import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js';
 import { EXRLoader } from 'three/addons/loaders/EXRLoader.js';
 
 const gsap = window.gsap;
@@ -17,7 +16,6 @@ gsap.registerPlugin(ScrollTrigger);
 ScrollTrigger.config({ ignoreMobileResize: true, autoRefreshEvents: 'visibilitychange,DOMContentLoaded,load' });
 
 const ASSETS = 'assets';
-const MODEL_URL = `${ASSETS}/models/hero-device.glb`;
 const ENV_URL = `${ASSETS}/hdri/studio_small_08_1k.exr`;
 
 const DEG = Math.PI / 180;
@@ -203,66 +201,174 @@ function startAllAnimations() {
     scene.environmentIntensity = 0.408;
   });
 
-  // device screens: canvas-drawn textures (Comando logo / live terminal)
+  // device screens: WhatsApp-style chat drawn on canvas (operator commands -> Comando)
   const ACCENT = '#4d7cff';
+  const SCRIPTS = {
+    logo: [
+      { from: 'me',  text: 'pásale el deal de la constructora a Renzo' },
+      { from: 'bot', text: 'Listo ✓ Deal "Constructora Andina" reasignado a Renzo. Le avisé por WhatsApp.' },
+      { from: 'me',  text: 'si un lead de Facebook no es contactado en 10 min, avísame' },
+      { from: 'bot', text: 'Regla creada:\n• lead.created (Facebook)\n• sin contacto 10 min → te aviso\n¿La activo?' },
+      { from: 'me',  text: 'sí' },
+      { from: 'bot', text: '🟢 Activa. Te aviso al primer lead que se enfríe.' },
+    ],
+    term: [
+      { from: 'me',  text: 'dame el pipeline' },
+      { from: 'bot', text: 'Pipeline hoy\nNuevos 14 · Propuesta 6 · Negociación 3\n⚠️ 2 deals sin actividad hace 7 días' },
+      { from: 'me',  text: 'avísale al jefe si cae un deal de más de 20k, con la razón' },
+      { from: 'bot', text: 'Listo ✓ deal.lost ≥ $20,000 → notifica a Jefe con motivo de pérdida.' },
+      { from: 'me',  text: 'organiza mi lunes' },
+      { from: 'bot', text: 'Lunes:\n09:00 Demo · Inmobiliaria Sur\n11:30 Seguimiento · 4 leads fríos\n15:00 Renovación · Grupo Mesa' },
+    ],
+  };
+  // timeline: typing speed per char + pauses; returns [{...msg, tStart, tShown}]
+  function buildTimeline(script) {
+    let t = 900; const out = [];
+    for (const m of script) {
+      if (m.from === 'me') { const typing = 55 * m.text.length; out.push({ ...m, tStart: t, tShown: t + typing }); t += typing + 700; }
+      else { out.push({ ...m, tStart: t, tShown: t + 1100 }); t += 1100 + 1600; }
+    }
+    return { items: out, total: t + 2500 };
+  }
+  function wrapText(ctx, text, maxW) {
+    const lines = [];
+    for (const para of text.split('\n')) {
+      let line = '';
+      for (const w of para.split(' ')) {
+        const test = line ? line + ' ' + w : w;
+        if (ctx.measureText(test).width > maxW && line) { lines.push(line); line = w; } else line = test;
+      }
+      lines.push(line);
+    }
+    return lines;
+  }
+  function roundRect(ctx, x, y, w, h, r) { ctx.beginPath(); ctx.roundRect(x, y, w, h, r); }
+
   function makeScreen(kind) {
-    const c = document.createElement('canvas'); c.width = c.height = 1024;
+    const W = 720, H = 1476; // iPhone front glass (71.6 x 146.7 mm)
+    const c = document.createElement('canvas'); c.width = W; c.height = H;
     const ctx = c.getContext('2d');
     const tex = new THREE.CanvasTexture(c);
-    tex.flipY = false;
     tex.colorSpace = THREE.SRGBColorSpace;
-    tex.minFilter = THREE.LinearFilter;
-    tex.magFilter = THREE.LinearFilter;
+    tex.minFilter = THREE.LinearFilter; tex.magFilter = THREE.LinearFilter;
     tex.wrapS = tex.wrapT = THREE.ClampToEdgeWrapping;
-    const t0 = performance.now();
+    tex.anisotropy = 4;
+    const tl = buildTimeline(SCRIPTS[kind]);
     let active = false, last = 0;
-    const LINES = [
-      ['$', 'comando watch --tenant acme'],
-      ['>', 'lead.created     facebook   -> hubspot'],
-      ['>', 'dedupe           match 0    -> nuevo contacto'],
-      ['>', 'assign           round-robin -> ana.r'],
-      ['>', 'whatsapp         plantilla "bienvenida"  ok'],
-      ['>', 'deal.stage       propuesta  -> negociacion'],
-      ['>', 'deal.stale       7d sin actividad -> alerta'],
-      ['>', 'sync             zoho <-> hubspot   12 cambios'],
-      ['>', 'webhook          firmado    -> ecommerce ok'],
-    ];
-    function drawLogo(t) {
-      ctx.fillStyle = '#0a0a0a'; ctx.fillRect(0, 0, 1024, 1024);
-      const pulse = 0.85 + 0.15 * Math.sin(t / 600);
-      ctx.save(); ctx.translate(512, 512); ctx.scale(6 * pulse, 6 * pulse); ctx.translate(-32, -32);
-      ctx.strokeStyle = ACCENT; ctx.lineCap = 'round'; ctx.lineJoin = 'round';
-      ctx.shadowColor = ACCENT; ctx.shadowBlur = 4;
+    const start = { t0: performance.now() };
+    const SANS = 'Inter, -apple-system, "Neuehaasunicaw 1 G", Arial, sans-serif';
+    const PAD = 22;                   // bezel
+    const SR = 96;                    // screen corner radius
+    const HEADER_H = 190, INPUT_H = 120, SAFE_TOP = 62, SAFE_BOTTOM = 34;
+
+    function drawMark(x, y, size, color) {
+      ctx.save(); ctx.translate(x, y); ctx.scale(size / 64, size / 64);
+      ctx.strokeStyle = color; ctx.lineCap = 'round'; ctx.lineJoin = 'round';
       ctx.lineWidth = 5; ctx.beginPath(); ctx.roundRect(4, 4, 56, 56, 12); ctx.stroke();
       ctx.lineWidth = 6; ctx.beginPath(); ctx.moveTo(20, 22); ctx.lineTo(32, 32); ctx.lineTo(20, 42); ctx.stroke();
-      const blink = Math.floor(t / 500) % 2 === 0;
-      if (blink) { ctx.beginPath(); ctx.moveTo(34, 44); ctx.lineTo(46, 44); ctx.stroke(); }
-      ctx.restore();
-      ctx.fillStyle = '#ffffff'; ctx.font = '600 84px "Neuemachina", "Space Grotesk", Inter, sans-serif';
-      ctx.textAlign = 'center'; ctx.fillText('Comando', 512, 860);
+      ctx.beginPath(); ctx.moveTo(34, 44); ctx.lineTo(46, 44); ctx.stroke(); ctx.restore();
     }
-    function drawTerm(t) {
-      ctx.fillStyle = '#0a0a0a'; ctx.fillRect(0, 0, 1024, 1024);
-      ctx.font = '500 34px "Jetbrainsmono Variable", "JetBrains Mono", monospace'; ctx.textAlign = 'left';
-      const chars = Math.floor(t / 22); // typing speed
-      let budget = chars, y = 110;
-      for (const [p, txt] of LINES) {
-        if (budget <= 0) break;
-        const shown = txt.slice(0, budget); budget -= txt.length + 6;
-        ctx.fillStyle = ACCENT; ctx.fillText(p, 60, y);
-        ctx.fillStyle = '#e6e6e6'; ctx.fillText(shown, 110, y);
-        y += 62;
+
+    function draw(t) {
+      const now = t % tl.total;
+      // glass + bezel
+      ctx.fillStyle = '#000'; ctx.fillRect(0, 0, W, H);
+      ctx.save(); roundRect(ctx, PAD, PAD, W - PAD * 2, H - PAD * 2, SR); ctx.clip();
+      // chat wallpaper
+      ctx.fillStyle = '#0b141a'; ctx.fillRect(0, 0, W, H);
+      ctx.fillStyle = 'rgba(255,255,255,0.025)';
+      for (let y = 0; y < H; y += 46) for (let x = (y / 46 % 2) * 23; x < W; x += 46) { ctx.beginPath(); ctx.arc(x, y, 3, 0, 6.29); ctx.fill(); }
+
+      // ---- messages (bottom-anchored, scrolls up) ----
+      const maxBubbleW = W * 0.72, bodyFont = `400 30px ${SANS}`;
+      ctx.font = bodyFont;
+      const bubbles = [];
+      for (const m of tl.items) {
+        if (now < m.tShown) break;
+        const lines = wrapText(ctx, m.text, maxBubbleW - 40);
+        const wText = Math.max(...lines.map((l) => ctx.measureText(l).width));
+        const w = Math.min(maxBubbleW, wText + 40 + (m.from === 'me' ? 70 : 0) + 30);
+        const hgt = lines.length * 38 + 42;
+        const age = Math.min(1, (now - m.tShown) / 260);
+        bubbles.push({ m, lines, w, h: hgt, age });
       }
-      if (budget > 0 || Math.floor(t / 400) % 2 === 0) { ctx.fillStyle = ACCENT; ctx.fillRect(60, y - 30, 18, 38); }
-      if (budget > 0 && (t % 9000) > 8000) { start.t0 = performance.now(); }
+      // typing indicator for bot
+      const pendingBot = tl.items.find((m) => m.from === 'bot' && now >= m.tStart && now < m.tShown);
+      const listBottom = H - PAD - SAFE_BOTTOM - INPUT_H - 16;
+      let y = listBottom;
+      if (pendingBot) y -= 74;
+      const positions = [];
+      for (let i = bubbles.length - 1; i >= 0; i--) { y -= bubbles[i].h; positions[i] = y; y -= 14; }
+      const listTop = PAD + HEADER_H + 20;
+      ctx.save(); roundRect(ctx, PAD, listTop, W - PAD * 2, listBottom - listTop); ctx.clip();
+      bubbles.forEach((b, i) => {
+        const by = positions[i] + (1 - b.age) * 18;
+        if (by + b.h < listTop) return;
+        ctx.globalAlpha = b.age;
+        const me = b.m.from === 'me';
+        const bx = me ? W - PAD - 24 - b.w : PAD + 24;
+        ctx.fillStyle = me ? '#005c4b' : '#202c33';
+        roundRect(ctx, bx, by, b.w, b.h, 18); ctx.fill();
+        ctx.fillStyle = '#e9edef'; ctx.font = bodyFont; ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
+        b.lines.forEach((l, k) => ctx.fillText(l, bx + 20, by + 38 + k * 38));
+        ctx.font = `400 20px ${SANS}`; ctx.fillStyle = 'rgba(233,237,239,0.6)';
+        const stamp = '09:4' + (i % 10);
+        ctx.textAlign = 'right'; ctx.fillText(stamp, bx + b.w - (me ? 46 : 16), by + b.h - 14);
+        if (me) { ctx.fillStyle = '#53bdeb'; ctx.font = `600 20px ${SANS}`; ctx.fillText('✓✓', bx + b.w - 14, by + b.h - 14); }
+        ctx.globalAlpha = 1;
+      });
+      if (pendingBot) {
+        const by = listBottom - 62, bx = PAD + 24;
+        ctx.fillStyle = '#202c33'; roundRect(ctx, bx, by, 110, 58, 18); ctx.fill();
+        for (let k = 0; k < 3; k++) { const ph = (now / 220 + k * 0.9) % 3; ctx.fillStyle = `rgba(233,237,239,${0.35 + 0.5 * Math.max(0, Math.sin(ph))})`; ctx.beginPath(); ctx.arc(bx + 30 + k * 25, by + 30, 7, 0, 6.29); ctx.fill(); }
+      }
+      ctx.restore();
+
+      // ---- header ----
+      ctx.fillStyle = '#1f2c34'; ctx.fillRect(PAD, PAD, W - PAD * 2, HEADER_H);
+      ctx.fillStyle = '#e9edef'; ctx.font = `600 26px ${SANS}`; ctx.textAlign = 'left'; ctx.fillText('9:41', PAD + 48, PAD + SAFE_TOP - 8);
+      ctx.textAlign = 'right'; ctx.font = `600 22px ${SANS}`; ctx.fillText('●●●  ▲  ▮', W - PAD - 40, PAD + SAFE_TOP - 8);
+      const hy = PAD + SAFE_TOP + 64;
+      ctx.strokeStyle = '#8696a0'; ctx.lineWidth = 4; ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(PAD + 54, hy - 16); ctx.lineTo(PAD + 38, hy); ctx.lineTo(PAD + 54, hy + 16); ctx.stroke();
+      ctx.fillStyle = '#111b21'; ctx.beginPath(); ctx.arc(PAD + 118, hy, 40, 0, 6.29); ctx.fill();
+      drawMark(PAD + 92, hy - 26, 52, ACCENT);
+      ctx.fillStyle = '#e9edef'; ctx.font = `600 32px ${SANS}`; ctx.textAlign = 'left'; ctx.fillText('Comando', PAD + 180, hy - 2);
+      ctx.fillStyle = '#8696a0'; ctx.font = `400 22px ${SANS}`;
+      ctx.fillText(pendingBot ? 'escribiendo…' : 'en línea', PAD + 180, hy + 30);
+      ctx.fillStyle = '#8696a0'; ctx.font = `400 30px ${SANS}`; ctx.textAlign = 'right'; ctx.fillText('⋮', W - PAD - 34, hy + 12);
+      // dynamic island
+      ctx.fillStyle = '#000'; roundRect(ctx, W / 2 - 92, PAD + 16, 184, 52, 26); ctx.fill();
+
+      // ---- input bar (typing simulation) ----
+      const typingMe = tl.items.find((m) => m.from === 'me' && now >= m.tStart && now < m.tShown);
+      const iy = H - PAD - SAFE_BOTTOM - INPUT_H;
+      ctx.fillStyle = '#1f2c34'; ctx.fillRect(PAD, iy, W - PAD * 2, INPUT_H + SAFE_BOTTOM);
+      ctx.fillStyle = '#2a3942'; roundRect(ctx, PAD + 24, iy + 22, W - PAD * 2 - 140, 72, 36); ctx.fill();
+      ctx.textAlign = 'left'; ctx.font = `400 28px ${SANS}`;
+      if (typingMe) {
+        const n = Math.floor((now - typingMe.tStart) / 55);
+        let shown = typingMe.text.slice(0, n);
+        const maxW = W - PAD * 2 - 220;
+        while (ctx.measureText(shown).width > maxW && shown.length) shown = shown.slice(1);
+        ctx.fillStyle = '#e9edef'; ctx.fillText(shown, PAD + 52, iy + 68);
+        if (Math.floor(now / 450) % 2 === 0) { const cx = PAD + 54 + ctx.measureText(shown).width; ctx.fillRect(cx, iy + 40, 3, 36); }
+      } else { ctx.fillStyle = '#8696a0'; ctx.fillText('Escribe un comando…', PAD + 52, iy + 68); }
+      ctx.fillStyle = '#00a884'; ctx.beginPath(); ctx.arc(W - PAD - 64, iy + 58, 36, 0, 6.29); ctx.fill();
+      ctx.fillStyle = '#fff'; ctx.beginPath();
+      if (typingMe) { ctx.moveTo(W - PAD - 76, iy + 44); ctx.lineTo(W - PAD - 46, iy + 58); ctx.lineTo(W - PAD - 76, iy + 72); ctx.lineTo(W - PAD - 70, iy + 58); }
+      else { ctx.roundRect(W - PAD - 72, iy + 40, 16, 26, 8); ctx.rect(W - PAD - 66, iy + 66, 4, 10); }
+      ctx.fill();
+      // home indicator
+      ctx.fillStyle = 'rgba(233,237,239,0.9)'; roundRect(ctx, W / 2 - 70, H - PAD - 22, 140, 8, 4); ctx.fill();
+      ctx.restore();
     }
-    const start = { t0 };
+
     function tick(now) {
-      if (active && now - last > 33) { last = now; (kind === 'logo' ? drawLogo : drawTerm)(now - start.t0); tex.needsUpdate = true; }
+      if (active && now - last > 33) { last = now; draw(now - start.t0); tex.needsUpdate = true; }
       requestAnimationFrame(tick);
     }
     requestAnimationFrame(tick);
-    (kind === 'logo' ? drawLogo : drawTerm)(0); tex.needsUpdate = true;
+    draw(0); tex.needsUpdate = true;
     // video-like facade so the rest of the scene code stays unchanged
     const v = { play() { active = true; return Promise.resolve(); }, pause() { active = false; }, set currentTime(x) { start.t0 = performance.now() - x * 1000; }, get currentTime() { return (performance.now() - start.t0) / 1000; } };
     return { v, tex };
@@ -275,65 +381,72 @@ function startAllAnimations() {
   let screenMat = null, screenMatB = null;
   let targetScale = 1;
 
-  // model load with meshopt + weighted progress
-  const loader = new GLTFLoader();
-  loader.setMeshoptDecoder(MeshoptDecoder);
-  loader.load(MODEL_URL, (gltf) => {
-    setTask('model', 1);
-    model = gltf.scene;
+  // procedural iPhone (mm). Lies flat: width X, length Z (top at -Z), thickness Y, screen facing +Y
+  // (same orientation convention as the original GLB, so the rotation choreography is unchanged).
+  function buildPhone() {
+    const W = 71.6, L = 146.7, T = 7.8, R = 11.5;
+    const g = new THREE.Group();
+    const frameMat = new THREE.MeshStandardMaterial({ color: 0x4a4a4d, metalness: 0.95, roughness: 0.32 });
+    const backMat = new THREE.MeshStandardMaterial({ color: 0x1c1c1e, metalness: 0.2, roughness: 0.55 });
+    const glassMat = new THREE.MeshStandardMaterial({ color: 0x050505, metalness: 0.1, roughness: 0.15 });
 
-    // material override + find screen mesh
-    let best = null, bestScore = -Infinity;
-    model.traverse((o) => {
-      if (!o.isMesh) return;
-      const m = o.material;
-      if (m && 'metalness' in m) { m.metalness = 0.053; m.roughness = 0.275; m.envMapIntensity = 0.42; }
-      // brand: recolor the legacy green button/LED materials to the Comando accent
-      if (m && m.color) { const {r,g,b} = m.color; if (g > 0.35 && g > r * 1.6 && g > b * 1.6) { m.color.setHex(0x4d7cff); if (m.emissive) m.emissive.setHex(0x1a3fbf); } }
-      // planarity heuristic for the screen
-      o.geometry.computeBoundingBox();
-      const s = new THREE.Vector3(); o.geometry.boundingBox.getSize(s);
-      const dims = [s.x, s.y, s.z].sort((a, b) => a - b);
-      const planarity = dims[0] / (dims[2] || 1);
-      let area = dims[1] * dims[2];
-      const name = ((o.name || '') + ' ' + (m && m.name || '')).toLowerCase();
-      if (/screen|display|appearance-13|part 2/.test(name)) area *= 1.2;
-      if (planarity <= 0.06) { if (area > bestScore) { bestScore = area; best = o; } }
+    // body: rounded rectangle extruded along thickness with bevel
+    const shape = new THREE.Shape();
+    const hw = W / 2, hl = L / 2;
+    shape.moveTo(-hw + R, -hl);
+    shape.lineTo(hw - R, -hl); shape.quadraticCurveTo(hw, -hl, hw, -hl + R);
+    shape.lineTo(hw, hl - R); shape.quadraticCurveTo(hw, hl, hw - R, hl);
+    shape.lineTo(-hw + R, hl); shape.quadraticCurveTo(-hw, hl, -hw, hl - R);
+    shape.lineTo(-hw, -hl + R); shape.quadraticCurveTo(-hw, -hl, -hw + R, -hl);
+    const bevel = 1.1;
+    const bodyGeo = new THREE.ExtrudeGeometry(shape, { depth: T - bevel * 2, bevelEnabled: true, bevelThickness: bevel, bevelSize: bevel, bevelSegments: 4, curveSegments: 24 });
+    const body = new THREE.Mesh(bodyGeo, frameMat);
+    body.rotation.x = -Math.PI / 2; // extrusion +Z -> +Y ; shape +Y -> -Z (top of phone)
+    body.position.y = bevel;
+    g.add(body);
+
+    // back glass (slightly inset, matte dark)
+    const backGeo = new THREE.ExtrudeGeometry(shape, { depth: 0.3, bevelEnabled: false, curveSegments: 24 });
+    const back = new THREE.Mesh(backGeo, backMat);
+    back.rotation.x = -Math.PI / 2; back.position.y = -0.05; back.scale.set(0.985, 0.99, 1);
+    g.add(back);
+
+    // camera module (back, top-left) + 3 lenses + flash
+    const camMod = new THREE.Mesh(new RoundedBoxGeometry(34, 2.2, 36, 4, 6), frameMat);
+    camMod.position.set(-hw + 21, -1.0, -hl + 22);
+    g.add(camMod);
+    const lensMat = new THREE.MeshStandardMaterial({ color: 0x0a0a12, metalness: 0.6, roughness: 0.2 });
+    const ringMat = new THREE.MeshStandardMaterial({ color: 0x6a6a6e, metalness: 1, roughness: 0.25 });
+    [[-7, -7], [-7, 8], [8, 0.5]].forEach(([dx, dz]) => {
+      const ring = new THREE.Mesh(new THREE.CylinderGeometry(6.2, 6.2, 1.4, 32), ringMat);
+      ring.position.set(camMod.position.x + dx, -2.4, camMod.position.z + dz); g.add(ring);
+      const lens = new THREE.Mesh(new THREE.CylinderGeometry(4.6, 4.6, 0.6, 32), lensMat);
+      lens.position.set(ring.position.x, -3.2, ring.position.z); g.add(lens);
     });
+    const flash = new THREE.Mesh(new THREE.CylinderGeometry(2, 2, 0.4, 20), new THREE.MeshStandardMaterial({ color: 0xfff3c4, emissive: 0x443300, roughness: 0.6 }));
+    flash.position.set(camMod.position.x + 10, -2.3, camMod.position.z - 10); g.add(flash);
 
-    if (best) {
-      const emo = isMobile()
-        ? new THREE.MeshBasicMaterial({ map: heroVid.tex, side: THREE.FrontSide })
-        : new THREE.MeshStandardMaterial({
-            map: heroVid.tex, emissive: 0xffffff, emissiveMap: heroVid.tex, emissiveIntensity: 1.6,
-            roughness: 1, metalness: 0, envMapIntensity: 0, toneMapped: false,
-            transparent: true, side: THREE.DoubleSide,
-          });
-      screenMat = emo;
-      best.material = emo;
-      best.renderOrder = 30;
-    }
+    // side buttons (right: power; left: action + volume)
+    const btn = (len, x, z) => { const m = new THREE.Mesh(new RoundedBoxGeometry(1.4, 3.2, len, 2, 0.6), frameMat); m.position.set(x, T / 2, z); g.add(m); };
+    btn(20, hw + 0.4, -hl + 46);
+    btn(8, -hw - 0.4, -hl + 36); btn(14, -hw - 0.4, -hl + 54); btn(14, -hw - 0.4, -hl + 72);
 
-    modelHolder = new THREE.Group();
-    modelHolder.add(model);
-    finalOffsetGroup.add(modelHolder);
-    computeScale();
-    modelHolder.rotation.set(77 * DEG, -11 * DEG, 16 * DEG);
-    modelHolder.visible = false; // stay hidden until the entrance zoom starts (no flash)
-    renderer.compile(scene, camera);
-    renderer.render(scene, camera);
-  }, (ev) => {
-    if (ev.total) setTask('model', ev.loaded / ev.total);
-  }, () => setTask('model', 1));
+    // front glass (screen): plane on the +Y face, texture already includes bezel + dynamic island
+    const screen = new THREE.Mesh(new THREE.PlaneGeometry(W - 1.6, L - 1.6), glassMat);
+    screen.rotation.x = -Math.PI / 2; // faces +Y; plane +Y -> -Z (top)
+    screen.position.y = T + 0.06;
+    g.add(screen);
+    return { group: g, screen };
+  }
 
   // Fraction of the visible frame the device should occupy in the hero.
-  const HERO_FILL_DESKTOP = 0.40;
-  const HERO_FILL_MOBILE = 0.5;
+  const HERO_FILL_DESKTOP = 0.52;
+  const HERO_FILL_MOBILE = 0.62;
   const HERO_Y_OFFSET = 0.004; // lift the device slightly above center at rest
   // Visual size ratio between the device when it lands in #target (About) and
   // in the hero. The original grows an internally tiny base scale by 2.47; our
   // base scale is already calibrated to the hero, so we use the net visual ratio.
-  const ARRIVAL_SCALE = 0.7;
+  const ARRIVAL_SCALE = 0.92;
   function computeScale() {
     if (!model || !modelHolder) return;
     // measure the model unrotated/unscaled and center its geometry in the holder
@@ -350,9 +463,38 @@ function startAllAnimations() {
     const visW = visH * camera.aspect;
     const fill = isMobile() ? HERO_FILL_MOBILE : HERO_FILL_DESKTOP;
     // scale so the model's largest footprint fills `fill` of the frame
-    const maxXY = Math.max(size.x, size.y);
-    targetScale = (Math.min(visW, visH) * fill) / maxXY;
+    const maxDim = Math.max(size.x, size.y, size.z);
+    targetScale = (Math.min(visW, visH) * fill) / maxDim;
     modelHolder.scale.setScalar(targetScale);
+  }
+
+  {
+    const built = buildPhone();
+    setTask('model', 1);
+    model = built.group;
+    const best = built.screen;
+
+    if (best) {
+      const emo = isMobile()
+        ? new THREE.MeshBasicMaterial({ map: heroVid.tex, side: THREE.FrontSide })
+        : new THREE.MeshStandardMaterial({
+            map: heroVid.tex, emissive: 0xffffff, emissiveMap: heroVid.tex, emissiveIntensity: 1.25,
+            roughness: 0.35, metalness: 0, envMapIntensity: 0.15, toneMapped: false,
+            side: THREE.FrontSide,
+          });
+      screenMat = emo;
+      best.material = emo;
+      best.renderOrder = 30;
+    }
+
+    modelHolder = new THREE.Group();
+    modelHolder.add(model);
+    finalOffsetGroup.add(modelHolder);
+    computeScale();
+    modelHolder.rotation.set(77 * DEG, -11 * DEG, 16 * DEG);
+    modelHolder.visible = false; // stay hidden until the entrance zoom starts (no flash)
+    renderer.compile(scene, camera);
+    renderer.render(scene, camera);
   }
 
   // material apply for screen video swap

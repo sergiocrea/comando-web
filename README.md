@@ -23,7 +23,7 @@ Debe servirse por HTTP (no abrir el `index.html` con `file://`), porque usa mód
 
 ## Assets (`assets/`)
 
-- `models/` — `hero-device.glb` (héroe) y `explode-device.glb` (vista explosionada).
+- `models/` — `explode-device.glb` (vista explosionada, comprimido con meshopt). El dispositivo del héroe ya no es un `.glb`: es un iPhone procedural construido en Three.js (`buildPhone()` en `js/hero3d.js`).
 - `hdri/` — `studio_small_08_1k.exr` (iluminación de la escena).
 - `lottie/line.json` — animación de línea (recoloreada a la paleta Comando).
 - `img/` — `comando-mark.svg` / `comando-logo.svg` (marca), favicon/webclip/og generados, íconos de features, marcos/fondos.
@@ -33,11 +33,11 @@ Debe servirse por HTTP (no abrir el `index.html` con `file://`), porque usa mód
 
 ## Pantallas dibujadas en canvas (sin video)
 
-- `js/hero3d.js` — la pantalla del dispositivo 3D usa `CanvasTexture`s (logo Comando → terminal animada) con una fachada tipo `<video>` para el crossfade por scroll.
+- `js/hero3d.js` — la pantalla del iPhone es un chat de WhatsApp (modo oscuro) dibujado en `CanvasTexture`: el operador tipea comandos en lenguaje natural (tomados de `comando-pro/docs/research/command-training-dataset`) y Comando responde. Dos guiones (`SCRIPTS.logo` en el hero, `SCRIPTS.term` al aterrizar en Producto) con fachada tipo `<video>` para el crossfade por scroll.
 - `js/screens.js` — `window.drawFeatureScreen(ctx, w, h, frame)` dibuja la UI de features por frame (0–680 @30fps: boot → log de eventos → pipeline de automatización → sync CRM). `main.js` lo scrubbea por scroll en `#scroll-video` y los `<canvas class="screen-loop">` (bloques responsive) lo reproducen en loop.
 
 ## Pendientes de marca
 
-- Los dos modelos `.glb` (hero y explode) siguen siendo el hardware del sitio original (solo se recoloreó el botón verde al acento). Reemplazarlos por un dispositivo/visual propio.
+- El modelo `.glb` de la vista explosionada sigue siendo el hardware del sitio original (solo se recoloreó el botón verde al acento). Reemplazarlo por un visual propio.
 - Links de redes del footer apuntan a `https://comando.pro`; el botón de acceso a `https://app.comando.pro`. Ajustar handles reales.
 - `og:image` es ruta relativa; ponerla absoluta al desplegar.
