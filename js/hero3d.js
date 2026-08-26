@@ -154,7 +154,7 @@ function startAllAnimations() {
   const camera = new THREE.PerspectiveCamera(13, window.innerWidth / window.innerHeight, 0.1, 1000);
   const CAM_Z = 0.25;
 
-  const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+  const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, logarithmicDepthBuffer: true });
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.setClearColor(0x000000, 0);
@@ -473,7 +473,7 @@ function startAllAnimations() {
     // front glass (screen): plane on the +Y face, texture already includes bezel + dynamic island
     const screen = new THREE.Mesh(new THREE.PlaneGeometry(W - 3.4, L - 3.4), glassMat);
     screen.rotation.x = -Math.PI / 2; // faces +Y; plane +Y -> -Z (top)
-    screen.position.y = T + 0.06;
+    screen.position.y = T + 0.4; // clear gap over the cap: avoids z-fighting on mobile GPUs
     g.add(screen);
     // floating bubble layer: wider than the phone, a few mm above the glass, transparent
     const overlay = new THREE.Mesh(new THREE.PlaneGeometry((W - 3.4) * OVERLAY_RATIO, L - 3.4),
@@ -487,7 +487,7 @@ function startAllAnimations() {
 
   // Fraction of the visible frame the device should occupy in the hero.
   const HERO_FILL_DESKTOP = 0.72;
-  const HERO_FILL_MOBILE = 0.56;
+  const HERO_FILL_MOBILE = 0.68;
   const HERO_Y_OFFSET = 0.004; // lift the device slightly above center at rest
   // Visual size ratio between the device when it lands in #target (About) and
   // in the hero. The original grows an internally tiny base scale by 2.47; our
@@ -524,11 +524,11 @@ function startAllAnimations() {
 
     if (best) {
       const emo = isMobile()
-        ? new THREE.MeshBasicMaterial({ map: heroVid.tex, side: THREE.FrontSide, transparent: true })
+        ? new THREE.MeshBasicMaterial({ map: heroVid.tex, side: THREE.FrontSide, transparent: true, polygonOffset: true, polygonOffsetFactor: -2, polygonOffsetUnits: -2 })
         : new THREE.MeshStandardMaterial({
             map: heroVid.tex, emissive: 0xffffff, emissiveMap: heroVid.tex, emissiveIntensity: 1.25,
             roughness: 0.35, metalness: 0, envMapIntensity: 0.15, toneMapped: false,
-            side: THREE.FrontSide, transparent: true,
+            side: THREE.FrontSide, transparent: true, polygonOffset: true, polygonOffsetFactor: -2, polygonOffsetUnits: -2,
           });
       screenMat = emo;
       best.material = emo;
