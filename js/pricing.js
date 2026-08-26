@@ -5,9 +5,9 @@
    ============================================================ */
 const PRICING_CONFIG = {
   billing: { annualFreeMonths: 2 },          // anual = precio mensual × 10 / 12
-  featuredPlan: 'pro',
+  featuredPlan: 'starter',
   cta: { trialBase: 'https://app.comando.pro/registro', trialLabel: 'Elegir plan', freeLabel: 'Empezar gratis', enterpriseHref: '#pricing-form', enterpriseLabel: 'Habla con ventas' },
-  title: 'Precios simples. Desde $3 al mes.',
+  title: 'Desde $3 al mes.',
   subtitle: 'Vendedores ilimitados. Paga según el tamaño de tu CRM. Empieza gratis con 50 comandos, sin tarjeta.',
   // Cada plan muestra solo 4 líneas: contactos, comandos, vendedores y un diferencial.
   plans: [
@@ -15,9 +15,8 @@ const PRICING_CONFIG = {
     { id: 'basico',   name: 'Básico',   price: 3,  contacts: 1000,  commands: 300,   highlight: '1 CRM conectado' },
     { id: 'starter',  name: 'Starter',  price: 6,  contacts: 5000,  commands: 1000,  highlight: 'Automatizaciones ilimitadas' },
     { id: 'pro',      name: 'Pro',      price: 19, contacts: 20000, commands: 4000,  highlight: 'Hasta 3 CRM + ecommerce · soporte por WhatsApp' },
-    { id: 'business', name: 'Business', price: 49, contacts: 50000, commands: 10000, highlight: 'CRM ilimitados · onboarding incluido' },
   ],
-  enterpriseLine: '¿Más de 50 000 contactos, varios países o requisitos especiales?',
+  enterpriseLine: '¿Más de 20 000 contactos, varios países o requisitos especiales?',
   commandNote: 'Un comando es cada pedido que le haces a Comando por WhatsApp, por texto o por audio. Las confirmaciones y las respuestas no cuentan.',
   addons: [
     { label: '+1 000 contactos', price: 1 },
@@ -101,15 +100,10 @@ const PRICING_CONFIG = {
       </div>`;
   }
   function renderMore() {
-    const cmp = C.comparison;
     return `<section class="pricing-more" aria-label="Detalles de precios">
       <div class="padding-global"><div class="container-large">
         <div class="pm-block"><h3 class="pm-title">Todos los planes incluyen</h3>
           <ul class="pm-includes">${C.includes.map((i) => `<li>${esc(i)}</li>`).join('')}</ul></div>
-        <div class="pm-block"><h3 class="pm-title">${esc(cmp.title)}</h3><p class="pm-intro">${esc(cmp.intro)}</p>
-          <div class="pm-table-wrap"><table class="pm-table"><thead><tr><th scope="col">Contactos</th><th scope="col">HubSpot (referencia)</th><th scope="col">Comando</th></tr></thead>
-          <tbody>${cmp.rows.map((r) => `<tr><td>${esc(r.contacts)}</td><td>${esc(r.hubspot)}</td><td class="pm-strong">${esc(r.comando)}</td></tr>`).join('')}</tbody></table></div>
-          <p class="pm-message">${esc(cmp.message)}</p><p class="pm-footnote">${esc(cmp.footnote)}</p></div>
         <div class="pm-block"><h3 class="pm-title">Preguntas frecuentes</h3>
           <div class="pm-faq">${C.faq.map((f) => `<details class="pm-faq-item"><summary>${esc(f.q)}</summary><div class="pm-faq-a">${esc(f.a)}</div></details>`).join('')}</div></div>
         <div class="pm-strip"><div class="pm-strip-text">${esc(C.finalStrip.text)}</div><a href="${C.finalStrip.href}" class="price-cta">${esc(C.finalStrip.cta)}</a></div>

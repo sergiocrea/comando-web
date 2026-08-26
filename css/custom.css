@@ -492,3 +492,18 @@ body.sheet-open { overflow: hidden; }
 #scope-2.home_defence-component { width: 100vw; margin-left: calc(50% - 50vw); }
 .sticky-block-grid { padding-left: max(1.88rem, calc((100vw - 90rem) / 2 + 1.88rem)); }
 @media (max-width: 767px) { .section_home-features .padding-global { padding-left: 1.25rem; padding-right: 1.25rem; } }
+
+/* ===== Producto as the hero (video background, phone in its slot) ===== */
+#about.is-hero { min-height: 100svh; margin-bottom: 0; position: relative; overflow: hidden; }
+#about.is-hero > .hero-video { position: absolute; inset: 0; z-index: 0; }
+#about.is-hero .section_about-component { position: relative; z-index: 1; min-height: 100svh; padding-top: 6rem; }
+#about.is-hero .section_about-eyebrow { color: #4d7cff; }
+/* nav: static name next to the mark (no wordmark morph any more) */
+.nav_brand-name { display: inline; }
+#nav-logo-destination { display: none !important; }
+@media (max-width: 767px) { #about.is-hero .section_about-component { padding-top: 5rem; } }
+/* nav: room between the brand and the links; 4 pricing columns */
+@media (min-width: 992px) { .nav_brand { margin-right: 3rem; } .nav_brand-name { font-size: 1.25rem; } }
+.pricing-grid.is-five { grid-template-columns: repeat(4, 1fr); }
+@media (max-width: 1200px) and (min-width: 992px) { .pricing-grid.is-five { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 767px) { #about.is-hero .section_about-component { padding-top: 6.5rem; } }

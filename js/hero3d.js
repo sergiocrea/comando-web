@@ -575,6 +575,7 @@ function startAllAnimations() {
   const SCRUB = isMobile() ? 0.45 : 1.5;
 
   function initTriggers() {
+    if (!document.getElementById('hero')) { ScrollTrigger.refresh(); return; } // no hero section: the phone lives in #target
     gsap.to(scrollState, { progress: 1, ease: 'none', scrollTrigger: {
       trigger: '#hero', start: 'top top', endTrigger: '#target', end: 'top bottom', scrub: 1.5 } });
     gsap.to([document.querySelector('.logo-outline'), document.querySelector('.canvas-wrap')].filter(Boolean),
@@ -643,11 +644,12 @@ function startAllAnimations() {
 
     if (!model || !started) { renderer.render(scene, camera); return; }
 
-    const t = scrollState.progress;
-    const rotP = isMobile() ? clamp(mobileState.progress * 1.35, 0, 1) : rotationState.progress;
-    const arrival = isMobile()
+    const NO_HERO = !document.getElementById('hero');
+    const t = NO_HERO ? 1 : scrollState.progress;
+    const rotP = NO_HERO ? 1 : (isMobile() ? clamp(mobileState.progress * 1.35, 0, 1) : rotationState.progress);
+    const arrival = NO_HERO ? 1 : (isMobile()
       ? smoothstep(clamp(mobileState.progress * 2.4, 0, 1), 0, 1)
-      : moveState.progress * clamp((t - 0.5) / 0.5, 0, 1);
+      : moveState.progress * clamp((t - 0.5) / 0.5, 0, 1));
 
     // tilt + float (desktop only)
     const strength = 1 - smoothstep(t, 0.02, 0.16);
