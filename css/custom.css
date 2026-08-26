@@ -435,7 +435,7 @@ input[type='file']:focus-visible {
   .home_features-card::after { content: "+"; position: absolute; top: .35rem; right: .5rem; color: #4d7cff; font-family: "Jetbrainsmono Variable", monospace; font-size: .95rem; }
 }
 @media (max-width: 767px) {
-  .section_about-left .canvas-target-block { width: 70vw; max-width: 70vw; aspect-ratio: 2 / 3; }
+  .section_about-left .canvas-target-block { width: 64vw !important; max-width: 64vw !important; height: auto !important; aspect-ratio: 1 / 2 !important; }
   #scope-1 .section_middle-slider, #lottiee-section .section_middle-slider { width: 58% !important; }
 }
 
@@ -482,3 +482,13 @@ body.sheet-open { overflow: hidden; }
 }
 /* mobile hero: no big wordmark behind the phone */
 @media (max-width: 991px) { #hero-logo-large-to-move { visibility: hidden; } }
+
+/* Funciones + Modo automático: no clipped container — full-bleed so the video takes 100% */
+.section_home-features { padding-left: 0; padding-right: 0; background-image: none; }
+.section_clip-path-wrap { clip-path: none !important; border-radius: 0 !important; padding-top: 5rem; }
+.stroke-wrap { background-color: #060606; }
+.features-bg, .features-bg-mob, .features-bg-mobile, .stroke-line { display: none !important; }
+.section_home-features .padding-global { padding-left: 1.88rem; padding-right: 1.88rem; }
+#scope-2.home_defence-component { width: 100vw; margin-left: calc(50% - 50vw); }
+.sticky-block-grid { padding-left: max(1.88rem, calc((100vw - 90rem) / 2 + 1.88rem)); }
+@media (max-width: 767px) { .section_home-features .padding-global { padding-left: 1.25rem; padding-right: 1.25rem; } }

@@ -619,7 +619,8 @@ function startAllAnimations() {
     const r = el.getBoundingClientRect();
     const visH = 2 * Math.tan((13 * DEG) / 2) * CAM_Z;
     // fill ~80% of the slot, but never more than 58% of the viewport height
-    const px = Math.min(r.height * 0.8, window.innerHeight * 0.58);
+    let px = Math.min(r.height * 0.8, window.innerHeight * 0.58);
+    if (isMobile()) px = Math.max(px, window.innerWidth * 1.25); // mobile: ~60% of the width, like the other phones
     const slotWorld = (px / window.innerHeight) * visH;
     return clamp(slotWorld / (modelLenWorld * targetScale), 0.5, 3);
   }
