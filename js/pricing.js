@@ -122,12 +122,8 @@ const PRICING_CONFIG = {
     root.querySelectorAll('.pt-btn').forEach((b) => b.addEventListener('click', () => {
       state[b.dataset.set] = b.dataset.val === '1'; mount();
     }));
-    // mobile: center the featured card in the carousel
-    const grid = document.getElementById('pricing-cards');
-    const feat = grid && grid.querySelector('.is-featured');
-    if (grid && feat && window.innerWidth < 992) {
-      requestAnimationFrame(() => { grid.scrollLeft = feat.offsetLeft - (grid.clientWidth - feat.clientWidth) / 2; });
-    }
+    // mobile carousel starts at the first card (Gratis)
+    const grid = document.getElementById('pricing-cards'); if (grid) grid.scrollLeft = 0;
     if (typeof ScrollTrigger !== 'undefined') ScrollTrigger.refresh();
   }
   const more = document.getElementById('pricing-more');

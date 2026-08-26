@@ -163,17 +163,29 @@
   }
 })();
 
-/* mobile: connector cards show only the logo + name; tap to reveal the description */
+/* mobile: connector cards show only the logo + name; tap opens a floating sheet with the description */
 (function () {
   const mq = window.matchMedia('(max-width: 767px)');
-  document.querySelectorAll('.home_features-card').forEach((card) => {
-    card.addEventListener('click', (e) => {
-      if (!mq.matches) return;
-      if (e.target.closest('a')) return;
-      const open = card.classList.toggle('is-open');
-      card.setAttribute('aria-expanded', open ? 'true' : 'false');
-    });
-    card.setAttribute('role', 'button'); card.setAttribute('tabindex', '0'); card.setAttribute('aria-expanded', 'false');
-    card.addEventListener('keydown', (e) => { if ((e.key === 'Enter' || e.key === ' ') && mq.matches) { e.preventDefault(); card.click(); } });
+  const cards = document.querySelectorAll('.home_features-card');
+  if (!cards.length) return;
+  const sheet = document.createElement('div');
+  sheet.className = 'connector-sheet'; sheet.setAttribute('role', 'dialog'); sheet.setAttribute('aria-modal', 'true'); sheet.hidden = true;
+  sheet.innerHTML = '<div class="connector-sheet-backdrop" data-close></div><div class="connector-sheet-panel"><button type="button" class="connector-sheet-close" aria-label="Cerrar" data-close>×</button><img class="connector-sheet-logo" alt=""/><div class="connector-sheet-name"></div><div class="connector-sheet-desc"></div></div>';
+  document.body.appendChild(sheet);
+  const logo = sheet.querySelector('.connector-sheet-logo'), name = sheet.querySelector('.connector-sheet-name'), desc = sheet.querySelector('.connector-sheet-desc');
+  let last = null;
+  const close = () => { sheet.classList.remove('is-open'); setTimeout(() => { sheet.hidden = true; }, 220); document.body.classList.remove('sheet-open'); if (last) last.focus(); };
+  const open = (card) => {
+    const img = card.querySelector('.connector-logo'); const h = card.querySelector('.card_specification-heading'); const d = card.querySelector('.card_specification-description');
+    logo.src = img ? img.src : ''; name.textContent = h ? h.textContent.trim() : ''; desc.textContent = d ? d.textContent.trim() : '';
+    last = card; sheet.hidden = false; requestAnimationFrame(() => sheet.classList.add('is-open')); document.body.classList.add('sheet-open');
+    sheet.querySelector('.connector-sheet-close').focus();
+  };
+  sheet.addEventListener('click', (e) => { if (e.target.closest('[data-close]')) close(); });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !sheet.hidden) close(); });
+  cards.forEach((card) => {
+    card.setAttribute('role', 'button'); card.setAttribute('tabindex', '0');
+    card.addEventListener('click', (e) => { if (!mq.matches || e.target.closest('a')) return; open(card); });
+    card.addEventListener('keydown', (e) => { if ((e.key === 'Enter' || e.key === ' ') && mq.matches) { e.preventDefault(); open(card); } });
   });
 })();

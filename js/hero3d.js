@@ -487,7 +487,7 @@ function startAllAnimations() {
 
   // Fraction of the visible frame the device should occupy in the hero.
   const HERO_FILL_DESKTOP = 0.72;
-  const HERO_FILL_MOBILE = 0.74;
+  const HERO_FILL_MOBILE = 0.98;
   const HERO_Y_OFFSET = 0.004; // lift the device slightly above center at rest
   // Visual size ratio between the device when it lands in #target (About) and
   // in the hero. The original grows an internally tiny base scale by 2.47; our
