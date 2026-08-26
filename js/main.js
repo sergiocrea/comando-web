@@ -450,19 +450,19 @@ function initFeatureVideo() {
         onUpdate: () => { setFrame(p4.v); setLottiePct(p4.l); },
       });
     }
-    // PHASE 5: 500->680
-    gsap.to(target, {
+    // PHASE 5: 500->680 (only if the section exists)
+    if (document.getElementById('router-details')) gsap.to(target, {
       frame: 680, ease: 'none', onUpdate: () => setFrame(target.frame),
       scrollTrigger: { trigger: '#router-details', start: 'top center', end: '70% top', scrub: true },
     });
     // LOTTIE 50->100%
     const lp = { l: 50 };
-    gsap.to(lp, {
+    if (document.getElementById('router-details')) gsap.to(lp, {
       l: 100, ease: 'none', onUpdate: () => setLottiePct(lp.l),
       scrollTrigger: { trigger: '#router-details', start: 'top 80%', end: 'top top', scrub: true },
     });
     // PHASE 5 GUARD: hide lottie under router
-    ScrollTrigger.create({
+    if (document.getElementById('router-details')) ScrollTrigger.create({
       trigger: '#router-details', start: 'top 92%', end: 'bottom top',
       onEnter: () => fadeLottie(0), onLeaveBack: () => fadeLottie(1),
     });
@@ -608,7 +608,7 @@ function initAboutFade() {
   // router-details content reveal (>=768px)
   mmGSAP('(min-width: 768px)', () => {
     const wrap = document.querySelector('.home_defence-content-wrap');
-    if (!wrap) return;
+    if (!wrap || !document.getElementById('router-details')) return;
     const heading = wrap.querySelector('.home_defence-heading') || wrap.children[0];
     const desc = wrap.querySelector('.home_defence-description') || wrap.children[1];
     const targets = [heading, desc].filter(Boolean);

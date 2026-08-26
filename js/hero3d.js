@@ -201,32 +201,56 @@ function startAllAnimations() {
     scene.environmentIntensity = 0.408;
   });
 
-  // device screens: WhatsApp-style chat drawn on canvas (operator commands -> Comando)
+  // device screens: WhatsApp-style chat. Two canvases per screen:
+  //  - screen  (720x1476): bezel, wallpaper, header, input bar (typing simulation)
+  //  - overlay (1240x1476, transparent): the bubbles, drawn LARGE and allowed to stick out of the phone
   const ACCENT = '#4d7cff';
-  const SCRIPTS = {
-    logo: [
-      { from: 'me',  text: 'pásale el deal de la constructora a Renzo' },
-      { from: 'bot', text: 'Listo ✓ Deal "Constructora Andina" reasignado a Renzo. Le avisé por WhatsApp.' },
-      { from: 'me',  text: 'si un lead de Facebook no es contactado en 10 min, avísame' },
-      { from: 'bot', text: 'Regla creada:\n• lead.created (Facebook)\n• sin contacto 10 min → te aviso\n¿La activo?' },
-      { from: 'me',  text: 'sí' },
-      { from: 'bot', text: '🟢 Activa. Te aviso al primer lead que se enfríe.' },
+  // ---- scenarios (edit ACTIVE to choose which ones play in the hero / in Producto) ----
+  const SCENARIOS = {
+    reasignar: [
+      { from: 'me',  text: 'reasigna el deal de la constructora a Renzo' },
+      { from: 'bot', text: 'Listo ✓ "Constructora Andina" ahora es de Renzo. Se le notificó por WhatsApp.' },
     ],
-    term: [
-      { from: 'me',  text: 'dame el pipeline' },
-      { from: 'bot', text: 'Pipeline hoy\nNuevos 14 · Propuesta 6 · Negociación 3\n⚠️ 2 deals sin actividad hace 7 días' },
-      { from: 'me',  text: 'avísale al jefe si cae un deal de más de 20k, con la razón' },
-      { from: 'bot', text: 'Listo ✓ deal.lost ≥ $20,000 → notifica a Jefe con motivo de pérdida.' },
+    speedToLead: [
+      { from: 'me',  text: 'si un lead de Facebook no es contactado en 10 minutos, notifícame' },
+      { from: 'bot', text: 'Regla creada:\nlead nuevo (Facebook) → sin contacto 10 min → notificación.\n¿La activo?' },
+      { from: 'me',  text: 'sí' },
+      { from: 'bot', text: '🟢 Activa. Te notificaré con el primer lead sin atender.' },
+    ],
+    pipeline: [
+      { from: 'me',  text: 'muéstrame el pipeline' },
+      { from: 'bot', text: 'Hoy: 14 nuevos · 6 en propuesta · 3 en negociación.\n⚠️ 2 deals sin actividad en 7 días.' },
+    ],
+    dealGrande: [
+      { from: 'me',  text: 'si se pierde un deal de más de 20k, notifica al gerente con el motivo' },
+      { from: 'bot', text: 'Listo ✓ deal perdido ≥ $20,000 → notificación al gerente con el motivo.' },
+    ],
+    lunes: [
       { from: 'me',  text: 'organiza mi lunes' },
-      { from: 'bot', text: 'Lunes:\n09:00 Demo · Inmobiliaria Sur\n11:30 Seguimiento · 4 leads fríos\n15:00 Renovación · Grupo Mesa' },
+      { from: 'bot', text: 'Lunes:\n09:00 Demo · Inmobiliaria Sur\n11:30 Llamar a 4 leads sin respuesta\n15:00 Renovación · Grupo Mesa' },
+    ],
+    seguimiento: [
+      { from: 'me',  text: 'a los leads que no responden, envía seguimientos los días 2, 6 y 12; detente si responden' },
+      { from: 'bot', text: 'Secuencia creada: 3 seguimientos por WhatsApp (días 2, 6 y 12). Se detiene con la primera respuesta. 38 leads entran hoy.' },
+    ],
+    citas: [
+      { from: 'me',  text: 'recuerda las citas a los pacientes un día antes' },
+      { from: 'bot', text: 'Listo ✓ Recordatorio 24 h antes con la plantilla "recordatorio_cita". Mañana se envían 12.' },
+    ],
+    leadCaliente: [
+      { from: 'bot', text: '🔥 Lead nuevo: María Torres (Facebook · campaña Verano). Solicita cotización hoy.' },
+      { from: 'me',  text: 'asígnalo a Ana y envíale la cotización base' },
+      { from: 'bot', text: 'Hecho ✓ Asignado a Ana. María ya recibió la cotización por WhatsApp.' },
     ],
   };
-  // timeline: typing speed per char + pauses; returns [{...msg, tStart, tShown}]
+  const ACTIVE = { logo: ['reasignar', 'speedToLead'], term: ['pipeline', 'dealGrande', 'lunes'] };
+  const SCRIPTS = { logo: ACTIVE.logo.flatMap((k) => SCENARIOS[k]), term: ACTIVE.term.flatMap((k) => SCENARIOS[k]) };
+
   function buildTimeline(script) {
     let t = 900; const out = [];
     for (const m of script) {
-      if (m.from === 'me') { const typing = 55 * m.text.length; out.push({ ...m, tStart: t, tShown: t + typing }); t += typing + 700; }
-      else { out.push({ ...m, tStart: t, tShown: t + 1100 }); t += 1100 + 1600; }
+      if (m.from === 'me') { const typing = 50 * m.text.length; out.push({ ...m, tStart: t, tShown: t + typing }); t += typing + 700; }
+      else { out.push({ ...m, tStart: t, tShown: t + 1100 }); t += 1100 + 2200; }
     }
     return { items: out, total: t + 2500 };
   }
@@ -243,23 +267,30 @@ function startAllAnimations() {
     return lines;
   }
   function roundRect(ctx, x, y, w, h, r) { ctx.beginPath(); ctx.roundRect(x, y, w, h, r); }
-
-  function makeScreen(kind) {
-    const W = 720, H = 1476; // iPhone front glass (71.6 x 146.7 mm)
-    const c = document.createElement('canvas'); c.width = W; c.height = H;
-    const ctx = c.getContext('2d');
+  function makeTex(c) {
     const tex = new THREE.CanvasTexture(c);
     tex.colorSpace = THREE.SRGBColorSpace;
     tex.minFilter = THREE.LinearFilter; tex.magFilter = THREE.LinearFilter;
-    tex.wrapS = tex.wrapT = THREE.ClampToEdgeWrapping;
-    tex.anisotropy = 4;
+    tex.wrapS = tex.wrapT = THREE.ClampToEdgeWrapping; tex.anisotropy = 4;
+    return tex;
+  }
+  const SCREEN_W = 720, SCREEN_H = 1476, OVER_W = 1240; // OVER_W/SCREEN_W = overlay plane width ratio
+  const OVERLAY_RATIO = OVER_W / SCREEN_W;
+
+  function makeScreen(kind) {
+    const W = SCREEN_W, H = SCREEN_H;
+    const c = document.createElement('canvas'); c.width = W; c.height = H;
+    const ctx = c.getContext('2d');
+    const oc = document.createElement('canvas'); oc.width = OVER_W; oc.height = H;
+    const octx = oc.getContext('2d');
+    const tex = makeTex(c), overlayTex = makeTex(oc);
     const tl = buildTimeline(SCRIPTS[kind]);
     let active = false, last = 0;
     const start = { t0: performance.now() };
     const SANS = 'Inter, -apple-system, "Neuehaasunicaw 1 G", Arial, sans-serif';
-    const PAD = 22;                   // bezel
-    const SR = 96;                    // screen corner radius
-    const HEADER_H = 190, INPUT_H = 120, SAFE_TOP = 62, SAFE_BOTTOM = 34;
+    const PAD = 22, SR = 96, HEADER_H = 190, INPUT_H = 120, SAFE_TOP = 62, SAFE_BOTTOM = 34;
+    const GLASS_R = Math.round((11.5 - 1.7) * (W / (71.6 - 3.4))); // body corner radius minus glass inset, in px
+    const OX = (OVER_W - W) / 2; // phone left edge inside the overlay canvas
 
     function drawMark(x, y, size, color) {
       ctx.save(); ctx.translate(x, y); ctx.scale(size / 64, size / 64);
@@ -271,60 +302,16 @@ function startAllAnimations() {
 
     function draw(t) {
       const now = t % tl.total;
-      // glass + bezel
+      const pendingBot = tl.items.find((m) => m.from === 'bot' && now >= m.tStart && now < m.tShown);
+      const typingMe = tl.items.find((m) => m.from === 'me' && now >= m.tStart && now < m.tShown);
+
+      // ================= SCREEN =================
       ctx.fillStyle = '#000'; ctx.fillRect(0, 0, W, H);
       ctx.save(); roundRect(ctx, PAD, PAD, W - PAD * 2, H - PAD * 2, SR); ctx.clip();
-      // chat wallpaper
       ctx.fillStyle = '#0b141a'; ctx.fillRect(0, 0, W, H);
       ctx.fillStyle = 'rgba(255,255,255,0.025)';
       for (let y = 0; y < H; y += 46) for (let x = (y / 46 % 2) * 23; x < W; x += 46) { ctx.beginPath(); ctx.arc(x, y, 3, 0, 6.29); ctx.fill(); }
-
-      // ---- messages (bottom-anchored, scrolls up) ----
-      const maxBubbleW = W * 0.72, bodyFont = `400 30px ${SANS}`;
-      ctx.font = bodyFont;
-      const bubbles = [];
-      for (const m of tl.items) {
-        if (now < m.tShown) break;
-        const lines = wrapText(ctx, m.text, maxBubbleW - 40);
-        const wText = Math.max(...lines.map((l) => ctx.measureText(l).width));
-        const w = Math.min(maxBubbleW, wText + 40 + (m.from === 'me' ? 70 : 0) + 30);
-        const hgt = lines.length * 38 + 42;
-        const age = Math.min(1, (now - m.tShown) / 260);
-        bubbles.push({ m, lines, w, h: hgt, age });
-      }
-      // typing indicator for bot
-      const pendingBot = tl.items.find((m) => m.from === 'bot' && now >= m.tStart && now < m.tShown);
-      const listBottom = H - PAD - SAFE_BOTTOM - INPUT_H - 16;
-      let y = listBottom;
-      if (pendingBot) y -= 74;
-      const positions = [];
-      for (let i = bubbles.length - 1; i >= 0; i--) { y -= bubbles[i].h; positions[i] = y; y -= 14; }
-      const listTop = PAD + HEADER_H + 20;
-      ctx.save(); roundRect(ctx, PAD, listTop, W - PAD * 2, listBottom - listTop); ctx.clip();
-      bubbles.forEach((b, i) => {
-        const by = positions[i] + (1 - b.age) * 18;
-        if (by + b.h < listTop) return;
-        ctx.globalAlpha = b.age;
-        const me = b.m.from === 'me';
-        const bx = me ? W - PAD - 24 - b.w : PAD + 24;
-        ctx.fillStyle = me ? '#005c4b' : '#202c33';
-        roundRect(ctx, bx, by, b.w, b.h, 18); ctx.fill();
-        ctx.fillStyle = '#e9edef'; ctx.font = bodyFont; ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
-        b.lines.forEach((l, k) => ctx.fillText(l, bx + 20, by + 38 + k * 38));
-        ctx.font = `400 20px ${SANS}`; ctx.fillStyle = 'rgba(233,237,239,0.6)';
-        const stamp = '09:4' + (i % 10);
-        ctx.textAlign = 'right'; ctx.fillText(stamp, bx + b.w - (me ? 46 : 16), by + b.h - 14);
-        if (me) { ctx.fillStyle = '#53bdeb'; ctx.font = `600 20px ${SANS}`; ctx.fillText('✓✓', bx + b.w - 14, by + b.h - 14); }
-        ctx.globalAlpha = 1;
-      });
-      if (pendingBot) {
-        const by = listBottom - 62, bx = PAD + 24;
-        ctx.fillStyle = '#202c33'; roundRect(ctx, bx, by, 110, 58, 18); ctx.fill();
-        for (let k = 0; k < 3; k++) { const ph = (now / 220 + k * 0.9) % 3; ctx.fillStyle = `rgba(233,237,239,${0.35 + 0.5 * Math.max(0, Math.sin(ph))})`; ctx.beginPath(); ctx.arc(bx + 30 + k * 25, by + 30, 7, 0, 6.29); ctx.fill(); }
-      }
-      ctx.restore();
-
-      // ---- header ----
+      // header
       ctx.fillStyle = '#1f2c34'; ctx.fillRect(PAD, PAD, W - PAD * 2, HEADER_H);
       ctx.fillStyle = '#e9edef'; ctx.font = `600 26px ${SANS}`; ctx.textAlign = 'left'; ctx.fillText('9:41', PAD + 48, PAD + SAFE_TOP - 8);
       ctx.textAlign = 'right'; ctx.font = `600 22px ${SANS}`; ctx.fillText('●●●  ▲  ▮', W - PAD - 40, PAD + SAFE_TOP - 8);
@@ -332,21 +319,18 @@ function startAllAnimations() {
       ctx.strokeStyle = '#8696a0'; ctx.lineWidth = 4; ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(PAD + 54, hy - 16); ctx.lineTo(PAD + 38, hy); ctx.lineTo(PAD + 54, hy + 16); ctx.stroke();
       ctx.fillStyle = '#111b21'; ctx.beginPath(); ctx.arc(PAD + 118, hy, 40, 0, 6.29); ctx.fill();
       drawMark(PAD + 92, hy - 26, 52, ACCENT);
-      ctx.fillStyle = '#e9edef'; ctx.font = `600 32px ${SANS}`; ctx.textAlign = 'left'; ctx.fillText('Comando', PAD + 180, hy - 2);
-      ctx.fillStyle = '#8696a0'; ctx.font = `400 22px ${SANS}`;
-      ctx.fillText(pendingBot ? 'escribiendo…' : 'en línea', PAD + 180, hy + 30);
+      ctx.fillStyle = '#e9edef'; ctx.font = `600 34px ${SANS}`; ctx.textAlign = 'left'; ctx.fillText('Comando', PAD + 180, hy - 2);
+      ctx.fillStyle = '#8696a0'; ctx.font = `400 24px ${SANS}`;
+      ctx.fillText(pendingBot ? 'escribiendo…' : 'en línea', PAD + 180, hy + 32);
       ctx.fillStyle = '#8696a0'; ctx.font = `400 30px ${SANS}`; ctx.textAlign = 'right'; ctx.fillText('⋮', W - PAD - 34, hy + 12);
-      // dynamic island
-      ctx.fillStyle = '#000'; roundRect(ctx, W / 2 - 92, PAD + 16, 184, 52, 26); ctx.fill();
-
-      // ---- input bar (typing simulation) ----
-      const typingMe = tl.items.find((m) => m.from === 'me' && now >= m.tStart && now < m.tShown);
+      ctx.fillStyle = '#000'; roundRect(ctx, W / 2 - 92, PAD + 16, 184, 52, 26); ctx.fill(); // dynamic island
+      // input bar
       const iy = H - PAD - SAFE_BOTTOM - INPUT_H;
       ctx.fillStyle = '#1f2c34'; ctx.fillRect(PAD, iy, W - PAD * 2, INPUT_H + SAFE_BOTTOM);
       ctx.fillStyle = '#2a3942'; roundRect(ctx, PAD + 24, iy + 22, W - PAD * 2 - 140, 72, 36); ctx.fill();
-      ctx.textAlign = 'left'; ctx.font = `400 28px ${SANS}`;
+      ctx.textAlign = 'left'; ctx.font = `400 30px ${SANS}`;
       if (typingMe) {
-        const n = Math.floor((now - typingMe.tStart) / 55);
+        const n = Math.floor((now - typingMe.tStart) / 50);
         let shown = typingMe.text.slice(0, n);
         const maxW = W - PAD * 2 - 220;
         while (ctx.measureText(shown).width > maxW && shown.length) shown = shown.slice(1);
@@ -354,31 +338,86 @@ function startAllAnimations() {
         if (Math.floor(now / 450) % 2 === 0) { const cx = PAD + 54 + ctx.measureText(shown).width; ctx.fillRect(cx, iy + 40, 3, 36); }
       } else { ctx.fillStyle = '#8696a0'; ctx.fillText('Escribe un comando…', PAD + 52, iy + 68); }
       ctx.fillStyle = '#00a884'; ctx.beginPath(); ctx.arc(W - PAD - 64, iy + 58, 36, 0, 6.29); ctx.fill();
-      ctx.fillStyle = '#fff'; ctx.beginPath();
-      if (typingMe) { ctx.moveTo(W - PAD - 76, iy + 44); ctx.lineTo(W - PAD - 46, iy + 58); ctx.lineTo(W - PAD - 76, iy + 72); ctx.lineTo(W - PAD - 70, iy + 58); }
-      else { ctx.roundRect(W - PAD - 72, iy + 40, 16, 26, 8); ctx.rect(W - PAD - 66, iy + 66, 4, 10); }
-      ctx.fill();
-      // home indicator
-      ctx.fillStyle = 'rgba(233,237,239,0.9)'; roundRect(ctx, W / 2 - 70, H - PAD - 22, 140, 8, 4); ctx.fill();
+      const cx = W - PAD - 64, cy = iy + 58;
+      if (typingMe) { // send arrow
+        ctx.fillStyle = '#fff'; ctx.beginPath(); ctx.moveTo(cx - 12, cy - 15); ctx.lineTo(cx + 18, cy); ctx.lineTo(cx - 12, cy + 15); ctx.lineTo(cx - 5, cy); ctx.closePath(); ctx.fill();
+      } else { // microphone: capsule + pickup arc + stem + base
+        ctx.strokeStyle = '#fff'; ctx.fillStyle = '#fff'; ctx.lineCap = 'round'; ctx.lineWidth = 3.5;
+        ctx.beginPath(); ctx.roundRect(cx - 7, cy - 20, 14, 26, 7); ctx.fill();
+        ctx.beginPath(); ctx.arc(cx, cy - 2, 14, 0.15 * Math.PI, 0.85 * Math.PI); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(cx, cy + 12); ctx.lineTo(cx, cy + 20); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(cx - 9, cy + 20); ctx.lineTo(cx + 9, cy + 20); ctx.stroke();
+      }
+      ctx.fillStyle = 'rgba(233,237,239,0.9)'; roundRect(ctx, W / 2 - 70, H - PAD - 22, 140, 8, 4); ctx.fill(); // home indicator
       ctx.restore();
+      // cut the glass corners to the body's corner radius (the plane is rectangular)
+      ctx.save(); ctx.globalCompositeOperation = 'destination-in'; ctx.fillStyle = '#000';
+      roundRect(ctx, 0, 0, W, H, GLASS_R); ctx.fill(); ctx.restore();
+
+      // ================= OVERLAY (bubbles, large, may exceed the phone) =================
+      octx.clearRect(0, 0, OVER_W, H);
+      const bodyFont = `500 44px ${SANS}`, LH = 56;
+      const maxBubbleW = W * 1.0; // wider than the screen on purpose
+      octx.font = bodyFont;
+      const bubbles = [];
+      for (const m of tl.items) {
+        if (now < m.tShown) break;
+        const lines = wrapText(octx, m.text, maxBubbleW - 56);
+        const wText = Math.max(...lines.map((l) => octx.measureText(l).width));
+        const w = Math.min(maxBubbleW, wText + 56 + (m.from === 'me' ? 90 : 40));
+        const hgt = lines.length * LH + 66;
+        const age = Math.min(1, (now - m.tShown) / 260);
+        bubbles.push({ m, lines, w, h: hgt, age });
+      }
+      const listBottom = H - PAD - SAFE_BOTTOM - INPUT_H - 28;
+      let y = listBottom;
+      if (pendingBot) y -= 96;
+      const positions = [];
+      for (let i = bubbles.length - 1; i >= 0; i--) { y -= bubbles[i].h; positions[i] = y; y -= 22; }
+      const listTop = PAD + HEADER_H + 30;
+      const OUT = 70; // how far bubbles stick out past the phone edge
+      bubbles.forEach((b, i) => {
+        const by = positions[i] + (1 - b.age) * 24;
+        if (by + b.h < listTop) return;
+        octx.save();
+        octx.globalAlpha = b.age * Math.min(1, Math.max(0, (by + b.h - listTop) / 120));
+        const me = b.m.from === 'me';
+        const bx = me ? OX + W - PAD + OUT - b.w : OX + PAD - OUT;
+        octx.shadowColor = 'rgba(0,0,0,0.55)'; octx.shadowBlur = 40; octx.shadowOffsetY = 18;
+        octx.fillStyle = me ? '#0a6e5b' : '#26343c';
+        roundRect(octx, bx, by, b.w, b.h, 26); octx.fill();
+        octx.shadowColor = 'transparent';
+        octx.strokeStyle = me ? 'rgba(0,168,132,0.5)' : 'rgba(255,255,255,0.08)'; octx.lineWidth = 2; octx.stroke();
+        octx.fillStyle = '#f2f5f6'; octx.font = bodyFont; octx.textAlign = 'left'; octx.textBaseline = 'alphabetic';
+        b.lines.forEach((l, k) => octx.fillText(l, bx + 28, by + 52 + k * LH));
+        octx.font = `400 24px ${SANS}`; octx.fillStyle = 'rgba(233,237,239,0.65)';
+        octx.textAlign = 'right'; octx.fillText('09:4' + (i % 10), bx + b.w - (me ? 60 : 22), by + b.h - 18);
+        if (me) { octx.fillStyle = '#53bdeb'; octx.font = `700 24px ${SANS}`; octx.fillText('✓✓', bx + b.w - 18, by + b.h - 18); }
+        octx.restore();
+      });
+      if (pendingBot) {
+        const by = listBottom - 80, bx = OX + PAD - OUT;
+        octx.save(); octx.shadowColor = 'rgba(0,0,0,0.5)'; octx.shadowBlur = 30; octx.shadowOffsetY = 14;
+        octx.fillStyle = '#26343c'; roundRect(octx, bx, by, 150, 76, 26); octx.fill(); octx.restore();
+        for (let k = 0; k < 3; k++) { const ph = (now / 220 + k * 0.9) % 3; octx.fillStyle = `rgba(233,237,239,${0.35 + 0.5 * Math.max(0, Math.sin(ph))})`; octx.beginPath(); octx.arc(bx + 40 + k * 35, by + 38, 9, 0, 6.29); octx.fill(); }
+      }
     }
 
     function tick(now) {
-      if (active && now - last > 33) { last = now; draw(now - start.t0); tex.needsUpdate = true; }
+      if (active && now - last > 33) { last = now; draw(now - start.t0); tex.needsUpdate = true; overlayTex.needsUpdate = true; }
       requestAnimationFrame(tick);
     }
     requestAnimationFrame(tick);
-    draw(0); tex.needsUpdate = true;
-    // video-like facade so the rest of the scene code stays unchanged
+    draw(0); tex.needsUpdate = true; overlayTex.needsUpdate = true;
     const v = { play() { active = true; return Promise.resolve(); }, pause() { active = false; }, set currentTime(x) { start.t0 = performance.now() - x * 1000; }, get currentTime() { return (performance.now() - start.t0) / 1000; } };
-    return { v, tex };
+    return { v, tex, overlayTex };
   }
   const heroVid = makeScreen('logo');
   const termVid = makeScreen('term');
 
   let model = null;
   let modelHolder = null; // rotates + scales around the model's geometric center
-  let screenMat = null, screenMatB = null;
+  let screenMat = null, overlayMat = null;
   let targetScale = 1;
 
   // procedural iPhone (mm). Lies flat: width X, length Z (top at -Z), thickness Y, screen facing +Y
@@ -399,7 +438,7 @@ function startAllAnimations() {
     shape.lineTo(-hw + R, hl); shape.quadraticCurveTo(-hw, hl, -hw, hl - R);
     shape.lineTo(-hw, -hl + R); shape.quadraticCurveTo(-hw, -hl, -hw + R, -hl);
     const bevel = 1.1;
-    const bodyGeo = new THREE.ExtrudeGeometry(shape, { depth: T - bevel * 2, bevelEnabled: true, bevelThickness: bevel, bevelSize: bevel, bevelSegments: 4, curveSegments: 24 });
+    const bodyGeo = new THREE.ExtrudeGeometry(shape, { depth: T - bevel * 2, bevelEnabled: true, bevelThickness: bevel, bevelSize: bevel, bevelOffset: -bevel, bevelSegments: 4, curveSegments: 24 });
     const body = new THREE.Mesh(bodyGeo, frameMat);
     body.rotation.x = -Math.PI / 2; // extrusion +Z -> +Y ; shape +Y -> -Z (top of phone)
     body.position.y = bevel;
@@ -432,16 +471,23 @@ function startAllAnimations() {
     btn(8, -hw - 0.4, -hl + 36); btn(14, -hw - 0.4, -hl + 54); btn(14, -hw - 0.4, -hl + 72);
 
     // front glass (screen): plane on the +Y face, texture already includes bezel + dynamic island
-    const screen = new THREE.Mesh(new THREE.PlaneGeometry(W - 1.6, L - 1.6), glassMat);
+    const screen = new THREE.Mesh(new THREE.PlaneGeometry(W - 3.4, L - 3.4), glassMat);
     screen.rotation.x = -Math.PI / 2; // faces +Y; plane +Y -> -Z (top)
     screen.position.y = T + 0.06;
     g.add(screen);
-    return { group: g, screen };
+    // floating bubble layer: wider than the phone, a few mm above the glass, transparent
+    const overlay = new THREE.Mesh(new THREE.PlaneGeometry((W - 3.4) * OVERLAY_RATIO, L - 3.4),
+      new THREE.MeshBasicMaterial({ map: heroVid.overlayTex, transparent: true, toneMapped: false, depthWrite: false, side: THREE.FrontSide }));
+    overlay.rotation.x = -Math.PI / 2;
+    overlay.position.y = T + 4.5;
+    overlay.renderOrder = 40;
+    g.add(overlay);
+    return { group: g, screen, overlay };
   }
 
   // Fraction of the visible frame the device should occupy in the hero.
-  const HERO_FILL_DESKTOP = 0.52;
-  const HERO_FILL_MOBILE = 0.62;
+  const HERO_FILL_DESKTOP = 0.72;
+  const HERO_FILL_MOBILE = 0.56;
   const HERO_Y_OFFSET = 0.004; // lift the device slightly above center at rest
   // Visual size ratio between the device when it lands in #target (About) and
   // in the hero. The original grows an internally tiny base scale by 2.47; our
@@ -453,7 +499,8 @@ function startAllAnimations() {
     modelHolder.rotation.set(0, 0, 0);
     modelHolder.scale.setScalar(1);
     model.position.set(0, 0, 0);
-    const box = new THREE.Box3().setFromObject(model);
+    const box = new THREE.Box3();
+    model.traverse((o) => { if (o.isMesh && o.renderOrder !== 40) box.expandByObject(o); });
     const size = new THREE.Vector3(); box.getSize(size);
     const center = new THREE.Vector3(); box.getCenter(center);
     model.position.sub(center); // geometric center now sits at the holder origin
@@ -473,14 +520,15 @@ function startAllAnimations() {
     setTask('model', 1);
     model = built.group;
     const best = built.screen;
+    overlayMat = built.overlay.material;
 
     if (best) {
       const emo = isMobile()
-        ? new THREE.MeshBasicMaterial({ map: heroVid.tex, side: THREE.FrontSide })
+        ? new THREE.MeshBasicMaterial({ map: heroVid.tex, side: THREE.FrontSide, transparent: true })
         : new THREE.MeshStandardMaterial({
             map: heroVid.tex, emissive: 0xffffff, emissiveMap: heroVid.tex, emissiveIntensity: 1.25,
             roughness: 0.35, metalness: 0, envMapIntensity: 0.15, toneMapped: false,
-            side: THREE.FrontSide,
+            side: THREE.FrontSide, transparent: true,
           });
       screenMat = emo;
       best.material = emo;
@@ -511,6 +559,7 @@ function startAllAnimations() {
     screenMat.map = tex;
     if ('emissiveMap' in screenMat) screenMat.emissiveMap = tex;
     screenMat.needsUpdate = true;
+    if (overlayMat) { overlayMat.map = band < 0.5 ? heroVid.overlayTex : termVid.overlayTex; overlayMat.needsUpdate = true; }
   }
 
   // --- scroll state ---
@@ -596,7 +645,7 @@ function startAllAnimations() {
     // position lerp origin -> target
     const finalPos = targetWorldPos();
     flipScaleGroup.position.x = lerp(0.0025, finalPos.x, arrival);
-    flipScaleGroup.position.y = lerp(isMobile() ? 0 : HERO_Y_OFFSET, finalPos.y, arrival);
+    flipScaleGroup.position.y = lerp(isMobile() ? 0.010 : HERO_Y_OFFSET, finalPos.y, arrival);
 
     // rotation
     const rx = lerp(77, isMobile() ? 90 : 85, rotP) * DEG;
@@ -628,6 +677,7 @@ function startAllAnimations() {
     if (isMobile()) {
       if (screenMat && mobileState.progress >= 0.03 && screenMat.map !== termVid.tex) {
         termVid.v.play(); screenMat.map = termVid.tex; screenMat.needsUpdate = true;
+        if (overlayMat) { overlayMat.map = termVid.overlayTex; overlayMat.needsUpdate = true; }
       }
     } else {
       applyVideoMix(rotP);

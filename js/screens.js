@@ -14,21 +14,25 @@
   const seg = (f, a, b) => clamp((f - a) / (b - a), 0, 1);
 
   function device(ctx, w, h) {
-    // body
-    ctx.fillStyle = BG; ctx.fillRect(0, 0, w, h);
-    const pad = w * 0.06, r = w * 0.09;
-    const bx = pad, by = h * 0.06, bw = w - pad * 2, bh = h - by * 2;
-    const g = ctx.createLinearGradient(0, by, 0, by + bh); g.addColorStop(0, '#2a2a2a'); g.addColorStop(1, '#161616');
-    ctx.fillStyle = g; ctx.beginPath(); ctx.roundRect(bx, by, bw, bh, r); ctx.fill();
-    ctx.strokeStyle = '#3a3a3a'; ctx.lineWidth = 2; ctx.stroke();
-    // screen
-    const sx = bx + bw * 0.07, sy = by + bh * 0.06, sw = bw * 0.86, sh = bh * 0.66;
-    ctx.fillStyle = '#050505'; ctx.beginPath(); ctx.roundRect(sx, sy, sw, sh, r * 0.4); ctx.fill();
-    // button + led
-    ctx.fillStyle = ACCENT; ctx.beginPath(); ctx.arc(bx + bw * 0.2, by + bh * 0.86, bw * 0.075, 0, Math.PI * 2); ctx.fill();
-    ctx.fillStyle = '#111'; ctx.beginPath(); ctx.arc(bx + bw * 0.8, by + bh * 0.86, bw * 0.05, 0, Math.PI * 2); ctx.fill();
-    ctx.strokeStyle = ACCENT; ctx.lineWidth = 3; ctx.stroke();
-    return { sx, sy, sw, sh };
+    ctx.clearRect(0, 0, w, h);
+    // iPhone proportions (71.6 x 146.7) fitted to the canvas height
+    const L = h * 0.96, W = L * (71.6 / 146.7), bx = (w - W) / 2, by = (h - L) / 2, r = W * 0.16;
+    // frame
+    ctx.fillStyle = '#3a3a3d'; ctx.beginPath(); ctx.roundRect(bx - 4, by - 4, W + 8, L + 8, r + 4); ctx.fill();
+    const g = ctx.createLinearGradient(0, by, 0, by + L); g.addColorStop(0, '#242426'); g.addColorStop(1, '#141416');
+    ctx.fillStyle = g; ctx.beginPath(); ctx.roundRect(bx, by, W, L, r); ctx.fill();
+    // glass
+    const pad = W * 0.035, sx = bx + pad, sy = by + pad, sw = W - pad * 2, sh = L - pad * 2;
+    ctx.fillStyle = '#050505'; ctx.beginPath(); ctx.roundRect(sx, sy, sw, sh, r - pad); ctx.fill();
+    // dynamic island + home indicator
+    ctx.fillStyle = '#000'; ctx.beginPath(); ctx.roundRect(bx + W / 2 - W * 0.13, sy + sh * 0.012, W * 0.26, sh * 0.032, 20); ctx.fill();
+    ctx.fillStyle = 'rgba(233,237,239,0.85)'; ctx.beginPath(); ctx.roundRect(bx + W / 2 - W * 0.16, sy + sh - sh * 0.018, W * 0.32, 4, 2); ctx.fill();
+    // side buttons
+    ctx.fillStyle = '#4a4a4d';
+    ctx.fillRect(bx + W + 4, by + L * 0.28, 3, L * 0.13);
+    ctx.fillRect(bx - 7, by + L * 0.22, 3, L * 0.05); ctx.fillRect(bx - 7, by + L * 0.31, 3, L * 0.09); ctx.fillRect(bx - 7, by + L * 0.42, 3, L * 0.09);
+    // usable screen area (below the island, above the indicator)
+    return { sx, sy: sy + sh * 0.06, sw, sh: sh * 0.9, r: r - pad };
   }
 
   function mark(ctx, x, y, size, color, alpha) {
@@ -41,13 +45,12 @@
 
   const LOG = [
     ['$', 'comando watch'],
-    ['>', 'lead.created  facebook'],
+    ['>', 'lead.created  formulario'],
     ['>', 'dedupe        0 match'],
     ['>', 'assign        ana.r'],
     ['>', 'whatsapp      enviado'],
-    ['>', 'crm.sync      hubspot ok'],
+    ['>', 'crm.sync      ok'],
   ];
-  const NODES = ['Lead', 'Dedupe', 'Asignar', 'WhatsApp', 'CRM'];
 
   function screenBoot(ctx, s, t) {
     const a = ease(seg(t, 0, 0.6));
@@ -68,24 +71,50 @@
     }
     ctx.restore();
   }
+  const PIPE = [
+    { n: 'Lead nuevo', d: 'formulario web · anuncio' },
+    { n: 'Validar datos', d: 'sin duplicados' },
+    { n: 'Asignar', d: 'vendedor disponible', branch: { n: 'Sin asignar', d: 'correo al gerente' } },
+    { n: 'Notificar', d: 'WhatsApp al vendedor' },
+    { n: 'CRM', d: 'registro actualizado' },
+  ];
   function screenPipeline(ctx, s, t, fade) {
     ctx.save(); ctx.globalAlpha = fade;
-    ctx.fillStyle = MUTED; ctx.font = `500 ${s.sw * 0.045}px ${MONO}`; ctx.textAlign = 'left';
-    ctx.fillText('AUTOMATIZACIÓN', s.sx + s.sw * 0.08, s.sy + s.sh * 0.1);
-    const x0 = s.sx + s.sw * 0.14, y0 = s.sy + s.sh * 0.2, gap = s.sh * 0.16, rr = s.sw * 0.045;
-    const lit = t * (NODES.length - 1);
-    // spine
-    ctx.strokeStyle = '#2a2a2a'; ctx.lineWidth = 4; ctx.beginPath(); ctx.moveTo(x0, y0); ctx.lineTo(x0, y0 + gap * (NODES.length - 1)); ctx.stroke();
-    ctx.strokeStyle = ACCENT; ctx.beginPath(); ctx.moveTo(x0, y0); ctx.lineTo(x0, y0 + gap * lit); ctx.stroke();
-    NODES.forEach((n, i) => {
-      const on = lit >= i - 0.02, y = y0 + gap * i;
-      ctx.fillStyle = on ? ACCENT : '#1c1c1c'; ctx.beginPath(); ctx.arc(x0, y, rr, 0, Math.PI * 2); ctx.fill();
-      if (on) { ctx.fillStyle = BG; ctx.font = `700 ${rr * 1.1}px ${MONO}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText('✓', x0, y + 1); ctx.textBaseline = 'alphabetic'; }
-      ctx.fillStyle = on ? FG : MUTED; ctx.font = `500 ${s.sw * 0.06}px ${SANS}`; ctx.textAlign = 'left'; ctx.fillText(n, x0 + rr * 2.2, y + rr * 0.5);
+    const x0 = s.sx + s.sw * 0.07, w = s.sw * 0.86;
+    // the operator's command, big, as a WhatsApp bubble
+    ctx.fillStyle = MUTED; ctx.font = `500 ${s.sw * 0.04}px ${MONO}`; ctx.textAlign = 'left';
+    ctx.fillText('COMANDO DEL OPERADOR', x0, s.sy + s.sh * 0.05);
+    const cmd = 'si un lead no es contactado en 10 minutos, avisa por WhatsApp al vendedor';
+    ctx.font = `500 ${s.sw * 0.062}px ${SANS}`;
+    const lines = []; let line = '';
+    for (const wd of cmd.split(' ')) { const tst = line ? line + ' ' + wd : wd; if (ctx.measureText(tst).width > w - s.sw * 0.1 && line) { lines.push(line); line = wd; } else line = tst; }
+    lines.push(line);
+    const lh = s.sw * 0.08, bh = lines.length * lh + s.sw * 0.09, by = s.sy + s.sh * 0.08;
+    ctx.fillStyle = '#0a6e5b'; ctx.beginPath(); ctx.roundRect(x0, by, w, bh, s.sw * 0.05); ctx.fill();
+    ctx.fillStyle = '#f2f5f6'; lines.forEach((l, k) => ctx.fillText(l, x0 + s.sw * 0.05, by + s.sw * 0.085 + k * lh));
+    // pipeline
+    const py0 = by + bh + s.sh * 0.07, gap = (s.sy + s.sh * 0.97 - py0) / PIPE.length, rr = s.sw * 0.035, lx = x0 + rr + 4;
+    const lit = t * (PIPE.length - 1);
+    ctx.strokeStyle = '#2a2a2a'; ctx.lineWidth = 4; ctx.beginPath(); ctx.moveTo(lx, py0); ctx.lineTo(lx, py0 + gap * (PIPE.length - 1)); ctx.stroke();
+    ctx.strokeStyle = ACCENT; ctx.beginPath(); ctx.moveTo(lx, py0); ctx.lineTo(lx, py0 + gap * lit); ctx.stroke();
+    PIPE.forEach((st, i) => {
+      const on = lit >= i - 0.02, y = py0 + gap * i;
+      ctx.fillStyle = on ? ACCENT : '#1c1c1c'; ctx.beginPath(); ctx.arc(lx, y, rr, 0, Math.PI * 2); ctx.fill();
+      if (on) { ctx.fillStyle = BG; ctx.font = `700 ${rr * 1.2}px ${MONO}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText('✓', lx, y + 1); ctx.textBaseline = 'alphabetic'; }
+      ctx.textAlign = 'left';
+      ctx.fillStyle = on ? FG : MUTED; ctx.font = `600 ${s.sw * 0.055}px ${SANS}`; ctx.fillText(st.n, lx + rr * 2, y - s.sw * 0.005);
+      ctx.fillStyle = MUTED; ctx.font = `400 ${s.sw * 0.04}px ${MONO}`; ctx.fillText(st.d, lx + rr * 2, y + s.sw * 0.05);
+      if (st.branch) { // side branch: fallback action (between this step and the next)
+        const bx2 = lx + s.sw * 0.34, by2 = y + gap * 0.56, onB = lit >= i + 0.5;
+        ctx.strokeStyle = onB ? '#f5a623' : '#2a2a2a'; ctx.setLineDash([6, 6]); ctx.lineWidth = 3;
+        ctx.beginPath(); ctx.moveTo(lx, y + rr); ctx.quadraticCurveTo(lx, by2, bx2 - rr, by2); ctx.stroke(); ctx.setLineDash([]);
+        ctx.fillStyle = onB ? '#f5a623' : '#1c1c1c'; ctx.beginPath(); ctx.arc(bx2, by2, rr * 0.75, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = onB ? FG : MUTED; ctx.font = `600 ${s.sw * 0.042}px ${SANS}`; ctx.fillText(st.branch.n, bx2 + rr * 1.4, by2 - s.sw * 0.004);
+        ctx.fillStyle = MUTED; ctx.font = `400 ${s.sw * 0.034}px ${MONO}`; ctx.fillText('✉ ' + st.branch.d, bx2 + rr * 1.4, by2 + s.sw * 0.04);
+      }
     });
-    // moving packet
-    const py = y0 + gap * lit; ctx.fillStyle = '#fff'; ctx.shadowColor = ACCENT; ctx.shadowBlur = 12;
-    ctx.beginPath(); ctx.arc(x0, py, rr * 0.45, 0, Math.PI * 2); ctx.fill(); ctx.shadowBlur = 0;
+    const py = py0 + gap * lit; ctx.fillStyle = '#fff'; ctx.shadowColor = ACCENT; ctx.shadowBlur = 12;
+    ctx.beginPath(); ctx.arc(lx, py, rr * 0.45, 0, Math.PI * 2); ctx.fill(); ctx.shadowBlur = 0;
     ctx.restore();
   }
   function screenSync(ctx, s, t, fade) {
@@ -113,7 +142,7 @@
   function drawFeatureScreen(ctx, w, h, frame) {
     const f = clamp(frame, 0, 680);
     const s = device(ctx, w, h);
-    ctx.save(); ctx.beginPath(); ctx.roundRect(s.sx, s.sy, s.sw, s.sh, w * 0.036); ctx.clip();
+    ctx.save(); ctx.beginPath(); ctx.roundRect(s.sx, s.sy - s.sh * 0.07, s.sw, s.sh * 1.14, s.r); ctx.clip();
     if (f < 60) screenBoot(ctx, s, f / 60);
     if (f >= 40 && f < 215) screenLog(ctx, s, seg(f, 50, 160), 1 - seg(f, 185, 215));
     if (f >= 185 && f < 530) screenPipeline(ctx, s, seg(f, 215, 480), seg(f, 185, 215) * (1 - seg(f, 500, 530)));

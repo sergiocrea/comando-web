@@ -182,4 +182,35 @@ input[type='file']:focus-visible {
 
 
 /* ---- Comando brand: shift legacy green artwork to the blue accent ---- */
-.form-bg, .responsive-form-bg, img[src*="responsive-form-bg"], img[src*="Mobile-top"], img[src*="Mobile-bottom"], .home_neoconda-skelton { filter: hue-rotate(74deg) saturate(0.85); }
+.form-bg, .responsive-form-bg, img[src*="responsive-form-bg"], img[src*="Mobile-top"], img[src*="Mobile-bottom"] { filter: hue-rotate(74deg) saturate(0.85); }
+
+/* connector logos (white brand marks) */
+.home_features-card .connector-logo { width: 2.75rem; height: 2.75rem; object-fit: contain; }
+.home_fetures-image .secure-logo { width: 2.4rem; height: 2.4rem; object-fit: contain; }
+.home_secure-features:has(.client-logo) { grid-template-columns: 8rem 1fr; align-items: center; margin-bottom: 1.4rem; }
+.home_fetures-image:has(.client-logo) { width: 8rem; aspect-ratio: auto; display: flex; align-items: center; }
+.home_fetures-image .client-logo { height: 1.35rem; width: auto; max-width: 100%; }
+
+/* about section CTA */
+.about_cta-row { display: flex; flex-wrap: wrap; gap: 1rem; margin-top: 2rem; }
+.polygon-btn.is-primary { background: #4d7cff; color: #0a0a0a; }
+.polygon-btn.is-primary:hover { background: #6d93ff; }
+.about_proof { margin-top: 1rem; font-family: "Jetbrainsmono Variable", monospace; font-size: .78rem; letter-spacing: .04em; color: #8a8a8a; }
+
+/* layout after removing the exploded-view section */
+#specs.home_device-specification-cards { margin-top: 0; }
+.home_secure-component-parent, .home_secure-component { min-height: auto; }
+.home_secure-component-parent { padding: 4rem 0 2rem; }
+.section_clip-path-wrap { padding-bottom: 5rem; }
+.card-text.is-command { font-style: italic; color: #c8c8c8; }
+.home_specification-component { min-height: auto; }
+
+/* about section: readable description + CTA block */
+.section_about-description { font-family: "Neuehaasunicaw 1 G", Inter, Arial, sans-serif; font-size: 1.125rem; line-height: 1.6; color: #b9b9b9; max-width: 34rem; }
+.section_about-description em, .section_about-description q { color: #e8e8e8; font-style: normal; }
+.about_cta-row { margin-top: 2.5rem; gap: .9rem; }
+.about_cta-row .polygon-btn { padding: .95rem 1.9rem; }
+.polygon-btn.is-primary { background: #4d7cff; color: #0a0a0a; font-weight: 600; }
+.polygon-btn.is-primary:hover { background: #6d93ff; }
+.about_proof { margin-top: 1.4rem; display: flex; flex-wrap: wrap; gap: .5rem 1.25rem; font-size: .74rem; color: #7a7a7a; }
+.about_proof span::before { content: "✓"; color: #4d7cff; margin-right: .4rem; }
