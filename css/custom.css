@@ -451,3 +451,6 @@ input[type='file']:focus-visible {
 .connector-sheet-name { font-family: "Jetbrainsmono Variable", monospace; color: #fff; font-size: 1rem; margin-bottom: .6rem; }
 .connector-sheet-desc { color: #c8c8c8; font-family: "Neuehaasunicaw 1 G", Inter, sans-serif; font-size: .95rem; line-height: 1.5; }
 body.sheet-open { overflow: hidden; }
+/* let the video layer fill the whole pinned section (#scope-2), not just the old strip */
+#scope-2 .home_image-wrapper, #scope-2 .video-code-embed { position: static; }
+#scope-2.home_defence-component { overflow: hidden; }

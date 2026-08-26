@@ -487,7 +487,7 @@ function startAllAnimations() {
 
   // Fraction of the visible frame the device should occupy in the hero.
   const HERO_FILL_DESKTOP = 0.72;
-  const HERO_FILL_MOBILE = 0.98;
+  const HERO_FILL_MOBILE = 0.47;
   const HERO_Y_OFFSET = 0.004; // lift the device slightly above center at rest
   // Visual size ratio between the device when it lands in #target (About) and
   // in the hero. The original grows an internally tiny base scale by 2.47; our
@@ -512,7 +512,8 @@ function startAllAnimations() {
     const fill = isMobile() ? HERO_FILL_MOBILE : HERO_FILL_DESKTOP;
     // scale so the model's largest footprint fills `fill` of the frame
     const maxDim = Math.max(size.x, size.y, size.z);
-    targetScale = (Math.min(visW, visH) * fill) / maxDim;
+    // mobile: size by viewport HEIGHT so the phone fits between the nav and the subtitle on short screens
+    targetScale = ((isMobile() ? visH : Math.min(visW, visH)) * fill) / maxDim;
     modelHolder.scale.setScalar(targetScale);
   }
 
@@ -646,7 +647,7 @@ function startAllAnimations() {
     // position lerp origin -> target
     const finalPos = targetWorldPos();
     flipScaleGroup.position.x = lerp(0.0025, finalPos.x, arrival);
-    flipScaleGroup.position.y = lerp(isMobile() ? -0.0025 : HERO_Y_OFFSET, finalPos.y, arrival); // mobile: sit over the wordmark
+    flipScaleGroup.position.y = lerp(isMobile() ? 0.0012 : HERO_Y_OFFSET, finalPos.y, arrival); // mobile: sit over the wordmark
 
     // rotation
     const rx = lerp(77, isMobile() ? 90 : 85, rotP) * DEG;
