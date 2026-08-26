@@ -480,3 +480,5 @@ body.sheet-open { overflow: hidden; }
   .pricing-form { margin-bottom: 0; }
   .pricing-more { padding-top: 2.5rem; }
 }
+/* mobile hero: no big wordmark behind the phone */
+@media (max-width: 991px) { #hero-logo-large-to-move { visibility: hidden; } }
