@@ -366,3 +366,10 @@ input[type='file']:focus-visible {
 }
 /* "Modo automático": breathing room above the text */
 .home_defence-content-wrap { margin-top: 3rem; }
+/* pricing v4: simpler cards + notes */
+.pricing-grid.is-five .price-list { font-size: .95rem; gap: .55rem; margin-bottom: 1.5rem; }
+.pricing-grid.is-five .price-list b { color: #fff; font-weight: 600; }
+.pricing-notes { position: relative; z-index: 2; margin-top: 1.25rem; max-width: 60rem; display: flex; flex-direction: column; gap: .5rem; }
+.pricing-note { margin: 0; color: #0a0a0a; font-family: "Neuehaasunicaw 1 G", Inter, sans-serif; font-size: .95rem; line-height: 1.5; }
+.pricing-note b { font-weight: 600; }
+.pricing-note a { color: #0a0a0a; text-decoration: underline; font-weight: 600; }

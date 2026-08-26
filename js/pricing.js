@@ -4,25 +4,28 @@
    FAQ y textos) vive en PRICING_CONFIG. El markup se genera desde aquí.
    ============================================================ */
 const PRICING_CONFIG = {
-  currency: { base: 'USD', alt: 'PEN', rate: 3.7, altNote: 'aprox., tipo de cambio referencial' },
   billing: { annualFreeMonths: 2 },          // anual = precio mensual × 10 / 12
   trialDays: 14,
   featuredPlan: 'pro',
-  cta: { trialBase: 'https://app.comando.pro/registro', trialLabel: 'Probar 14 días gratis', enterpriseHref: '#pricing-form', enterpriseLabel: 'Hablar con ventas' },
+  cta: { trialBase: 'https://app.comando.pro/registro', trialLabel: 'Probar 14 días gratis', freeLabel: 'Empezar gratis', enterpriseHref: '#pricing-form', enterpriseLabel: 'Habla con ventas' },
   title: 'Precios simples. Desde $2 al mes.',
   subtitle: 'Vendedores ilimitados. Paga según el tamaño de tu CRM.',
+  // Cada plan muestra solo 4 líneas: contactos, comandos, vendedores y un diferencial.
   plans: [
-    { id: 'basico',   name: 'Básico',   price: 2,  contacts: 500,    commands: 300,   crms: '1',           automations: '5 activas',   summaries: 'Diario',                         ecommerce: false, support: 'Email' },
-    { id: 'starter',  name: 'Starter',  price: 6,  contacts: 2500,   commands: 1000,  crms: '1',           automations: 'Ilimitadas',  summaries: 'Diario',                         ecommerce: false, support: 'Email' },
-    { id: 'pro',      name: 'Pro',      price: 19, contacts: 10000,  commands: 4000,  crms: '3',           automations: 'Ilimitadas',  summaries: 'Diario, semanal y a pedido',     ecommerce: true,  support: 'Prioritario por WhatsApp' },
-    { id: 'business', name: 'Business', price: 49, contacts: 50000,  commands: 10000, crms: 'Ilimitados',  automations: 'Ilimitadas',  summaries: 'Personalizados',                 ecommerce: true,  support: 'Prioritario + onboarding' },
-    { id: 'enterprise', name: 'Enterprise', price: null, contacts: null, commands: null, crms: 'Ilimitados', automations: 'Ilimitadas', summaries: 'Personalizados', ecommerce: true, support: 'Dedicado + SLA', extra: ['Credenciales del CRM en tu infraestructura', 'SSO y auditoría avanzada', 'Plantillas a medida'] },
+    { id: 'gratis',   name: 'Gratis',   price: 0,  contacts: 100,   commands: 50,    highlight: '1 CRM conectado' },
+    { id: 'basico',   name: 'Básico',   price: 2,  contacts: 1000,  commands: 300,   highlight: '1 CRM conectado' },
+    { id: 'starter',  name: 'Starter',  price: 6,  contacts: 5000,  commands: 1000,  highlight: 'Automatizaciones ilimitadas' },
+    { id: 'pro',      name: 'Pro',      price: 19, contacts: 20000, commands: 4000,  highlight: 'Hasta 3 CRM + ecommerce · soporte por WhatsApp' },
+    { id: 'business', name: 'Business', price: 49, contacts: 50000, commands: 10000, highlight: 'CRM ilimitados · onboarding incluido' },
   ],
+  enterpriseLine: '¿Más de 50 000 contactos, varios países o requisitos especiales?',
+  commandNote: 'Un comando es cada pedido que le haces a Comando por WhatsApp, por texto o por audio. Las confirmaciones y las respuestas no cuentan.',
   addons: [
-    { label: '+1 000 contactos', price: 1, per: '/mes' },
-    { label: '+1 000 comandos',  price: 2, per: '/mes' },
+    { label: '+1 000 contactos', price: 1 },
+    { label: '+1 000 comandos',  price: 2 },
   ],
-  overageNote: 'Al superar contactos o comandos te avisamos al 80 %; puedes sumar un paquete o subir de plan. Nunca cortamos el servicio sin aviso.',
+  addonsIntro: '¿Te quedas corto? Suma paquetes sin cambiar de plan:',
+  overageNote: 'Te avisamos al 80 % de tu límite. Nunca cortamos el servicio sin aviso.',
   includes: [
     'Conexión al CRM en 2 minutos con login OAuth (sin copiar claves)',
     'Confirmación antes de ejecutar cualquier cambio',
@@ -36,9 +39,9 @@ const PRICING_CONFIG = {
     title: '¿Cuánto es esto frente a tu CRM?',
     intro: 'Comando complementa a tu CRM, no lo sustituye. Referencia: precios de lista de HubSpot 2026, facturación anual.',
     rows: [
-      { contacts: '1 000',           hubspot: 'Marketing Hub Starter: $20/asiento/mes (1 000 contactos; +$50 por cada 1 000)', comando: 'Starter: $6/mes, vendedores ilimitados' },
-      { contacts: '2 000 – 10 000',  hubspot: 'Marketing Hub Professional: desde $890/mes (2 000 contactos; +$250 por 5 000)', comando: 'Pro: $19/mes' },
-      { contacts: '10 000 – 50 000', hubspot: 'Marketing Hub Enterprise: desde $3 600/mes (10 000 contactos)',                  comando: 'Business: $49/mes' },
+      { contacts: '1 000',           hubspot: 'Marketing Hub Starter: $20/asiento/mes (1 000 contactos; +$50 por cada 1 000)', comando: 'Básico: $2/mes, vendedores ilimitados' },
+      { contacts: '2 000 – 10 000',  hubspot: 'Marketing Hub Professional: desde $890/mes (2 000 contactos; +$250 por 5 000)', comando: 'Starter: $6/mes' },
+      { contacts: '10 000 – 50 000', hubspot: 'Marketing Hub Enterprise: desde $3 600/mes (10 000 contactos)',                  comando: 'Pro $19/mes · Business $49/mes' },
       { contacts: 'Asiento de ventas', hubspot: 'Sales Hub Professional: $90/asiento/mes',                                      comando: 'Sin costo por asiento' },
     ],
     message: 'Todo tu equipo opera el CRM desde WhatsApp por menos del 5 % de lo que pagas por el CRM. Vendedores ilimitados.',
@@ -51,7 +54,7 @@ const PRICING_CONFIG = {
     { q: '¿Qué pasa si uso más comandos de los incluidos?', a: 'Te avisamos al 80 %. Puedes sumar paquetes de 1 000 comandos por $2 o subir de plan.' },
     { q: '¿Qué CRM soportan?', a: 'HubSpot, Salesforce, Zoho, Pipedrive, Dynamics 365 y más.' },
     { q: '¿Necesito contratar la API de WhatsApp Business?', a: 'No para empezar.' },
-    { q: '¿Dónde quedan las credenciales de mi CRM?', a: 'En infraestructura de Comando, cifradas; nunca en terceros. En Enterprise, en la tuya.' },
+    { q: '¿Dónde quedan las credenciales de mi CRM?', a: 'En infraestructura de Comando, cifradas; nunca en terceros. En planes a medida, en la tuya.' },
     { q: '¿Puedo cambiar de plan?', a: 'Cuando quieras; se prorratea.' },
   ],
   finalStrip: { text: 'Tus datos no salen de tu CRM. Comando solo ejecuta lo que confirmas.', cta: 'Probar 14 días gratis', href: 'https://app.comando.pro/registro' },
@@ -59,15 +62,9 @@ const PRICING_CONFIG = {
 
 (function () {
   const C = PRICING_CONFIG;
-  const state = { annual: false, alt: false };
+  const state = { annual: false };
   const fmtN = (n) => n.toLocaleString('es-PE').replace(/,/g, ' ').replace(/\./g, ' ');
-  function money(usd) {
-    if (usd == null) return null;
-    const v = state.alt ? usd * C.currency.rate : usd;
-    const sym = state.alt ? 'S/ ' : 'US$ ';
-    const rounded = state.alt ? Math.round(v) : (Number.isInteger(v) ? v : Math.round(v * 100) / 100);
-    return sym + rounded.toLocaleString('es-PE');
-  }
+  function money(usd) { if (usd == null) return null; const v = Number.isInteger(usd) ? usd : Math.round(usd * 100) / 100; return 'US$ ' + v.toLocaleString('es-PE'); }
   function monthly(p) { if (p == null) return null; return state.annual ? p * (12 - C.billing.annualFreeMonths) / 12 : p; }
   const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 
@@ -80,32 +77,28 @@ const PRICING_CONFIG = {
           <button type="button" class="pt-btn${state.annual ? '' : ' is-on'}" data-set="annual" data-val="0" aria-pressed="${!state.annual}">Mensual</button>
           <button type="button" class="pt-btn${state.annual ? ' is-on' : ''}" data-set="annual" data-val="1" aria-pressed="${state.annual}">Anual <span class="pt-badge">${C.billing.annualFreeMonths} meses gratis</span></button>
         </div>
-        <div class="pt-group" role="group" aria-label="Moneda">
-          <button type="button" class="pt-btn${state.alt ? '' : ' is-on'}" data-set="alt" data-val="0" aria-pressed="${!state.alt}">${C.currency.base}</button>
-          <button type="button" class="pt-btn${state.alt ? ' is-on' : ''}" data-set="alt" data-val="1" aria-pressed="${state.alt}">${C.currency.alt}</button>
-        </div>
-        ${state.alt ? `<div class="pt-note">${esc(C.currency.altNote)}</div>` : ''}
       </div></div>`;
   }
   function renderCard(p) {
     const featured = p.id === C.featuredPlan;
-    const ent = p.price == null;
+    const free = p.price === 0;
     const m = monthly(p.price);
-    const priceHtml = ent ? `<div class="price-amount">A medida</div>`
+    const priceHtml = free ? `<div class="price-amount">US$ 0<span>/mes</span></div>`
       : `<div class="price-amount">${money(m)}<span>/mes</span></div>${state.annual ? `<div class="price-annual">${money(m * 12)} al año</div>` : ''}`;
-    const lines = ent
-      ? ['Contactos ilimitados', 'Comandos negociados', 'Vendedores ilimitados', 'CRM conectados: ilimitados', `Resúmenes ${p.summaries.toLowerCase()}`, 'Integración ecommerce', `Soporte ${p.support.toLowerCase()}`, ...p.extra]
-      : [`Hasta ${fmtN(p.contacts)} contactos`, `${fmtN(p.commands)} comandos al mes (texto o audio)`, 'Vendedores ilimitados', `CRM conectados: ${p.crms}`, `Automatizaciones: ${p.automations.toLowerCase()}`, `Resúmenes por WhatsApp: ${p.summaries.toLowerCase()}`, p.ecommerce ? 'Integración ecommerce (Shopify, WooCommerce, VTEX)' : null, `Soporte: ${p.support.toLowerCase()}`].filter(Boolean);
-    const cta = ent ? `<a href="${C.cta.enterpriseHref}" class="price-cta">${esc(C.cta.enterpriseLabel)}</a>`
+    const lines = [`<b>${fmtN(p.contacts)}</b> contactos en tu CRM`, `<b>${fmtN(p.commands)}</b> comandos al mes`, 'Vendedores ilimitados', esc(p.highlight)];
+    const cta = free ? `<a href="${C.cta.trialBase}?plan=${p.id}" class="price-cta">${esc(C.cta.freeLabel)}</a>`
       : `<a href="${C.cta.trialBase}?plan=${p.id}" class="price-cta">${esc(C.cta.trialLabel)}</a>`;
-    return `<div class="price-card${featured ? ' is-featured' : ''}" data-plan="${p.id}">${featured ? '<div class="price-flag">Más elegido</div>' : ''}
+    return `<div class="price-card${featured ? ' is-featured' : ''}${free ? ' is-free' : ''}" data-plan="${p.id}">${featured ? '<div class="price-flag">Más elegido</div>' : ''}
       <div class="price-name">${esc(p.name)}</div>${priceHtml}
-      <ul class="price-list">${lines.map((l) => `<li>${esc(l)}</li>`).join('')}</ul>${cta}</div>`;
+      <ul class="price-list">${lines.map((l) => `<li>${l}</li>`).join('')}</ul>${cta}</div>`;
   }
   function renderCards() {
     return `<div class="pricing-grid is-five" id="pricing-cards">${C.plans.map(renderCard).join('')}</div>
-      <div class="pricing-addons"><span>Add-ons en todos los planes:</span> ${C.addons.map((a) => `<b>${esc(a.label)} → ${money(a.price)}${a.per}</b>`).join(' · ')}
-      <div class="pricing-overage">${esc(C.overageNote)}</div></div>`;
+      <div class="pricing-notes">
+        <p class="pricing-note"><b>¿Qué es un comando?</b> ${esc(C.commandNote)}</p>
+        <p class="pricing-note"><b>${esc(C.addonsIntro)}</b> ${C.addons.map((a) => `${esc(a.label)} = ${money(a.price)}/mes`).join(' · ')}. ${esc(C.overageNote)}</p>
+        <p class="pricing-note">${esc(C.enterpriseLine)} <a href="${C.cta.enterpriseHref}">${esc(C.cta.enterpriseLabel)}</a>.</p>
+      </div>`;
   }
   function renderMore() {
     const cmp = C.comparison;
