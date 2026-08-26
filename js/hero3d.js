@@ -493,7 +493,7 @@ function startAllAnimations() {
   // in the hero. The original grows an internally tiny base scale by 2.47; our
   // base scale is already calibrated to the hero, so we use the net visual ratio.
   const ARRIVAL_SCALE = 0.92;
-  const ARRIVAL_SCALE_MOBILE = 1.45;
+  const ARRIVAL_SCALE_MOBILE = 0.9;
   function computeScale() {
     if (!model || !modelHolder) return;
     // measure the model unrotated/unscaled and center its geometry in the holder

@@ -189,3 +189,13 @@
     card.addEventListener('keydown', (e) => { if ((e.key === 'Enter' || e.key === ' ') && mq.matches) { e.preventDefault(); open(card); } });
   });
 })();
+
+/* background video: make sure it actually plays (some browsers ignore autoplay until visible) */
+(function () {
+  const v = document.querySelector('.benefits-video-el'); if (!v) return;
+  const tryPlay = () => { const p = v.play(); if (p && p.catch) p.catch(() => {}); };
+  tryPlay();
+  if ('IntersectionObserver' in window) new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) tryPlay(); }), { threshold: 0.05 }).observe(v);
+  document.addEventListener('touchstart', tryPlay, { once: true, passive: true });
+  document.addEventListener('click', tryPlay, { once: true });
+})();

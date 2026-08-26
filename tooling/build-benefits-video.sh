@@ -3,7 +3,7 @@
 # Uso: tooling/build-benefits-video.sh <carpeta-con-clips>
 #   La carpeta debe contener: 1-gimnasio.mp4 2-auto.mp4 3-obra.mp4 4-calle.mp4
 #   (1920x1080, ~8 s, sin audio; cualquier fps/codec de origen sirve).
-# Salida: assets/videos/benefits.mp4 (< 6 MB) y assets/img/benefits-poster.jpg
+# Salida: assets/videos/benefits-v1.mp4 (< 6 MB) y assets/img/benefits-poster-v1.jpg
 set -euo pipefail
 SRC="${1:?carpeta con los 4 clips}"
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
@@ -38,12 +38,12 @@ ffmpeg -v error -y -i "$TMP/chain.mp4" -filter_complex "\
   -map "[v]" -c:v libx264 -crf 16 -preset fast "$TMP/loop.mp4"
 
 # 4) Export final con el comando pedido; si supera 6 MB sube el CRF hasta cumplir.
-OUT="$ROOT/assets/videos/benefits.mp4"; CRF=26
+OUT="$ROOT/assets/videos/benefits-v1.mp4"; CRF=26
 while :; do
   ffmpeg -v error -y -i "$TMP/loop.mp4" -an -c:v libx264 -crf $CRF -preset slow -pix_fmt yuv420p \
     -movflags +faststart -vf "scale=1920:-2" "$OUT"
   SIZE=$(stat -f%z "$OUT"); echo "crf $CRF -> $((SIZE/1024)) KB"
   [ "$SIZE" -le $((6*1024*1024)) ] && break; CRF=$((CRF+2)); [ $CRF -gt 36 ] && { echo "no baja de 6 MB; considera 1280 px"; break; }
 done
-ffmpeg -v error -y -i "$OUT" -ss 2 -frames:v 1 -q:v 3 "$ROOT/assets/img/benefits-poster.jpg"
-echo "listo: $OUT ($((SIZE/1024)) KB), duración $(ffprobe -v error -show_entries format=duration -of csv=p=0 "$OUT") s, póster assets/img/benefits-poster.jpg"
+ffmpeg -v error -y -i "$OUT" -ss 2 -frames:v 1 -q:v 3 "$ROOT/assets/img/benefits-poster-v1.jpg"
+echo "listo: $OUT ($((SIZE/1024)) KB), duración $(ffprobe -v error -show_entries format=duration -of csv=p=0 "$OUT") s, póster assets/img/benefits-poster-v1.jpg"

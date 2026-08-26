@@ -386,7 +386,7 @@ input[type='file']:focus-visible {
 /* features: the sticky phone sits at the left edge of the container; cards fill the right in 2 columns */
 @media (min-width: 768px) {
   .sticky-block-grid { align-items: flex-start; padding-left: max(1.88rem, calc((100% - 90rem) / 2 + 1.88rem)); }
-  .sticky-block-grid .section_middle-slider { width: min(26%, 23rem); margin: 0; }
+  .sticky-block-grid .section_middle-slider { width: min(17%, 15rem); margin: 0; }
   #scope-1 .home_grid-wrapper { padding-left: 29%; gap: 2rem; justify-content: flex-start; }
   #scope-1 .section_left-slider-wrap.hide-mobile-landscape, #scope-1 .section_bottom-slider.hide-mobile-landscape { width: 33%; }
 }
@@ -415,7 +415,7 @@ input[type='file']:focus-visible {
 @media (max-width: 767px) {
   /* Producto: no dead space above the landing slot, bigger slot */
   .section_about-component { min-height: auto; padding-top: 5rem; }
-  .section_about-left { min-height: auto; padding-bottom: 1rem; }
+  .section_about-left { min-height: auto; padding-bottom: 3.5rem; }
   .canvas-target-block { max-width: 22rem; aspect-ratio: 2 / 3; }
   /* Funciones: bigger phone */
   #scope-1 .home_grid-wrapper > .section_middle-slider { width: 74%; display: flex; }
@@ -436,7 +436,7 @@ input[type='file']:focus-visible {
 }
 @media (max-width: 767px) {
   .section_about-left .canvas-target-block { width: 70vw; max-width: 70vw; aspect-ratio: 2 / 3; }
-  #scope-1 .section_middle-slider, #lottiee-section .section_middle-slider { width: 82% !important; }
+  #scope-1 .section_middle-slider, #lottiee-section .section_middle-slider { width: 58% !important; }
 }
 
 /* connector bottom sheet (mobile) */
@@ -454,3 +454,8 @@ body.sheet-open { overflow: hidden; }
 /* let the video layer fill the whole pinned section (#scope-2), not just the old strip */
 #scope-2 .home_image-wrapper, #scope-2 .video-code-embed { position: static; }
 #scope-2.home_defence-component { overflow: hidden; }
+/* Modo automático: keep the phone clear of the text on short desktop viewports */
+@media (min-width: 768px) and (max-height: 820px) { .sticky-block-grid .section_middle-slider { width: min(14%, 12rem); } }
+@media (min-width: 768px) { .home_defence-content-wrap { bottom: 4%; } }
+/* mobile: Modo automático phone same size as the others */
+@media (max-width: 767px) { #scope-2 .hide-above-lanscape.w-embed { display: flex; justify-content: center; } #scope-2 .screen-loop { width: 58% !important; height: auto; } }
