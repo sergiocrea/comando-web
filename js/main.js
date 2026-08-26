@@ -1,6 +1,6 @@
 /* ============================================================
    main.js — site UI logic (rewritten from scratch)
-   Replaces the original neoconda-script + the page's inline scripts:
+   Replaces the original site script + the page's inline scripts:
    Lenis smooth scroll, data-reveal engine, divider lines, grid
    canvas spotlight, nav background + hero-logo->nav morph, mobile
    menu, scroll-scrubbed feature video + Lottie, countdown, footer
@@ -382,12 +382,15 @@ function initFeatureVideo() {
   const FPS = 30;
   const target = { frame: 0 };
   let pending = false;
+  const isCanvas = video.tagName === 'CANVAS';
+  const ctx2d = isCanvas ? video.getContext('2d') : null;
   const applyFrame = () => {
     pending = false;
-    if (video.duration) video.currentTime = Math.min(target.frame / FPS, video.duration - 0.001);
+    if (isCanvas) { if (window.drawFeatureScreen) window.drawFeatureScreen(ctx2d, video.width, video.height, target.frame); }
+    else if (video.duration) video.currentTime = Math.min(target.frame / FPS, video.duration - 0.001);
   };
   const setFrame = (f) => { target.frame = f; if (!pending) { pending = true; requestAnimationFrame(applyFrame); } };
-  video.pause();
+  if (isCanvas) applyFrame(); else video.pause();
 
   // ---- Lottie player control ----
   const lottieEl = document.querySelector('dotlottie-player');

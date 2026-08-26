@@ -1,6 +1,6 @@
 # comando-web
 
-Réplica de la landing de neoconda.com con las mismas animaciones y efectos.
+Landing de Comando (plataforma de integraciones y automatizaciones para CRM). Estructura y motor de animaciones derivados de una réplica de landing; marca, copy, assets de pantalla y paleta son propios.
 
 ## Estructura
 
@@ -12,7 +12,7 @@ Réplica de la landing de neoconda.com con las mismas animaciones y efectos.
 
 ## Cómo correrlo
 
-Los assets pesados (fuentes, imágenes, videos, modelos `.glb`, HDRI, Lottie) se enlazan desde los CDN públicos originales, así que hace falta conexión a internet. Sirve la carpeta con cualquier servidor estático:
+Todos los assets y librerías están en `assets/` (no hay dependencias de CDN externos; funciona offline). Sirve la carpeta con cualquier servidor estático:
 
 ```bash
 python3 -m http.server 8000
@@ -21,6 +21,23 @@ python3 -m http.server 8000
 
 Debe servirse por HTTP (no abrir el `index.html` con `file://`), porque usa módulos ES e `importmap`.
 
-## Librerías (desde CDN)
+## Assets (`assets/`)
 
-GSAP 3.12.5 + Flip + ScrollTrigger, SplitText, ScrambleText, Lenis 0.2.28, Three.js 0.160.0 (+ addons: GLTFLoader, MeshoptDecoder, EXRLoader), dotLottie player, y el runtime de Webflow (jQuery + webflow.js) para el layout base y el nav.
+- `models/` — `hero-device.glb` (héroe) y `explode-device.glb` (vista explosionada).
+- `hdri/` — `studio_small_08_1k.exr` (iluminación de la escena).
+- `lottie/line.json` — animación de línea (recoloreada a la paleta Comando).
+- `img/` — `comando-mark.svg` / `comando-logo.svg` (marca), favicon/webclip/og generados, íconos de features, marcos/fondos.
+- `fonts/` — Inter y Space Grotesk (libres; sustituyen a Neue Haas Unica / Neue Machina bajo los mismos nombres de `font-family`), Digital 7 Mono, JetBrains Mono.
+- `css/webflow.css` — stylesheet base exportado de Webflow.
+- `vendor/` — GSAP 3.12.5 + Flip + ScrollTrigger, SplitText, ScrambleText, Lenis 0.2.28, Three.js 0.160.0 (+ addons GLTFLoader, MeshoptDecoder, EXRLoader), dotLottie player, jQuery + webflow.js.
+
+## Pantallas dibujadas en canvas (sin video)
+
+- `js/hero3d.js` — la pantalla del dispositivo 3D usa `CanvasTexture`s (logo Comando → terminal animada) con una fachada tipo `<video>` para el crossfade por scroll.
+- `js/screens.js` — `window.drawFeatureScreen(ctx, w, h, frame)` dibuja la UI de features por frame (0–680 @30fps: boot → log de eventos → pipeline de automatización → sync CRM). `main.js` lo scrubbea por scroll en `#scroll-video` y los `<canvas class="screen-loop">` (bloques responsive) lo reproducen en loop.
+
+## Pendientes de marca
+
+- Los dos modelos `.glb` (hero y explode) siguen siendo el hardware del sitio original (solo se recoloreó el botón verde al acento). Reemplazarlos por un dispositivo/visual propio.
+- Links de redes del footer apuntan a `https://comando.pro`; el botón de acceso a `https://app.comando.pro`. Ajustar handles reales.
+- `og:image` es ruta relativa; ponerla absoluta al desplegar.

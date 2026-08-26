@@ -1,5 +1,5 @@
 /* ============================================================
-   Neoconda replica — custom styles
+   Comando landing — custom styles
    Reconstructed from the original inline <style> blocks plus the
    component styles our rewritten JS relies on (preloader, grid
    canvas, explode hotspots). Layout/typography come from the
@@ -170,7 +170,7 @@ input[type='file']:focus-visible {
   justify-content: center;
   font-family: var(--_fonts---jetbrains-mono, "Jetbrainsmono Variable"), monospace;
   font-size: 0.75rem;
-  color: #1fe477;
+  color: #3563e9;
 }
 @media screen and (max-width: 767px) {
   .hotspot-content, .hotspot-line { display: none; }
@@ -179,3 +179,7 @@ input[type='file']:focus-visible {
 
 /* SplitText line wrapper used by the reveal engine */
 .split-line { display: block; }
+
+
+/* ---- Comando brand: shift legacy green artwork to the blue accent ---- */
+.form-bg, .responsive-form-bg, img[src*="responsive-form-bg"], img[src*="Mobile-top"], img[src*="Mobile-bottom"], .home_neoconda-skelton { filter: hue-rotate(74deg) saturate(0.85); }

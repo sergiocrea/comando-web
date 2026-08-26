@@ -8,9 +8,10 @@
    ============================================================ */
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js';
 
-const R2 = 'https://pub-28ca259d32274e718fe1f5d0e35661bf.r2.dev/3dtest';
-const MODEL_URL = `${R2}/neoconda-test/models/Explode%20model.glb`;
+const ASSETS = 'assets';
+const MODEL_URL = `${ASSETS}/models/explode-device.glb`;
 
 const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
 const lerp = (a, b, t) => a + (b - a) * t;
@@ -94,7 +95,9 @@ const LABELS = [
   const labelEls = []; // {el, line, obj, def, anchor}
   let lockedScale = 1;
 
-  new GLTFLoader().load(MODEL_URL, (gltf) => {
+  const loader = new GLTFLoader();
+  loader.setMeshoptDecoder(MeshoptDecoder);
+  loader.load(MODEL_URL, (gltf) => {
     model = gltf.scene;
     // center
     const box = new THREE.Box3().setFromObject(model);
@@ -122,6 +125,11 @@ const LABELS = [
 
     // screen material roughness tweak
     model.traverse((o) => {
+      if (o.isMesh) {
+        // brand: recolor the legacy green button/LED materials to the Comando accent
+        const m = o.material;
+        if (m && m.color) { const { r, g, b } = m.color; if (g > 0.35 && g > r * 1.6 && g > b * 1.6) { m.color.setHex(0x4d7cff); if (m.emissive) m.emissive.setHex(0x1a3fbf); } }
+      }
       if (o.isMesh && /group3001_11/i.test(o.parent && o.parent.name || '')) {
         o.material = o.material.clone(); o.material.roughness = 1;
       }

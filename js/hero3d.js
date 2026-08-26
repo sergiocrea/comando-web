@@ -4,7 +4,7 @@
    registry driving the preloader counter and its staggered exit,
    then the floating device model that flies from the hero into the
    #target slot as you scroll, with mouse tilt, idle float, a full
-   Z spin and a hero->terminal video crossfade on its screen.
+   Z spin and a logo->terminal crossfade on its (canvas-drawn) screen.
    ============================================================ */
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
@@ -16,11 +16,9 @@ const ScrollTrigger = window.ScrollTrigger;
 gsap.registerPlugin(ScrollTrigger);
 ScrollTrigger.config({ ignoreMobileResize: true, autoRefreshEvents: 'visibilitychange,DOMContentLoaded,load' });
 
-const R2 = 'https://pub-28ca259d32274e718fe1f5d0e35661bf.r2.dev/3dtest';
-const MODEL_URL = `${R2}/neoconda-test/models/neoconda-hero-header.glb`;
-const ENV_URL = `${R2}/sunthings-test/hdri/studio_small_08_1k.exr`;
-const VIDEO_HERO = `${R2}/neoconda-test/videos/Logo.mp4`;
-const VIDEO_TERM = `${R2}/neoconda-test/videos/neoconda-terminal-2.mp4`;
+const ASSETS = 'assets';
+const MODEL_URL = `${ASSETS}/models/hero-device.glb`;
+const ENV_URL = `${ASSETS}/hdri/studio_small_08_1k.exr`;
 
 const DEG = Math.PI / 180;
 const isMobile = () => window.innerWidth <= 767;
@@ -58,8 +56,8 @@ function onHeroRelease(fn) { heroReleased.fn = fn; }
   if (!wrap) { onHeroRelease.ready = true; return; }
 
   // skip on resize reload
-  if (sessionStorage.getItem('__neoconda_resize_reload') === 'true') {
-    sessionStorage.removeItem('__neoconda_resize_reload');
+  if (sessionStorage.getItem('__comando_resize_reload') === 'true') {
+    sessionStorage.removeItem('__comando_resize_reload');
     wrap.remove();
     revealAfterPreloader(1);
     return;
@@ -205,21 +203,72 @@ function startAllAnimations() {
     scene.environmentIntensity = 0.408;
   });
 
-  // videos
-  function makeVideo(src) {
-    const v = document.createElement('video');
-    Object.assign(v, { src, muted: true, loop: true, autoplay: true, playsInline: true, crossOrigin: 'anonymous' });
-    v.setAttribute('playsinline', '');
-    const tex = new THREE.VideoTexture(v);
+  // device screens: canvas-drawn textures (Comando logo / live terminal)
+  const ACCENT = '#4d7cff';
+  function makeScreen(kind) {
+    const c = document.createElement('canvas'); c.width = c.height = 1024;
+    const ctx = c.getContext('2d');
+    const tex = new THREE.CanvasTexture(c);
     tex.flipY = false;
     tex.colorSpace = THREE.SRGBColorSpace;
     tex.minFilter = THREE.LinearFilter;
     tex.magFilter = THREE.LinearFilter;
     tex.wrapS = tex.wrapT = THREE.ClampToEdgeWrapping;
+    const t0 = performance.now();
+    let active = false, last = 0;
+    const LINES = [
+      ['$', 'comando watch --tenant acme'],
+      ['>', 'lead.created     facebook   -> hubspot'],
+      ['>', 'dedupe           match 0    -> nuevo contacto'],
+      ['>', 'assign           round-robin -> ana.r'],
+      ['>', 'whatsapp         plantilla "bienvenida"  ok'],
+      ['>', 'deal.stage       propuesta  -> negociacion'],
+      ['>', 'deal.stale       7d sin actividad -> alerta'],
+      ['>', 'sync             zoho <-> hubspot   12 cambios'],
+      ['>', 'webhook          firmado    -> ecommerce ok'],
+    ];
+    function drawLogo(t) {
+      ctx.fillStyle = '#0a0a0a'; ctx.fillRect(0, 0, 1024, 1024);
+      const pulse = 0.85 + 0.15 * Math.sin(t / 600);
+      ctx.save(); ctx.translate(512, 512); ctx.scale(6 * pulse, 6 * pulse); ctx.translate(-32, -32);
+      ctx.strokeStyle = ACCENT; ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+      ctx.shadowColor = ACCENT; ctx.shadowBlur = 4;
+      ctx.lineWidth = 5; ctx.beginPath(); ctx.roundRect(4, 4, 56, 56, 12); ctx.stroke();
+      ctx.lineWidth = 6; ctx.beginPath(); ctx.moveTo(20, 22); ctx.lineTo(32, 32); ctx.lineTo(20, 42); ctx.stroke();
+      const blink = Math.floor(t / 500) % 2 === 0;
+      if (blink) { ctx.beginPath(); ctx.moveTo(34, 44); ctx.lineTo(46, 44); ctx.stroke(); }
+      ctx.restore();
+      ctx.fillStyle = '#ffffff'; ctx.font = '600 84px "Neuemachina", "Space Grotesk", Inter, sans-serif';
+      ctx.textAlign = 'center'; ctx.fillText('Comando', 512, 860);
+    }
+    function drawTerm(t) {
+      ctx.fillStyle = '#0a0a0a'; ctx.fillRect(0, 0, 1024, 1024);
+      ctx.font = '500 34px "Jetbrainsmono Variable", "JetBrains Mono", monospace'; ctx.textAlign = 'left';
+      const chars = Math.floor(t / 22); // typing speed
+      let budget = chars, y = 110;
+      for (const [p, txt] of LINES) {
+        if (budget <= 0) break;
+        const shown = txt.slice(0, budget); budget -= txt.length + 6;
+        ctx.fillStyle = ACCENT; ctx.fillText(p, 60, y);
+        ctx.fillStyle = '#e6e6e6'; ctx.fillText(shown, 110, y);
+        y += 62;
+      }
+      if (budget > 0 || Math.floor(t / 400) % 2 === 0) { ctx.fillStyle = ACCENT; ctx.fillRect(60, y - 30, 18, 38); }
+      if (budget > 0 && (t % 9000) > 8000) { start.t0 = performance.now(); }
+    }
+    const start = { t0 };
+    function tick(now) {
+      if (active && now - last > 33) { last = now; (kind === 'logo' ? drawLogo : drawTerm)(now - start.t0); tex.needsUpdate = true; }
+      requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+    (kind === 'logo' ? drawLogo : drawTerm)(0); tex.needsUpdate = true;
+    // video-like facade so the rest of the scene code stays unchanged
+    const v = { play() { active = true; return Promise.resolve(); }, pause() { active = false; }, set currentTime(x) { start.t0 = performance.now() - x * 1000; }, get currentTime() { return (performance.now() - start.t0) / 1000; } };
     return { v, tex };
   }
-  const heroVid = makeVideo(VIDEO_HERO);
-  const termVid = makeVideo(VIDEO_TERM);
+  const heroVid = makeScreen('logo');
+  const termVid = makeScreen('term');
 
   let model = null;
   let modelHolder = null; // rotates + scales around the model's geometric center
@@ -239,6 +288,8 @@ function startAllAnimations() {
       if (!o.isMesh) return;
       const m = o.material;
       if (m && 'metalness' in m) { m.metalness = 0.053; m.roughness = 0.275; m.envMapIntensity = 0.42; }
+      // brand: recolor the legacy green button/LED materials to the Comando accent
+      if (m && m.color) { const {r,g,b} = m.color; if (g > 0.35 && g > r * 1.6 && g > b * 1.6) { m.color.setHex(0x4d7cff); if (m.emissive) m.emissive.setHex(0x1a3fbf); } }
       // planarity heuristic for the screen
       o.geometry.computeBoundingBox();
       const s = new THREE.Vector3(); o.geometry.boundingBox.getSize(s);
@@ -468,7 +519,7 @@ function startAllAnimations() {
     renderer.setSize(window.innerWidth, window.innerHeight);
     if (window.innerWidth !== lastW) {
       lastW = window.innerWidth;
-      sessionStorage.setItem('__neoconda_resize_reload', 'true');
+      sessionStorage.setItem('__comando_resize_reload', 'true');
       location.reload();
     }
   });
