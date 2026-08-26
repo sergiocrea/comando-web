@@ -407,3 +407,39 @@ input[type='file']:focus-visible {
 .pricing-form .getupdate-text { margin-bottom: 1.25rem; }
 .pricing-form { margin-top: 1rem; }
 @media (min-width: 768px) { #trigger-1.section-dummy { min-height: 150svh; } }
+
+/* ===== mobile fixes ===== */
+@media (max-width: 991px) {
+  /* hero: wordmark behind the phone, like desktop */
+}
+@media (max-width: 767px) {
+  /* Producto: no dead space above the landing slot, bigger slot */
+  .section_about-component { min-height: auto; padding-top: 5rem; }
+  .section_about-left { min-height: auto; padding-bottom: 1rem; }
+  .canvas-target-block { max-width: 22rem; aspect-ratio: 2 / 3; }
+  /* Funciones: bigger phone */
+  #scope-1 .home_grid-wrapper > .section_middle-slider { width: 74%; display: flex; }
+  /* Modo automático: keep the text away from the container edge and the next section */
+  .home_defence-content-wrap { position: static; margin-top: 1.5rem; }
+  #lottiee-section { padding-bottom: 1rem; }
+  .section_clip-path-wrap { padding-bottom: 2rem; }
+  #specs .home_specification-component { padding-top: 5rem; }
+  /* Conectores: compact logo grid; tap to expand */
+  .home_features-card-component { display: grid; grid-template-columns: repeat(3, 1fr); gap: .6rem; }
+  .home_features-card { position: relative; padding: 1rem .6rem .9rem; min-height: 0; cursor: pointer; border: 1px solid #1f1f1f; border-radius: .75rem; }
+  .home_features-card .card-svg { display: none; }
+  .home_features-card .home_icon-text-wrapper { flex-direction: column; align-items: center; gap: .5rem; text-align: center; }
+  .home_features-card .connector-logo { width: 2rem; height: 2rem; }
+  .home_features-card .card_specification-heading.hide-above-lanscape { display: block; font-size: .72rem; line-height: 1.2; }
+  .home_features-card .card_specification-content { display: none; margin-top: .75rem; }
+  .home_features-card::after { content: "+"; position: absolute; top: .35rem; right: .5rem; color: #4d7cff; font-family: "Jetbrainsmono Variable", monospace; font-size: .95rem; }
+  .home_features-card.is-open { grid-column: 1 / -1; }
+  .home_features-card.is-open::after { content: "–"; }
+  .home_features-card.is-open .card_specification-content { display: block; }
+  .home_features-card.is-open .card_specification-heading.hide-mobile-landscape { display: none; }
+  .home_features-card.is-open .card_specification-description { font-size: .9rem; color: #c8c8c8; text-align: center; }
+}
+@media (max-width: 767px) {
+  .section_about-left .canvas-target-block { width: 70vw; max-width: 70vw; aspect-ratio: 2 / 3; }
+  #scope-1 .section_middle-slider { width: 80% !important; }
+}

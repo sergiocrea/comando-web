@@ -162,3 +162,18 @@
     })(t0);
   }
 })();
+
+/* mobile: connector cards show only the logo + name; tap to reveal the description */
+(function () {
+  const mq = window.matchMedia('(max-width: 767px)');
+  document.querySelectorAll('.home_features-card').forEach((card) => {
+    card.addEventListener('click', (e) => {
+      if (!mq.matches) return;
+      if (e.target.closest('a')) return;
+      const open = card.classList.toggle('is-open');
+      card.setAttribute('aria-expanded', open ? 'true' : 'false');
+    });
+    card.setAttribute('role', 'button'); card.setAttribute('tabindex', '0'); card.setAttribute('aria-expanded', 'false');
+    card.addEventListener('keydown', (e) => { if ((e.key === 'Enter' || e.key === ' ') && mq.matches) { e.preventDefault(); card.click(); } });
+  });
+})();

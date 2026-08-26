@@ -487,12 +487,13 @@ function startAllAnimations() {
 
   // Fraction of the visible frame the device should occupy in the hero.
   const HERO_FILL_DESKTOP = 0.72;
-  const HERO_FILL_MOBILE = 0.68;
+  const HERO_FILL_MOBILE = 0.74;
   const HERO_Y_OFFSET = 0.004; // lift the device slightly above center at rest
   // Visual size ratio between the device when it lands in #target (About) and
   // in the hero. The original grows an internally tiny base scale by 2.47; our
   // base scale is already calibrated to the hero, so we use the net visual ratio.
   const ARRIVAL_SCALE = 0.92;
+  const ARRIVAL_SCALE_MOBILE = 1.45;
   function computeScale() {
     if (!model || !modelHolder) return;
     // measure the model unrotated/unscaled and center its geometry in the holder
@@ -645,7 +646,7 @@ function startAllAnimations() {
     // position lerp origin -> target
     const finalPos = targetWorldPos();
     flipScaleGroup.position.x = lerp(0.0025, finalPos.x, arrival);
-    flipScaleGroup.position.y = lerp(isMobile() ? 0.010 : HERO_Y_OFFSET, finalPos.y, arrival);
+    flipScaleGroup.position.y = lerp(isMobile() ? -0.006 : HERO_Y_OFFSET, finalPos.y, arrival); // mobile: sit over the wordmark
 
     // rotation
     const rx = lerp(77, isMobile() ? 90 : 85, rotP) * DEG;
@@ -658,6 +659,8 @@ function startAllAnimations() {
     if (!isMobile()) {
       finalOffsetGroup.rotation.set(0.13 * arrival, -0.198 * arrival, -0.005 * arrival);
       finalOffsetGroup.scale.setScalar(lerp(1, ARRIVAL_SCALE, arrival));
+    } else {
+      finalOffsetGroup.scale.setScalar(lerp(1, ARRIVAL_SCALE_MOBILE, arrival)); // grow when it lands in Producto
     }
 
     // lights lerp by rotP
