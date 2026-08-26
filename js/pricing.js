@@ -5,14 +5,13 @@
    ============================================================ */
 const PRICING_CONFIG = {
   billing: { annualFreeMonths: 2 },          // anual = precio mensual × 10 / 12
-  trialDays: 14,
   featuredPlan: 'pro',
-  cta: { trialBase: 'https://app.comando.pro/registro', trialLabel: 'Probar 14 días gratis', freeLabel: 'Empezar gratis', enterpriseHref: '#pricing-form', enterpriseLabel: 'Habla con ventas' },
+  cta: { trialBase: 'https://app.comando.pro/registro', trialLabel: 'Elegir plan', freeLabel: 'Empezar gratis', enterpriseHref: '#pricing-form', enterpriseLabel: 'Habla con ventas' },
   title: 'Precios simples. Desde $2 al mes.',
-  subtitle: 'Vendedores ilimitados. Paga según el tamaño de tu CRM.',
+  subtitle: 'Vendedores ilimitados. Paga según el tamaño de tu CRM. Empieza gratis con 50 comandos, sin tarjeta.',
   // Cada plan muestra solo 4 líneas: contactos, comandos, vendedores y un diferencial.
   plans: [
-    { id: 'gratis',   name: 'Gratis',   price: 0,  contacts: 100,   commands: 50,    highlight: '1 CRM conectado' },
+    { id: 'gratis',   name: 'Gratis',   price: 0,  contacts: null,  commands: 50,    highlight: '1 CRM conectado', note: 'Prueba Comando con tu CRM real, del tamaño que sea. Sin tarjeta.' },
     { id: 'basico',   name: 'Básico',   price: 2,  contacts: 1000,  commands: 300,   highlight: '1 CRM conectado' },
     { id: 'starter',  name: 'Starter',  price: 6,  contacts: 5000,  commands: 1000,  highlight: 'Automatizaciones ilimitadas' },
     { id: 'pro',      name: 'Pro',      price: 19, contacts: 20000, commands: 4000,  highlight: 'Hasta 3 CRM + ecommerce · soporte por WhatsApp' },
@@ -57,7 +56,7 @@ const PRICING_CONFIG = {
     { q: '¿Dónde quedan las credenciales de mi CRM?', a: 'En infraestructura de Comando, cifradas; nunca en terceros. En planes a medida, en la tuya.' },
     { q: '¿Puedo cambiar de plan?', a: 'Cuando quieras; se prorratea.' },
   ],
-  finalStrip: { text: 'Tus datos no salen de tu CRM. Comando solo ejecuta lo que confirmas.', cta: 'Probar 14 días gratis', href: 'https://app.comando.pro/registro' },
+  finalStrip: { text: 'Tus datos no salen de tu CRM. Comando solo ejecuta lo que confirmas.', cta: 'Empezar gratis', href: 'https://app.comando.pro/registro?plan=gratis' },
 };
 
 (function () {
@@ -85,12 +84,12 @@ const PRICING_CONFIG = {
     const m = monthly(p.price);
     const priceHtml = free ? `<div class="price-amount">US$ 0<span>/mes</span></div>`
       : `<div class="price-amount">${money(m)}<span>/mes</span></div>${state.annual ? `<div class="price-annual">${money(m * 12)} al año</div>` : ''}`;
-    const lines = [`<b>${fmtN(p.contacts)}</b> contactos en tu CRM`, `<b>${fmtN(p.commands)}</b> comandos al mes`, 'Vendedores ilimitados', esc(p.highlight)];
+    const lines = [p.contacts == null ? 'Cualquier tamaño de CRM' : `<b>${fmtN(p.contacts)}</b> contactos en tu CRM`, free ? `<b>${fmtN(p.commands)}</b> comandos para probar` : `<b>${fmtN(p.commands)}</b> comandos al mes`, 'Vendedores ilimitados', esc(p.highlight)];
     const cta = free ? `<a href="${C.cta.trialBase}?plan=${p.id}" class="price-cta">${esc(C.cta.freeLabel)}</a>`
       : `<a href="${C.cta.trialBase}?plan=${p.id}" class="price-cta">${esc(C.cta.trialLabel)}</a>`;
     return `<div class="price-card${featured ? ' is-featured' : ''}${free ? ' is-free' : ''}" data-plan="${p.id}">${featured ? '<div class="price-flag">Más elegido</div>' : ''}
       <div class="price-name">${esc(p.name)}</div>${priceHtml}
-      <ul class="price-list">${lines.map((l) => `<li>${l}</li>`).join('')}</ul>${cta}</div>`;
+      <ul class="price-list">${lines.map((l) => `<li>${l}</li>`).join('')}</ul>${p.note ? `<div class="price-note">${esc(p.note)}</div>` : ''}${cta}</div>`;
   }
   function renderCards() {
     return `<div class="pricing-grid is-five" id="pricing-cards">${C.plans.map(renderCard).join('')}</div>
