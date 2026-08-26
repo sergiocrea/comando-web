@@ -1,0 +1,24 @@
+:root{--bg:#0b1416;--card:#101c1f;--line:#1e2f33;--text:#e6f0f1;--muted:#8fa5a9;--accent:#2fd28f;--accent-ink:#06261a;--error:#ff7b7b}
+*{box-sizing:border-box}html,body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,system-ui,-apple-system,sans-serif;-webkit-font-smoothing:antialiased}
+.ob{max-width:520px;margin:0 auto;padding:40px 20px 80px}
+.ob-logo img{height:28px;display:block;margin-bottom:32px}
+.ob-steps{display:flex;gap:18px;list-style:none;padding:0;margin:0 0 24px;color:var(--muted);font-size:14px}
+.ob-steps li{display:flex;align-items:center;gap:8px}.ob-steps span{display:inline-grid;place-items:center;width:24px;height:24px;border-radius:50%;border:1px solid var(--line);font-size:12px}
+.ob-steps li.active{color:var(--text)}.ob-steps li.active span{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.ob-steps li.done span{background:var(--line)}
+.ob-card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:28px}
+.ob-card h1{font-size:24px;margin:0 0 8px;line-height:1.2}
+.ob-muted{color:var(--muted)}.ob-small{font-size:13px}
+.ob-form{display:grid;gap:10px;margin-top:18px}.ob-form label{font-size:14px;color:var(--muted)}
+.ob-form input{font:inherit;font-size:18px;padding:12px 14px;border-radius:10px;border:1px solid var(--line);background:#0c1719;color:var(--text)}
+.ob-form input:focus{outline:2px solid var(--accent);border-color:transparent}
+.ob-btn{display:inline-block;text-align:center;text-decoration:none;font:inherit;font-weight:600;padding:12px 18px;border-radius:10px;border:0;background:var(--accent);color:var(--accent-ink);cursor:pointer}
+.ob-btn:disabled{opacity:.5;cursor:default}.ob-btn-secondary{background:transparent;color:var(--text);border:1px solid var(--line)}
+.ob-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+.ob-link{background:none;border:0;color:var(--muted);text-decoration:underline;cursor:pointer;font:inherit;padding:0;margin-top:10px}
+.ob-code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:22px;letter-spacing:.06em;background:#0c1719;border:1px dashed var(--line);border-radius:10px;padding:14px;text-align:center;margin:14px 0}
+.ob-error{color:var(--error);font-size:14px;margin:8px 0 0}
+.ob-spinner{display:inline-block;width:12px;height:12px;border:2px solid var(--line);border-top-color:var(--accent);border-radius:50%;animation:spin 1s linear infinite;vertical-align:middle}
+@keyframes spin{to{transform:rotate(360deg)}}
+/* Clerk: que el formulario herede el tema oscuro */
+#clerk-signup{margin-top:18px}

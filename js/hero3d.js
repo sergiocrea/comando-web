@@ -419,6 +419,7 @@ function startAllAnimations() {
   let modelHolder = null; // rotates + scales around the model's geometric center
   let screenMat = null, overlayMat = null;
   let targetScale = 1;
+  let modelLenWorld = 0; // model length (world units, unscaled), set by computeScale
 
   // procedural iPhone (mm). Lies flat: width X, length Z (top at -Z), thickness Y, screen facing +Y
   // (same orientation convention as the original GLB, so the rotation choreography is unchanged).
@@ -513,6 +514,7 @@ function startAllAnimations() {
     const fill = isMobile() ? HERO_FILL_MOBILE : (window.innerHeight < 780 ? 0.56 : HERO_FILL_DESKTOP);
     // scale so the model's largest footprint fills `fill` of the frame
     const maxDim = Math.max(size.x, size.y, size.z);
+    modelLenWorld = maxDim;
     // mobile: size by viewport HEIGHT so the phone fits between the nav and the subtitle on short screens
     targetScale = ((isMobile() ? visH : Math.min(visW, visH)) * fill) / maxDim;
     modelHolder.scale.setScalar(targetScale);
@@ -610,6 +612,17 @@ function startAllAnimations() {
     return camera.position.clone().add(dir.multiplyScalar(dist));
   }
 
+  // scale factor so the phone (currently targetScale-sized) fills ~88% of the #target slot height
+  function targetFitScale() {
+    const el = document.getElementById('target');
+    if (!el || !modelLenWorld) return isMobile() ? ARRIVAL_SCALE_MOBILE : ARRIVAL_SCALE;
+    const r = el.getBoundingClientRect();
+    const visH = 2 * Math.tan((13 * DEG) / 2) * CAM_Z;
+    // fill ~80% of the slot, but never more than 58% of the viewport height
+    const px = Math.min(r.height * 0.8, window.innerHeight * 0.58);
+    const slotWorld = (px / window.innerHeight) * visH;
+    return clamp(slotWorld / (modelLenWorld * targetScale), 0.5, 3);
+  }
   // --- mouse tilt ---
   const tilt = { tx: 0, ty: 0, targetX: 0, targetY: 0 };
   window.addEventListener('mousemove', (e) => {
@@ -632,7 +645,7 @@ function startAllAnimations() {
     const t = scrollState.progress;
     const rotP = isMobile() ? clamp(mobileState.progress * 1.35, 0, 1) : rotationState.progress;
     const arrival = isMobile()
-      ? smoothstep(clamp(mobileState.progress * 1.7, 0, 1), 0, 1)
+      ? smoothstep(clamp(mobileState.progress * 2.4, 0, 1), 0, 1)
       : moveState.progress * clamp((t - 0.5) / 0.5, 0, 1);
 
     // tilt + float (desktop only)
@@ -658,11 +671,13 @@ function startAllAnimations() {
     modelHolder.rotation.set(rx, ry, rz + extraZ);
 
     // finalOffsetGroup extra rot + scale on arrival (desktop)
+    // arrival size: fit the #target slot (independent of the hero size, so it never lands small)
+    const arriveScale = targetFitScale();
     if (!isMobile()) {
       finalOffsetGroup.rotation.set(0.13 * arrival, -0.198 * arrival, -0.005 * arrival);
-      finalOffsetGroup.scale.setScalar(lerp(1, ARRIVAL_SCALE, arrival));
+      finalOffsetGroup.scale.setScalar(lerp(1, arriveScale, arrival));
     } else {
-      finalOffsetGroup.scale.setScalar(lerp(1, ARRIVAL_SCALE_MOBILE, arrival)); // grow when it lands in Producto
+      finalOffsetGroup.scale.setScalar(lerp(1, arriveScale, arrival));
     }
 
     // lights lerp by rotP

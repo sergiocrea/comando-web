@@ -466,3 +466,17 @@ body.sheet-open { overflow: hidden; }
 .home_getupdate-component { padding-top: 3rem; }
 #specs .home_specification-component { padding-bottom: 2rem; }
 @media (min-width: 992px) { .home_getupdate-component-content { padding: 4rem 4.5rem; } }
+
+/* mobile: nav with solid backdrop once content scrolls under it */
+@media (max-width: 991px) { .nav_component.w-nav { background-color: rgba(6,6,6,.9) !important; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); } }
+/* mobile: background video visible in Modo automático */
+@media (max-width: 767px) {
+  #scope-2.home_defence-component { position: relative; overflow: hidden; }
+  #scope-2 .video-code-embed { display: block !important; position: static; }
+  #scope-2 .benefits-video { display: block !important; position: absolute !important; left: 0 !important; top: 0 !important; width: 100% !important; height: 100% !important; }
+  /* pricing band: no wasted space under the form / around the notes */
+  .home_getupdate-component { padding-top: 2rem; padding-bottom: 2rem; }
+  .home_getupdate-component-content { padding: 2.5rem 1.25rem 2rem; min-height: auto; }
+  .pricing-form { margin-bottom: 0; }
+  .pricing-more { padding-top: 2.5rem; }
+}

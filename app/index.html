@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Comando — Crear cuenta</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="../assets/img/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="onboarding.css" rel="stylesheet">
+<!-- Config publica: la clave publishable de Clerk NO es secreta -->
+<script>
+  window.COMANDO_CONFIG = {
+    clerkPublishableKey: 'CLERK_PUBLISHABLE_KEY_AQUI',
+    clerkFrontendApi: 'CLERK_FRONTEND_API_AQUI',   // p.ej. clerk.comando.pro o xxx.clerk.accounts.dev
+    clerkJwtTemplate: 'comando',
+    engineUrl: 'https://app.comando.pro/api',
+  };
+</script>
+</head>
+<body>
+<main class="ob">
+  <a class="ob-logo" href="../"><img src="../assets/img/comando-wordmark.svg" alt="Comando"></a>
+
+  <ol class="ob-steps" aria-label="Pasos">
+    <li data-step="cuenta"><span>1</span> Cuenta</li>
+    <li data-step="whatsapp"><span>2</span> WhatsApp</li>
+    <li data-step="crm"><span>3</span> CRM</li>
+  </ol>
+
+  <!-- Paso 1: Clerk monta aquí su formulario (Google + email) -->
+  <section id="step-cuenta" class="ob-card" hidden>
+    <h1>Crea tu cuenta gratis</h1>
+    <p class="ob-muted">50 comandos de prueba, sin tarjeta. Tu CRM se conecta después, si quieres.</p>
+    <div id="clerk-signup"></div>
+  </section>
+
+  <!-- Paso 2: número de WhatsApp -->
+  <section id="step-whatsapp" class="ob-card" hidden>
+    <h1>Vincula tu WhatsApp</h1>
+    <p class="ob-muted">Comando funciona desde tu propio WhatsApp: escribe el número completo con código de país desde el que enviarás los comandos.</p>
+    <form id="phone-form" class="ob-form">
+      <label for="phone">Número de WhatsApp</label>
+      <input id="phone" name="phone" type="tel" inputmode="tel" placeholder="+51 912 345 678" autocomplete="tel" required>
+      <button type="submit" class="ob-btn">Continuar</button>
+      <p id="phone-error" class="ob-error" role="alert" hidden></p>
+    </form>
+    <div id="phone-verify" hidden>
+      <p>Envía este mensaje <strong>desde el número que registraste</strong> al WhatsApp de Comando (<span id="comando-number"></span>):</p>
+      <p class="ob-code" id="verify-message"></p>
+      <a id="wa-link" class="ob-btn" target="_blank" rel="noopener">Abrir WhatsApp y enviar</a>
+      <p class="ob-muted ob-small">El código vence en 15 minutos. Esperando tu mensaje… <span class="ob-spinner" aria-hidden="true"></span></p>
+      <button type="button" id="phone-change" class="ob-link">Cambiar número</button>
+    </div>
+  </section>
+
+  <!-- Paso 3: CRM opcional -->
+  <section id="step-crm" class="ob-card" hidden>
+    <h1>¡Listo! Tu WhatsApp está vinculado</h1>
+    <p>Ya puedes escribirle a Comando. Prueba con: <em>"muéstrame mis contactos de esta semana"</em>.</p>
+    <p class="ob-muted">¿Quieres que Comando trabaje sobre tu CRM real? Conéctalo ahora o hazlo más tarde desde WhatsApp escribiendo <em>"conectar HubSpot"</em>.</p>
+    <div class="ob-actions">
+      <button type="button" id="connect-hubspot" class="ob-btn">Conectar HubSpot</button>
+      <a class="ob-btn ob-btn-secondary" id="open-whatsapp" target="_blank" rel="noopener">Ir a WhatsApp</a>
+    </div>
+    <p id="crm-status" class="ob-muted ob-small"></p>
+  </section>
+
+  <p id="fatal" class="ob-error" role="alert" hidden></p>
+</main>
+<script src="onboarding.js" defer></script>
+</body>
+</html>
