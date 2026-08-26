@@ -356,3 +356,13 @@ input[type='file']:focus-visible {
   .pricing-toggles { gap: .6rem; }
   .home_getupdate-component-content { padding-left: 1rem; padding-right: 1rem; }
 }
+/* about CTA: two buttons on one row, also on mobile */
+.about_cta-row { display: flex; flex-wrap: nowrap; gap: 1rem; margin-top: 2.5rem; }
+.about_cta-row > a { margin: 0; }
+@media (max-width: 600px) {
+  .about_cta-row { gap: .6rem; }
+  .about_cta-row > a { flex: 1 1 0; }
+  .about_cta-row .polygon-btn { padding: .85rem .6rem; font-size: .78rem; width: 100%; text-align: center; white-space: nowrap; }
+}
+/* "Modo automático": breathing room above the text */
+.home_defence-content-wrap { margin-top: 3rem; }
