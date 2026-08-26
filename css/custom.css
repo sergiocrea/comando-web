@@ -382,7 +382,7 @@ input[type='file']:focus-visible {
   .section_left-slider-wrap.hide-mobile-landscape, .section_bottom-slider.hide-mobile-landscape { width: 34%; }
   .section_slider-card { max-width: 34ch; }
 }
-@media (min-width: 768px) { .section_left-slider-wrap, .section_bottom-slider { transform: translateY(25%); } }
+@media (min-width: 768px) { .section_left-slider-wrap, .section_bottom-slider { transform: translateY(45%); } }
 /* features: the sticky phone sits at the left edge of the container; cards fill the right in 2 columns */
 @media (min-width: 768px) {
   .sticky-block-grid { align-items: flex-start; padding-left: max(1.88rem, calc((100% - 90rem) / 2 + 1.88rem)); }
@@ -392,3 +392,8 @@ input[type='file']:focus-visible {
 }
 @media (min-width: 768px) { #scope-1 .home_grid-wrapper { padding-left: 27%; } }
 @media (min-width: 768px) { #scope-1 .home_grid-wrapper > .section_middle-slider { display: none; } }
+
+/* features: narrower dark bands so ~2 rows stay readable at once */
+@media (min-width: 768px) {
+  .section_lineargrad-overlay, .section_lineargrad-overlay.hide-mobile-landscape { background-image: linear-gradient(#060606 0%, rgba(6,6,6,.92) 7%, rgba(6,6,6,0) 22%, rgba(6,6,6,0) 78%, rgba(6,6,6,.92) 93%, #060606 100%); }
+}

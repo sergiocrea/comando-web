@@ -496,7 +496,7 @@ function initSliderParallax() {
       // desktop: spread the movement over the whole pinned range (dummy entering + leaving),
       // so the rows keep sliding until the block unpins and the phone is never left alone
       const p2 = Math.min(1, Math.max(0, (window.innerHeight - rect.top) / (window.innerHeight * 2)));
-      const y = 25 - p2 * 52;
+      const y = 45 - p2 * 62; // start with row 1 in the readable band, end with the last row still visible
       if (left) left.style.transform = `translateY(${y}%)`;
       if (bottom) bottom.style.transform = `translateY(${y}%)`;
     } else {
