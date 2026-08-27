@@ -605,8 +605,9 @@ function startAllAnimations() {
     const el = document.getElementById('target');
     if (!el) return new THREE.Vector3(0, 0, 0);
     const r = el.getBoundingClientRect();
-    const ndcX = ((r.left + r.width / 2) / window.innerWidth) * 2 - 1;
-    const ndcY = -((r.top + r.height / 2) / window.innerHeight) * 2 + 1;
+    const c = renderer.domElement.getBoundingClientRect(); // canvas may scroll with the page (absolute inside the hero)
+    const ndcX = ((r.left + r.width / 2 - c.left) / window.innerWidth) * 2 - 1;
+    const ndcY = -((r.top + r.height / 2 - c.top) / window.innerHeight) * 2 + 1;
     const v = new THREE.Vector3(ndcX, ndcY, 0.5).unproject(camera);
     const dir = v.sub(camera.position).normalize();
     const dist = -camera.position.z / dir.z;

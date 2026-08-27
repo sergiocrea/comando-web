@@ -25,7 +25,7 @@ const PRICING_CONFIG = {
   addonsIntro: '¿Te quedas corto? Suma paquetes sin cambiar de plan:',
   overageNote: 'Te avisamos al 80 % de tu límite. Nunca cortamos el servicio sin aviso.',
   includes: [
-    'Conexión al CRM en 2 minutos con login OAuth (sin copiar claves)',
+    'Conexión al CRM en 2 minutos',
     'Confirmación antes de ejecutar cualquier cambio',
     'Historial auditable de cada acción',
     'Español adaptado al país de tu equipo',
@@ -102,8 +102,6 @@ const PRICING_CONFIG = {
   function renderMore() {
     return `<section class="pricing-more" aria-label="Detalles de precios">
       <div class="padding-global"><div class="container-large">
-        <div class="pm-block"><h3 class="pm-title">Todos los planes incluyen</h3>
-          <ul class="pm-includes">${C.includes.map((i) => `<li>${esc(i)}</li>`).join('')}</ul></div>
         <div class="pm-block"><h3 class="pm-title">Preguntas frecuentes</h3>
           <div class="pm-faq">${C.faq.map((f) => `<details class="pm-faq-item"><summary>${esc(f.q)}</summary><div class="pm-faq-a">${esc(f.a)}</div></details>`).join('')}</div></div>
         <div class="pm-strip"><div class="pm-strip-text">${esc(C.finalStrip.text)}</div><a href="${C.finalStrip.href}" class="price-cta">${esc(C.finalStrip.cta)}</a></div>
