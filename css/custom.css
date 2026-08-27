@@ -581,7 +581,7 @@ body.sheet-open { overflow: hidden; }
 .section_usecases { position: relative; z-index: 3; background: #0a0a0a; padding: 5rem 0 3rem; }
 .uc-subtitle { font-family: "Neuehaasunicaw 1 G", Inter, sans-serif; color: #b0b0b0; font-size: 1.05rem; line-height: 1.5; max-width: 40rem; margin: 1rem auto 0; text-align: center; }
 .uc-tabs, .uc-chips { display: flex; gap: .5rem; justify-content: center; flex-wrap: wrap; }
-.uc-tabs { margin-top: 2.5rem; }
+.uc-tabs { margin-top: 1.5rem; }
 .uc-chips { margin-top: .75rem; }
 .uc-tab, .uc-chip { -webkit-appearance: none; appearance: none; cursor: pointer; border-radius: 999px; font-family: "Jetbrainsmono Variable", monospace; letter-spacing: .04em; white-space: nowrap; transition: background .2s, color .2s, border-color .2s; }
 .uc-tab { background: #111; border: 1px solid #2a2a2a; color: #d0d0d0; font-size: .85rem; padding: .7rem 1.15rem; }
