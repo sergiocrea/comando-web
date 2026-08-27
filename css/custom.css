@@ -564,3 +564,8 @@ body.sheet-open { overflow: hidden; }
   #about.is-hero .section_about-left { padding-bottom: 2rem; }
   #about.is-hero .section_about-component { padding-top: 6.5rem; }
 }
+/* hero (desktop/tablet): the phone never grows taller than the viewport (short/zoomed windows) */
+@media (min-width: 768px) {
+  #about.is-hero .section_about-left { align-items: center; padding-top: 0; }
+  #about.is-hero .section_about-left .canvas-target-block { max-height: calc(100svh - 7rem); }
+}
