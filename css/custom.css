@@ -515,3 +515,4 @@ body.sheet-open { overflow: hidden; }
 @media (min-width: 768px) { #trigger-1.section-dummy { min-height: 120svh; } }
 .section_clip-path-wrap { padding-bottom: 0; }
 #specs .home_specification-component { padding-top: 3rem; }
+.section_clip-path-wrap { min-height: 0 !important; }
