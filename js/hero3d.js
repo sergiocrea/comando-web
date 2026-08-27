@@ -154,8 +154,9 @@ function startAllAnimations() {
   const camera = new THREE.PerspectiveCamera(13, window.innerWidth / window.innerHeight, 0.1, 1000);
   const CAM_Z = 0.25;
 
-  const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, logarithmicDepthBuffer: true });
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  const LOW_END = isMobile() && ((navigator.hardwareConcurrency || 4) <= 4 || (navigator.deviceMemory || 4) <= 4);
+  const renderer = new THREE.WebGLRenderer({ antialias: !LOW_END, alpha: true, logarithmicDepthBuffer: !isMobile(), powerPreference: 'high-performance' });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, isMobile() ? (LOW_END ? 1 : 1.5) : 2));
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.setClearColor(0x000000, 0);
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
@@ -404,7 +405,7 @@ function startAllAnimations() {
     }
 
     function tick(now) {
-      if (active && now - last > 33) { last = now; draw(now - start.t0); tex.needsUpdate = true; overlayTex.needsUpdate = true; }
+      if (active && now - last > (isMobile() ? 66 : 33)) { last = now; draw(now - start.t0); tex.needsUpdate = true; overlayTex.needsUpdate = true; }
       requestAnimationFrame(tick);
     }
     requestAnimationFrame(tick);
@@ -637,8 +638,11 @@ function startAllAnimations() {
   // --- render loop ---
   const clock = new THREE.Clock();
   let started = false;
+  let heroVisible = true;
+  if ('IntersectionObserver' in window) new IntersectionObserver((es) => { heroVisible = es[0].isIntersecting; heroVid.v[heroVisible ? 'play' : 'pause'](); termVid.v[heroVisible ? 'play' : 'pause'](); }, { threshold: 0.01 }).observe(mount);
   function animate() {
     requestAnimationFrame(animate);
+    if (!heroVisible) return; // nothing to draw while the hero is scrolled away
     const elapsed = clock.getElapsedTime();
     camera.position.set(0, 0, CAM_Z);
     camera.lookAt(0, 0, 0);

@@ -152,11 +152,16 @@
   // looping canvases (responsive/mobile blocks)
   const loops = Array.from(document.querySelectorAll('canvas.screen-loop'));
   if (loops.length) {
-    const t0 = performance.now();
+    const t0 = performance.now(); let last = 0;
+    const visible = new Set();
+    if ('IntersectionObserver' in window) { const io = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) visible.add(e.target); else visible.delete(e.target); })); loops.forEach((c) => io.observe(c)); }
+    else loops.forEach((c) => visible.add(c));
     (function tick(now) {
-      const frame = ((now - t0) / 1000 * 30) % 680;
-      loops.forEach((c) => { if (c.offsetParent !== null) drawFeatureScreen(c.getContext('2d'), c.width, c.height, frame); });
       requestAnimationFrame(tick);
+      if (now - last < 50) return; // ~20 fps is plenty for a scrubbed UI
+      last = now;
+      const frame = ((now - t0) / 1000 * 30) % 680;
+      visible.forEach((c) => { if (c.offsetParent !== null) drawFeatureScreen(c.getContext('2d'), c.width, c.height, frame); });
     })(t0);
   }
 })();
