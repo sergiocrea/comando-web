@@ -558,3 +558,9 @@ body.sheet-open { overflow: hidden; }
 #target.canvas-target-block { position: relative; overflow: visible; }
 #hero-canvas { position: absolute; left: 50%; top: 50%; height: 100%; width: auto; transform: translate(-50%, -50%) perspective(1400px) rotateY(-10deg) rotateX(3deg); transform-origin: center; pointer-events: none; }
 @media (max-width: 767px) { #hero-canvas { transform: translate(-50%, -50%); } }
+/* mobile hero: bigger phone */
+@media (max-width: 767px) {
+  #about.is-hero .section_about-left .canvas-target-block { width: 66vw !important; max-width: 66vw !important; aspect-ratio: 1 / 2 !important; }
+  #about.is-hero .section_about-left { padding-bottom: 2rem; }
+  #about.is-hero .section_about-component { padding-top: 6.5rem; }
+}
