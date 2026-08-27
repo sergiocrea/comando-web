@@ -168,14 +168,15 @@
   if (!cards.length) return;
   const sheet = document.createElement('div');
   sheet.className = 'connector-sheet'; sheet.setAttribute('role', 'dialog'); sheet.setAttribute('aria-modal', 'true'); sheet.hidden = true;
-  sheet.innerHTML = '<div class="connector-sheet-backdrop" data-close></div><div class="connector-sheet-panel"><button type="button" class="connector-sheet-close" aria-label="Cerrar" data-close>×</button><img class="connector-sheet-logo" alt=""/><div class="connector-sheet-name"></div><div class="connector-sheet-desc"></div></div>';
+  sheet.innerHTML = '<div class="connector-sheet-backdrop" data-close></div><div class="connector-sheet-panel"><button type="button" class="connector-sheet-close" aria-label="Cerrar" data-close>×</button><img class="connector-sheet-logo" alt=""/><div class="connector-sheet-name"></div><div class="connector-sheet-desc"></div><div class="connector-sheet-example"><div class="connector-sheet-example-label">Ejemplo de comando</div><div class="connector-sheet-bubble"></div></div></div>';
   document.body.appendChild(sheet);
-  const logo = sheet.querySelector('.connector-sheet-logo'), name = sheet.querySelector('.connector-sheet-name'), desc = sheet.querySelector('.connector-sheet-desc');
+  const logo = sheet.querySelector('.connector-sheet-logo'), name = sheet.querySelector('.connector-sheet-name'), desc = sheet.querySelector('.connector-sheet-desc'), ex = sheet.querySelector('.connector-sheet-example'), bubble = sheet.querySelector('.connector-sheet-bubble');
   let last = null;
   const close = () => { sheet.classList.remove('is-open'); setTimeout(() => { sheet.hidden = true; }, 220); document.body.classList.remove('sheet-open'); if (last) last.focus(); };
   const open = (card) => {
     const img = card.querySelector('.connector-logo'); const h = card.querySelector('.card_specification-heading'); const d = card.querySelector('.card_specification-description');
     logo.src = img ? img.src : ''; name.textContent = h ? h.textContent.trim() : ''; desc.textContent = d ? d.textContent.trim() : '';
+    const example = card.getAttribute('data-example'); ex.hidden = !example; bubble.textContent = example ? '«' + example + '»' : '';
     last = card; sheet.hidden = false; requestAnimationFrame(() => sheet.classList.add('is-open')); document.body.classList.add('sheet-open');
     sheet.querySelector('.connector-sheet-close').focus();
   };
