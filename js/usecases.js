@@ -80,5 +80,5 @@
     restartTimer(6000);
     if (typeof ScrollTrigger !== 'undefined') ScrollTrigger.refresh();
   }
-  fetch('docs/usecases.json?v=1').then((r) => r.json()).then((d) => { D = d; render(); showStep(0, 'init'); requestAnimationFrame(() => root.querySelector('.uc-layout').classList.add('is-in')); if (typeof ScrollTrigger !== 'undefined') ScrollTrigger.refresh(); }).catch(() => {});
+  fetch('docs/usecases.json?v=2').then((r) => r.json()).then((d) => { D = d; render(); showStep(0, 'init'); requestAnimationFrame(() => root.querySelector('.uc-layout').classList.add('is-in')); if (typeof ScrollTrigger !== 'undefined') ScrollTrigger.refresh(); }).catch(() => {});
 })();
