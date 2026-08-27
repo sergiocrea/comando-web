@@ -538,3 +538,13 @@ body.sheet-open { overflow: hidden; }
 @media (max-width: 767px) { .home_features-card { aspect-ratio: auto !important; display: flex !important; flex-direction: column; justify-content: flex-start; grid-template-rows: auto !important; } .home_features-card .home_icon-text-wrapper { width: 100%; } }
 /* 3D canvas lives inside the hero and scrolls with it (steady on mobile) */
 #about.is-hero #app.canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100svh; z-index: 2; }
+
+/* hero: prominent badge + corporate primary button */
+.hero-badge { display: inline-flex; align-items: center; gap: .6rem; background: rgba(77,124,255,.16); border: 1px solid rgba(77,124,255,.55); color: #fff; font-family: "Neuehaasunicaw 1 G", Inter, Arial, sans-serif; font-weight: 600; font-size: 1.05rem; letter-spacing: .01em; text-transform: none; padding: .55rem 1.1rem; border-radius: 999px; backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); margin-bottom: 1.25rem; }
+.hero-badge-dot { width: .6rem; height: .6rem; border-radius: 50%; background: #4d7cff; box-shadow: 0 0 0 4px rgba(77,124,255,.25); }
+.btn-primary { display: inline-flex; align-items: center; gap: .6rem; background: #4d7cff; color: #fff; font-family: "Neuehaasunicaw 1 G", Inter, Arial, sans-serif; font-weight: 600; font-size: 1.05rem; padding: 1rem 1.75rem; border-radius: .75rem; text-decoration: none; box-shadow: 0 10px 30px rgba(77,124,255,.35); transition: background .2s, transform .2s, box-shadow .2s; }
+.btn-primary:hover { background: #3d6cf0; transform: translateY(-1px); box-shadow: 0 14px 34px rgba(77,124,255,.45); }
+.btn-primary .btn-arrow { transition: transform .2s; }
+.btn-primary:hover .btn-arrow { transform: translateX(3px); }
+.about_cta-row > a.btn-primary { margin: 0; }
+@media (max-width: 767px) { .hero-badge { font-size: .95rem; } .btn-primary { width: 100%; justify-content: center; } }
