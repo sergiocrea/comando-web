@@ -428,7 +428,7 @@ function initFeatureVideo() {
     });
     // phone: slide from the left column (Funciones) to the center (Modo automático)
     const phoneWrap = document.querySelector('.sticky-block-grid .section_middle-slider');
-    if (phoneWrap) {
+    if (phoneWrap && document.getElementById('lottiee-section')) {
       gsap.fromTo(phoneWrap, { x: 0 }, {
         x: () => {
           const g = phoneWrap.parentElement.getBoundingClientRect();
@@ -441,7 +441,7 @@ function initFeatureVideo() {
       });
     }
     // PHASE 3: 160->200
-    gsap.to(target, {
+    if (document.getElementById('lottiee-section')) gsap.to(target, {
       frame: 200, ease: 'none', onUpdate: () => setFrame(target.frame),
       scrollTrigger: { trigger: '#lottiee-section', start: 'top bottom', end: 'top top', scrub: true },
     });
@@ -510,7 +510,7 @@ function initSliderParallax() {
       // desktop: the block stays pinned while #trigger-1 (150svh) scrolls through;
       // spread the movement over that whole pinned range
       const p2 = Math.min(1, Math.max(0, (window.innerHeight - rect.top) / rect.height));
-      const y = 34 - p2 * 62; // row 1 enters just below the top band; the last rows end near the middle // start with row 1 in the readable band, end with the last row still visible
+      const y = 22 - p2 * 50; // row 1 enters just below the top band; the last rows end near the middle // start with row 1 in the readable band, end with the last row still visible
       if (left) left.style.transform = `translateY(${y}%)`;
       if (bottom) bottom.style.transform = `translateY(${y}%)`;
     } else {

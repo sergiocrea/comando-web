@@ -382,7 +382,7 @@ input[type='file']:focus-visible {
   .section_left-slider-wrap.hide-mobile-landscape, .section_bottom-slider.hide-mobile-landscape { width: 34%; }
   .section_slider-card { max-width: 34ch; }
 }
-@media (min-width: 768px) { .section_left-slider-wrap, .section_bottom-slider { transform: translateY(34%); } }
+@media (min-width: 768px) { .section_left-slider-wrap, .section_bottom-slider { transform: translateY(22%); } }
 /* features: the sticky phone sits at the left edge of the container; cards fill the right in 2 columns */
 @media (min-width: 768px) {
   .sticky-block-grid { align-items: flex-start; padding-left: max(1.88rem, calc((100% - 90rem) / 2 + 1.88rem)); }
@@ -507,3 +507,11 @@ body.sheet-open { overflow: hidden; }
 .pricing-grid.is-five { grid-template-columns: repeat(4, 1fr); }
 @media (max-width: 1200px) and (min-width: 992px) { .pricing-grid.is-five { grid-template-columns: repeat(2, 1fr); } }
 @media (max-width: 767px) { #about.is-hero .section_about-component { padding-top: 6.5rem; } }
+/* hero: exactly one viewport tall */
+#about.is-hero { height: 100svh; min-height: 0; }
+#about.is-hero .section_about-component { min-height: 0; height: 100svh; box-sizing: border-box; padding-top: 5rem; }
+#about.is-hero .section_about-heading { font-size: clamp(2.4rem, 4.4vw, 4rem); }
+/* features: tighter vertical rhythm (12 rows now) */
+@media (min-width: 768px) { #trigger-1.section-dummy { min-height: 120svh; } }
+.section_clip-path-wrap { padding-bottom: 0; }
+#specs .home_specification-component { padding-top: 3rem; }

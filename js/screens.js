@@ -143,10 +143,8 @@
     const f = clamp(frame, 0, 680);
     const s = device(ctx, w, h);
     ctx.save(); ctx.beginPath(); ctx.roundRect(s.sx, s.sy - s.sh * 0.07, s.sw, s.sh * 1.14, s.r); ctx.clip();
-    if (f < 60) screenBoot(ctx, s, f / 60);
-    if (f >= 40 && f < 215) screenLog(ctx, s, seg(f, 50, 160), 1 - seg(f, 185, 215));
-    if (f >= 185 && f < 530) screenPipeline(ctx, s, seg(f, 215, 480), seg(f, 185, 215) * (1 - seg(f, 500, 530)));
-    if (f >= 500) screenSync(ctx, s, seg(f, 530, 660), seg(f, 500, 530));
+    // 0-200: the automation pipeline builds up while the feature rows scroll; afterwards it stays complete
+    screenPipeline(ctx, s, seg(f, 10, 190), 1);
     ctx.restore();
   }
   window.drawFeatureScreen = drawFeatureScreen;
