@@ -6,7 +6,7 @@
 const PRICING_CONFIG = {
   billing: { annualFreeMonths: 2 },          // anual = precio mensual × 10 / 12
   featuredPlan: 'starter',
-  cta: { trialBase: 'https://app.comando.pro/registro', trialLabel: 'Elegir plan', freeLabel: 'Empezar gratis', enterpriseHref: '#pricing-form', enterpriseLabel: 'Habla con ventas' },
+  cta: { trialBase: '/app/', trialLabel: 'Elegir plan', freeLabel: 'Empezar gratis', enterpriseHref: '#pricing-form', enterpriseLabel: 'Habla con ventas' },
   title: 'Desde $3 al mes.',
   subtitle: 'Vendedores ilimitados. Paga según el tamaño de tu CRM. Empieza gratis con 50 comandos, sin tarjeta.',
   // Cada plan muestra solo 4 líneas: contactos, comandos, vendedores y un diferencial.
@@ -16,7 +16,8 @@ const PRICING_CONFIG = {
     { id: 'starter',  name: 'Starter',  price: 6,  contacts: 25000, commands: 1000,  highlight: 'Automatizaciones ilimitadas' },
     { id: 'pro',      name: 'Pro',      price: 19, contacts: 75000, commands: 4000,  highlight: 'Hasta 3 CRM + ecommerce · soporte por WhatsApp' },
   ],
-  enterpriseLine: '¿Más de 75 000 contactos, varios países o requisitos especiales?',
+  enterpriseLine: '¿Más de 75 000 contactos? Business: US$ 49/mes con 200 000 contactos y 10 000 comandos al mes. ¿Varios países o requisitos especiales?',
+  syncNote: 'Sincronización en tiempo real cuando tu CRM envía eventos (HubSpot, Pipedrive, Zoho, Kommo, Shopify, Tiendanube, WooCommerce, Mercado Libre…). En los demás, Comando revisa cambios cada 6 h en Básico, 30 min en Starter y 5 min en Pro.',
   commandNote: 'Un comando es cada pedido que le haces a Comando por WhatsApp, por texto o por audio. Las confirmaciones y las respuestas no cuentan.',
   addons: [
     { label: '+10 000 contactos', price: 1 },
@@ -52,12 +53,14 @@ const PRICING_CONFIG = {
     { q: '¿Qué cuenta como comando?', a: 'Cada pedido que le haces a Comando por WhatsApp, por texto o por audio. Las confirmaciones («sí», «ok») y las respuestas de Comando no cuentan.' },
     { q: '¿Qué pasa si uso más comandos de los incluidos?', a: 'Te avisamos al 80 %. Puedes sumar paquetes de 1 000 comandos por $2 o subir de plan.' },
     { q: '¿Qué incluye el plan Gratis?', a: '50 comandos de cupo total con 1 CRM de cualquier tamaño y vendedores ilimitados, sin tarjeta. No incluye sincronización continua ni automatizaciones; al agotar el cupo (o tras 30 días sin uso) deja de ejecutar hasta que elijas un plan.' },
-    { q: '¿Qué CRM soportan?', a: 'HubSpot, Salesforce, Zoho, Pipedrive, Dynamics 365 y más.' },
+    { q: '¿Comando les escribe a mis clientes?', a: 'No desde tu número personal: Meta bloquea los envíos automáticos desde WhatsApp no oficial. Comando prepara el mensaje y te lo entrega listo para enviarlo con un toque (modo asistido). Si conectas un número oficial de WhatsApp Business, los envíos automáticos con plantillas aprobadas quedan disponibles.' },
+    { q: '¿Qué pasa si pido algo que mi CRM no permite?', a: 'Comando te lo dice y te propone la alternativa que sí puede hacer (por ejemplo, crear la tarea en vez de llamar, o contar desde hoy si tu CRM no guarda historial de ese campo).' },
+    { q: '¿Qué CRM soportan?', a: 'HubSpot, Pipedrive, Zoho CRM, Salesforce, Kommo y Dynamics 365; en e-commerce, Shopify, Tiendanube, WooCommerce, Mercado Libre y VTEX.' },
     { q: '¿Necesito contratar la API de WhatsApp Business?', a: 'No para empezar.' },
     { q: '¿Dónde quedan las credenciales de mi CRM?', a: 'En infraestructura de Comando, cifradas; nunca en terceros. En planes a medida, en la tuya.' },
     { q: '¿Puedo cambiar de plan?', a: 'Cuando quieras; se prorratea.' },
   ],
-  finalStrip: { text: 'Tus datos no salen de tu CRM. Comando solo ejecuta lo que confirmas.', cta: 'Empezar gratis', href: 'https://app.comando.pro/registro?plan=gratis' },
+  finalStrip: { text: 'Tus datos no salen de tu CRM. Comando solo ejecuta lo que confirmas.', cta: 'Empezar gratis', href: '/app/?plan=gratis' },
 };
 
 (function () {
@@ -98,11 +101,16 @@ const PRICING_CONFIG = {
         <p class="pricing-note"><b>¿Qué es un comando?</b> ${esc(C.commandNote)}</p>
         <p class="pricing-note"><b>${esc(C.addonsIntro)}</b> ${C.addons.map((a) => `${esc(a.label)} = ${money(a.price)}/mes`).join(' · ')}. ${esc(C.overageNote)}</p>
         <p class="pricing-note">${esc(C.enterpriseLine)} <a href="${C.cta.enterpriseHref}">${esc(C.cta.enterpriseLabel)}</a>.</p>
+        <p class="pricing-note ob-muted">${esc(C.syncNote)}</p>
       </div>`;
   }
   function renderMore() {
     return `<section class="pricing-more" aria-label="Detalles de precios">
       <div class="padding-global"><div class="container-large">
+        <div class="pm-block"><h3 class="pm-title">${esc(C.comparison.title)}</h3><p class="pm-intro">${esc(C.comparison.intro)}</p>
+          <div class="pm-table-wrap"><table class="pm-table"><thead><tr><th scope="col">Contactos</th><th scope="col">HubSpot Marketing Hub (referencia)</th><th scope="col">Comando</th></tr></thead>
+          <tbody>${C.comparison.rows.map((r) => `<tr><td class="pm-strong">${esc(r.contacts)}</td><td>${esc(r.hubspot)}</td><td class="pm-strong">${esc(r.comando)}</td></tr>`).join('')}</tbody></table></div>
+          <p class="pm-message">${esc(C.comparison.message)}</p><p class="pm-footnote">${esc(C.comparison.footnote)}</p></div>
         <div class="pm-block"><h3 class="pm-title">Preguntas frecuentes</h3>
           <div class="pm-faq">${C.faq.map((f) => `<details class="pm-faq-item"><summary>${esc(f.q)}</summary><div class="pm-faq-a">${esc(f.a)}</div></details>`).join('')}</div></div>
         <div class="pm-strip"><div class="pm-strip-text">${esc(C.finalStrip.text)}</div><a href="${C.finalStrip.href}" class="price-cta">${esc(C.finalStrip.cta)}</a></div>
@@ -119,6 +127,13 @@ const PRICING_CONFIG = {
     const grid = document.getElementById('pricing-cards'); if (grid) grid.scrollLeft = 0;
     if (typeof ScrollTrigger !== 'undefined') ScrollTrigger.refresh();
   }
+  // contact form: goes to the onboarding at /app/ (no Webflow backend)
+  const form = document.getElementById('wf-form-Waitlist-form');
+  if (form) form.addEventListener('submit', (e) => {
+    e.preventDefault(); e.stopImmediatePropagation();
+    const v = (form.querySelector('input[name="name"]') || {}).value || '';
+    window.location.href = '/app/' + (v ? '?email=' + encodeURIComponent(v.trim()) : '');
+  }, true);
   const more = document.getElementById('pricing-more');
   if (more) more.innerHTML = renderMore();
   mount();

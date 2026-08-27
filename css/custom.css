@@ -569,3 +569,18 @@ body.sheet-open { overflow: hidden; }
   #about.is-hero .section_about-left { align-items: center; padding-top: 0; }
   #about.is-hero .section_about-left .canvas-target-block { max-height: calc(100svh - 7rem); }
 }
+/* ===== "Tú envías, Comando prepara" (modo asistido) ===== */
+.section_assisted { padding: 5rem 0 2.5rem; }
+.assisted-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; margin-top: 2.5rem; }
+.assisted-step { background: #0d0d0d; border: 1px solid #262626; border-radius: 1rem; padding: 1.6rem 1.5rem; }
+.assisted-num { font-family: "Jetbrainsmono Variable", monospace; font-size: .78rem; letter-spacing: .08em; color: #4d7cff; margin-bottom: .9rem; }
+.assisted-title { font-family: Neuemachina, "Space Grotesk", Inter, sans-serif; font-weight: 600; font-size: 1.15rem; line-height: 1.3; color: #fff; margin: 0 0 .6rem; }
+.assisted-text { font-family: "Neuehaasunicaw 1 G", Inter, sans-serif; color: #b0b0b0; line-height: 1.5; margin: 0; }
+.assisted-close { text-align: center; font-family: Neuemachina, "Space Grotesk", Inter, sans-serif; font-weight: 600; font-size: 1.25rem; color: #fff; margin: 2rem 0 0; }
+@media (max-width: 767px) { .section_assisted { padding: 3rem 0 1rem; } .assisted-grid { grid-template-columns: 1fr; gap: .9rem; margin-top: 1.75rem; } .assisted-close { font-size: 1.1rem; } }
+/* connector cards: sync chip */
+.connector-chip { display: block; width: fit-content; line-height: 1.2; font-family: "Jetbrainsmono Variable", monospace; font-size: .62rem; letter-spacing: .06em; text-transform: uppercase; padding: .22rem .55rem; border-radius: 999px; border: 1px solid #2f2f2f; color: #9a9a9a; margin: 0 0 .6rem; }
+.connector-chip.is-live { color: #4d7cff; border-color: rgba(77,124,255,.5); }
+.connector-sheet-chip { margin: -.2rem 0 .6rem; } .connector-sheet-chip .connector-chip { margin: 0 auto; }
+/* pricing: muted small print under the cards */
+.pricing-note.ob-muted { font-size: .85rem; color: rgba(10,10,10,.7); }

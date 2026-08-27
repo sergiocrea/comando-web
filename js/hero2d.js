@@ -182,17 +182,17 @@ function startAllAnimations() {
       { from: 'bot', text: 'Lunes:\n09:00 Demo · Inmobiliaria Sur\n11:30 Llamar a 4 leads sin respuesta\n15:00 Renovación · Grupo Mesa' },
     ],
     seguimiento: [
-      { from: 'me',  text: 'a los leads que no responden, envía seguimientos los días 2, 6 y 12; detente si responden' },
-      { from: 'bot', text: 'Secuencia creada: 3 seguimientos por WhatsApp (días 2, 6 y 12). Se detiene con la primera respuesta. 38 leads entran hoy.' },
+      { from: 'me',  text: 'a los leads que no responden, pásame el seguimiento listo los días 2, 6 y 12; detente si responden' },
+      { from: 'bot', text: 'Secuencia creada: 3 seguimientos (días 2, 6 y 12), te llegan redactados para enviarlos con un toque. Se detiene con la primera respuesta. 38 leads entran hoy.' },
     ],
     citas: [
-      { from: 'me',  text: 'recuerda las citas a los pacientes un día antes' },
-      { from: 'bot', text: 'Listo ✓ Recordatorio 24 h antes con la plantilla "recordatorio_cita". Mañana se envían 12.' },
+      { from: 'me',  text: 'un día antes de cada cita, pásame el recordatorio para el paciente' },
+      { from: 'bot', text: 'Listo ✓ 24 h antes de cada cita te llega el recordatorio listo para enviar. Mañana te paso 12.' },
     ],
     leadCaliente: [
       { from: 'bot', text: '🔥 Lead nuevo: María Torres (Facebook · campaña Verano). Solicita cotización hoy.' },
-      { from: 'me',  text: 'asígnalo a Ana y envíale la cotización base' },
-      { from: 'bot', text: 'Hecho ✓ Asignado a Ana. María ya recibió la cotización por WhatsApp.' },
+      { from: 'me',  text: 'asígnalo a Ana y déjale la cotización base lista para enviar' },
+      { from: 'bot', text: 'Hecho ✓ Asignado a Ana. Le pasé la cotización base redactada para María; la envía con un toque.' },
     ],
   };
   const ACTIVE = { logo: ['reasignar', 'speedToLead'], term: ['pipeline', 'dealGrande', 'lunes'] };
