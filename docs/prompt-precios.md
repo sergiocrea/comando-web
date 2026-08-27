@@ -33,7 +33,7 @@ sección debe sentirse parte de la misma página.
 | | Gratis | Básico | Starter | Pro | Business | Enterprise |
 |---|---|---|---|---|---|---|
 | Precio mensual | $0 | **$2/mes** | $6/mes | $19/mes | $49/mes | A medida |
-| Contactos en el CRM | cualquier tamaño (1 CRM) | hasta 1,000 | hasta 5,000 | hasta 20,000 | hasta 50,000 | Ilimitados |
+| Contactos en el CRM | cualquier tamaño (1 CRM) | hasta 10,000 | hasta 25,000 | hasta 75,000 | hasta 200,000 | Ilimitados |
 | Comandos incluidos (texto o audio) | 50 en total (cupo de prueba) | 300 / mes | 1,000 / mes | 4,000 / mes | 10,000 / mes | Negociados |
 | Operadores (vendedores) | Ilimitados | Ilimitados | Ilimitados | Ilimitados | Ilimitados |
 | CRMs conectados | 1 | 1 | 3 | Ilimitados | Ilimitados |
@@ -46,7 +46,9 @@ sección debe sentirse parte de la misma página.
 | Soporte | Email | Email | Prioritario por WhatsApp | Prioritario + onboarding | Dedicado + SLA |
 | Credenciales del CRM en infraestructura del cliente, SSO, auditoría avanzada | — | — | — | — | ✓ |
 
-Add-ons (todos los planes): **+1,000 contactos → $1/mes** · **+1,000 comandos → $2/mes**.
+Add-ons (todos los planes): **+10,000 contactos → $1/mes** · **+1,000 comandos → $2/mes**.
+
+Sincronización: en tiempo real cuando el CRM envía eventos (HubSpot, Pipedrive, Zoho, Kommo, Shopify, Tiendanube, WooCommerce, Mercado Libre…); en los que no, Comando revisa cambios cada 6 h (Básico), 30 min (Starter) o 5 min (Pro/Business).
 Anual: 2 meses gratis (toggle mensual/anual). Plan destacado: Pro.
 Al superar contactos o comandos: aviso al 80%; sugerir add-on o plan siguiente; nunca se
 corta el servicio sin aviso.
@@ -57,9 +59,9 @@ de HubSpot 2026 como referencia; citar "precios de lista HubSpot, facturación a
 
 | Contactos | HubSpot Marketing Hub (referencia) | Comando |
 |---|---|---|
-| 1,000 | Starter: $20/asiento/mes (1,000 contactos; +$50 por cada 1,000) | Starter: $6/mes, vendedores ilimitados |
-| 2,000-10,000 | Professional: desde $890/mes (2,000 contactos; +$250 por 5,000) | Pro: $19/mes |
-| 10,000-50,000 | Enterprise: desde $3,600/mes (10,000 contactos) | Business: $49/mes |
+| Hasta 10,000 | Starter: $20/asiento/mes (1,000 contactos; +$50 por cada 1,000) | Básico: $3/mes, 10,000 contactos, vendedores ilimitados |
+| 10,000-25,000 | Professional: desde $890/mes (2,000 contactos; +$250 por 5,000) | Starter: $6/mes, 25,000 contactos |
+| 25,000-200,000 | Enterprise: desde $3,600/mes (10,000 contactos) | Pro: $19/mes (75,000) · Business: $49/mes (200,000) |
 | Asiento de ventas | Sales Hub Professional: $90/asiento/mes | Sin costo por asiento |
 
 Mensaje clave: **"Todo tu equipo opera el CRM desde WhatsApp por menos del 5% de lo que
@@ -111,7 +113,7 @@ sincronización del CRM cada 6 h):
 
 | Unidad | Costo para Comando |
 |---|---|
-| 1,000 contactos vigilados / mes | $0.11 |
+| 1,000 contactos vigilados / mes | $0.015 con eventos o polling incremental (peor caso sin filtro incremental, barrido diario: $0.028) |
 | 1 comando de texto | $0.0015 (LLM $0.0009 + Temporal $0.0006) |
 | 1 comando de audio de 60 s | $0.0022 (texto + transcripción Groq $0.0007) |
 | 1,000 comandos | $1.50 texto · $2.17 audio (Groq) · $7.50 audio si se usara OpenAI Whisper — **usar Groq** |
@@ -121,11 +123,13 @@ Márgenes por plan con TODOS los comandos incluidos consumidos y el CRM al tope 
 
 | Plan | Precio | Costo si todo es texto | Margen | Costo si todo es audio 60 s | Margen (peor caso) |
 |---|---|---|---|---|---|
-| Básico | $2 | $0.55 | 72% | $0.76 | 62% |
-| Starter | $6 | $1.84 | 69% | $2.54 | 58% |
-| Pro | $19 | $7.24 | 62% | $10.04 | 47% |
-| Business | $49 | $18.04 | 63% | $25.04 | 49% |
-| Gratis | $0 | ~$0.11 una vez (50 comandos) + ~$0.10-0.60/mes de sincronización mientras el cupo esté activo | — | — | — |
+| Básico | $3 | $0.60 | 80% | $0.80 | 73% |
+| Starter | $6 | $1.88 | 69% | $2.55 | 58% |
+| Pro | $19 | $7.13 | 62% | $9.80 | 48% |
+| Business | $49 | $18.00 | 63% | $24.70 | 50% |
+| Gratis | $0 | ~$0.11 una vez (50 comandos); sin sincronización continua | — | — | — |
+
+(Contactos al tope del plan a $0.015 por 1,000/mes: Básico 10,000 → $0.15 · Starter 25,000 → $0.38 · Pro 75,000 → $1.13 · Business 200,000 → $3.00. Con un CRM sin filtro incremental el costo de contactos se duplica y el margen baja 1-6 puntos.)
 
 Uso real esperado (60% de los comandos consumidos, 30% audio): márgenes 75-85%.
 Regla del plan Gratis: la sincronización del CRM se pausa al agotar los 50 comandos; sin esa
