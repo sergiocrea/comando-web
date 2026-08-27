@@ -577,7 +577,8 @@ body.sheet-open { overflow: hidden; }
 .pricing-note.ob-muted { font-size: .85rem; color: rgba(10,10,10,.7); }
 
 /* ===== Casos de uso: "Un vendedor. Tres veces el resultado." ===== */
-.section_usecases { padding: 5rem 0 3rem; }
+.section_home-features { overflow: clip; }              /* the sticky phone never paints outside Producto */
+.section_usecases { position: relative; z-index: 3; background: #0a0a0a; padding: 5rem 0 3rem; }
 .uc-subtitle { font-family: "Neuehaasunicaw 1 G", Inter, sans-serif; color: #b0b0b0; font-size: 1.05rem; line-height: 1.5; max-width: 40rem; margin: 1rem auto 0; text-align: center; }
 .uc-tabs, .uc-chips { display: flex; gap: .5rem; justify-content: center; flex-wrap: wrap; }
 .uc-tabs { margin-top: 2.5rem; }
@@ -588,27 +589,47 @@ body.sheet-open { overflow: hidden; }
 .uc-chip { background: transparent; border: 1px solid #2a2a2a; color: #9a9a9a; font-size: .72rem; text-transform: uppercase; padding: .45rem .8rem; }
 .uc-chip.is-on { color: #4d7cff; border-color: rgba(77,124,255,.6); background: rgba(77,124,255,.1); }
 .uc-tab:focus-visible, .uc-chip:focus-visible { outline: 2px solid #4d7cff; outline-offset: 2px; }
-.uc-stage { max-width: 44rem; margin: 2rem auto 0; opacity: 0; transform: translateY(10px); transition: opacity .3s ease, transform .3s ease; }
-.uc-stage.is-in { opacity: 1; transform: none; }
-.uc-card { background: #0d0d0d; border: 1px solid #262626; border-radius: 1.25rem; overflow: hidden; }
-.uc-card-head { padding: 1.4rem 1.5rem 1.1rem; border-bottom: 1px solid #1c1c1c; }
-.uc-card-meta { font-family: "Jetbrainsmono Variable", monospace; font-size: .7rem; letter-spacing: .08em; text-transform: uppercase; color: #4d7cff; margin-bottom: .5rem; }
-.uc-card-title { font-family: Neuemachina, "Space Grotesk", Inter, sans-serif; font-weight: 600; font-size: 1.35rem; line-height: 1.25; color: #fff; margin: 0; }
-.uc-chat { padding: 1.25rem 1.25rem .5rem; display: flex; flex-direction: column; gap: .5rem; background: #0b1410 radial-gradient(rgba(255,255,255,.035) 1px, transparent 1px) 0 0 / 14px 14px; }
+/* layout: phone + outcome */
+.uc-layout { display: grid; grid-template-columns: minmax(0, 23rem) minmax(0, 26rem); justify-content: center; align-items: center; gap: 3rem 4rem; margin: 2.75rem auto 0; opacity: 0; transform: translateY(10px); transition: opacity .3s ease, transform .3s ease; }
+.uc-layout.is-in { opacity: 1; transform: none; }
+/* CSS-only phone (no images, no canvas) */
+.uc-phone { width: 100%; max-width: 23rem; margin: 0 auto; background: #0b0b0b; border: 2px solid #2b2b2b; border-radius: 2.6rem; padding: .55rem; box-shadow: 0 0 0 1px #000, 0 30px 60px -30px rgba(0,0,0,.9); position: relative; }
+.uc-phone::before { content: ""; position: absolute; left: 50%; top: 1rem; width: 6.5rem; height: 1.45rem; margin-left: -3.25rem; background: #000; border-radius: 999px; z-index: 2; }
+.uc-phone-screen { background: #0b141a; border-radius: 2.1rem; overflow: hidden; display: flex; flex-direction: column; }
+.uc-status { display: flex; justify-content: space-between; padding: 1rem 1.6rem .4rem; font-family: "Neuehaasunicaw 1 G", Inter, sans-serif; font-weight: 600; font-size: .8rem; color: #fff; }
+.uc-status-icons { font-size: .62rem; letter-spacing: -.05em; }
+.uc-wa-head { display: flex; align-items: center; gap: .6rem; padding: .5rem .9rem .7rem; background: #1f2c34; color: #fff; font-family: "Neuehaasunicaw 1 G", Inter, sans-serif; }
+.uc-wa-back { font-size: 1.5rem; line-height: 1; color: #8fa3ad; }
+.uc-wa-avatar { width: 2rem; height: 2rem; border-radius: 50%; background: #0b0b0b; padding: .25rem; }
+.uc-wa-name { flex: 1; font-size: .95rem; font-weight: 600; line-height: 1.1; }
+.uc-wa-name small { display: block; font-weight: 400; font-size: .7rem; color: #8fa3ad; margin-top: .15rem; }
+.uc-wa-more { color: #8fa3ad; }
+.uc-chat { padding: .9rem .7rem .6rem; display: flex; flex-direction: column; gap: .4rem; min-height: 22rem; background: #0b141a radial-gradient(rgba(255,255,255,.04) 1px, transparent 1px) 0 0 / 14px 14px; }
 .uc-msg { display: flex; }
 .uc-msg.is-user { justify-content: flex-end; }
-.uc-msg.is-bot + .uc-msg.is-user { margin-top: .6rem; }
-.uc-bubble { max-width: 85%; padding: .7rem .9rem; border-radius: 1rem; font-family: "Neuehaasunicaw 1 G", Inter, sans-serif; font-size: .97rem; line-height: 1.45; position: relative; }
-.uc-msg.is-user .uc-bubble { background: #0a6e5b; color: #f2f5f6; border-bottom-right-radius: .3rem; padding-right: 1rem; padding-bottom: 1.2rem; }
-.uc-msg.is-bot .uc-bubble { background: #1f2b28; color: #e6ebe9; border-bottom-left-radius: .3rem; }
-.uc-time { position: absolute; right: .7rem; bottom: .3rem; font-size: .62rem; color: rgba(255,255,255,.65); }
+.uc-msg.is-bot + .uc-msg.is-user { margin-top: .5rem; }
+.uc-bubble { max-width: 88%; padding: .55rem .7rem 1.05rem; border-radius: .85rem; font-family: "Neuehaasunicaw 1 G", Inter, sans-serif; font-size: .86rem; line-height: 1.38; position: relative; }
+.uc-msg.is-user .uc-bubble { background: #005c4b; color: #e9edef; border-top-right-radius: .2rem; }
+.uc-msg.is-bot .uc-bubble { background: #202c33; color: #e9edef; border-top-left-radius: .2rem; }
+.uc-time { position: absolute; right: .55rem; bottom: .25rem; font-size: .58rem; color: rgba(255,255,255,.55); }
 .uc-time i { font-style: normal; color: #53bdeb; }
-.uc-result { padding: 1.1rem 1.5rem; font-family: Neuemachina, "Space Grotesk", Inter, sans-serif; font-weight: 600; font-size: 1.05rem; color: #fff; border-top: 1px solid #1c1c1c; }
-.uc-evidence { padding: 0 1.5rem 1.3rem; font-family: "Neuehaasunicaw 1 G", Inter, sans-serif; font-size: .8rem; line-height: 1.45; color: #8a8a8a; }
-.uc-evidence span { font-family: "Jetbrainsmono Variable", monospace; font-size: .62rem; letter-spacing: .08em; text-transform: uppercase; color: #4d7cff; margin-right: .4rem; }
-.uc-foot { text-align: center; margin-top: 2.5rem; }
+.uc-wa-input { display: flex; align-items: center; gap: .5rem; padding: .5rem .7rem .9rem; background: #0b141a; }
+.uc-wa-input span { flex: 1; background: #2a3942; color: #8fa3ad; border-radius: 999px; padding: .55rem .9rem; font-family: "Neuehaasunicaw 1 G", Inter, sans-serif; font-size: .8rem; }
+.uc-wa-input i { width: 2.1rem; height: 2.1rem; border-radius: 50%; background: #00a884; display: grid; place-items: center; font-style: normal; font-size: .85rem; }
+/* outcome column */
+.uc-card-meta { font-family: "Jetbrainsmono Variable", monospace; font-size: .7rem; letter-spacing: .08em; text-transform: uppercase; color: #4d7cff; margin-bottom: .6rem; }
+.uc-card-title { font-family: Neuemachina, "Space Grotesk", Inter, sans-serif; font-weight: 600; font-size: clamp(1.6rem, 2.4vw, 2.1rem); line-height: 1.15; color: #fff; margin: 0 0 1.25rem; }
+.uc-result { font-family: "Neuehaasunicaw 1 G", Inter, sans-serif; font-size: 1.1rem; line-height: 1.45; color: #e6e6e6; padding-left: 1rem; border-left: 3px solid #4d7cff; margin-bottom: 1.25rem; }
+.uc-evidence { font-family: "Neuehaasunicaw 1 G", Inter, sans-serif; font-size: .82rem; line-height: 1.45; color: #8a8a8a; }
+.uc-evidence span { display: block; font-family: "Jetbrainsmono Variable", monospace; font-size: .62rem; letter-spacing: .08em; text-transform: uppercase; color: #4d7cff; margin-bottom: .3rem; }
+.uc-foot { text-align: center; margin-top: 3rem; }
 .uc-close { font-family: Neuemachina, "Space Grotesk", Inter, sans-serif; font-weight: 600; font-size: 1.25rem; color: #fff; margin: 0 0 1.25rem; }
 .uc-cta { font-size: 1rem; }
+@media (max-width: 991px) {
+  .uc-layout { grid-template-columns: minmax(0, 24rem); gap: 1.75rem; }
+  .uc-outcome { text-align: center; }
+  .uc-result { border-left: 0; padding-left: 0; border-top: 3px solid #4d7cff; padding-top: 1rem; display: inline-block; }
+}
 @media (max-width: 767px) {
   .section_usecases { padding: 3rem 0 2rem; }
   .uc-subtitle { font-size: .95rem; margin-top: .75rem; }
@@ -617,13 +638,13 @@ body.sheet-open { overflow: hidden; }
   .uc-tab, .uc-chip { scroll-snap-align: center; flex: 0 0 auto; }
   .uc-tab { padding: .8rem 1.1rem; font-size: .82rem; }
   .uc-tabs { margin-top: 1.75rem; }
-  .uc-stage { margin-top: 1.25rem; }
-  .uc-card-head { padding: 1.1rem 1.1rem .9rem; }
-  .uc-card-title { font-size: 1.15rem; }
-  .uc-chat { padding: 1rem .9rem .4rem; }
-  .uc-bubble { max-width: 92%; font-size: .92rem; }
-  .uc-result { padding: .9rem 1.1rem; font-size: .98rem; }
-  .uc-evidence { padding: 0 1.1rem 1.1rem; }
+  .uc-layout { margin-top: 1.5rem; gap: 1.25rem; }
+  .uc-phone { max-width: 100%; border-radius: 2.2rem; }
+  .uc-phone-screen { border-radius: 1.8rem; }
+  .uc-chat { min-height: 0; }
+  .uc-card-title { font-size: 1.35rem; margin-bottom: .9rem; }
+  .uc-result { font-size: 1rem; }
+  .uc-foot { margin-top: 2rem; }
   .uc-close { font-size: 1.05rem; }
   .uc-cta { width: 100%; justify-content: center; }
 }
