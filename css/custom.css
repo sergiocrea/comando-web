@@ -584,5 +584,3 @@ body.sheet-open { overflow: hidden; }
 .connector-sheet-chip { margin: -.2rem 0 .6rem; } .connector-sheet-chip .connector-chip { margin: 0 auto; }
 /* pricing: muted small print under the cards */
 .pricing-note.ob-muted { font-size: .85rem; color: rgba(10,10,10,.7); }
-/* nav: INICIO and PRODUCTO both point to #about; only PRODUCTO shows as current */
-.nav_menu_link.is-home.w--current { color: #fff; }
