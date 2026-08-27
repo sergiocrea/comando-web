@@ -517,3 +517,21 @@ body.sheet-open { overflow: hidden; }
 #specs .home_specification-component { padding-top: 3rem; }
 .section_clip-path-wrap { min-height: 0 !important; }
 .section_clip-path-wrap, #features-padding, .section_home-features { background-color: #060606; }
+/* mobile hero: let it grow so the phone sits under the nav and the text follows */
+@media (max-width: 767px) {
+  #about.is-hero { height: auto; min-height: 100svh; }
+  #about.is-hero .section_about-component { height: auto; min-height: 100svh; padding-top: 7.5rem; padding-bottom: 2.5rem; }
+  #about.is-hero .section_about-left { padding-bottom: 1.5rem; }
+  #about.is-hero .section_about-left .canvas-target-block { width: 50vw !important; max-width: 50vw !important; aspect-ratio: 1 / 2 !important; }
+  #about.is-hero .section_about-heading { font-size: clamp(1.9rem, 8vw, 2.4rem); }
+}
+/* mobile: shorter connector cards with bigger logos; no dead space above Precios */
+@media (max-width: 767px) {
+  .home_features-card { min-height: 0 !important; height: auto !important; padding: 1.1rem .5rem 1rem; }
+  .home_features-card .home_icon-text-wrapper { gap: .6rem; }
+  .home_features-card .connector-logo { width: 2.6rem; height: 2.6rem; }
+  .home_features-card-component { gap: .5rem; }
+  #specs .home_specification-component { padding-top: 4rem; padding-bottom: 1rem; }
+  .home_getupdate-component { padding-top: 1rem; }
+  .pricing-head { padding-top: .5rem; }
+}
