@@ -553,3 +553,8 @@ body.sheet-open { overflow: hidden; }
 .connector-sheet-example-label { font-family: "Jetbrainsmono Variable", monospace; font-size: .68rem; letter-spacing: .08em; text-transform: uppercase; color: #8a8a8a; margin-bottom: .45rem; }
 .connector-sheet-bubble { background: #0a6e5b; color: #f2f5f6; border-radius: 1rem 1rem .25rem 1rem; padding: .8rem 1rem; font-family: "Neuehaasunicaw 1 G", Inter, sans-serif; font-size: .95rem; line-height: 1.45; margin-left: 2rem; position: relative; }
 .connector-sheet-bubble::after { content: "✓✓"; position: absolute; right: .7rem; bottom: .3rem; font-size: .6rem; color: #53bdeb; }
+
+/* ===== 2D hero canvas ===== */
+#target.canvas-target-block { position: relative; overflow: visible; }
+#hero-canvas { position: absolute; left: 50%; top: 50%; height: 100%; width: auto; transform: translate(-50%, -50%) perspective(1400px) rotateY(-10deg) rotateX(3deg); transform-origin: center; pointer-events: none; }
+@media (max-width: 767px) { #hero-canvas { transform: translate(-50%, -50%); } }
