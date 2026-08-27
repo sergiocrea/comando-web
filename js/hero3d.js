@@ -208,8 +208,8 @@ function startAllAnimations() {
   // ---- scenarios (edit ACTIVE to choose which ones play in the hero / in Producto) ----
   const SCENARIOS = {
     reasignar: [
-      { from: 'me',  text: 'reasigna el deal de la constructora a Renzo' },
-      { from: 'bot', text: 'Listo ✓ "Constructora Andina" ahora es de Renzo. Se le notificó por WhatsApp.' },
+      { from: 'me',  text: 'reasigna el deal de la constructora a Ana' },
+      { from: 'bot', text: 'Listo ✓ "Constructora Andina" ahora es de Ana. Se le notificó por WhatsApp.' },
     ],
     speedToLead: [
       { from: 'me',  text: 'si un lead de Facebook no es contactado en 10 minutos, notifícame' },
