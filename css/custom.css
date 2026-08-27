@@ -618,6 +618,17 @@ body.sheet-open { overflow: hidden; }
 .uc-wa-input { display: flex; align-items: center; gap: .5rem; padding: .5rem .7rem .9rem; background: #0b141a; }
 .uc-wa-input span { flex: 1; background: #2a3942; color: #8fa3ad; border-radius: 999px; padding: .55rem .9rem; font-family: "Neuehaasunicaw 1 G", Inter, sans-serif; font-size: .8rem; }
 .uc-wa-input i { width: 2.1rem; height: 2.1rem; border-radius: 50%; background: #00a884; display: grid; place-items: center; font-style: normal; font-size: .85rem; }
+/* timeline (mobile only) */
+.uc-timeline { display: none; list-style: none; margin: 0; padding: 0; position: relative; }
+.uc-timeline::before { content: ""; position: absolute; left: .55rem; top: .6rem; bottom: .6rem; width: 2px; background: #262626; }
+.uc-timeline li + li { margin-top: 2.6rem; }
+.uc-dot { -webkit-appearance: none; appearance: none; background: transparent; border: 0; padding: 0; display: flex; flex-direction: column; align-items: flex-start; gap: .35rem; cursor: pointer; color: #6f6f6f; font-family: "Jetbrainsmono Variable", monospace; font-size: .68rem; letter-spacing: .04em; position: relative; }
+.uc-dot i { display: block; width: 1.15rem; height: 1.15rem; border-radius: 50%; border: 2px solid #3a3a3a; background: #0a0a0a; box-sizing: border-box; transition: border-color .2s, background .2s, box-shadow .2s; }
+.uc-dot.is-past i { border-color: #4d7cff; }
+.uc-dot.is-past { color: #9a9a9a; }
+.uc-dot.is-on i { border-color: #4d7cff; background: #4d7cff; box-shadow: 0 0 0 4px rgba(77,124,255,.25); }
+.uc-dot.is-on { color: #fff; }
+.uc-dot:focus-visible i { outline: 2px solid #4d7cff; outline-offset: 2px; }
 /* outcome column */
 .uc-steps { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: .4rem; }
 .uc-step { -webkit-appearance: none; appearance: none; width: 100%; text-align: left; display: flex; gap: .8rem; align-items: flex-start; background: transparent; border: 1px solid #222; border-radius: .8rem; padding: .7rem .9rem; color: #9a9a9a; cursor: pointer; font-family: "Neuehaasunicaw 1 G", Inter, sans-serif; font-size: .93rem; line-height: 1.4; transition: border-color .2s, color .2s, background .2s; }
@@ -647,10 +658,15 @@ body.sheet-open { overflow: hidden; }
   .uc-tab, .uc-chip { scroll-snap-align: center; flex: 0 0 auto; }
   .uc-tab { padding: .8rem 1.1rem; font-size: .82rem; }
   .uc-tabs { margin-top: 1.75rem; }
-  .uc-layout { margin-top: 1.5rem; gap: 1.25rem; }
-  .uc-phone { max-width: 100%; border-radius: 2.2rem; }
+  .uc-layout { margin-top: 1.25rem; grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: "outcome outcome" "phone timeline"; gap: 1rem 1rem; align-items: start; }
+  .uc-outcome { grid-area: outcome; }
+  .uc-phone { grid-area: phone; max-width: 100%; border-radius: 2.2rem; }
+  .uc-timeline { grid-area: timeline; display: block; padding-top: 4.5rem; padding-right: .25rem; }
+  .uc-steps { display: none; }
+  .uc-card-meta { margin-bottom: .4rem; }
+  .uc-card-title { margin-bottom: 0; }
   .uc-phone-screen { border-radius: 1.8rem; }
-  .uc-chat { height: 16rem; }
+  .uc-chat { height: auto; min-height: 12rem; overflow: hidden; }
   .uc-card-title { font-size: 1.35rem; margin-bottom: .9rem; }
   .uc-result { font-size: 1rem; }
   .uc-foot { margin-top: 2rem; }

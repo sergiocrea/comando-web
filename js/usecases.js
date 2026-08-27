@@ -16,11 +16,16 @@
     return D.casos.find((x) => x.rol === rol && x.vertical === vertical);
   }
   let step = 0, timer = null, visible = false;
+  const mqMobile = window.matchMedia('(max-width: 767px)');
+  mqMobile.addEventListener && mqMobile.addEventListener('change', () => { if (D) showStep(step, 'init'); });
   function msgHtml(m, i, upTo) {
     return `<div class="uc-msg is-user${i < upTo ? ' is-in' : ''}"><div class="uc-bubble">${esc(m.u)}<span class="uc-time">${TIMES[i] || ''} <i>✓✓</i></span></div></div>
       <div class="uc-msg is-bot${i < upTo ? ' is-in' : ''}"><div class="uc-bubble">${esc(m.r)}<span class="uc-time">${TIMES[i] || ''}</span></div></div>`;
   }
-  function chatHtml(c) { return c.comandos.map((m, i) => msgHtml(m, i, step + 1)).join(''); }
+  function chatHtml(c) { return c.comandos.map((m, i) => msgHtml(m, i, step + 1)).join(''); } // showStep() narrows to the active exchange on mobile
+  function timelineHtml(c) {
+    return c.comandos.map((m, i) => `<li><button type="button" class="uc-dot${i === step ? ' is-on' : ''}${i < step ? ' is-past' : ''}" data-step="${i}" aria-label="Enviar el mensaje de las ${TIMES[i] || ''}"><i></i><span>${TIMES[i] || ''}</span></button></li>`).join('');
+  }
   function outcomeHtml(c) {
     return `<div class="uc-card-meta">${esc(c.rol)} · ${esc(c.vertical)}</div><h3 class="uc-card-title">${esc(c.titulo)}</h3>
       <ol class="uc-steps">${c.comandos.map((m, i) => `<li><button type="button" class="uc-step${i === step ? ' is-on' : ''}" data-step="${i}"><span class="uc-step-time">${TIMES[i] || ''}</span><span class="uc-step-text">${esc(m.u)}</span></button></li>`).join('')}</ol>
@@ -28,8 +33,10 @@
   }
   function showStep(i, fromUser) {
     step = i;
-    root.querySelectorAll('.uc-msg').forEach((m, k) => m.classList.toggle('is-in', Math.floor(k / 2) <= step));
+    const only = mqMobile.matches;
+    root.querySelectorAll('.uc-msg').forEach((m, k) => { const e = Math.floor(k / 2); m.classList.toggle('is-in', only ? e === step : e <= step); });
     root.querySelectorAll('.uc-step').forEach((b) => b.classList.toggle('is-on', +b.dataset.step === step));
+    root.querySelectorAll('.uc-dot').forEach((b) => { const k = +b.dataset.step; b.classList.toggle('is-on', k === step); b.classList.toggle('is-past', k < step); });
     const chat = root.querySelector('.uc-chat');
     requestAnimationFrame(() => chat.scrollTo({ top: chat.scrollHeight, behavior: fromUser === 'init' ? 'auto' : 'smooth' }));
     if (fromUser === true) restartTimer(9000); else restartTimer();
@@ -39,7 +46,7 @@
     if (!visible) return;
     timer = setInterval(() => { const n = current().comandos.length; showStep((step + 1) % n, false); }, delay || 4200);
   }
-  function bindSteps() { root.querySelectorAll('.uc-step').forEach((b) => b.addEventListener('click', () => showStep(+b.dataset.step, true))); }
+  function bindSteps() { root.querySelectorAll('.uc-step, .uc-dot').forEach((b) => b.addEventListener('click', () => showStep(+b.dataset.step, true))); }
   function render() {
     const c = current(); step = 0;
     root.innerHTML = `
@@ -56,6 +63,7 @@
             <div class="uc-wa-input"><span>Escribe un comando…</span><i>🎤</i></div>
           </div>
         </div>
+        <ol class="uc-timeline" aria-label="Momentos del día">${timelineHtml(c)}</ol>
         <div class="uc-outcome">${outcomeHtml(c)}</div>
       </div>
       <div class="uc-foot"><p class="uc-close">${esc(D.seccion.cierre)}</p><a href="${esc(D.seccion.cta.href)}" class="btn-primary uc-cta">${esc(D.seccion.cta.texto)}<span class="btn-arrow" aria-hidden="true">→</span></a></div>`;
@@ -70,10 +78,10 @@
     root.querySelectorAll('[data-rol]').forEach((b) => { const on = +b.dataset.rol === state.rol; b.classList.toggle('is-on', on); b.setAttribute('aria-selected', on); if (on) b.scrollIntoView({ block: 'nearest', inline: 'center', behavior: 'smooth' }); });
     root.querySelectorAll('[data-vertical]').forEach((b) => { const on = +b.dataset.vertical === state.vertical; b.classList.toggle('is-on', on); b.setAttribute('aria-pressed', on); if (on) b.scrollIntoView({ block: 'nearest', inline: 'center', behavior: 'smooth' }); });
     const c = current(); step = 0; const chat = root.querySelector('.uc-chat'), out = root.querySelector('.uc-outcome'), layout = root.querySelector('.uc-layout');
-    layout.classList.remove('is-in'); chat.innerHTML = chatHtml(c); out.innerHTML = outcomeHtml(c); bindSteps(); chat.scrollTop = 0;
+    layout.classList.remove('is-in'); chat.innerHTML = chatHtml(c); out.innerHTML = outcomeHtml(c); root.querySelector('.uc-timeline').innerHTML = timelineHtml(c); bindSteps(); chat.scrollTop = 0; showStep(0, 'init');
     requestAnimationFrame(() => requestAnimationFrame(() => layout.classList.add('is-in')));
     restartTimer(6000);
     if (typeof ScrollTrigger !== 'undefined') ScrollTrigger.refresh();
   }
-  fetch('docs/usecases.json?v=1').then((r) => r.json()).then((d) => { D = d; render(); requestAnimationFrame(() => root.querySelector('.uc-layout').classList.add('is-in')); if (typeof ScrollTrigger !== 'undefined') ScrollTrigger.refresh(); }).catch(() => {});
+  fetch('docs/usecases.json?v=1').then((r) => r.json()).then((d) => { D = d; render(); showStep(0, 'init'); requestAnimationFrame(() => root.querySelector('.uc-layout').classList.add('is-in')); if (typeof ScrollTrigger !== 'undefined') ScrollTrigger.refresh(); }).catch(() => {});
 })();
