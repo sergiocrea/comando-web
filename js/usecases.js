@@ -16,13 +16,11 @@
     return D.casos.find((x) => x.rol === rol && x.vertical === vertical);
   }
   let step = 0, timer = null, visible = false;
-  const mqMobile = window.matchMedia('(max-width: 767px)');
-  mqMobile.addEventListener && mqMobile.addEventListener('change', () => { if (D) showStep(step, 'init'); });
   function msgHtml(m, i, upTo) {
     return `<div class="uc-msg is-user${i < upTo ? ' is-in' : ''}"><div class="uc-bubble">${esc(m.u)}<span class="uc-time">${TIMES[i] || ''} <i>✓✓</i></span></div></div>
       <div class="uc-msg is-bot${i < upTo ? ' is-in' : ''}"><div class="uc-bubble">${esc(m.r)}<span class="uc-time">${TIMES[i] || ''}</span></div></div>`;
   }
-  function chatHtml(c) { return c.comandos.map((m, i) => msgHtml(m, i, step + 1)).join(''); } // showStep() narrows to the active exchange on mobile
+  function chatHtml(c) { return c.comandos.map((m, i) => msgHtml(m, i, step + 1)).join(''); }
   function timelineHtml(c) {
     return c.comandos.map((m, i) => `<li><button type="button" class="uc-dot${i === step ? ' is-on' : ''}${i < step ? ' is-past' : ''}" data-step="${i}" aria-label="Enviar el mensaje de las ${TIMES[i] || ''}"><i></i><span>${TIMES[i] || ''}</span></button></li>`).join('');
   }
@@ -33,8 +31,7 @@
   }
   function showStep(i, fromUser) {
     step = i;
-    const only = mqMobile.matches;
-    root.querySelectorAll('.uc-msg').forEach((m, k) => { const e = Math.floor(k / 2); m.classList.toggle('is-in', only ? e === step : e <= step); });
+    root.querySelectorAll('.uc-msg').forEach((m, k) => m.classList.toggle('is-in', Math.floor(k / 2) <= step));
     root.querySelectorAll('.uc-step').forEach((b) => b.classList.toggle('is-on', +b.dataset.step === step));
     root.querySelectorAll('.uc-dot').forEach((b) => { const k = +b.dataset.step; b.classList.toggle('is-on', k === step); b.classList.toggle('is-past', k < step); });
     const chat = root.querySelector('.uc-chat');

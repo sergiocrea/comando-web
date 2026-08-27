@@ -666,7 +666,7 @@ body.sheet-open { overflow: hidden; }
   .uc-card-meta { margin-bottom: .4rem; }
   .uc-card-title { margin-bottom: 0; }
   .uc-phone-screen { border-radius: 1.8rem; }
-  .uc-chat { height: auto; min-height: 12rem; overflow: hidden; }
+  .uc-chat { height: 21rem; }
   .uc-card-title { font-size: 1.35rem; margin-bottom: .9rem; }
   .uc-result { font-size: 1rem; }
   .uc-foot { margin-top: 2rem; }
