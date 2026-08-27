@@ -24,8 +24,7 @@
   function outcomeHtml(c) {
     return `<div class="uc-card-meta">${esc(c.rol)} · ${esc(c.vertical)}</div><h3 class="uc-card-title">${esc(c.titulo)}</h3>
       <ol class="uc-steps">${c.comandos.map((m, i) => `<li><button type="button" class="uc-step${i === step ? ' is-on' : ''}" data-step="${i}"><span class="uc-step-time">${TIMES[i] || ''}</span><span class="uc-step-text">${esc(m.u)}</span></button></li>`).join('')}</ol>
-      <div class="uc-result">${esc(c.resultado)}</div>
-      <div class="uc-evidence"><span>Evidencia</span> ${esc(D.evidencias[c.evidencia] || '')}</div>`;
+`;
   }
   function showStep(i, fromUser) {
     step = i;
