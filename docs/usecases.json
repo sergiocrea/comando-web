@@ -1,0 +1,135 @@
+{
+  "seccion": {
+    "titulo": "Un vendedor. Tres veces el resultado.",
+    "subtitulo": "Comando no reemplaza a tu equipo: lo vuelve imposible de reemplazar. Elige tu rol y mira qué le pides por WhatsApp.",
+    "cierre": "Nadie escribe a tus clientes por ti. Tu número, tu voz, tu reputación.",
+    "cta": { "texto": "Pruébalo con tu propio CRM en 2 minutos", "href": "/app/" }
+  },
+  "roles": ["Vendedor", "Jefe de ventas", "Dueño del negocio", "Atención y postventa"],
+  "verticales": ["Inmobiliaria", "Clínica / salud", "Distribuidora B2B", "Tienda online"],
+  "evidencias": {
+    "speed": "Responder a un lead en menos de 5 minutos multiplica por 21 la probabilidad de calificarlo (Lead Response Management Study).",
+    "toques": "El 80 % de las ventas requiere 5 o más contactos; el 44 % de los vendedores abandona tras el primero (Brevet Group).",
+    "cotizacion": "Hacer seguimiento entre el día 3 y 5 después de una cotización duplica la tasa de cierre.",
+    "noshow": "Confirmar la cita y recordarla 24 h y 2 h antes reduce las ausencias entre 40 % y 70 %.",
+    "carrito": "La recuperación de carritos por WhatsApp alcanza 18-23 % frente a ~8 % por email.",
+    "estancados": "Un deal que supera 1,5 veces el ciclo promedio tiene menos de la mitad de probabilidad de cerrarse."
+  },
+  "casos": [
+    { "rol": "Vendedor", "vertical": "Inmobiliaria", "titulo": "Cierro más sin vivir en el CRM",
+      "comandos": [
+        { "u": "¿Qué leads entraron anoche del portal y quién no los ha tocado?", "r": "6 leads nuevos de Urbania y Adondevivir; 2 sin dueño desde hace 9 horas. ¿Los tomo para ti o los reparto?" },
+        { "u": "A los que no respondieron la cotización, recuérdamelo a los 3, 5 y 7 días con el mensaje listo.", "r": "Listo. Hoy tocan 4: te paso el primero, Familia Rojas, depto. 402 — «Hola Carla, te envié la cotización del 402 el lunes…». Toca para enviarlo." },
+        { "u": "Mueve el 402 de Rojas a Negociación y anota que pidieron 30 días para la separación.", "r": "Hecho en HubSpot: etapa Negociación, nota guardada. ¿Creo la tarea de llamar el 15 para confirmar la separación?" }
+      ],
+      "resultado": "Ningún seguimiento olvidado. Cero minutos escribiendo en el CRM.", "evidencia": "cotizacion" },
+    { "rol": "Vendedor", "vertical": "Clínica / salud", "titulo": "Cada presupuesto tiene seguimiento",
+      "comandos": [
+        { "u": "¿Qué pacientes recibieron presupuesto esta semana y no han respondido?", "r": "7 presupuestos sin respuesta: 3 de ortodoncia, 4 de implantes. El más antiguo es de Marta Pérez (6 días)." },
+        { "u": "Prepárame el mensaje para Marta recordándole que el presupuesto vence el viernes.", "r": "«Hola Marta, soy Diego de Clínica Sonríe. Tu presupuesto de ortodoncia sigue vigente hasta el viernes; si quieres lo vemos en 10 minutos por aquí.» Toca para enviarlo." },
+        { "u": "Marca el presupuesto de Luis Ávila como aceptado y créame la tarea de agendar la primera sesión.", "r": "Presupuesto aceptado en el CRM y tarea creada para hoy. ¿Le propongo martes o jueves?" }
+      ],
+      "resultado": "Los presupuestos se cierran mientras aún importan.", "evidencia": "toques" },
+    { "rol": "Vendedor", "vertical": "Distribuidora B2B", "titulo": "Mis clientes recurrentes no se enfrían",
+      "comandos": [
+        { "u": "¿Qué clientes de mi cartera no compran desde hace más de 30 días?", "r": "9 clientes. Los tres más grandes: Ferretería El Sol (42 días), Distribuidora Norte (38), Bodegas Lima (35)." },
+        { "u": "Prepárame un mensaje para cada uno ofreciendo la promoción de agosto.", "r": "Tienes 9 mensajes listos con su último pedido y la promo. Empiezo con El Sol: «Hola Jorge, vi que tu último pedido fue en julio…». Toca para enviar el primero." },
+        { "u": "Sube el pedido de Ferretería El Sol a Cotizado con 120 cajas y avísale a despacho.", "r": "Deal en Cotizado por 120 cajas; despacho avisado por WhatsApp. ¿Programo el recordatorio de cobro a 30 días?" }
+      ],
+      "resultado": "Cartera viva, pedidos recurrentes que no se pierden.", "evidencia": "toques" },
+    { "rol": "Vendedor", "vertical": "Tienda online", "titulo": "Vendo mientras atiendo",
+      "comandos": [
+        { "u": "¿Qué carritos de más de $200 se abandonaron hoy?", "r": "5 carritos: el mayor es de Andrea Gómez ($480, zapatillas y casaca). Ninguno completó el pago." },
+        { "u": "Prepárame el mensaje para Andrea con el enlace de pago y un 5 % de descuento.", "r": "Cupón ANDREA5 creado en Shopify. «Hola Andrea, dejaste tus zapatillas y la casaca en el carrito; aquí tienes el enlace con 5 % extra…». Toca para enviarlo." },
+        { "u": "Marca el pedido 1042 como entregado y anota que el cliente pidió factura.", "r": "Pedido 1042 entregado y nota guardada. Mañana te dejo listo el mensaje para pedirle la reseña." }
+      ],
+      "resultado": "Cada carrito abandonado tiene una segunda oportunidad.", "evidencia": "carrito" },
+
+    { "rol": "Jefe de ventas", "vertical": "Inmobiliaria", "titulo": "Veo el pipeline sin pedir reportes",
+      "comandos": [
+        { "u": "Cada lunes a las 8 envíame el pipeline por vendedor y los deals estancados más de 10 días.", "r": "Programado. Este lunes: 38 deals activos, 6 estancados (4 de Luis). Te lo mando a las 8:00." },
+        { "u": "Si un lead lleva 15 minutos sin contacto, avisa al supervisor de turno.", "r": "Regla activa de 9:00 a 20:00. El supervisor de turno se toma del calendario de guardias." },
+        { "u": "Reparte los leads de Miraflores entre Ana y Luis; si nadie los toma en 1 hora, dímelo.", "r": "Asignados 11 leads (6 Ana, 5 Luis). Te aviso a la hora con los que sigan sin actividad." }
+      ],
+      "resultado": "Cada lead tiene dueño en minutos, no en días.", "evidencia": "speed" },
+    { "rol": "Jefe de ventas", "vertical": "Clínica / salud", "titulo": "Agenda llena, sin ausencias",
+      "comandos": [
+        { "u": "¿Cuántas citas de mañana no están confirmadas?", "r": "14 de 41 sin confirmar. 5 son de primera consulta." },
+        { "u": "Para las que no confirmen hoy a las 18:00, pásale el recordatorio a cada asesora con el mensaje listo.", "r": "Programado. A las 18:00 cada asesora recibe sus citas pendientes con el recordatorio para enviar." },
+        { "u": "Si un paciente falta a la cita, créale la tarea de reagendar a su asesora ese mismo día.", "r": "Regla activa. Las ausencias se marcan desde la agenda y la tarea se crea al instante." }
+      ],
+      "resultado": "Menos sillas vacías, más tratamientos iniciados.", "evidencia": "noshow" },
+    { "rol": "Jefe de ventas", "vertical": "Distribuidora B2B", "titulo": "Cuotas bajo control cada día",
+      "comandos": [
+        { "u": "Cada día a las 7 envíame el avance de cuota por vendedor y los pedidos sin cotizar.", "r": "Programado. Hoy: equipo al 62 % de la cuota mensual; 8 pedidos llevan más de 24 h sin cotización." },
+        { "u": "Si una cotización supera $20,000, avísame antes de que se envíe.", "r": "Regla activa: te llega el resumen con margen y condiciones para aprobar con un «OK»." },
+        { "u": "¿Qué clientes bajaron más de 30 % sus compras este trimestre respecto al anterior?", "r": "12 clientes. Los cinco mayores suman $84,000 menos. ¿Los asigno a un vendedor para recuperación?" }
+      ],
+      "resultado": "Decisiones con datos del día, no del cierre de mes.", "evidencia": "estancados" },
+    { "rol": "Jefe de ventas", "vertical": "Tienda online", "titulo": "La operación me avisa a mí",
+      "comandos": [
+        { "u": "Avísame si una orden de más de $500 se queda en «Pendiente de pago» más de 24 horas.", "r": "Regla activa. Ahora mismo hay 2: pedidos 1031 ($640) y 1037 ($512)." },
+        { "u": "Cada mañana dime cuántos pedidos hay por despachar y cuáles llevan más de 48 horas.", "r": "Programado a las 8:00. Hoy: 27 por despachar, 4 con más de 48 h." },
+        { "u": "Si un producto se queda sin stock y tiene pedidos pendientes, avisa a compras y a mí.", "r": "Regla activa sobre el inventario de Shopify. Aviso a compras por WhatsApp y a ti." }
+      ],
+      "resultado": "Cero pedidos olvidados, cero clientes preguntando «¿y mi pedido?».", "evidencia": "carrito" },
+
+    { "rol": "Dueño del negocio", "vertical": "Inmobiliaria", "titulo": "Sé lo que pasa sin entrar a nada",
+      "comandos": [
+        { "u": "Avísame si se pierde un deal de más de $80,000 con el motivo.", "r": "Regla activa. Última pérdida: Torre Norte 1203, $95,000, motivo «financiamiento no aprobado»." },
+        { "u": "Cada viernes: ventas de la semana, conversión por portal y los 3 mejores asesores.", "r": "Programado. Esta semana: 4 separaciones, conversión Urbania 3,1 % vs Adondevivir 1,8 %; top: Ana, Luis, Marco." },
+        { "u": "¿Cuántas visitas cerramos este mes comparado con el mes pasado?", "r": "Agosto: 31 % de visitas con separación vs 24 % en julio. Subió 7 puntos." }
+      ],
+      "resultado": "Un WhatsApp al final del día vale más que tres dashboards.", "evidencia": "estancados" },
+    { "rol": "Dueño del negocio", "vertical": "Clínica / salud", "titulo": "Mi clínica me reporta sola",
+      "comandos": [
+        { "u": "Cada lunes envíame pacientes nuevos, presupuestos aceptados y tasa de ausencias de la semana.", "r": "Programado. Semana pasada: 46 pacientes nuevos, 19 presupuestos aceptados ($38,000), ausencias 9 %." },
+        { "u": "Avísame si la tasa de ausencias de un día supera el 15 %.", "r": "Regla activa. Se calcula al cierre de cada día con la agenda del CRM." },
+        { "u": "¿Qué tratamientos generaron más ingresos este trimestre?", "r": "Implantes $142,000 (41 %), ortodoncia $96,000 (28 %), estética $58,000 (17 %)." }
+      ],
+      "resultado": "Números claros, sin esperar al contador.", "evidencia": "noshow" },
+    { "rol": "Dueño del negocio", "vertical": "Distribuidora B2B", "titulo": "Margen y cobranza a la vista",
+      "comandos": [
+        { "u": "Avísame cuando un cliente supere los 15 días de atraso en el pago y prepárame el recordatorio.", "r": "Regla activa. Hoy: 3 clientes; el mayor es Bodegas Lima, $12,400 a 18 días. Mensaje listo para enviar." },
+        { "u": "Cada viernes dime ventas por línea de producto y margen promedio.", "r": "Programado. Esta semana: $210,000; margen 23 %; ferretería creció 12 %, pinturas cayó 6 %." },
+        { "u": "¿Quiénes son los 10 clientes que más compraron este año y cuánto crecieron?", "r": "Te lo mando en una tabla: 7 de los 10 crecieron; El Sol +34 %, Distribuidora Norte −8 %." }
+      ],
+      "resultado": "Cobras a tiempo y sabes dónde está el margen.", "evidencia": "toques" },
+    { "rol": "Dueño del negocio", "vertical": "Tienda online", "titulo": "Mi tienda me escribe a mí",
+      "comandos": [
+        { "u": "Cada mañana envíame las ventas de ayer, el ticket promedio y el producto más vendido.", "r": "Programado a las 8:00. Ayer: $6,420 en 38 pedidos, ticket $169, más vendido: zapatilla Runner." },
+        { "u": "Avísame si las ventas del día caen más de 30 % frente al promedio de los últimos 7 días.", "r": "Regla activa. Promedio actual: $5,900/día; te aviso si un día cierra por debajo de $4,130." },
+        { "u": "¿Cuánto vendimos por Mercado Libre vs la tienda propia este mes?", "r": "Mercado Libre $48,000 (54 %), tienda propia $41,000 (46 %). El margen es 9 puntos mayor en la tienda propia." }
+      ],
+      "resultado": "Decides con el dato del día, desde el celular.", "evidencia": "carrito" },
+
+    { "rol": "Atención y postventa", "vertical": "Inmobiliaria", "titulo": "Nadie se queda sin respuesta",
+      "comandos": [
+        { "u": "Un día antes de cada visita, pásame el recordatorio para el cliente y avísame si no confirma.", "r": "Programado. Mañana hay 6 visitas; a las 17:00 te dejo los 6 mensajes listos." },
+        { "u": "Cuando se firme la promesa de compra, créame la tarea de enviar los documentos al notario.", "r": "Regla activa. Se dispara cuando el deal pasa a «Promesa firmada» en el CRM." },
+        { "u": "Si un cliente lleva 3 días sin respuesta después de la visita, avísame con su ficha.", "r": "Regla activa. Ahora mismo hay 2: Familia Quispe (visita del lunes) y Sr. Paredes." }
+      ],
+      "resultado": "Cada cliente atendido como si fuera el único.", "evidencia": "noshow" },
+    { "rol": "Atención y postventa", "vertical": "Clínica / salud", "titulo": "El paciente vuelve porque lo cuidan",
+      "comandos": [
+        { "u": "Al día siguiente de cada tratamiento, prepárame el mensaje para preguntar cómo se siente el paciente.", "r": "Programado. Hoy tienes 12 mensajes de seguimiento listos; empiezo con Rosa Díaz (extracción de ayer)." },
+        { "u": "Si un paciente no vuelve en 6 meses desde su última limpieza, avísame y prepárame la invitación.", "r": "Regla activa. Este mes vencen 58 pacientes; te los paso por lotes de 10 cada mañana." },
+        { "u": "Anota en la ficha de Rosa Díaz que prefiere citas por la tarde y créale la tarea de control a los 15 días.", "r": "Nota guardada y control programado para el 11. ¿Le mando la propuesta de hora ahora?" }
+      ],
+      "resultado": "Pacientes que regresan, sin llamadas de recordatorio.", "evidencia": "noshow" },
+    { "rol": "Atención y postventa", "vertical": "Distribuidora B2B", "titulo": "Cada pedido llega y se confirma",
+      "comandos": [
+        { "u": "Cuando un pedido salga a despacho, prepárame el aviso para el cliente con la fecha estimada.", "r": "Regla activa. Hoy salieron 14; los mensajes están listos con guía y fecha." },
+        { "u": "Si un cliente reporta un reclamo, créale la tarea al vendedor y avísame si no se atiende en 24 h.", "r": "Regla activa. Los reclamos entran como tickets del CRM y el aviso te llega a las 24 h." },
+        { "u": "¿Qué clientes tuvieron más de 2 reclamos este trimestre?", "r": "4 clientes: Bodegas Lima (4), Minimarket Sur (3), El Sol (3), Norte (3). ¿Los marco para visita?" }
+      ],
+      "resultado": "Menos reclamos repetidos, clientes que recompran.", "evidencia": "toques" },
+    { "rol": "Atención y postventa", "vertical": "Tienda online", "titulo": "Del pedido a la reseña, sin fricción",
+      "comandos": [
+        { "u": "Cuando un pedido pase a «Entregado», al día siguiente déjame listo el mensaje para pedir la reseña.", "r": "Regla activa. Mañana tendrás 22 mensajes listos con el enlace de reseña de cada producto." },
+        { "u": "Si un cliente pregunta por su pedido en Mercado Libre y no respondemos en 2 horas, avísame.", "r": "Regla activa sobre las preguntas y mensajes de Mercado Libre." },
+        { "u": "Marca el pedido 1058 como devolución aceptada y créame la tarea de reembolso para finanzas.", "r": "Pedido 1058 en «Devolución aceptada»; tarea creada para finanzas con el monto $210." }
+      ],
+      "resultado": "Clientes que vuelven y lo cuentan.", "evidencia": "carrito" }
+  ]
+}
