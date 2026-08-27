@@ -535,3 +535,4 @@ body.sheet-open { overflow: hidden; }
   .home_getupdate-component { padding-top: 1rem; }
   .pricing-head { padding-top: .5rem; }
 }
+@media (max-width: 767px) { .home_features-card { aspect-ratio: auto !important; display: flex !important; flex-direction: column; justify-content: flex-start; grid-template-rows: auto !important; } .home_features-card .home_icon-text-wrapper { width: 100%; } }
