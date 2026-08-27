@@ -516,3 +516,4 @@ body.sheet-open { overflow: hidden; }
 .section_clip-path-wrap { padding-bottom: 0; }
 #specs .home_specification-component { padding-top: 3rem; }
 .section_clip-path-wrap { min-height: 0 !important; }
+.section_clip-path-wrap, #features-padding, .section_home-features { background-color: #060606; }
