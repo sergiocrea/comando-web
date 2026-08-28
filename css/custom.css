@@ -675,3 +675,13 @@ body.sheet-open { overflow: hidden; }
   .uc-close { font-size: 1.05rem; }
   .uc-cta { width: 100%; justify-content: center; }
 }
+/* mobile hero: badge + heading above the phone, CTA below it */
+@media (max-width: 767px) {
+  #about.is-hero .section_about-right, #about.is-hero .section_about-content { display: contents; }
+  #about.is-hero .section_about-eyebrow { order: 1; align-self: flex-start; margin-bottom: .9rem; }
+  #about.is-hero .section_about-heading { order: 2; margin-top: 0; margin-bottom: 1.25rem; }
+  #about.is-hero .section_about-left { order: 3; padding-bottom: 1.75rem; }
+  #about.is-hero .about_cta-row { order: 4; }
+  #about.is-hero .section_about-component { padding-top: 6rem; gap: 0; }
+  #about.is-hero .section_about-left .canvas-target-block { width: 58vw !important; max-width: 58vw !important; }
+}
