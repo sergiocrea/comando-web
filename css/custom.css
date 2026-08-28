@@ -673,7 +673,9 @@ body.sheet-open { overflow: hidden; }
   .uc-result { font-size: 1rem; }
   .uc-foot { margin-top: 2rem; }
   .uc-close { font-size: 1.05rem; }
-  .uc-cta { width: 100%; justify-content: center; }
+  .uc-cta { width: auto; font-size: .9rem; padding: .65rem 1.1rem; }
+  .uc-cta-sufijo { display: none; }
+  .uc-close { max-width: 20rem; margin-left: auto; margin-right: auto; }
 }
 /* mobile hero: badge + heading above the phone, CTA below it */
 @media (max-width: 767px) {
@@ -690,4 +692,4 @@ body.sheet-open { overflow: hidden; }
 /* Producto: card columns start at the top of the pinned area (short screens showed rows 01/02 above the fold) */
 @media (min-width: 768px) { #scope-1 .home_grid-wrapper { align-items: flex-start; } .section_left-slider-wrap, .section_bottom-slider { transform: translateY(18%); } }
 /* casos de uso: smaller CTA */
-.uc-cta { font-size: .92rem; padding: .7rem 1.2rem; border-radius: .6rem; box-shadow: 0 6px 18px rgba(77,124,255,.25); }
+.uc-cta { white-space: nowrap; font-size: .92rem; padding: .7rem 1.2rem; border-radius: .6rem; box-shadow: 0 6px 18px rgba(77,124,255,.25); }

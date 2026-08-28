@@ -2,9 +2,10 @@
   "seccion": {
     "titulo": "Elige tu rol. Mira lo que le pides.",
     "subtitulo": "Comando no reemplaza a tu equipo: lo vuelve imposible de reemplazar. Elige tu rol y mira qué le pides por WhatsApp.",
-    "cierre": "Nadie escribe a tus clientes por ti. Tu número, tu voz, tu reputación.",
+    "cierre": "Conviértete en el operador 3×: el triple de rápido, imposible de reemplazar.",
     "cta": {
-      "texto": "Pruébalo con tu propio CRM en 2 minutos",
+      "texto": "Pruébalo con tu CRM",
+      "sufijo": " en 2 minutos",
       "href": "/app/"
     }
   },
