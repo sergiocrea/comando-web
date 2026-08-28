@@ -31,11 +31,18 @@
   }
   function showStep(i, fromUser) {
     step = i;
-    root.querySelectorAll('.uc-msg').forEach((m, k) => m.classList.toggle('is-in', Math.floor(k / 2) <= step));
+    const msgs = [...root.querySelectorAll('.uc-msg')];
+    msgs.forEach((m, k) => m.classList.toggle('is-in', Math.floor(k / 2) <= step));
+    // fixed-height chat, no scroll: drop the oldest exchanges until everything fits
+    const chatEl = root.querySelector('.uc-chat'); const cs = getComputedStyle(chatEl);
+    const avail = chatEl.clientHeight - parseFloat(cs.paddingTop) - parseFloat(cs.paddingBottom); const gap = parseFloat(cs.rowGap) || 0;
+    const used = () => { const v = msgs.filter((m) => m.classList.contains('is-in')); return v.reduce((a, m) => a + m.offsetHeight + parseFloat(getComputedStyle(m).marginTop), 0) + gap * (v.length - 1); };
+    for (let first = 0; first < step && used() > avail + 1; first++) {
+      msgs[first * 2].classList.remove('is-in'); msgs[first * 2 + 1].classList.remove('is-in');
+    }
     root.querySelectorAll('.uc-step').forEach((b) => b.classList.toggle('is-on', +b.dataset.step === step));
     root.querySelectorAll('.uc-dot').forEach((b) => { const k = +b.dataset.step; b.classList.toggle('is-on', k === step); b.classList.toggle('is-past', k < step); });
-    const chat = root.querySelector('.uc-chat');
-    requestAnimationFrame(() => chat.scrollTo({ top: chat.scrollHeight, behavior: fromUser === 'init' ? 'auto' : 'smooth' }));
+
     if (fromUser === true) restartTimer(9000); else restartTimer();
   }
   function restartTimer(delay) {
@@ -75,7 +82,7 @@
     root.querySelectorAll('[data-rol]').forEach((b) => { const on = +b.dataset.rol === state.rol; b.classList.toggle('is-on', on); b.setAttribute('aria-selected', on); if (on) b.scrollIntoView({ block: 'nearest', inline: 'center', behavior: 'smooth' }); });
     root.querySelectorAll('[data-vertical]').forEach((b) => { const on = +b.dataset.vertical === state.vertical; b.classList.toggle('is-on', on); b.setAttribute('aria-pressed', on); if (on) b.scrollIntoView({ block: 'nearest', inline: 'center', behavior: 'smooth' }); });
     const c = current(); step = 0; const chat = root.querySelector('.uc-chat'), out = root.querySelector('.uc-outcome'), layout = root.querySelector('.uc-layout');
-    layout.classList.remove('is-in'); chat.innerHTML = chatHtml(c); out.innerHTML = outcomeHtml(c); root.querySelector('.uc-timeline').innerHTML = timelineHtml(c); bindSteps(); chat.scrollTop = 0; showStep(0, 'init');
+    layout.classList.remove('is-in'); chat.innerHTML = chatHtml(c); out.innerHTML = outcomeHtml(c); root.querySelector('.uc-timeline').innerHTML = timelineHtml(c); bindSteps(); showStep(0, 'init');
     requestAnimationFrame(() => requestAnimationFrame(() => layout.classList.add('is-in')));
     restartTimer(6000);
     if (typeof ScrollTrigger !== 'undefined') ScrollTrigger.refresh();

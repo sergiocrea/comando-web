@@ -604,8 +604,7 @@ body.sheet-open { overflow: hidden; }
 .uc-wa-name { flex: 1; font-size: .95rem; font-weight: 600; line-height: 1.1; }
 .uc-wa-name small { display: block; font-weight: 400; font-size: .7rem; color: #8fa3ad; margin-top: .15rem; }
 .uc-wa-more { color: #8fa3ad; }
-.uc-chat { padding: .9rem .7rem .6rem; display: flex; flex-direction: column; gap: .4rem; height: 21rem; overflow-y: auto; overscroll-behavior: contain; scrollbar-width: none; background: #0b141a radial-gradient(rgba(255,255,255,.04) 1px, transparent 1px) 0 0 / 14px 14px; }
-.uc-chat::-webkit-scrollbar { display: none; }
+.uc-chat { padding: .9rem .7rem .6rem; display: flex; flex-direction: column; justify-content: flex-end; gap: .4rem; height: 27rem; overflow: hidden; background: #0b141a radial-gradient(rgba(255,255,255,.04) 1px, transparent 1px) 0 0 / 14px 14px; }
 .uc-msg { display: none; opacity: 0; transform: translateY(8px); transition: opacity .35s ease, transform .35s ease; }
 .uc-msg.is-in { display: flex; opacity: 1; transform: none; }
 .uc-msg.is-user { justify-content: flex-end; }
@@ -668,7 +667,7 @@ body.sheet-open { overflow: hidden; }
   .uc-card-meta { margin-bottom: .4rem; }
   .uc-card-title { margin-bottom: 0; }
   .uc-phone-screen { border-radius: 1.8rem; }
-  .uc-chat { height: 21rem; }
+  .uc-chat { height: 24rem; }
   .uc-card-title { font-size: 1.35rem; margin-bottom: .9rem; }
   .uc-result { font-size: 1rem; }
   .uc-foot { margin-top: 2rem; }
