@@ -34,7 +34,7 @@ sección debe sentirse parte de la misma página.
 |---|---|---|---|---|---|---|
 | Precio mensual | $0 | **$2/mes** | $6/mes | $19/mes | $49/mes | A medida |
 | Contactos en el CRM | cualquier tamaño (1 CRM) | hasta 10,000 | hasta 25,000 | hasta 75,000 | hasta 200,000 | Ilimitados |
-| Comandos incluidos (texto o audio) | 50 en total (cupo de prueba) | 300 / mes | 1,000 / mes | 4,000 / mes | 10,000 / mes | Negociados |
+| Comandos incluidos (texto o audio; una nota de voz = 1.5) | 50 en total (cupo de prueba) | 150 / mes | 400 / mes | 1,500 / mes | 4,000 / mes | Negociados |
 | Operadores (vendedores) | Ilimitados | Ilimitados | Ilimitados | Ilimitados | Ilimitados |
 | CRMs conectados | 1 | 1 | 3 | Ilimitados | Ilimitados |
 | Automatizaciones activas | 5 | Ilimitadas | Ilimitadas | Ilimitadas | Ilimitadas |
@@ -46,7 +46,7 @@ sección debe sentirse parte de la misma página.
 | Soporte | Email | Email | Prioritario por WhatsApp | Prioritario + onboarding | Dedicado + SLA |
 | Credenciales del CRM en infraestructura del cliente, SSO, auditoría avanzada | — | — | — | — | ✓ |
 
-Add-ons (todos los planes): **+10,000 contactos → $1/mes** · **+1,000 comandos → $2/mes**.
+Add-ons (todos los planes): **+10,000 contactos → $1/mes** · **+500 comandos → $8** (62 comandos por dólar: siempre conviene más subir de plan que acumular paquetes).
 
 Sincronización: en tiempo real cuando el CRM envía eventos (HubSpot, Pipedrive, Zoho, Kommo, Shopify, Tiendanube, WooCommerce, Mercado Libre…); en los que no, Comando revisa cambios cada 6 h (Básico), 30 min (Starter) o 5 min (Pro/Business).
 Anual: 2 meses gratis (toggle mensual/anual). Plan destacado: Pro.
@@ -87,7 +87,7 @@ cambio; Comando funciona con cualquier plan de HubSpot, incluido el gratuito.
    - ¿Qué cuenta como comando? Cada pedido que le haces a Comando por WhatsApp, por texto
      o por audio. Las confirmaciones ("sí", "ok") y las respuestas de Comando no cuentan.
    - ¿Qué pasa si uso más comandos de los incluidos? Aviso al 80%; sumas paquetes de
-     1,000 comandos por $2 o subes de plan.
+     500 comandos por $8 o subes de plan.
    - ¿Qué CRMs soportan? HubSpot, Salesforce, Zoho, Pipedrive, Dynamics 365 y más.
    - ¿Necesito contratar la API de WhatsApp Business? No para empezar.
    - ¿Dónde quedan las credenciales de mi CRM? En infraestructura de Comando, cifradas;
@@ -123,11 +123,13 @@ Márgenes por plan con TODOS los comandos incluidos consumidos y el CRM al tope 
 
 | Plan | Precio | Costo si todo es texto | Margen | Costo si todo es audio 60 s | Margen (peor caso) |
 |---|---|---|---|---|---|
-| Básico | $3 | $0.60 | 80% | $0.80 | 73% |
-| Starter | $6 | $1.88 | 69% | $2.55 | 58% |
-| Pro | $19 | $7.13 | 62% | $9.80 | 48% |
-| Business | $49 | $18.00 | 63% | $24.70 | 50% |
-| Gratis | $0 | ~$0.11 una vez (50 comandos); sin sincronización continua | — | — | — |
+| Básico | $3 | $0.43 | 85% | $0.51 | 82% |
+| Starter | $6 | $1.13 | 80% | $1.34 | 77% |
+| Pro | $19 | $3.93 | 78% | $4.75 | 74% |
+| Business | $49 | $10.50 | 77% | $12.70 | 73% |
+| Gratis | $0 | ~$0.10 una vez (50 comandos); sin sincronización continua | — | — | — |
+
+Escalera de valor (comandos por dólar): Básico 50 → Starter 67 → Pro 79 → Business 82; el add-on (62/$) queda entre Starter y Pro para que el upgrade siempre gane. Márgenes calculados con 30 % de comandos por audio y cobro anual (5 % de comisión); "peor caso" = todo por audio.
 
 (Contactos al tope del plan a $0.015 por 1,000/mes: Básico 10,000 → $0.15 · Starter 25,000 → $0.38 · Pro 75,000 → $1.13 · Business 200,000 → $3.00. Con un CRM sin filtro incremental el costo de contactos se duplica y el margen baja 1-6 puntos.)
 
@@ -136,9 +138,8 @@ Regla del plan Gratis: la sincronización del CRM se pausa al agotar los 50 coma
 regla, un free con un CRM de 50,000 contactos costaría ~$3/mes indefinidamente.
 Plataforma fija ~$175/mes (Temporal Cloud piso $100, VM ~$65, Redis $5, Neon ~$5) →
 cubierta con ~12 clientes de pago. Reglas para el agente: no bajar precios ni subir
-comandos incluidos sin recalcular esta tabla; el add-on de comandos ($2/1,000) debe
-mantenerse ≥ $2 porque el costo de 1,000 comandos de audio es $2.17 antes de margen
-(considerar $3/1,000 si el mix de audio supera 50%). Si el canal WhatsApp migra a la API
+comandos incluidos sin recalcular esta tabla; el add-on de comandos ($8/500) no debe
+bajar de 60 comandos por dólar ni superar los comandos por dólar del plan siguiente. Si el canal WhatsApp migra a la API
 oficial de Meta (conversaciones cobradas), revisar el plan Básico.
 
 ## 8. Entregable
