@@ -234,6 +234,8 @@ function initNav() {
     nav.style.transition = 'background 0.3s ease';
     let menuOpen = false;
     const update = () => {
+      nav.classList.toggle('is-open', menuOpen);
+      nav.classList.toggle('is-scrolled', window.scrollY > 60);
       if (menuOpen) { nav.style.backgroundImage = 'none'; nav.style.backgroundColor = '#000'; return; }
       nav.style.backgroundColor = 'transparent';
       nav.style.backgroundImage = window.scrollY > threshold() ? grad : 'none';

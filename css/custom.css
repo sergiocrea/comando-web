@@ -468,7 +468,7 @@ body.sheet-open { overflow: hidden; }
 @media (min-width: 992px) { .home_getupdate-component-content { padding: 4rem 4.5rem; } }
 
 /* mobile: nav with solid backdrop once content scrolls under it */
-@media (max-width: 991px) { .nav_component.w-nav { background-color: rgba(6,6,6,.96) !important; } }
+@media (max-width: 991px) { .nav_component.w-nav { background-color: transparent !important; transition: background-color .3s ease; } .nav_component.w-nav.is-scrolled, .nav_component.w-nav.is-open { background-color: rgba(6,6,6,.96) !important; } }
 /* mobile: background video visible in Modo automático */
 @media (max-width: 767px) {
   #scope-2.home_defence-component { position: relative; overflow: hidden; }
