@@ -41,7 +41,7 @@
       "comandos": [
         {
           "u": "¿Qué leads entraron anoche del portal y quién no los ha tocado?",
-          "r": "6 leads nuevos de Urbania y Adondevivir; 2 sin dueño desde hace 9 horas. ¿Los tomo para ti o los reparto?"
+          "r": "6 leads nuevos de los portales; 2 sin dueño desde hace 9 horas. ¿Los tomo para ti o los reparto?"
         },
         {
           "u": "A los que no respondieron la cotización, recuérdamelo a los 3, 5 y 7 días con el mensaje listo.",
@@ -83,7 +83,7 @@
       "comandos": [
         {
           "u": "¿Qué clientes de mi cartera no compran desde hace más de 30 días?",
-          "r": "9 clientes. Los tres más grandes: Ferretería El Sol (42 días), Distribuidora Norte (38), Bodegas Lima (35)."
+          "r": "9 clientes. Los tres más grandes: Ferretería El Sol (42 días), Distribuidora Norte (38), Bodegas Centro (35)."
         },
         {
           "u": "Prepárame un mensaje para cada uno ofreciendo la promoción de agosto.",
@@ -132,7 +132,7 @@
           "r": "Regla activa de 9:00 a 20:00. El supervisor de turno se toma del calendario de guardias."
         },
         {
-          "u": "Reparte los leads de Miraflores entre Ana y Luis; si nadie los toma en 1 hora, dímelo.",
+          "u": "Reparte los leads de la zona norte entre Ana y Luis; si nadie los toma en 1 hora, dímelo.",
           "r": "Asignados 11 leads (6 Ana, 5 Luis). Te aviso a la hora con los que sigan sin actividad."
         }
       ],
@@ -213,7 +213,7 @@
         },
         {
           "u": "Cada viernes: ventas de la semana, conversión por portal y los 3 mejores asesores.",
-          "r": "Programado. Esta semana: 4 separaciones, conversión Urbania 3,1 % vs Adondevivir 1,8 %; top: Ana, Luis, Marco."
+          "r": "Programado. Esta semana: 4 separaciones, conversión portal A 3,1 % vs portal B 1,8 %; top: Ana, Luis, Marco."
         },
         {
           "u": "¿Cuántas visitas cerramos este mes comparado con el mes pasado?",
@@ -251,7 +251,7 @@
       "comandos": [
         {
           "u": "Avísame cuando un cliente supere los 15 días de atraso en el pago y prepárame el recordatorio.",
-          "r": "Regla activa. Hoy: 3 clientes; el mayor es Bodegas Lima, $12,400 a 18 días. Mensaje listo para enviar."
+          "r": "Regla activa. Hoy: 3 clientes; el mayor es Bodegas Centro, $12,400 a 18 días. Mensaje listo para enviar."
         },
         {
           "u": "Cada viernes dime ventas por línea de producto y margen promedio.",
@@ -343,7 +343,7 @@
         },
         {
           "u": "¿Qué clientes tuvieron más de 2 reclamos este trimestre?",
-          "r": "4 clientes: Bodegas Lima (4), Minimarket Sur (3), El Sol (3), Norte (3). ¿Los marco para visita?"
+          "r": "4 clientes: Bodegas Centro (4), Minimarket Sur (3), El Sol (3), Norte (3). ¿Los marco para visita?"
         }
       ],
       "resultado": "Menos reclamos repetidos, clientes que recompran.",
@@ -419,11 +419,11 @@
       "comandos": [
         {
           "u": "¿Qué pólizas de mi cartera vencen en los próximos 30 días?",
-          "r": "23 pólizas: 14 vehiculares, 6 de salud, 3 SOAT. Las tres mayores: Transportes Lima ($4,200), Familia Cárdenas ($1,850), Grupo Mesa ($1,600)."
+          "r": "23 pólizas: 14 vehiculares, 6 de salud, 3 de vida. Las tres mayores: Transportes Andes ($4,200), Familia Cárdenas ($1,850), Grupo Mesa ($1,600)."
         },
         {
           "u": "Prepárame el recordatorio de renovación para cada una con la prima actual.",
-          "r": "23 mensajes listos con prima, vigencia y opción de mejora. Empiezo con Transportes Lima: «Hola Raúl, tu póliza de flota vence el 15…». Toca para enviar el primero."
+          "r": "23 mensajes listos con prima, vigencia y opción de mejora. Empiezo con Transportes Andes: «Hola Raúl, tu póliza de flota vence el 15…». Toca para enviar el primero."
         },
         {
           "u": "Marca la solicitud de crédito de Ana Torres como «Documentos completos» y créame la tarea de enviarla a evaluación.",
@@ -595,7 +595,7 @@
         },
         {
           "u": "¿Qué aseguradora nos deja más margen este trimestre?",
-          "r": "Pacífico 14,2 %, Rímac 12,8 %, Mapfre 11,5 %. Pacífico concentra el 46 % de las primas."
+          "r": "La primera deja 14,2 %, la segunda 12,8 % y la tercera 11,5 %; la primera concentra el 46 % de las primas."
         }
       ],
       "resultado": "Cobras a tiempo y sabes dónde está el margen.",
@@ -675,7 +675,7 @@
         },
         {
           "u": "Si un siniestro lleva 5 días sin actualización, avísame con el asesor responsable.",
-          "r": "Regla activa. Ahora hay 2: Transportes Lima (Luis, 6 días) y Sr. Paredes (Carla, 5 días)."
+          "r": "Regla activa. Ahora hay 2: Transportes Andes (Luis, 6 días) y Sr. Paredes (Carla, 5 días)."
         },
         {
           "u": "Tres días antes de cada cuota, pásame el recordatorio para el cliente con el monto y el enlace de pago.",
