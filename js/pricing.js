@@ -6,7 +6,7 @@
 const PRICING_CONFIG = {
   billing: { annualFreeMonths: 2 },          // anual = precio mensual × 10 / 12
   featuredPlan: 'starter',
-  cta: { trialBase: '/app/', trialLabel: 'Elegir plan', freeLabel: 'Empezar gratis', enterpriseHref: '#pricing-form', enterpriseLabel: 'Habla con ventas' },
+  cta: { trialBase: '/empezar/', trialLabel: 'Elegir plan', freeLabel: 'Empezar gratis', enterpriseHref: '#pricing-form', enterpriseLabel: 'Habla con ventas' },
   title: 'Desde $3 al mes.',
   subtitle: 'Vendedores ilimitados. Paga según el tamaño de tu CRM. Empieza gratis con 50 comandos, sin tarjeta.',
   // Cada plan muestra solo 4 líneas: contactos, comandos, vendedores y un diferencial.
@@ -55,7 +55,7 @@ const PRICING_CONFIG = {
     { q: '¿Qué pasa si pido algo que mi CRM no permite?', a: 'Comando te lo dice y te propone la alternativa que sí puede hacer (por ejemplo, crear la tarea en vez de llamar, o contar desde hoy si tu CRM no guarda historial de ese campo).' },
     { q: '¿Qué CRM soportan y dónde quedan mis credenciales?', a: 'HubSpot, Pipedrive, Zoho CRM, Salesforce, Kommo y Dynamics 365; en e-commerce, Shopify, Tiendanube, WooCommerce, Mercado Libre y VTEX. Te conectas con el login del propio CRM, sin copiar claves; las credenciales quedan cifradas en infraestructura de Comando, nunca en terceros (en planes a medida, en la tuya).' },
   ],
-  finalStrip: { text: 'Tus datos no salen de tu CRM. Comando solo ejecuta lo que confirmas.', cta: 'Empezar gratis', href: '/app/?plan=gratis' },
+  finalStrip: { text: 'Tus datos no salen de tu CRM. Comando solo ejecuta lo que confirmas.', cta: 'Empezar gratis', href: '/empezar/?plan=gratis' },
 };
 
 (function () {
@@ -118,12 +118,12 @@ const PRICING_CONFIG = {
     const grid = document.getElementById('pricing-cards'); if (grid) grid.scrollLeft = 0;
     if (typeof ScrollTrigger !== 'undefined') ScrollTrigger.refresh();
   }
-  // contact form: goes to the onboarding at /app/ (no Webflow backend)
+  // contact form: goes to /empezar/ (early access) (no Webflow backend)
   const form = document.getElementById('wf-form-Waitlist-form');
   if (form) form.addEventListener('submit', (e) => {
     e.preventDefault(); e.stopImmediatePropagation();
     const v = (form.querySelector('input[name="name"]') || {}).value || '';
-    window.location.href = '/app/' + (v ? '?email=' + encodeURIComponent(v.trim()) : '');
+    window.location.href = '/empezar/' + (v ? '?email=' + encodeURIComponent(v.trim()) : '');
   }, true);
   const more = document.getElementById('pricing-more');
   if (more) more.innerHTML = renderMore();

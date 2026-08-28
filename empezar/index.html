@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Comando — Elige tu CRM</title>
+<meta name="description" content="Comando abre cupos por CRM. Elige tu plataforma y te avisamos cuando puedas conectarla desde WhatsApp."/>
+<meta name="robots" content="noindex"/>
+<link rel="icon" href="/assets/img/favicon.png"/><link rel="apple-touch-icon" href="/assets/img/webclip.png"/>
+<style>
+@font-face{font-family:"Space Grotesk";src:url(/assets/fonts/SpaceGrotesk-Variable.woff2) format("woff2");font-weight:300 700;font-display:swap}
+@font-face{font-family:"Inter";src:url(/assets/fonts/Inter-Variable.woff2) format("woff2");font-weight:100 900;font-display:swap}
+@font-face{font-family:"JetBrains Mono";src:url(/assets/fonts/JetBrainsMono-Variable.woff2) format("woff2");font-weight:100 800;font-display:swap}
+*{box-sizing:border-box}
+html,body{margin:0;background:#0a0a0a;color:#fff;font-family:Inter,system-ui,-apple-system,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:inherit}
+.nav{display:flex;align-items:center;justify-content:space-between;padding:1.1rem 1.5rem;max-width:72rem;margin:0 auto}
+.brand{display:flex;align-items:center;gap:.6rem;text-decoration:none;font-family:"Space Grotesk",Inter,sans-serif;font-weight:600;font-size:1.2rem}
+.cmd-wordmark{display:inline-flex;align-items:center;gap:.05em;font-family:"Space Grotesk",Inter,sans-serif;font-weight:700;letter-spacing:-.01em;color:#fff;text-transform:lowercase;line-height:1;font-size:1.35rem}.cmd-o{display:inline-block;width:.56em;height:.74em;border-radius:.14em;background:#4d7cff;transform:translateY(.04em);animation:cmd-blink 1.6s steps(1,end) infinite}@keyframes cmd-blink{0%,60%{opacity:1}61%,100%{opacity:.35}}@media (prefers-reduced-motion:reduce){.cmd-o{animation:none}}
+.back{font-family:"JetBrains Mono",monospace;font-size:.78rem;letter-spacing:.06em;text-transform:uppercase;color:#9a9a9a;text-decoration:none}
+.back:hover{color:#fff}
+main{max-width:72rem;margin:0 auto;padding:2.5rem 1.5rem 5rem}
+.eyebrow{font-family:"JetBrains Mono",monospace;font-size:.78rem;letter-spacing:.1em;text-transform:uppercase;color:#4d7cff;text-align:center}
+h1{font-family:Inter,system-ui,sans-serif;font-weight:500;letter-spacing:-.02em;font-size:clamp(2rem,5vw,3.4rem);line-height:1.08;text-align:center;margin:.9rem auto 1rem;max-width:34rem}
+.lead{color:#b0b0b0;text-align:center;max-width:36rem;margin:0 auto;line-height:1.55;font-size:1.05rem}
+.notice{display:inline-flex;align-items:center;gap:.5rem;margin:1.25rem auto 0;padding:.5rem .9rem;border-radius:999px;border:1px solid #2a2a2a;background:#111;color:#c8c8c8;font-size:.85rem}
+.notice i{width:.5rem;height:.5rem;border-radius:50%;background:#f5b400;box-shadow:0 0 0 4px rgba(245,180,0,.2);font-style:normal}
+.center{text-align:center}
+.grid{display:grid;grid-template-columns:repeat(5,1fr);gap:.75rem;margin-top:2.5rem}
+.crm{-webkit-appearance:none;appearance:none;background:#0d0d0d;border:1px solid #1f1f1f;border-radius:.9rem;padding:1.5rem .75rem 1.1rem;display:flex;flex-direction:column;align-items:center;gap:.7rem;color:#fff;cursor:pointer;transition:border-color .2s,background .2s,transform .2s;position:relative;font:inherit}
+.crm:hover{border-color:rgba(77,124,255,.55);background:#101318;transform:translateY(-2px)}
+.crm.is-on{border-color:#4d7cff;background:rgba(77,124,255,.1);box-shadow:0 0 0 1px #4d7cff inset}
+.crm.is-on::after{content:"✓";position:absolute;top:.5rem;right:.7rem;color:#4d7cff;font-weight:700}
+.crm img{width:2.75rem;height:2.75rem;object-fit:contain}
+.crm-name{font-family:"JetBrains Mono",monospace;font-size:.82rem;text-align:center}
+.chip-unused{font-family:"JetBrains Mono",monospace;font-size:.58rem;letter-spacing:.06em;text-transform:uppercase;padding:.2rem .5rem;border-radius:999px;border:1px solid #2f2f2f;color:#9a9a9a}
+.chip.live{color:#4d7cff;border-color:rgba(77,124,255,.5)}
+.chip.soon{color:#f5b400;border-color:rgba(245,180,0,.4)}
+.other{margin-top:.75rem;text-align:center;color:#8a8a8a;font-size:.9rem}
+.other input{background:#111;border:1px solid #2a2a2a;border-radius:.6rem;color:#fff;padding:.55rem .8rem;font:inherit;font-size:.9rem;margin-left:.4rem;width:14rem;max-width:60vw}
+.form{margin:2.75rem auto 0;max-width:34rem;background:#0d0d0d;border:1px solid #262626;border-radius:1.25rem;padding:1.75rem}
+.form h2{font-family:"Space Grotesk",Inter,sans-serif;font-weight:600;font-size:1.25rem;margin:0 0 .35rem}
+.form p{color:#b0b0b0;margin:0 0 1.1rem;line-height:1.5;font-size:.95rem}
+.row{display:flex;gap:.6rem;flex-wrap:wrap}
+.row input{flex:1 1 14rem;background:#111;border:1px solid #2a2a2a;border-radius:.75rem;color:#fff;padding:.85rem 1rem;font:inherit;font-size:1rem}
+.row input:focus{outline:2px solid #4d7cff;outline-offset:1px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:.5rem;background:#4d7cff;color:#fff;border:0;border-radius:.75rem;padding:.85rem 1.4rem;font:inherit;font-weight:600;font-size:1rem;cursor:pointer;text-decoration:none;box-shadow:0 8px 24px rgba(77,124,255,.3);transition:background .2s,transform .2s}
+.btn:hover{background:#3d6cf0;transform:translateY(-1px)}
+.btn[aria-disabled="true"]{opacity:.5;cursor:not-allowed;transform:none}
+.hint{margin-top:.8rem;color:#6f6f6f;font-size:.8rem;line-height:1.45}
+.hint b{color:#9a9a9a;font-weight:500}
+.done{display:none;margin-top:1rem;padding:.9rem 1rem;border-radius:.75rem;background:rgba(77,124,255,.12);border:1px solid rgba(77,124,255,.4);color:#dfe7ff;font-size:.95rem}
+.done.show{display:block}
+@media (max-width:900px){.grid{grid-template-columns:repeat(4,1fr)}}
+@media (max-width:640px){.grid{grid-template-columns:repeat(3,1fr);gap:.5rem} .crm{padding:1.1rem .5rem .9rem} .crm img{width:2.2rem;height:2.2rem} .crm-name{font-size:.72rem} .chip{display:none} .form{padding:1.25rem} main{padding-top:1.5rem}}
+</style>
+</head>
+<body>
+<nav class="nav"><a class="brand" href="/" aria-label="Comando"><span class="cmd-wordmark"><span aria-hidden="true">comand</span><span class="cmd-o" aria-hidden="true"></span></span></a><a class="back" href="/">← Volver</a></nav>
+<main>
+  <div class="eyebrow">Acceso anticipado</div>
+  <h1>¿Con qué CRM trabajas?</h1>
+  <p class="lead">Estamos abriendo cupos por plataforma. Elige la tuya y te avisamos en cuanto puedas conectarla y operarla desde WhatsApp.</p>
+  <div class="center"><span class="notice"><i></i>Todavía no hay registro ni inicio de sesión</span></div>
+  <div class="grid" id="grid"><button type="button" class="crm" data-crm="HubSpot"><img src="/assets/img/logos/hubspot.svg" alt=""/><span class="crm-name">HubSpot</span></button><button type="button" class="crm" data-crm="Pipedrive"><img src="/assets/img/logos/pipedrive.svg" alt=""/><span class="crm-name">Pipedrive</span></button><button type="button" class="crm" data-crm="Zoho CRM"><img src="/assets/img/logos/zoho.svg" alt=""/><span class="crm-name">Zoho CRM</span></button><button type="button" class="crm" data-crm="Salesforce"><img src="/assets/img/logos/salesforce.svg" alt=""/><span class="crm-name">Salesforce</span></button><button type="button" class="crm" data-crm="Kommo"><img src="/assets/img/logos/kommo.svg" alt=""/><span class="crm-name">Kommo</span></button><button type="button" class="crm" data-crm="Shopify"><img src="/assets/img/logos/shopify.svg" alt=""/><span class="crm-name">Shopify</span></button><button type="button" class="crm" data-crm="Tiendanube"><img src="/assets/img/logos/tiendanube.svg" alt=""/><span class="crm-name">Tiendanube</span></button><button type="button" class="crm" data-crm="WooCommerce"><img src="/assets/img/logos/woocommerce.svg" alt=""/><span class="crm-name">WooCommerce</span></button><button type="button" class="crm" data-crm="Mercado Libre"><img src="/assets/img/logos/mercadolibre.svg" alt=""/><span class="crm-name">Mercado Libre</span></button><button type="button" class="crm" data-crm="VTEX"><img src="/assets/img/logos/vtex.svg" alt=""/><span class="crm-name">VTEX</span></button><button type="button" class="crm" data-crm="Dynamics 365 Sales"><img src="/assets/img/logos/dynamics.svg" alt=""/><span class="crm-name">Dynamics 365 Sales</span></button><button type="button" class="crm" data-crm="HighLevel"><img src="/assets/img/logos/highlevel.svg" alt=""/><span class="crm-name">HighLevel</span></button><button type="button" class="crm" data-crm="Meta Lead Ads"><img src="/assets/img/logos/meta.svg" alt=""/><span class="crm-name">Meta Lead Ads</span></button><button type="button" class="crm" data-crm="TikTok Lead Generation"><img src="/assets/img/logos/tiktok.svg" alt=""/><span class="crm-name">TikTok Lead Generation</span></button><button type="button" class="crm" data-crm="WhatsApp Business"><img src="/assets/img/logos/whatsapp.svg" alt=""/><span class="crm-name">WhatsApp Business</span></button></div>
+  <div class="other">¿Otro? <input id="other" type="text" placeholder="Escribe tu CRM o tienda" maxlength="60"/></div>
+  <section class="form" id="form">
+    <h2>Avísame cuando esté listo</h2>
+    <p>Déjanos tu correo o tu WhatsApp. Sin tarjeta, sin spam: un solo mensaje cuando tu CRM esté disponible.</p>
+    <div class="row"><input id="contact" type="text" inputmode="email" placeholder="tu@correo.com o +51 999 999 999" autocomplete="email"/><a class="btn" id="send" href="#" aria-disabled="true">Avísame <span aria-hidden="true">→</span></a></div>
+    <div class="hint" id="hint">Elige un CRM arriba para continuar.</div>
+    <div class="done" id="done">Se abrió tu app de correo con el mensaje listo para <b>hola@comando.pro</b>. Si no se abrió, escríbenos directamente a esa dirección con tu CRM y tu contacto.</div>
+  </section>
+</main>
+<script>
+(function(){
+  var q=new URLSearchParams(location.search), grid=document.getElementById('grid'), other=document.getElementById('other'), contact=document.getElementById('contact'), send=document.getElementById('send'), hint=document.getElementById('hint'), done=document.getElementById('done');
+  var plan=q.get('plan')||''; if(q.get('email')) contact.value=q.get('email');
+  var crm=''; try{crm=localStorage.getItem('comando_crm')||''}catch(e){}
+  function pick(name){ crm=name; grid.querySelectorAll('.crm').forEach(function(b){b.classList.toggle('is-on',b.dataset.crm===name)}); if(name&&grid.querySelector('.crm.is-on')) other.value=''; try{localStorage.setItem('comando_crm',name)}catch(e){} update(); }
+  function update(){ var ok=!!crm; send.setAttribute('aria-disabled',ok?'false':'true'); hint.textContent=ok?('Te avisamos cuando '+crm+' esté disponible'+(plan?' (plan '+plan+')':'')+'.'):'Elige un CRM arriba para continuar.'; }
+  grid.addEventListener('click',function(e){ var b=e.target.closest('.crm'); if(b) pick(b.dataset.crm); });
+  other.addEventListener('input',function(){ if(other.value.trim()){ grid.querySelectorAll('.crm').forEach(function(b){b.classList.remove('is-on')}); crm=other.value.trim(); update(); } });
+  send.addEventListener('click',function(e){ e.preventDefault(); if(!crm) return; var c=contact.value.trim(); var body='Hola, quiero probar Comando.%0A%0ACRM / tienda: '+encodeURIComponent(crm)+(plan?'%0APlan: '+encodeURIComponent(plan):'')+(c?'%0AContacto: '+encodeURIComponent(c):'')+'%0A%0AAvísenme cuando esté disponible.'; location.href='mailto:hola@comando.pro?subject='+encodeURIComponent('Acceso anticipado: '+crm)+'&body='+body; done.classList.add('show'); });
+  if(crm) pick(crm); else update();
+})();
+</script>
+</body>
+</html>
