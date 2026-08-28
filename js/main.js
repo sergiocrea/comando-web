@@ -512,7 +512,11 @@ function initSliderParallax() {
       // desktop: the block stays pinned while #trigger-1 (150svh) scrolls through;
       // spread the movement over that whole pinned range
       const p2 = Math.min(1, Math.max(0, (window.innerHeight - rect.top) / rect.height));
-      const y = 22 - p2 * 50; // row 1 enters just below the top band; the last rows end near the middle // start with row 1 in the readable band, end with the last row still visible
+      // row 1 starts just below the top band; the travel adapts to the viewport so the last row is reachable on short screens
+      const colH = (left || bottom) ? Math.max(left ? left.offsetHeight : 0, bottom ? bottom.offsetHeight : 0) : 0;
+      const startY = 18;
+      const endY = colH ? Math.min(-28, -((colH - window.innerHeight * 0.8) / colH) * 100) : -28;
+      const y = startY - p2 * (startY - endY);
       if (left) left.style.transform = `translateY(${y}%)`;
       if (bottom) bottom.style.transform = `translateY(${y}%)`;
     } else {
