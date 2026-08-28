@@ -693,3 +693,22 @@ body.sheet-open { overflow: hidden; }
 @media (min-width: 768px) { #scope-1 .home_grid-wrapper { align-items: flex-start; } .section_left-slider-wrap, .section_bottom-slider { transform: translateY(18%); } }
 /* casos de uso: smaller CTA */
 .uc-cta { white-space: nowrap; font-size: .92rem; padding: .7rem 1.2rem; border-radius: .6rem; box-shadow: 0 6px 18px rgba(77,124,255,.25); }
+
+/* ===== Conectores: compact logo grid + dialog on every screen size (desktop mirrors the mobile UI) ===== */
+@media (min-width: 768px) {
+  .home_features-card-component { display: grid; grid-template-columns: repeat(6, 1fr); gap: .75rem; }
+  .home_features-card { position: relative; display: flex !important; flex-direction: column; justify-content: center; align-items: center; aspect-ratio: 1 / 1; min-height: 0 !important; height: auto !important; max-width: none; padding: 1.25rem .75rem 1.1rem; cursor: pointer; background: #0d0d0d; border: 1px solid #1f1f1f; border-radius: .9rem; transition: border-color .2s, background .2s, transform .2s; }
+  .home_features-card:hover { border-color: rgba(77,124,255,.55); background: #101318; transform: translateY(-2px); }
+  .home_features-card:focus-visible { outline: 2px solid #4d7cff; outline-offset: 2px; }
+  .home_features-card .card-svg { display: none; }
+  .home_features-card .home_icon-text-wrapper { flex-direction: column; align-items: center; gap: .8rem; text-align: center; }
+  .home_features-card .connector-logo { width: 3rem; height: 3rem; }
+  .home_features-card .card_specification-heading.hide-above-lanscape { display: block; font-size: .9rem; line-height: 1.2; }
+  .home_features-card .card_specification-content { display: none; }
+  .home_features-card::after { content: "+"; position: absolute; top: .45rem; right: .7rem; color: #4d7cff; font-family: "Jetbrainsmono Variable", monospace; font-size: 1.1rem; }
+  /* centred dialog instead of a bottom sheet */
+  .connector-sheet { align-items: center; padding: 1.5rem; }
+  .connector-sheet-panel { max-width: 30rem; border-radius: 1.25rem; padding: 2.25rem 2rem 2rem; transform: translateY(12px) scale(.98); opacity: 0; transition: transform .22s ease-out, opacity .22s ease-out; }
+  .connector-sheet.is-open .connector-sheet-panel { transform: none; opacity: 1; }
+}
+@media (min-width: 768px) and (max-width: 1100px) { .home_features-card-component { grid-template-columns: repeat(4, 1fr); } }

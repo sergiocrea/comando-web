@@ -166,9 +166,8 @@
   }
 })();
 
-/* mobile: connector cards show only the logo + name; tap opens a floating sheet with the description */
+/* connector cards show only the logo + name; tap/click opens a panel with the description (sheet on mobile, dialog on desktop) */
 (function () {
-  const mq = window.matchMedia('(max-width: 767px)');
   const cards = document.querySelectorAll('.home_features-card');
   if (!cards.length) return;
   const sheet = document.createElement('div');
@@ -190,8 +189,8 @@
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !sheet.hidden) close(); });
   cards.forEach((card) => {
     card.setAttribute('role', 'button'); card.setAttribute('tabindex', '0');
-    card.addEventListener('click', (e) => { if (!mq.matches || e.target.closest('a')) return; open(card); });
-    card.addEventListener('keydown', (e) => { if ((e.key === 'Enter' || e.key === ' ') && mq.matches) { e.preventDefault(); open(card); } });
+    card.addEventListener('click', (e) => { if (e.target.closest('a')) return; open(card); });
+    card.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(card); } });
   });
 })();
 
