@@ -678,7 +678,8 @@ body.sheet-open { overflow: hidden; }
 /* mobile hero: badge + heading above the phone, CTA below it */
 @media (max-width: 767px) {
   #about.is-hero .section_about-right, #about.is-hero .section_about-content { display: contents; }
-  #about.is-hero .section_about-eyebrow { order: 1; align-self: flex-start; margin-bottom: .9rem; }
+  #about.is-hero .section_about-eyebrow { order: 1; align-self: center; margin-bottom: .75rem; background: none; border: 0; padding: 0; color: #4d7cff; font-size: 1rem; }
+  #about.is-hero .section_about-eyebrow .hero-badge-dot { display: none; }
   #about.is-hero .section_about-heading { order: 2; margin-top: 0; margin-bottom: 1.25rem; }
   #about.is-hero .section_about-left { order: 3; padding-bottom: 1.75rem; }
   #about.is-hero .about_cta-row { order: 4; }
