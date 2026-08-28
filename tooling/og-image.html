@@ -1,0 +1,42 @@
+<!DOCTYPE html><html lang="es"><head><meta charset="utf-8"><style>
+@font-face{font-family:"Inter";src:url(file:///Users/sergiomini/Documents/comando/comando-web/assets/fonts/Inter-Variable.woff2) format("woff2");font-weight:100 900}
+@font-face{font-family:"Space Grotesk";src:url(file:///Users/sergiomini/Documents/comando/comando-web/assets/fonts/SpaceGrotesk-Variable.woff2) format("woff2");font-weight:300 700}
+*{box-sizing:border-box;margin:0}
+body{width:1200px;height:630px;overflow:hidden;background:#06090c;font-family:Inter,system-ui,sans-serif;color:#fff;position:relative}
+.bg{position:absolute;inset:0;background:url(og-bg.jpg) center right/cover no-repeat}
+.shade{position:absolute;inset:0;background:linear-gradient(90deg,rgba(6,9,12,.92) 0%,rgba(6,9,12,.8) 45%,rgba(6,9,12,.45) 100%)}
+.shade2{position:absolute;inset:0;background:linear-gradient(180deg,rgba(6,9,12,.35),rgba(6,9,12,0) 30%,rgba(6,9,12,.55))}
+.brand{position:absolute;left:64px;top:44px;display:inline-flex;align-items:center;gap:.05em;font-family:"Space Grotesk",Inter,sans-serif;font-weight:700;font-size:34px;letter-spacing:-.01em;line-height:1}
+.brand i{display:inline-block;width:.56em;height:.74em;border-radius:.14em;background:#4d7cff;transform:translateY(.04em)}
+.phone{position:absolute;left:64px;top:118px;width:300px;height:560px;background:#0b0b0b;border:3px solid #2b2b2b;border-radius:44px;padding:8px;box-shadow:0 30px 80px -20px rgba(0,0,0,.9),0 0 0 1px #000;transform:perspective(1400px) rotateY(-8deg) rotateX(2deg);transform-origin:center}
+.screen{background:#0b141a;border-radius:36px;height:100%;overflow:hidden;display:flex;flex-direction:column}
+.island{width:90px;height:22px;background:#000;border-radius:999px;margin:12px auto 0}
+.head{display:flex;align-items:center;gap:9px;padding:12px 14px 12px;background:#1f2c34;margin-top:8px}
+.av{width:30px;height:30px;border-radius:50%;background:#4d7cff;display:grid;place-items:center;font-family:"Space Grotesk";font-weight:700;font-size:15px;color:#fff}
+.nm{font-weight:600;font-size:15px;line-height:1.1}.nm small{display:block;font-weight:400;font-size:11px;color:#8fa3ad;margin-top:2px}
+.chat{flex:1;padding:14px 10px;display:flex;flex-direction:column;gap:7px;background:#0b141a radial-gradient(rgba(255,255,255,.04) 1px,transparent 1px) 0 0/14px 14px}
+.m{display:flex}.m.u{justify-content:flex-end}.b{max-width:88%;min-width:64px;padding:9px 11px 16px;border-radius:13px;font-size:14.5px;line-height:1.35;position:relative}
+.u .b{background:#005c4b;color:#e9edef;border-top-right-radius:4px}.o .b{background:#202c33;color:#e9edef;border-top-left-radius:4px}
+.t{position:absolute;right:9px;bottom:4px;font-size:9.5px;color:rgba(255,255,255,.55)}.t i{font-style:normal;color:#53bdeb}
+.in{display:flex;gap:8px;align-items:center;padding:8px 10px 14px}.in span{flex:1;background:#2a3942;border-radius:999px;padding:9px 13px;font-size:13px;color:#8fa3ad}.in b{width:34px;height:34px;border-radius:50%;background:#00a884;display:grid;place-items:center;font-size:14px}
+.copy{position:absolute;left:470px;top:170px;width:700px}
+.badge{display:inline-flex;align-items:center;gap:10px;background:rgba(77,124,255,.16);border:1.5px solid rgba(77,124,255,.6);border-radius:999px;padding:11px 20px;font-weight:600;font-size:21px;color:#fff}
+.badge i{width:11px;height:11px;border-radius:50%;background:#4d7cff;box-shadow:0 0 0 5px rgba(77,124,255,.25)}
+h1{font-weight:500;font-size:86px;line-height:1.02;letter-spacing:-.025em;margin-top:34px}
+.sub{margin-top:26px;font-size:24px;color:#c9d1d9;font-weight:400}
+.url{position:absolute;right:64px;bottom:44px;font-size:20px;color:#8fa3ad;letter-spacing:.02em}
+</style></head><body>
+<div class="bg"></div><div class="shade"></div><div class="shade2"></div>
+<div class="brand">comand<i></i></div>
+<div class="phone"><div class="screen"><div class="island"></div>
+<div class="head"><div class="av">›_</div><div class="nm">Comando<small>en línea</small></div></div>
+<div class="chat">
+<div class="m u"><div class="b">reasigna el deal de la constructora a Ana<span class="t">09:40 <i>✓✓</i></span></div></div>
+<div class="m o"><div class="b">Listo ✓ "Constructora Andina" ahora es de Ana. Se le notificó por WhatsApp.<span class="t">09:41</span></div></div>
+<div class="m u"><div class="b">si un lead no es contactado en 10 minutos, avísame<span class="t">09:42 <i>✓✓</i></span></div></div>
+<div class="m o"><div class="b">Regla creada: lead nuevo → sin contacto 10 min → aviso. ¿La activo?<span class="t">09:43</span></div></div>
+</div>
+<div class="in"><span>Escribe un comando…</span><b>🎤</b></div></div></div>
+<div class="copy"><div class="badge"><i></i>Listo en 2 minutos, sin tarjeta</div><h1>Opera tu CRM<br>desde WhatsApp</h1><div class="sub">Pide, confirma y listo. Vendedores ilimitados.</div></div>
+<div class="url">comando.pro</div>
+</body></html>
