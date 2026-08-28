@@ -107,10 +107,6 @@ const PRICING_CONFIG = {
   function renderMore() {
     return `<section class="pricing-more" aria-label="Detalles de precios">
       <div class="padding-global"><div class="container-large">
-        <div class="pm-block"><h3 class="pm-title">${esc(C.comparison.title)}</h3><p class="pm-intro">${esc(C.comparison.intro)}</p>
-          <div class="pm-table-wrap"><table class="pm-table"><thead><tr><th scope="col">Contactos</th><th scope="col">HubSpot Marketing Hub (referencia)</th><th scope="col">Comando</th></tr></thead>
-          <tbody>${C.comparison.rows.map((r) => `<tr><td class="pm-strong">${esc(r.contacts)}</td><td>${esc(r.hubspot)}</td><td class="pm-strong">${esc(r.comando)}</td></tr>`).join('')}</tbody></table></div>
-          <p class="pm-message">${esc(C.comparison.message)}</p><p class="pm-footnote">${esc(C.comparison.footnote)}</p></div>
         <div class="pm-block"><h3 class="pm-title">Preguntas frecuentes</h3>
           <div class="pm-faq">${C.faq.map((f) => `<details class="pm-faq-item"><summary>${esc(f.q)}</summary><div class="pm-faq-a">${esc(f.a)}</div></details>`).join('')}</div></div>
         <div class="pm-strip"><div class="pm-strip-text">${esc(C.finalStrip.text)}</div><a href="${C.finalStrip.href}" class="price-cta">${esc(C.finalStrip.cta)}</a></div>
