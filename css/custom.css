@@ -696,12 +696,13 @@ body.sheet-open { overflow: hidden; }
 /* ===== Conectores: compact logo grid + dialog on every screen size (desktop mirrors the mobile UI) ===== */
 @media (min-width: 768px) {
   .home_features-card-component { display: grid; grid-template-columns: repeat(6, 1fr); gap: .75rem; }
-  .home_features-card { position: relative; display: flex !important; flex-direction: column; justify-content: center; align-items: center; aspect-ratio: 1 / 1; min-height: 0 !important; height: auto !important; max-width: none; padding: 1.25rem .75rem 1.1rem; cursor: pointer; background: #0d0d0d; border: 1px solid #1f1f1f; border-radius: .9rem; transition: border-color .2s, background .2s, transform .2s; }
+  .home_features-card { position: relative; display: flex !important; flex-direction: column; justify-content: center; align-items: center; aspect-ratio: auto; min-height: 0 !important; height: auto !important; max-width: none; padding: 2rem .75rem 1.6rem; cursor: pointer; background: #0d0d0d; border: 1px solid #1f1f1f; border-radius: .9rem; transition: border-color .2s, background .2s, transform .2s; }
   .home_features-card:hover { border-color: rgba(77,124,255,.55); background: #101318; transform: translateY(-2px); }
   .home_features-card:focus-visible { outline: 2px solid #4d7cff; outline-offset: 2px; }
   .home_features-card .card-svg { display: none; }
-  .home_features-card .home_icon-text-wrapper { flex-direction: column; align-items: center; gap: .8rem; text-align: center; }
-  .home_features-card .connector-logo { width: 3rem; height: 3rem; }
+  .home_features-card .home_icon-text-wrapper { flex-direction: column; align-items: center; gap: 1.2rem !important; text-align: center; }
+  .home_features-card .connector-logo { width: 3.25rem; height: 3.25rem; }
+  .home_features-card .card_specification-heading.hide-above-lanscape { margin: 1.1rem 0 0 !important; padding: 0; }
   .home_features-card .card_specification-heading.hide-above-lanscape { display: block; font-size: .9rem; line-height: 1.2; }
   .home_features-card .card_specification-content { display: none; }
   .home_features-card::after { content: "+"; position: absolute; top: .45rem; right: .7rem; color: #4d7cff; font-family: "Jetbrainsmono Variable", monospace; font-size: 1.1rem; }
