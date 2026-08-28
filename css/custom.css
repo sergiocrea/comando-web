@@ -688,7 +688,6 @@ body.sheet-open { overflow: hidden; }
   #about.is-hero .section_about-component { padding-top: 6rem; gap: 0; }
   #about.is-hero .section_about-left .canvas-target-block { width: 58vw !important; max-width: 58vw !important; }
 }
-@media (max-width: 767px) { .hide-mobile-heading { display: none; } }
 /* Producto: card columns start at the top of the pinned area (short screens showed rows 01/02 above the fold) */
 @media (min-width: 768px) { #scope-1 .home_grid-wrapper { align-items: flex-start; } .section_left-slider-wrap, .section_bottom-slider { transform: translateY(18%); } }
 /* casos de uso: smaller CTA */
