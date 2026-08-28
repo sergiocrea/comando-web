@@ -659,10 +659,11 @@ body.sheet-open { overflow: hidden; }
   .uc-tab, .uc-chip { scroll-snap-align: center; flex: 0 0 auto; }
   .uc-tab { padding: .8rem 1.1rem; font-size: .82rem; }
   .uc-tabs { margin-top: 1.75rem; }
-  .uc-layout { margin-top: 1.25rem; grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: "outcome outcome" "phone timeline"; gap: 1rem .5rem; align-items: start; }
-  .uc-outcome { grid-area: outcome; }
+  .uc-layout { margin-top: 1.25rem; grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: "phone timeline"; gap: 1rem .5rem; align-items: start; }
+  .uc-outcome { display: none; }
   .uc-phone { grid-area: phone; max-width: 100%; border-radius: 2.2rem; }
   .uc-timeline { grid-area: timeline; display: block; padding-top: 4.5rem; }
+  .uc-layout { margin-top: 1.5rem; }
   .uc-steps { display: none; }
   .uc-card-meta { margin-bottom: .4rem; }
   .uc-card-title { margin-bottom: 0; }
