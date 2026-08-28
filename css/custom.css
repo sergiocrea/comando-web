@@ -686,3 +686,4 @@ body.sheet-open { overflow: hidden; }
   #about.is-hero .section_about-component { padding-top: 6rem; gap: 0; }
   #about.is-hero .section_about-left .canvas-target-block { width: 58vw !important; max-width: 58vw !important; }
 }
+@media (max-width: 767px) { .hide-mobile-heading { display: none; } }
