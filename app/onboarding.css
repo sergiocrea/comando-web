@@ -56,3 +56,11 @@
   .ob-code { font-size: 18px; }
 }
 @media (max-width: 360px) { .ob-steps li span + * { display: none; } .ob-steps li.active span + * { display: inline; } }
+
+/* móvil: ningún hijo de Clerk puede superar el ancho del viewport */
+@media (max-width: 520px) {
+  html, body { overflow-x: hidden; }
+  .ob, .ob-card, #clerk-signup { width: 100%; max-width: 100%; min-width: 0; box-sizing: border-box; }
+  #clerk-signup * { max-width: 100% !important; min-width: 0 !important; box-sizing: border-box; }
+  #clerk-signup .cl-cardBox, #clerk-signup .cl-card, #clerk-signup .cl-rootBox { width: 100% !important; }
+}
