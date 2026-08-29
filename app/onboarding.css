@@ -85,3 +85,10 @@
 .crm-card[disabled] { cursor: not-allowed; opacity: .45; filter: grayscale(1); }
 .crm-card.is-connected { border-color: var(--accent); opacity: 1; }
 .crm-card.is-connected small { color: var(--accent); }
+
+/* enlace al panel de campos (/app/dashboard/), visible cuando el CRM ya está conectado */
+.ob-next { margin: 16px 0 0; padding-top: 14px; border-top: 1px solid var(--line); font-size: 13px; line-height: 1.5; }
+.ob-next a { color: var(--accent); font-weight: 600; text-decoration: none; }
+.ob-next a:hover { text-decoration: underline; }
+.ob-next a:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 4px; }
+.ob-next span { display: block; color: var(--muted); margin-top: 2px; }

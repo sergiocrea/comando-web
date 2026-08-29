@@ -8,7 +8,7 @@
 <link rel="icon" href="../assets/img/favicon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link href="onboarding.css?v=6" rel="stylesheet">
+<link href="onboarding.css?v=7" rel="stylesheet">
 <!-- Config publica: la clave publishable de Clerk NO es secreta -->
 <script>
   window.COMANDO_CONFIG = {
@@ -76,11 +76,15 @@
       <button type="button" id="connect-hubspot" class="ob-btn" hidden>Conectar HubSpot</button>
       <a class="ob-btn ob-btn-secondary" id="open-whatsapp" target="_blank" rel="noopener">Ir a WhatsApp</a>
     </div>
+    <p id="fields-next" class="ob-next" hidden>
+      <a href="dashboard/">Qué puede consultar Comando &rarr;</a>
+      <span>Elige qué campos de tu CRM puede leer y cuáles puede modificar cuando le escribes.</span>
+    </p>
   </section>
 
   <p id="fatal" class="ob-error" role="alert" hidden></p>
 </main>
 <script src="phone-picker.js?v=3"></script>
-<script src="onboarding.js?v=6" defer></script>
+<script src="onboarding.js?v=7" defer></script>
 </body>
 </html>
