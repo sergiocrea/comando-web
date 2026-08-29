@@ -72,6 +72,20 @@ h1{font-family:Inter,system-ui,sans-serif;font-weight:500;letter-spacing:-.02em;
 @media (max-width:900px){.grid{grid-template-columns:repeat(4,1fr)}}
 @media (max-width:640px){.grid{grid-template-columns:repeat(3,1fr);gap:.5rem} .crm{padding:1.1rem .5rem .9rem} .crm img{width:2.2rem;height:2.2rem} .crm-name{font-size:.72rem} .chip{display:none} .form{padding:1.25rem} main{padding-top:1.5rem}}
 </style>
+<script>
+  // CRM ya soportados entran directo al registro; el resto sigue en lista de espera.
+  document.addEventListener('DOMContentLoaded', function () {
+    var listos = { 'HubSpot': 'hubspot' };
+    document.querySelectorAll('button.crm[data-crm]').forEach(function (b) {
+      var key = listos[b.getAttribute('data-crm')];
+      if (!key) return;
+      b.addEventListener('click', function (ev) { ev.stopImmediatePropagation(); window.location.href = '/app/?crm=' + key; }, true);
+      var badge = document.createElement('span'); badge.textContent = 'Disponible'; badge.className = 'crm-badge';
+      b.appendChild(badge);
+    });
+  });
+</script>
+<style>.crm-badge{display:inline-block;margin-left:.5rem;font-size:.7rem;padding:.1rem .45rem;border-radius:999px;background:#2fd28f;color:#06261a;vertical-align:middle}</style>
 </head>
 <body>
 <nav class="nav"><a class="brand" href="/" aria-label="Comando"><span class="cmd-wordmark"><span aria-hidden="true">comand</span><span class="cmd-o" aria-hidden="true"></span></span></a><a class="back" href="/">← Volver</a></nav>
