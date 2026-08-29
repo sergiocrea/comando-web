@@ -86,17 +86,36 @@
 
   async function onConnectHubspot() {
     const btn = $('connect-hubspot'); btn.disabled = true;
+    const status = $('crm-status');
     try {
       const r = await api('/integrations/nango/connect-sessions', {
         method: 'POST',
         headers: { 'idempotency-key': crypto.randomUUID(), 'x-request-id': crypto.randomUUID() },
         body: JSON.stringify({ integrationId: 'hubspot' }),
       });
-      // Autenticación headless de Nango: redirige al OAuth de HubSpot con el token de sesión.
-      const url = r.connectUrl || r.url || (r.data && r.data.connectUrl);
-      if (!url) throw new Error('No recibimos la URL de conexión');
-      window.location.href = url;
-    } catch (e) { $('crm-status').textContent = e.message; btn.disabled = false; }
+      if (!r.token || !r.connectionId) throw new Error('No recibimos la sesión de conexión');
+      // OAuth directo (sin ventana de Nango): el proveedor pide autorización y vuelve a Nango.
+      const url = cfg.nangoUrl.replace(/\/$/, '') + '/oauth/connect/hubspot?connect_session_token=' + encodeURIComponent(r.token);
+      const popup = window.open(url, 'comando-oauth', 'width=720,height=800');
+      if (!popup) window.location.href = url;
+      status.textContent = 'Autoriza el acceso en la ventana de HubSpot… (esta página se actualiza sola)';
+      const started = Date.now();
+      const poll = async () => {
+        if (Date.now() - started > 6 * 60 * 1000) { status.textContent = 'No se completó la autorización. Vuelve a intentarlo.'; btn.disabled = false; return; }
+        try {
+          const res = await api('/integrations/nango/connections/' + r.connectionId + '/reconcile', {
+            method: 'POST', headers: { 'x-request-id': crypto.randomUUID() }, body: JSON.stringify({ integrationId: 'hubspot' }),
+          });
+          if (res.status === 'connected') {
+            if (popup && !popup.closed) popup.close();
+            status.textContent = 'HubSpot conectado. Comando está importando tus contactos; en unos minutos podrás preguntar por ellos desde WhatsApp.';
+            return;
+          }
+        } catch (e) { /* transitorio */ }
+        setTimeout(poll, 3000);
+      };
+      setTimeout(poll, 3000);
+    } catch (e) { status.textContent = e.message; btn.disabled = false; }
   }
 
   async function boot() {
