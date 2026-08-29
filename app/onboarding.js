@@ -62,6 +62,10 @@
       $('open-whatsapp').href = 'https://wa.me/' + (window.COMANDO_NUMBER || '');
       $('crm-status').textContent = status.crmConnected ? 'CRM conectado. Comando ya sincroniza tus contactos.' : '';
       if (status.crmConnected) { const hb = document.querySelector('.crm-card[data-crm="hubspot"]'); if (hb) { hb.classList.add('is-connected'); hb.disabled = true; hb.querySelector('small').textContent = 'Conectado'; } }
+      else {
+        let pending = null; try { pending = localStorage.getItem('comando.pendingHubspotConnection'); } catch (e) { /* sin storage */ }
+        if (pending) { $('crm-status').textContent = 'Confirmando la conexión con HubSpot…'; pollReconcile(pending, null, null); }
+      }
       return;
     }
     show('whatsapp');
@@ -102,24 +106,34 @@
       const popup = window.open(url, 'comando-oauth', 'width=720,height=800');
       if (!popup) window.location.href = url;
       status.textContent = 'Autoriza el acceso en la ventana de HubSpot… (esta página se actualiza sola)';
-      const started = Date.now();
-      const poll = async () => {
-        if (Date.now() - started > 6 * 60 * 1000) { status.textContent = 'No se completó la autorización. Vuelve a intentarlo.'; btn.disabled = false; return; }
-        try {
-          const res = await api('/integrations/nango/connections/' + r.connectionId + '/reconcile', {
-            method: 'POST', headers: { 'x-request-id': crypto.randomUUID() }, body: JSON.stringify({ integrationId: 'hubspot' }),
-          });
-          if (res.status === 'connected') {
-            if (popup && !popup.closed) popup.close();
-            status.textContent = 'HubSpot conectado. Comando está importando tus contactos; en unos minutos podrás preguntar por ellos desde WhatsApp.';
-            btn.classList.add('is-connected'); btn.querySelector('small').textContent = 'Conectado';
-            return;
-          }
-        } catch (e) { /* transitorio */ }
-        setTimeout(poll, 3000);
-      };
-      setTimeout(poll, 3000);
+      try { localStorage.setItem('comando.pendingHubspotConnection', r.connectionId); } catch (e) { /* sin storage */ }
+      pollReconcile(r.connectionId, popup, btn);
     } catch (e) { status.textContent = e.message; btn.disabled = false; }
+  }
+
+  // Confirma la conexión con el backend. Se retoma en cualquier pestaña/recarga
+  // porque el OAuth vuelve a Nango, no a esta página.
+  function pollReconcile(connectionId, popup, btn) {
+    const status = $('crm-status');
+    const started = Date.now();
+    const done = () => { try { localStorage.removeItem('comando.pendingHubspotConnection'); } catch (e) { /* sin storage */ } };
+    const poll = async () => {
+      if (Date.now() - started > 6 * 60 * 1000) { status.textContent = 'No se completó la autorización. Vuelve a intentarlo.'; if (btn) btn.disabled = false; done(); return; }
+      try {
+        const res = await api('/integrations/nango/connections/' + connectionId + '/reconcile', {
+          method: 'POST', headers: { 'x-request-id': crypto.randomUUID() }, body: JSON.stringify({ integrationId: 'hubspot' }),
+        });
+        if (res.status === 'connected') {
+          if (popup && !popup.closed) popup.close();
+          status.textContent = 'HubSpot conectado. Comando está importando tus contactos; en unos minutos podrás preguntar por ellos desde WhatsApp.';
+          const hb = btn || document.querySelector('.crm-card[data-crm="hubspot"]');
+          if (hb) { hb.classList.add('is-connected'); hb.disabled = true; hb.querySelector('small').textContent = 'Conectado'; }
+          done(); return;
+        }
+      } catch (e) { /* transitorio */ }
+      setTimeout(poll, 3000);
+    };
+    setTimeout(poll, 1000);
   }
 
   async function boot() {
