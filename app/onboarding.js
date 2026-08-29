@@ -15,6 +15,8 @@
     });
   }
   function fatal(msg) { const el = $('fatal'); el.textContent = msg; el.hidden = false; }
+  // Con el CRM conectado ya tiene sentido elegir qué campos puede consultar Comando.
+  function showFieldsLink() { const el = $('fields-next'); if (el) el.hidden = false; }
 
   async function token() {
     // El template "comando" añade tenant_id (public_metadata) y el audience del engine.
@@ -64,6 +66,7 @@
       if (status.crmConnected) {
         const hb = document.querySelector('.crm-card[data-crm="hubspot"]'); if (hb) { hb.classList.add('is-connected'); hb.disabled = true; hb.querySelector('small').textContent = 'Conectado'; }
         const cta = $('connect-hubspot'); if (cta) cta.style.display = 'none';
+        showFieldsLink();
       }
       else {
         let pending = null; try { pending = localStorage.getItem('comando.pendingHubspotConnection'); } catch (e) { /* sin storage */ }
@@ -132,6 +135,7 @@
           const hb = btn || document.querySelector('.crm-card[data-crm="hubspot"]');
           if (hb) { hb.classList.add('is-connected'); hb.disabled = true; hb.querySelector('small').textContent = 'Conectado'; }
           const cta = $('connect-hubspot'); if (cta) cta.style.display = 'none';
+          showFieldsLink();
           done(); return;
         }
       } catch (e) { /* transitorio */ }
