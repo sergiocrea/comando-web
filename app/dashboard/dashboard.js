@@ -1,8 +1,8 @@
 /* Entrada de /app/dashboard/: sesión de Clerk (la misma de /app/) + catálogo de campos.
    Modos de revisión sin backend:  ?mock=1  ?mock=error  ?mock=nocrm  */
-import { createApi, isNoCrmError } from './fields-api.js?v=1';
-import { createMockApi } from './mock-fields.js?v=1';
-import { mountFields } from './fields-ui.js?v=1';
+import { createApi, isNoCrmError } from './fields-api.js?v=2';
+import { createMockApi } from './mock-fields.js?v=2';
+import { mountFields } from './fields-ui.js?v=2';
 
 const cfg = window.COMANDO_CONFIG || {};
 const $ = (id) => document.getElementById(id);
@@ -85,6 +85,8 @@ async function start() {
   try {
     api = await buildApi();
   } catch (e) {
+    // Un fallo de API no es "sin CRM": deja rastro para poder diagnosticarlo.
+    console.error('[comando] /crm/fields', e && e.status, e && e.message, e && e.body);
     fail(e.message);
     return;
   }
