@@ -42,8 +42,8 @@
     <h1>Vincula tu WhatsApp</h1>
     <p class="ob-muted">Comando funciona desde tu propio WhatsApp: escribe el número completo con código de país desde el que enviarás los comandos.</p>
     <form id="phone-form" class="ob-form">
-      <label for="phone">Número de WhatsApp</label>
-      <input id="phone" name="phone" type="tel" inputmode="tel" placeholder="+51 912 345 678" autocomplete="tel" required>
+      <label>Número de WhatsApp</label>
+      <div id="phone-picker"></div>
       <button type="submit" class="ob-btn">Continuar</button>
       <p id="phone-error" class="ob-error" role="alert" hidden></p>
     </form>
@@ -70,6 +70,7 @@
 
   <p id="fatal" class="ob-error" role="alert" hidden></p>
 </main>
+<script src="phone-picker.js"></script>
 <script src="onboarding.js" defer></script>
 </body>
 </html>

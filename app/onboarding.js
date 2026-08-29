@@ -4,7 +4,7 @@
   const cfg = window.COMANDO_CONFIG;
   const $ = (id) => document.getElementById(id);
   const steps = { cuenta: $('step-cuenta'), whatsapp: $('step-whatsapp'), crm: $('step-crm') };
-  let clerk, pollTimer;
+  let clerk, pollTimer, picker;
 
   function show(step) {
     Object.entries(steps).forEach(([k, el]) => { el.hidden = k !== step; });
@@ -64,7 +64,7 @@
       return;
     }
     show('whatsapp');
-    if (wa.pending) { $('phone').value = wa.pending.phone; }
+    if (wa.pending && picker) { picker.set(wa.pending.phone); }
   }
 
   async function onPhoneSubmit(ev) {
@@ -72,7 +72,9 @@
     const err = $('phone-error'); err.hidden = true;
     const btn = ev.target.querySelector('button'); btn.disabled = true;
     try {
-      const r = await api('/auth/whatsapp/start', { method: 'POST', body: JSON.stringify({ phone: $('phone').value.trim() }) });
+      const parsed = picker.value();
+      if (parsed.error) { err.textContent = parsed.error; err.hidden = false; btn.disabled = false; return; }
+      const r = await api('/auth/whatsapp/start', { method: 'POST', body: JSON.stringify({ phone: parsed.e164 }) });
       window.COMANDO_NUMBER = (r.comandoNumber || '').replace(/\D/g, '');
       $('comando-number').textContent = r.comandoNumber;
       $('verify-message').textContent = 'VERIFICAR ' + r.code;
@@ -126,6 +128,7 @@
       s.async = true; s.crossOrigin = 'anonymous';
       await new Promise((res, rej) => { s.onload = res; s.onerror = () => rej(new Error('No se pudo cargar Clerk')); document.head.appendChild(s); });
       clerk = window.Clerk; await clerk.load();
+      picker = window.ComandoPhonePicker.mount($('phone-picker'));
       $('phone-form').addEventListener('submit', onPhoneSubmit);
       $('phone-change').addEventListener('click', () => { clearInterval(pollTimer); $('phone-verify').hidden = true; $('phone-form').hidden = false; });
       $('connect-hubspot').addEventListener('click', onConnectHubspot);
