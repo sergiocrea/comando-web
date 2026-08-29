@@ -127,7 +127,33 @@
       s.setAttribute('data-clerk-publishable-key', cfg.clerkPublishableKey);
       s.async = true; s.crossOrigin = 'anonymous';
       await new Promise((res, rej) => { s.onload = res; s.onerror = () => rej(new Error('No se pudo cargar Clerk')); document.head.appendChild(s); });
-      clerk = window.Clerk; await clerk.load();
+      clerk = window.Clerk;
+      await clerk.load({
+        localization: {
+          locale: 'es-ES',
+          socialButtonsBlockButton: 'Continuar con {{provider|titleize}}',
+          dividerText: 'o',
+          formButtonPrimary: 'Continuar',
+          formFieldLabel__emailAddress: 'Correo electrónico',
+          formFieldInputPlaceholder__emailAddress: 'tu@correo.com',
+          formFieldLabel__firstName: 'Nombre',
+          formFieldLabel__lastName: 'Apellido',
+          formFieldInputPlaceholder__firstName: 'Nombre',
+          formFieldInputPlaceholder__lastName: 'Apellido',
+          formFieldHintText__optional: 'Opcional',
+          formFieldLabel__emailAddress_username: 'Correo',
+          backButton: 'Volver',
+          signUp: {
+            start: { title: 'Crea tu cuenta gratis', subtitle: '50 comandos de prueba, sin tarjeta. Tu CRM se conecta después, si quieres.', actionText: '¿Ya tienes cuenta?', actionLink: 'Inicia sesión' },
+            emailCode: { title: 'Revisa tu correo', subtitle: 'Escribe el código que te enviamos', formTitle: 'Código de verificación', formSubtitle: 'Escribe el código enviado a tu correo', resendButton: '¿No llegó? Reenviar' },
+            continue: { title: 'Completa tus datos', subtitle: 'Un último paso para crear tu cuenta' },
+          },
+          signIn: {
+            start: { title: 'Inicia sesión', subtitle: 'Bienvenido de vuelta a Comando', actionText: '¿Aún no tienes cuenta?', actionLink: 'Crear cuenta' },
+            emailCode: { title: 'Revisa tu correo', subtitle: 'Escribe el código que te enviamos', formTitle: 'Código de verificación', formSubtitle: 'Escribe el código enviado a tu correo', resendButton: '¿No llegó? Reenviar' },
+          },
+        },
+      });
       picker = window.ComandoPhonePicker.mount($('phone-picker'));
       $('phone-form').addEventListener('submit', onPhoneSubmit);
       $('phone-change').addEventListener('click', () => { clearInterval(pollTimer); $('phone-verify').hidden = true; $('phone-form').hidden = false; });
@@ -137,7 +163,16 @@
         clerk.mountSignUp($('clerk-signup'), {
           appearance: {
             variables: { colorPrimary: '#2fd28f', colorBackground: '#101c1f', colorText: '#e6f0f1', colorInputBackground: '#0c1719', colorInputText: '#e6f0f1', borderRadius: '12px' },
-            elements: { rootBox: { width: '100%' }, cardBox: { width: '100%', maxWidth: '100%', boxShadow: 'none' }, card: { width: '100%', maxWidth: '100%' } },
+            elements: {
+              rootBox: { width: '100%' }, cardBox: { width: '100%', maxWidth: '100%', boxShadow: 'none' }, card: { width: '100%', maxWidth: '100%', padding: '20px 18px' },
+              headerTitle: { fontSize: '22px', fontWeight: 700 }, headerSubtitle: { color: '#8fa5a9' },
+              socialButtonsBlockButton: { backgroundColor: '#ffffff', color: '#0b1416', border: '1px solid #ffffff', fontWeight: 600, '&:hover': { backgroundColor: '#e9eef0' } },
+              socialButtonsBlockButtonText: { color: '#0b1416', fontWeight: 600 },
+              dividerLine: { backgroundColor: '#1e2f33' }, dividerText: { color: '#8fa5a9' },
+              formFieldInput: { backgroundColor: '#0c1719', borderColor: '#1e2f33' },
+              formButtonPrimary: { backgroundColor: '#2fd28f', color: '#06261a', fontWeight: 700, textTransform: 'none', fontSize: '15px', '&:hover': { backgroundColor: '#29bd80' } },
+              footerActionLink: { color: '#2fd28f' },
+            },
           },
           forceRedirectUrl: window.location.href,
         });

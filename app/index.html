@@ -8,7 +8,7 @@
 <link rel="icon" href="../assets/img/favicon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link href="onboarding.css?v=4" rel="stylesheet">
+<link href="onboarding.css?v=5" rel="stylesheet">
 <!-- Config publica: la clave publishable de Clerk NO es secreta -->
 <script>
   window.COMANDO_CONFIG = {
@@ -31,9 +31,7 @@
   </ol>
 
   <!-- Paso 1: Clerk monta aquí su formulario (Google + email) -->
-  <section id="step-cuenta" class="ob-card" hidden>
-    <h1>Crea tu cuenta gratis</h1>
-    <p class="ob-muted">50 comandos de prueba, sin tarjeta. Tu CRM se conecta después, si quieres.</p>
+  <section id="step-cuenta" class="ob-card ob-card-clerk" hidden>
     <div id="clerk-signup"></div>
   </section>
 
@@ -71,6 +69,6 @@
   <p id="fatal" class="ob-error" role="alert" hidden></p>
 </main>
 <script src="phone-picker.js?v=3"></script>
-<script src="onboarding.js?v=3" defer></script>
+<script src="onboarding.js?v=5" defer></script>
 </body>
 </html>

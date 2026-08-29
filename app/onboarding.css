@@ -64,3 +64,10 @@
   #clerk-signup * { max-width: 100% !important; min-width: 0 !important; box-sizing: border-box; }
   #clerk-signup .cl-cardBox, #clerk-signup .cl-card, #clerk-signup .cl-rootBox { width: 100% !important; }
 }
+
+/* cabecera centrada */
+.ob-logo { display: flex; justify-content: center; }
+.ob-logo .cmd-wordmark { margin-bottom: 18px; }
+.ob-steps { justify-content: center; }
+.ob-card-clerk { background: transparent; border: 0; padding: 0; }
+@media (min-width: 521px) { .ob-card-clerk { background: var(--card); border: 1px solid var(--line); padding: 10px; } }
