@@ -71,3 +71,17 @@
 .ob-steps { justify-content: center; }
 .ob-card-clerk { background: transparent; border: 0; padding: 0; }
 @media (min-width: 521px) { .ob-card-clerk { background: var(--card); border: 1px solid var(--line); padding: 10px; } }
+
+/* paso 3: rejilla de CRM / tiendas */
+.ob-logo, .ob-logo:hover { text-decoration: none; }
+.crm-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(118px, 1fr)); gap: 10px; margin: 16px 0 6px; }
+.crm-card { display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 14px 8px 10px; border-radius: 12px; border: 1px solid var(--line); background: #0c1719; color: var(--text); font: inherit; cursor: pointer; text-align: center; }
+.crm-card img { height: 28px; width: auto; max-width: 90px; object-fit: contain; }
+.crm-card span { font-size: 13px; font-weight: 600; }
+.crm-card small { font-size: 11px; color: var(--muted); }
+.crm-card.is-ready { border-color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent); }
+.crm-card.is-ready small { color: var(--accent); font-weight: 600; }
+.crm-card.is-ready:hover { background: #10231d; }
+.crm-card[disabled] { cursor: not-allowed; opacity: .45; filter: grayscale(1); }
+.crm-card.is-connected { border-color: var(--accent); opacity: 1; }
+.crm-card.is-connected small { color: var(--accent); }
