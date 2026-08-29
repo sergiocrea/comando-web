@@ -61,7 +61,10 @@
       show('crm');
       $('open-whatsapp').href = 'https://wa.me/' + (window.COMANDO_NUMBER || '');
       $('crm-status').textContent = status.crmConnected ? 'CRM conectado. Comando ya sincroniza tus contactos.' : '';
-      if (status.crmConnected) { const hb = document.querySelector('.crm-card[data-crm="hubspot"]'); if (hb) { hb.classList.add('is-connected'); hb.disabled = true; hb.querySelector('small').textContent = 'Conectado'; } }
+      if (status.crmConnected) {
+        const hb = document.querySelector('.crm-card[data-crm="hubspot"]'); if (hb) { hb.classList.add('is-connected'); hb.disabled = true; hb.querySelector('small').textContent = 'Conectado'; }
+        const cta = $('connect-hubspot'); if (cta) cta.style.display = 'none';
+      }
       else {
         let pending = null; try { pending = localStorage.getItem('comando.pendingHubspotConnection'); } catch (e) { /* sin storage */ }
         if (pending) { $('crm-status').textContent = 'Confirmando la conexión con HubSpot…'; pollReconcile(pending, null, null); }
@@ -128,6 +131,7 @@
           status.textContent = 'HubSpot conectado. Comando está importando tus contactos; en unos minutos podrás preguntar por ellos desde WhatsApp.';
           const hb = btn || document.querySelector('.crm-card[data-crm="hubspot"]');
           if (hb) { hb.classList.add('is-connected'); hb.disabled = true; hb.querySelector('small').textContent = 'Conectado'; }
+          const cta = $('connect-hubspot'); if (cta) cta.style.display = 'none';
           done(); return;
         }
       } catch (e) { /* transitorio */ }
