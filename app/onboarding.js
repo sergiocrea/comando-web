@@ -134,7 +134,13 @@
       $('connect-hubspot').addEventListener('click', onConnectHubspot);
       if (!clerk.user) {
         show('cuenta');
-        clerk.mountSignUp($('clerk-signup'), { appearance: { baseTheme: undefined, variables: { colorPrimary: '#2fd28f', colorBackground: '#101c1f', colorText: '#e6f0f1', colorInputBackground: '#0c1719', colorInputText: '#e6f0f1' } }, forceRedirectUrl: window.location.href });
+        clerk.mountSignUp($('clerk-signup'), {
+          appearance: {
+            variables: { colorPrimary: '#2fd28f', colorBackground: '#101c1f', colorText: '#e6f0f1', colorInputBackground: '#0c1719', colorInputText: '#e6f0f1', borderRadius: '12px' },
+            elements: { rootBox: { width: '100%' }, cardBox: { width: '100%', maxWidth: '100%', boxShadow: 'none' }, card: { width: '100%', maxWidth: '100%' } },
+          },
+          forceRedirectUrl: window.location.href,
+        });
         clerk.addListener(({ user }) => { if (user) refreshStatus().then(route).catch((e) => fatal(e.message)); });
         return;
       }

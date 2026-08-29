@@ -37,3 +37,22 @@
 .pp-country:focus,.pp-number:focus{outline:2px solid var(--accent);border-color:transparent}
 .pp-help{font-size:12px;color:var(--muted);margin-top:6px}
 @media (max-width:420px){.pp-row{grid-template-columns:1fr}}
+
+/* ---- móvil: Clerk a ancho completo, sin tarjeta dentro de tarjeta ---- */
+#clerk-signup .cl-rootBox, #clerk-signup .cl-cardBox, #clerk-signup .cl-card, #clerk-signup .cl-signUp-root { width: 100% !important; max-width: 100% !important; min-width: 0 !important; box-sizing: border-box; }
+#clerk-signup .cl-cardBox { box-shadow: none !important; }
+@media (max-width: 520px) {
+  .ob { padding: 20px 12px 60px; }
+  .ob-logo img { height: 24px; margin-bottom: 18px; }
+  .ob-logo .cmd-wordmark { font-size: 22px; }
+  .ob-steps { gap: 10px; font-size: 13px; margin-bottom: 16px; }
+  .ob-steps span { width: 22px; height: 22px; font-size: 11px; }
+  .ob-card { padding: 18px 14px; border-radius: 14px; }
+  .ob-card h1 { font-size: 21px; }
+  #step-cuenta { background: transparent; border: 0; padding: 0; }
+  #step-cuenta h1, #step-cuenta > .ob-muted { padding: 0 4px; }
+  #clerk-signup { margin-top: 12px; }
+  #clerk-signup .cl-card, #clerk-signup .cl-cardBox { border-radius: 14px !important; }
+  .ob-code { font-size: 18px; }
+}
+@media (max-width: 360px) { .ob-steps li span + * { display: none; } .ob-steps li.active span + * { display: inline; } }
