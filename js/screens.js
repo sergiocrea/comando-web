@@ -203,3 +203,9 @@
   document.addEventListener('touchstart', tryPlay, { once: true, passive: true });
   document.addEventListener('click', tryPlay, { once: true });
 })();
+
+/* mobile Producto list: reveal the remaining cards */
+(function () {
+  const list = document.getElementById('mob-res'); const btn = list && list.querySelector('.features-more'); if (!btn) return;
+  btn.addEventListener('click', () => { list.classList.add('is-expanded'); btn.setAttribute('aria-expanded', 'true'); if (typeof ScrollTrigger !== 'undefined') ScrollTrigger.refresh(); });
+})();

@@ -722,3 +722,9 @@ body.sheet-open { overflow: hidden; }
 .hero-claim { color: #fff; font-family: "Neuehaasunicaw 1 G", Inter, sans-serif; font-weight: 600; font-size: 1.15rem; letter-spacing: -.01em; margin: 1.1rem 0 0; }
 #about.is-hero .about_cta-row { margin-top: 1.1rem; }
 @media (max-width: 767px) { #about.is-hero .hero-claim { order: 4; text-align: center; margin: 0 0 .75rem; font-size: 1.05rem; } #about.is-hero .about_cta-row { order: 5; margin-top: .25rem; } }
+/* mobile Producto list: 6 most relevant + "Ver más" */
+#mob-res .section_slider-card.is-more { display: none; }
+#mob-res.is-expanded .section_slider-card.is-more { display: flex; }
+.features-more { -webkit-appearance: none; appearance: none; background: transparent; border: 1px solid #2a2a2a; border-radius: 999px; color: #c8c8c8; font-family: "Jetbrainsmono Variable", monospace; font-size: .78rem; letter-spacing: .06em; text-transform: uppercase; padding: .6rem 1rem; margin: .5rem 0 0; cursor: pointer; align-self: flex-start; }
+.features-more:hover { border-color: #4d7cff; color: #fff; }
+#mob-res.is-expanded .features-more { display: none; }
