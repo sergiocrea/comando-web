@@ -42,11 +42,41 @@ async function buildApi() {
   return createApi(cfg, () => clerk.session.getToken({ template: cfg.clerkJwtTemplate }));
 }
 
+/** Etiquetas de cada objeto del CRM; el engine devuelve la clave técnica. */
+const OBJECT_LABELS = {
+  contact: 'Contactos',
+  contacts: 'Contactos',
+  opportunity: 'Negocios',
+  deal: 'Negocios',
+  deals: 'Negocios',
+  company: 'Empresas',
+  companies: 'Empresas',
+  order: 'Pedidos',
+};
+
+/**
+ * El engine responde `{fields: {contact: [...], deal: [...]}, counts: {...}}`.
+ * Aceptamos también la forma `{objects: [...]}` por si el contrato vuelve a ella.
+ */
 function usableObjects(payload) {
-  const objects = (payload && Array.isArray(payload.objects)) ? payload.objects : [];
-  return objects
-    .filter((o) => o && o.objectType)
-    .map((o) => ({ ...o, fields: (Array.isArray(o.fields) ? o.fields : []).filter((f) => f && f.propertyName) }));
+  if (!payload) return [];
+  const clean = (fields) => (Array.isArray(fields) ? fields : []).filter((f) => f && f.propertyName);
+  if (Array.isArray(payload.objects)) {
+    return payload.objects
+      .filter((o) => o && o.objectType)
+      .map((o) => ({ ...o, label: o.label || OBJECT_LABELS[o.objectType] || o.objectType, fields: clean(o.fields) }));
+  }
+  const grouped = payload.fields;
+  if (!grouped || typeof grouped !== 'object' || Array.isArray(grouped)) return [];
+  const counts = payload.counts || {};
+  return Object.keys(grouped)
+    .map((objectType) => ({
+      objectType,
+      label: OBJECT_LABELS[objectType] || objectType,
+      total: (counts[objectType] && counts[objectType].total) || clean(grouped[objectType]).length,
+      fields: clean(grouped[objectType]),
+    }))
+    .filter((o) => o.fields.length || o.total);
 }
 
 async function start() {

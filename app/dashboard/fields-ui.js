@@ -154,7 +154,8 @@ export function mountFields(opts) {
 
   function refreshCounts() {
     tabs.forEach(({ obj, count }) => {
-      const total = obj.fields.length;
+      // `total` viene del engine cuando la lista está paginada; si no, es lo recibido.
+      const total = Number(obj.total) || obj.fields.length;
       const on = obj.fields.filter(isActive).length;
       count.textContent = on + ' activos de ' + total;
     });
