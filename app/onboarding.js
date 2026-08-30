@@ -146,14 +146,40 @@
 
   /* ---------- Google Sheets: Nango para el refresh token, Picker para elegir hojas ---------- */
 
+  /**
+   * Espera a que un SDK de Google esté disponible.
+   *
+   * Los dos <script> de Google se cargan con `async`, así que en una red lenta
+   * —o si el operador hace clic apenas abre la página— todavía no existen
+   * cuando el flujo los necesita. Antes eso salía como «No se pudo cargar
+   * Google» sin que nada estuviera roto: bastaba reintentar. Ahora espera, y
+   * solo se rinde si de verdad no llegan.
+   */
+  function waitForGoogle(isReady, what, timeoutMs) {
+    if (isReady()) return Promise.resolve();
+    return new Promise((resolve, reject) => {
+      const deadline = Date.now() + (timeoutMs || 10000);
+      const timer = setInterval(() => {
+        if (isReady()) { clearInterval(timer); resolve(); return; }
+        if (Date.now() >= deadline) {
+          clearInterval(timer);
+          reject(new Error('No se pudo cargar ' + what + '. Revisa tu conexión y vuelve a intentar.'));
+        }
+      }, 100);
+    });
+  }
+
   // El Picker necesita un token en el navegador. En vez de sacarlo de Nango y
   // exponerlo, lo pedimos con Google Identity Services usando el MISMO client id:
   // como el consentimiento de drive.file ya se dio en el paso anterior, Google lo
   // devuelve sin volver a preguntar.
-  function googleAccessToken() {
+  async function googleAccessToken() {
+    await waitForGoogle(
+      () => Boolean(window.google && window.google.accounts && window.google.accounts.oauth2),
+      'Google',
+    );
     return new Promise((resolve, reject) => {
-      const gis = window.google && window.google.accounts && window.google.accounts.oauth2;
-      if (!gis) { reject(new Error('No se pudo cargar Google. Revisa tu conexión.')); return; }
+      const gis = window.google.accounts.oauth2;
       const client = gis.initTokenClient({
         client_id: cfg.googleClientId,
         scope: 'https://www.googleapis.com/auth/drive.file',
@@ -164,11 +190,14 @@
     });
   }
 
-  function loadPicker() {
-    return new Promise((resolve, reject) => {
-      if (window.google && window.google.picker) { resolve(); return; }
-      if (!window.gapi) { reject(new Error('No se pudo cargar el selector de Google')); return; }
-      window.gapi.load('picker', { callback: resolve, onerror: () => reject(new Error('No se pudo cargar el selector de Google')) });
+  async function loadPicker() {
+    if (window.google && window.google.picker) return;
+    await waitForGoogle(() => Boolean(window.gapi), 'el selector de Google');
+    await new Promise((resolve, reject) => {
+      window.gapi.load('picker', {
+        callback: resolve,
+        onerror: () => reject(new Error('No se pudo cargar el selector de Google')),
+      });
     });
   }
 
