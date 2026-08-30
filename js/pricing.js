@@ -7,8 +7,8 @@ const PRICING_CONFIG = {
   billing: { annualFreeMonths: 2 },          // anual = precio mensual × 10 / 12
   featuredPlan: 'starter',
   cta: { trialBase: '/empezar/', trialLabel: 'Elegir plan', freeLabel: 'Empezar gratis', enterpriseHref: '#pricing-form', enterpriseLabel: 'Habla con ventas' },
-  title: 'Desde $3 al mes.',
-  subtitle: 'Vendedores ilimitados. Paga según el tamaño de tu CRM. Empieza gratis con 50 comandos, sin tarjeta.',
+  title: 'Un precio por empresa, no por vendedor.',
+  subtitle: 'El precio sube con tu base de clientes, no con tu equipo. Empieza gratis, sin tarjeta.',
   // Cada plan muestra solo 4 líneas: contactos, comandos, vendedores y un diferencial.
   plans: [
     { id: 'gratis',   name: 'Gratis',   price: 0,  contacts: 10000, commands: 50,    highlight: '1 CRM conectado', note: 'Cupo total de prueba, sin tarjeta. Sin sincronización continua ni automatizaciones; expira a los 30 días sin uso.' },
@@ -27,12 +27,12 @@ const PRICING_CONFIG = {
   overageNote: 'Te avisamos al 80 % de tu límite. Nunca cortamos el servicio sin aviso.',
   includes: [
     'Conexión al CRM en 2 minutos',
-    'Confirmación antes de ejecutar cualquier cambio',
+    'Nadie cambia nada sin confirmar',
     'Historial auditable de cada acción',
     'Español adaptado al país de tu equipo',
-    'Alertas en tiempo real por eventos del CRM',
+    'Los avisos que quieras, cuando los quieras. Se apagan en un mensaje',
     'Comandos por texto o audio de WhatsApp',
-    'Vendedores ilimitados, sin costo por asiento',
+    'Todo tu equipo, sin costo por persona',
   ],
   comparison: {
     title: '¿Cuánto es esto frente a tu CRM?',
@@ -55,7 +55,7 @@ const PRICING_CONFIG = {
     { q: '¿Qué pasa si pido algo que mi CRM no permite?', a: 'Comando te lo dice y te propone la alternativa que sí puede hacer (por ejemplo, crear la tarea en vez de llamar, o contar desde hoy si tu CRM no guarda historial de ese campo).' },
     { q: '¿Qué CRM soportan y dónde quedan mis credenciales?', a: 'HubSpot, Pipedrive, Zoho CRM, Salesforce, Kommo y Dynamics 365; en e-commerce, Shopify, Tiendanube, WooCommerce, Mercado Libre y VTEX. Te conectas con el login del propio CRM, sin copiar claves; las credenciales quedan cifradas en infraestructura de Comando, nunca en terceros (en planes a medida, en la tuya).' },
   ],
-  finalStrip: { text: 'Tus datos no salen de tu CRM. Comando solo ejecuta lo que confirmas.', cta: 'Empezar gratis', href: '/empezar/?plan=gratis' },
+  finalStrip: { text: 'Tus datos se quedan en tu CRM. Comando no hace nada que no esté autorizado. Y si mañana te vas, no hay nada que exportar: ya está todo en tu CRM.', cta: 'Empezar gratis', href: '/empezar/?plan=gratis' },
 };
 
 (function () {

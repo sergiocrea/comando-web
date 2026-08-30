@@ -3,7 +3,7 @@
    Replaces the original site script + the page's inline scripts:
    Lenis smooth scroll, data-reveal engine, divider lines, grid
    canvas spotlight, nav background + hero-logo->nav morph, mobile
-   menu, scroll-scrubbed feature video + Lottie, countdown, footer
+   menu, scroll-scrubbed feature video + Lottie, footer
    globe. Uses GSAP/ScrollTrigger/SplitText/ScrambleText/Lenis from
    the global scope (loaded via <script> in index.html).
    ============================================================ */
@@ -535,29 +535,6 @@ function initSliderParallax() {
 }
 
 /* ============================================================
-   8. Countdown to launch (America/New_York)
-   ============================================================ */
-function initCountdown() {
-  const targetStr = 'August 4, 2026 10:00:00';
-  const target = new Date(targetStr + ' GMT-0400').getTime(); // EDT
-  const set = (cls, val) => {
-    document.querySelectorAll(cls).forEach((e) => { e.textContent = String(val).padStart(2, '0'); });
-  };
-  function tick() {
-    const now = Date.now();
-    let diff = Math.max(0, target - now);
-    const days = Math.floor(diff / 86400000);
-    const months = Math.floor(days / 30.44);
-    const hours = Math.floor((diff % 86400000) / 3600000);
-    set('.timer-month', months);
-    set('.timer-days', days % 31);
-    set('.timer-hours', hours);
-  }
-  tick();
-  setInterval(tick, 1000);
-}
-
-/* ============================================================
    9. Footer wireframe globe (2D canvas)
    ============================================================ */
 function initGlobe() {
@@ -651,7 +628,6 @@ function boot() {
   initMobileMenu();
   initFeatureVideo();
   initSliderParallax();
-  initCountdown();
   initGlobe();
   initAboutFade();
   initReveals();
