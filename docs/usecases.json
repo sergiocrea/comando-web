@@ -1,12 +1,12 @@
 {
   "seccion": {
-    "titulo": "Elige tu rol. Mira lo que le pides.",
-    "subtitulo": "Comando no reemplaza a tu equipo: lo vuelve imposible de reemplazar. Elige tu rol y mira qué le pides por WhatsApp.",
-    "cierre": "Cierra más. Escribe menos.",
+    "titulo": "Así cambia el día de cada persona de tu equipo.",
+    "subtitulo": "Comando no reemplaza a tu equipo: le quita el trabajo que lo frena. Elige un rol y mira el alivio en acción.",
+    "cierre": "Tu equipo conserva el criterio. Comando elimina la carga.",
     "cta": {
-      "texto": "Pruébalo con tu CRM",
+      "texto": "Quitarle trabajo al equipo",
       "sufijo": " en 2 minutos",
-      "href": "/empezar/"
+      "href": "/app/"
     }
   },
   "roles": [

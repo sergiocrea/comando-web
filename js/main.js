@@ -229,16 +229,13 @@ function initGridCanvas() {
 function initNav() {
   const nav = document.querySelector('.nav_component');
   if (nav) {
-    const threshold = () => (window.innerWidth > 991 ? window.innerHeight * 2 : window.innerHeight * 0.05);
-    const grad = 'linear-gradient(to bottom, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0) 100%)';
     nav.style.transition = 'background 0.3s ease';
     let menuOpen = false;
     const update = () => {
       nav.classList.toggle('is-open', menuOpen);
       nav.classList.toggle('is-scrolled', window.scrollY > 60);
-      if (menuOpen) { nav.style.backgroundImage = 'none'; nav.style.backgroundColor = '#000'; return; }
-      nav.style.backgroundColor = 'transparent';
-      nav.style.backgroundImage = window.scrollY > threshold() ? grad : 'none';
+      nav.style.backgroundImage = 'none';
+      nav.style.backgroundColor = menuOpen ? '#f8f7f3' : 'rgba(248,247,243,.94)';
     };
     window.addEventListener('scroll', update, { passive: true });
     update();

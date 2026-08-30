@@ -160,8 +160,10 @@ function startAllAnimations() {
   // ---- scenarios (edit ACTIVE to choose which ones play in the hero / in Producto) ----
   const SCENARIOS = {
     reasignar: [
-      { from: 'me',  text: 'reasigna el deal de la constructora a Ana' },
-      { from: 'bot', text: 'Listo ✓ "Constructora Andina" ahora es de Ana. Se le notificó por WhatsApp.' },
+      { from: 'me',  text: 'Constructora Andina queda con Ana. Avísale y crea seguimiento para el jueves' },
+      { from: 'bot', text: 'Encontré “Constructora Andina”. Reasignaré el deal a Ana y crearé la tarea para el jueves. ¿Confirmas?' },
+      { from: 'me',  text: 'sí' },
+      { from: 'bot', text: 'Hecho ✓ CRM actualizado, seguimiento creado y Ana avisada por WhatsApp.' },
     ],
     speedToLead: [
       { from: 'me',  text: 'si un lead de Facebook no es contactado en 10 minutos, notifícame' },
@@ -170,12 +172,14 @@ function startAllAnimations() {
       { from: 'bot', text: '🟢 Activa. Te notificaré con el primer lead sin atender.' },
     ],
     pipeline: [
-      { from: 'me',  text: 'muéstrame el pipeline' },
-      { from: 'bot', text: 'Hoy: 14 nuevos · 6 en propuesta · 3 en negociación.\n⚠️ 2 deals sin actividad en 7 días.' },
+      { from: 'me',  text: '¿qué oportunidades necesitan atención?' },
+      { from: 'bot', text: '3 necesitan atención: 2 sin actividad en 7 días y 1 sin responsable.\nDatos de HubSpot actualizados hace 6 min.' },
     ],
     dealGrande: [
       { from: 'me',  text: 'si se pierde un deal de más de 20k, notifica al gerente con el motivo' },
-      { from: 'bot', text: 'Listo ✓ deal perdido ≥ $20,000 → notificación al gerente con el motivo.' },
+      { from: 'bot', text: 'Regla lista: deal perdido ≥ 20,000 → aviso al gerente con nombre y motivo. ¿La activo?' },
+      { from: 'me',  text: 'sí' },
+      { from: 'bot', text: 'Activa ✓ La regla queda registrada y puedes pausarla cuando quieras.' },
     ],
     lunes: [
       { from: 'me',  text: 'organiza mi lunes' },
