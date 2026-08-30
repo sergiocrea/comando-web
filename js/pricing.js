@@ -7,11 +7,11 @@ const PRICING_CONFIG = {
   billing: { annualFreeMonths: 2 },          // anual = precio mensual × 10 / 12
   featuredPlan: 'starter',
   cta: { trialBase: '/app/', trialLabel: 'Elegir plan', freeLabel: 'Empezar gratis', enterpriseHref: '#pricing-form', enterpriseLabel: 'Habla con ventas' },
-  title: 'Todo tu equipo, sin pagar otra licencia por vendedor.',
-  subtitle: 'Paga por el tamaño de tu base, no por el número de personas. Empieza gratis, sin tarjeta.',
-  // Cada plan muestra solo 4 líneas: contactos, comandos, vendedores y un diferencial.
+  title: 'Planes desde US$ 3 por usuario al mes.',
+  subtitle: 'Cada persona tiene su propio espejo del CRM y su propio cupo de comandos. Prueba gratis.',
+  // Cada plan muestra solo 4 líneas: contactos, comandos, usuario y un diferencial.
   plans: [
-    { id: 'gratis',   name: 'Gratis',   price: 0,  contacts: 10000, commands: 50,    highlight: '1 CRM conectado', note: 'Cupo total de prueba, sin tarjeta. Sin sincronización continua ni automatizaciones; expira a los 30 días sin uso.' },
+    { id: 'gratis',   name: 'Gratis',   price: 0,  contacts: 10000, commands: 50,    highlight: '1 CRM conectado', note: 'Prueba individual, sin tarjeta. Sin sincronización continua ni automatizaciones; expira a los 30 días sin uso.' },
     { id: 'basico',   name: 'Básico',   price: 3,  contacts: 10000, commands: 150,   highlight: '1 CRM conectado' },
     { id: 'starter',  name: 'Starter',  price: 7,  contacts: 30000, commands: 500,  highlight: 'Automatizaciones ilimitadas' },
     { id: 'pro',      name: 'Pro',      price: 19, contacts: 80000, commands: 1500,  highlight: 'Historial y soporte por WhatsApp' },
@@ -33,24 +33,24 @@ const PRICING_CONFIG = {
     'Español adaptado al país de tu equipo',
     'Los avisos que quieras, cuando los quieras. Se apagan en un mensaje',
     'Comandos por texto o audio de WhatsApp',
-    'Todo tu equipo, sin costo por persona',
+    'Un espejo y un cupo independiente por usuario',
   ],
   comparison: {
     title: '¿Cuánto es esto frente a tu CRM?',
     intro: 'Comando complementa a tu CRM, no lo sustituye. Referencia: precios de lista de HubSpot 2026, facturación anual.',
     rows: [
-      { contacts: 'Hasta 10 000',     hubspot: 'Marketing Hub Starter: $20/asiento/mes (1 000 contactos; +$50 por cada 1 000)', comando: 'Básico: $3/mes, 10 000 contactos, vendedores ilimitados' },
-      { contacts: '10 000 – 30 000', hubspot: 'Marketing Hub Professional: desde $890/mes (2 000 contactos; +$250 por 5 000)', comando: 'Starter: $7/mes, 30 000 contactos' },
-      { contacts: '30 000 – 250 000', hubspot: 'Marketing Hub Enterprise: desde $3 600/mes (10 000 contactos)',                  comando: 'Pro $19/mes (80 000) · Business $49/mes (250 000)' },
-      { contacts: 'Asiento de ventas', hubspot: 'Sales Hub Professional: $90/asiento/mes',                                      comando: 'Sin costo por asiento' },
+      { contacts: 'Hasta 10 000',     hubspot: 'Marketing Hub Starter: $20/asiento/mes (1 000 contactos; +$50 por cada 1 000)', comando: 'Básico: $3/usuario/mes, espejo de 10 000 contactos' },
+      { contacts: '10 000 – 30 000', hubspot: 'Marketing Hub Professional: desde $890/mes (2 000 contactos; +$250 por 5 000)', comando: 'Starter: $7/usuario/mes, espejo de 30 000 contactos' },
+      { contacts: '30 000 – 250 000', hubspot: 'Marketing Hub Enterprise: desde $3 600/mes (10 000 contactos)',                  comando: 'Pro $19/usuario/mes (80 000) · Business $49/usuario/mes (250 000)' },
+      { contacts: 'Usuario', hubspot: 'Sales Hub Professional: $90/asiento/mes',                                                comando: 'Desde $3/usuario/mes' },
     ],
-    message: 'Todo tu equipo opera el CRM desde WhatsApp por menos del 5 % de lo que pagas por el CRM. Vendedores ilimitados.',
+    message: 'Cada persona opera el CRM desde WhatsApp con su propio espejo y cupo.',
     footnote: 'Precios de HubSpot sujetos a cambio. Comando funciona con cualquier plan de HubSpot, incluido el gratuito.',
   },
   faq: [
-    { q: '¿Cómo se calcula el precio?', a: 'Por el tamaño de tu CRM: los contactos que Comando vigila, medidos una vez al día (no se cobra por leads que entran y salen el mismo día). No cobramos por usuario: conecta a todo tu equipo sin costo por asiento. Puedes cambiar de plan cuando quieras; se prorratea.' },
+    { q: '¿Cómo se calcula el precio?', a: 'Cada persona usa un plan según los contactos que necesita tener en su espejo del CRM. Si dos usuarios necesitan hasta 10 000 contactos cada uno, cada uno usa un plan Básico de US$ 3 al mes. Puedes cambiar de plan cuando quieras; se prorratea.' },
     { q: '¿Qué cuenta como comando y qué pasa si me paso?', a: 'Un comando es cada pedido que le haces a Comando por WhatsApp, por texto o por audio; una nota de voz cuenta como 1,5. Las confirmaciones («sí», «ok») y las respuestas de Comando no cuentan. Te avisamos al 80 % del cupo y nunca cortamos el servicio sin aviso: puedes sumar paquetes de 500 comandos por $8 o subir de plan.' },
-    { q: '¿Qué incluye el plan Gratis?', a: '50 comandos de cupo total con 1 CRM de hasta 10 000 contactos y vendedores ilimitados, sin tarjeta. No incluye sincronización continua ni automatizaciones; al agotar el cupo (o tras 30 días sin uso) deja de ejecutar hasta que elijas un plan.' },
+    { q: '¿Qué incluye el plan Gratis?', a: '50 comandos para una persona, con un espejo de hasta 10 000 contactos y 1 CRM conectado, sin tarjeta. No incluye sincronización continua ni automatizaciones; al agotar el cupo (o tras 30 días sin uso) deja de ejecutar hasta que elijas un plan.' },
     { q: '¿Cada cuánto se actualiza mi CRM en Comando?', a: 'HubSpot sincroniza los cambios compatibles mediante sus eventos y Google Sheets se consulta cuando se lo pides. La frecuencia y cobertura de nuevos conectores se publicará a medida que estén disponibles.' },
     { q: '¿Comando les escribe a mis clientes?', a: 'No desde tu número personal: Meta bloquea los envíos automáticos desde WhatsApp no oficial. Comando prepara el mensaje y te lo entrega listo para enviarlo con un toque (modo asistido), así que no necesitas contratar la API de WhatsApp Business para empezar. Si conectas un número oficial de WhatsApp Business, los envíos automáticos con plantillas aprobadas quedan disponibles.' },
     { q: '¿Qué pasa si pido algo que mi CRM no permite?', a: 'Comando te lo dice y te propone la alternativa que sí puede hacer (por ejemplo, crear la tarea en vez de llamar, o contar desde hoy si tu CRM no guarda historial de ese campo).' },
@@ -82,9 +82,9 @@ const PRICING_CONFIG = {
     const featured = p.id === C.featuredPlan;
     const free = p.price === 0;
     const m = monthly(p.price);
-    const priceHtml = free ? `<div class="price-amount">US$ 0<span>/mes</span></div>`
-      : `<div class="price-amount">${money(m)}<span>/mes</span></div>${state.annual ? `<div class="price-annual">${money(m * 12)} al año</div>` : ''}`;
-    const lines = [p.contacts == null ? 'Cualquier tamaño de CRM' : `<b>${fmtN(p.contacts)}</b> contactos en tu CRM`, free ? `<b>${fmtN(p.commands)}</b> comandos para probar` : `<b>${fmtN(p.commands)}</b> comandos al mes`, 'Vendedores ilimitados', esc(p.highlight)];
+    const priceHtml = free ? `<div class="price-amount">US$ 0</div><div class="price-unit">por usuario</div>`
+      : `<div class="price-amount">${money(m)}</div><div class="price-unit">por usuario / mes</div>${state.annual ? `<div class="price-annual">${money(m * 12)} al año por usuario</div>` : ''}`;
+    const lines = [p.contacts == null ? 'Contactos según tu plan' : `<b>${fmtN(p.contacts)}</b> contactos en tu espejo`, free ? `<b>${fmtN(p.commands)}</b> comandos para probar` : `<b>${fmtN(p.commands)}</b> comandos al mes`, '<b>1 usuario</b> por plan', esc(p.highlight)];
     const cta = free ? `<a href="${C.cta.trialBase}?plan=${p.id}" class="price-cta">${esc(C.cta.freeLabel)}</a>`
       : `<a href="${C.cta.trialBase}?plan=${p.id}" class="price-cta">${esc(C.cta.trialLabel)}</a>`;
     return `<div class="price-card${featured ? ' is-featured' : ''}${free ? ' is-free' : ''}" data-plan="${p.id}">${featured ? '<div class="price-flag">Más elegido</div>' : ''}

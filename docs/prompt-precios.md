@@ -1,4 +1,4 @@
-# Prompt para el agente desarrollador de la landing — Sección de precios de Comando
+# Prompt para el agente desarrollador de la landing — Precios por usuario de Comando
 
 ## 1. Contexto del producto
 Comando es una plataforma B2B para equipos de ventas en Latinoamérica. Los vendedores
@@ -7,8 +7,8 @@ natural o por audio, en su español local: "avísame si un deal de más de S/50 
 queda quieto dos semanas", "etiqueta a Juan Pérez como VIP", "mándame cada lunes el
 resumen del embudo". Comando interpreta el pedido, pide confirmación, ejecuta en el CRM
 y responde por WhatsApp. Comando NO reemplaza al CRM: se conecta al que el cliente ya
-tiene con un login OAuth de 2 minutos (sin copiar claves). Diferenciadores: vendedores
-ilimitados sin costo por asiento, alertas en tiempo real por eventos del CRM,
+tiene con un login OAuth de 2 minutos (sin copiar claves). Diferenciadores: un espejo
+y un cupo independiente por usuario, alertas en tiempo real por eventos del CRM,
 credenciales del CRM custodiadas en infraestructura de Comando (nunca en terceros),
 automatizaciones basadas en playbooks probados (speed-to-lead, deals estancados,
 seguimiento de cotizaciones), comandos por texto o audio.
@@ -19,37 +19,34 @@ Tono directo, concreto, sin jerga técnica. Español neutro LatAm. Mantener el e
 visual actual de la landing (fondo oscuro, tipografía y animaciones existentes); la
 sección debe sentirse parte de la misma página.
 
-## 3. Modelo de precios (FINAL)
-- Eje principal: **contactos en el CRM del cliente** (métrica que ya conoce; crece con
-  su negocio y refleja el costo de vigilar su CRM).
-- **Sin cobro por usuarios: operadores/vendedores ilimitados en todos los planes.**
+## 3. Modelo de precios vigente desde 2026-08-30
+- Cada plan corresponde a **una persona** y se cobra por usuario.
+- Cada usuario tiene su propio **espejo del CRM**, con el límite de contactos del plan.
 - Uso justo en **comandos** (texto o audio; paquete incluido por plan + add-on).
 - Alertas en **tiempo real** por eventos del CRM en todos los planes.
-- Plan **Gratis permanente como prueba con cupo**: 50 comandos en total, 1 CRM de cualquier
-  tamaño, vendedores ilimitados, sin tarjeta. Al agotar el cupo deja de ejecutar (y se pausa
-  la sincronización de su CRM) hasta que elija un plan.
-- Moneda: USD con toggle a PEN (tipo de cambio referencial; mostrar "aprox.").
+- Plan **Gratis como prueba individual con cupo**: 50 comandos en total, 1 usuario,
+  1 CRM y un espejo de hasta 10,000 contactos, sin tarjeta. Al agotar el cupo deja de
+  ejecutar hasta que el usuario elija un plan.
+- Moneda: USD. Anual = 2 meses gratis.
+
+> Nota histórica: antes del 2026-08-30 se evaluó cobrar solo por contactos con operadores
+> ilimitados. Ese modelo fue reemplazado por planes individuales; no debe volver a
+> publicarse como una capacidad vigente.
 
 | | Gratis | Básico | Starter | Pro | Business | Enterprise |
 |---|---|---|---|---|---|---|
-| Precio mensual | $0 | **$2/mes** | $6/mes | $19/mes | $49/mes | A medida |
-| Contactos en el CRM | cualquier tamaño (1 CRM) | hasta 10,000 | hasta 25,000 | hasta 75,000 | hasta 200,000 | Ilimitados |
-| Comandos incluidos (texto o audio; una nota de voz = 1.5) | 50 en total (cupo de prueba) | 150 / mes | 400 / mes | 1,500 / mes | 4,000 / mes | Negociados |
-| Operadores (vendedores) | Ilimitados | Ilimitados | Ilimitados | Ilimitados | Ilimitados |
-| CRMs conectados | 1 | 1 | 3 | Ilimitados | Ilimitados |
-| Automatizaciones activas | 5 | Ilimitadas | Ilimitadas | Ilimitadas | Ilimitadas |
-| Alertas en tiempo real (eventos del CRM) | ✓ | ✓ | ✓ | ✓ | ✓ |
-| Comandos por audio de WhatsApp | ✓ | ✓ | ✓ | ✓ | ✓ |
-| Plantillas de automatización probadas | ✓ | ✓ | ✓ | ✓ | ✓ + a medida |
-| Resúmenes por WhatsApp | Diario | Diario | Diario + semanal + a pedido | Personalizados | Personalizados |
-| Integración ecommerce (Shopify, WooCommerce, VTEX) | — | — | ✓ | ✓ | ✓ |
-| Soporte | Email | Email | Prioritario por WhatsApp | Prioritario + onboarding | Dedicado + SLA |
-| Credenciales del CRM en infraestructura del cliente, SSO, auditoría avanzada | — | — | — | — | ✓ |
+| Precio mensual por usuario | $0 | **$3/mes** | $7/mes | $19/mes | $49/mes | A medida |
+| Contactos en el espejo personal | hasta 10,000 | hasta 10,000 | hasta 30,000 | hasta 80,000 | hasta 250,000 | A medida |
+| Comandos incluidos (texto o audio; una nota de voz = 1.5) | 50 en total | 150 / mes | 500 / mes | 1,500 / mes | 5,000 / mes | Negociados |
+| Usuarios incluidos | 1 | 1 | 1 | 1 | 1 | Negociados |
+| CRM conectado | 1 | 1 | 1 | 1 | 1 | A medida |
+| Automatizaciones | Sin automatizaciones | Según disponibilidad | Ilimitadas | Ilimitadas | Ilimitadas | A medida |
+| Soporte | Autoservicio | Estándar | Estándar | WhatsApp | Prioritario | Dedicado + SLA |
 
 Add-ons (todos los planes): **+10,000 contactos → $1/mes** · **+500 comandos → $8** (62 comandos por dólar: siempre conviene más subir de plan que acumular paquetes).
 
 Sincronización: en tiempo real cuando el CRM envía eventos (HubSpot, Pipedrive, Zoho, Kommo, Shopify, Tiendanube, WooCommerce, Mercado Libre…); en los que no, Comando revisa cambios cada 6 h (Básico), 30 min (Starter) o 5 min (Pro/Business).
-Anual: 2 meses gratis (toggle mensual/anual). Plan destacado: Pro.
+Anual: 2 meses gratis (toggle mensual/anual). Plan destacado: Starter.
 Al superar contactos o comandos: aviso al 80%; sugerir add-on o plan siguiente; nunca se
 corta el servicio sin aviso.
 
@@ -59,29 +56,30 @@ de HubSpot 2026 como referencia; citar "precios de lista HubSpot, facturación a
 
 | Contactos | HubSpot Marketing Hub (referencia) | Comando |
 |---|---|---|
-| Hasta 10,000 | Starter: $20/asiento/mes (1,000 contactos; +$50 por cada 1,000) | Básico: $3/mes, 10,000 contactos, vendedores ilimitados |
-| 10,000-25,000 | Professional: desde $890/mes (2,000 contactos; +$250 por 5,000) | Starter: $6/mes, 25,000 contactos |
-| 25,000-200,000 | Enterprise: desde $3,600/mes (10,000 contactos) | Pro: $19/mes (75,000) · Business: $49/mes (200,000) |
-| Asiento de ventas | Sales Hub Professional: $90/asiento/mes | Sin costo por asiento |
+| Hasta 10,000 | Starter: $20/asiento/mes (1,000 contactos; +$50 por cada 1,000) | Básico: $3/usuario/mes, espejo de 10,000 contactos |
+| 10,000-30,000 | Professional: desde $890/mes (2,000 contactos; +$250 por 5,000) | Starter: $7/usuario/mes, espejo de 30,000 contactos |
+| 30,000-250,000 | Enterprise: desde $3,600/mes (10,000 contactos) | Pro: $19/usuario/mes (80,000) · Business: $49/usuario/mes (250,000) |
+| Usuario | Sales Hub Professional: $90/asiento/mes | Desde $3/usuario/mes |
 
-Mensaje clave: **"Todo tu equipo opera el CRM desde WhatsApp por menos del 5% de lo que
-pagas por el CRM. Vendedores ilimitados."** Nota al pie: precios de HubSpot sujetos a
-cambio; Comando funciona con cualquier plan de HubSpot, incluido el gratuito.
+Mensaje clave: **"Cada persona opera el CRM desde WhatsApp con su propio espejo y
+cupo."** Nota al pie: precios de HubSpot sujetos a cambio. Comando complementa al CRM;
+no lo reemplaza.
 
 ## 5. Elementos de la sección
-1. Título: "Precios simples. Desde $2 al mes." Subtítulo: "Vendedores ilimitados. Paga
-   según el tamaño de tu CRM."
-2. Toggle mensual/anual y toggle USD/PEN.
-3. Cinco tarjetas (tabla de la sección 3), Pro destacada. CTAs: Básico/Starter/Pro/
+1. Título: "Planes desde US$ 3 por usuario al mes." Subtítulo: "Cada persona tiene su
+   propio espejo del CRM y su propio cupo de comandos. Prueba gratis."
+2. Toggle mensual/anual.
+3. Cinco tarjetas (tabla de la sección 3), Starter destacada. CTAs: Básico/Starter/Pro/
    Business → "Probar 14 días gratis" · Enterprise → "Hablar con ventas".
 4. Bloque "Todos los planes incluyen": conexión al CRM en 2 minutos con login OAuth
    (sin copiar claves), confirmación antes de ejecutar cualquier cambio, historial
    auditable de cada acción, español adaptado al país del equipo, alertas en tiempo
-   real, comandos por texto o audio, vendedores ilimitados.
+   real, comandos por texto o audio y un espejo independiente por usuario.
 5. Bloque comparativo con HubSpot (sección 4).
 6. FAQ (acordeón):
-   - ¿Cobran por usuario? No. Conecta a todo tu equipo sin costo por asiento; el plan
-     depende del tamaño de tu CRM.
+   - ¿Cómo se calcula el precio? Cada persona elige un plan según los contactos que
+     necesita en su espejo. Dos personas con 8,000 contactos cada una usan dos planes
+     Básico de $3/mes.
    - ¿Qué cuenta como "contacto"? Los contactos de tu CRM que Comando vigila. Se mide
      una vez al día; no se cobra por leads que entran y salen el mismo día.
    - ¿Qué cuenta como comando? Cada pedido que le haces a Comando por WhatsApp, por texto
@@ -123,21 +121,21 @@ Márgenes por plan con TODOS los comandos incluidos consumidos y el CRM al tope 
 
 | Plan | Precio | Costo si todo es texto | Margen | Costo si todo es audio 60 s | Margen (peor caso) |
 |---|---|---|---|---|---|
-| Básico | $3 | $0.43 | 85% | $0.51 | 82% |
-| Starter | $6 | $1.13 | 80% | $1.34 | 77% |
-| Pro | $19 | $3.93 | 78% | $4.75 | 74% |
-| Business | $49 | $10.50 | 77% | $12.70 | 73% |
+| Básico | $3 | $0.38 | 87% | $0.48 | 84% |
+| Starter | $7 | $1.20 | 83% | $1.54 | 78% |
+| Pro | $19 | $3.45 | 82% | $4.46 | 77% |
+| Business | $49 | $11.25 | 77% | $14.60 | 70% |
 | Gratis | $0 | ~$0.10 una vez (50 comandos); sin sincronización continua | — | — | — |
 
-Escalera de valor (comandos por dólar): Básico 50 → Starter 67 → Pro 79 → Business 82; el add-on (62/$) queda entre Starter y Pro para que el upgrade siempre gane. Márgenes calculados con 30 % de comandos por audio y cobro anual (5 % de comisión); "peor caso" = todo por audio.
+Escalera de valor (comandos por dólar): Básico 50 → Starter 71 → Pro 79 → Business 102; el add-on (62/$) queda entre Básico y Starter para que el upgrade siempre gane. Márgenes calculados con 30 % de comandos por audio y cobro anual (5 % de comisión); "peor caso" = todo por audio.
 
-(Contactos al tope del plan a $0.015 por 1,000/mes: Básico 10,000 → $0.15 · Starter 25,000 → $0.38 · Pro 75,000 → $1.13 · Business 200,000 → $3.00. Con un CRM sin filtro incremental el costo de contactos se duplica y el margen baja 1-6 puntos.)
+(Contactos al tope del plan a $0.015 por 1,000/mes: Básico 10,000 → $0.15 · Starter 30,000 → $0.45 · Pro 80,000 → $1.20 · Business 250,000 → $3.75. Con un CRM sin filtro incremental el costo de contactos se duplica y el margen baja.)
 
 Uso real esperado (60% de los comandos consumidos, 30% audio): márgenes 75-85%.
-Regla del plan Gratis: la sincronización del CRM se pausa al agotar los 50 comandos; sin esa
-regla, un free con un CRM de 50,000 contactos costaría ~$3/mes indefinidamente.
-Plataforma fija ~$175/mes (Temporal Cloud piso $100, VM ~$65, Redis $5, Neon ~$5) →
-cubierta con ~12 clientes de pago. Reglas para el agente: no bajar precios ni subir
+Regla del plan Gratis: la sincronización del CRM se pausa al agotar los 50 comandos o
+tras 30 días sin uso; su espejo nunca supera 10,000 contactos.
+Plataforma fija ~$175/mes (Temporal Cloud piso $100, VM ~$65, Redis $5, Neon ~$5).
+Recalcular el punto de equilibrio con la mezcla real de planes y usuarios. Reglas para el agente: no bajar precios ni subir
 comandos incluidos sin recalcular esta tabla; el add-on de comandos ($8/500) no debe
 bajar de 60 comandos por dólar ni superar los comandos por dólar del plan siguiente. Si el canal WhatsApp migra a la API
 oficial de Meta (conversaciones cobradas), revisar el plan Básico.
