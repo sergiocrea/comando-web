@@ -11,12 +11,12 @@ const PRICING_CONFIG = {
   subtitle: 'Vendedores ilimitados. Paga según el tamaño de tu CRM. Empieza gratis con 50 comandos, sin tarjeta.',
   // Cada plan muestra solo 4 líneas: contactos, comandos, vendedores y un diferencial.
   plans: [
-    { id: 'gratis',   name: 'Gratis',   price: 0,  contacts: null,  commands: 50,    highlight: '1 CRM conectado', note: 'Cupo total de prueba, sin tarjeta. Sin sincronización continua ni automatizaciones; expira a los 30 días sin uso.' },
+    { id: 'gratis',   name: 'Gratis',   price: 0,  contacts: 10000, commands: 50,    highlight: '1 CRM conectado', note: 'Cupo total de prueba, sin tarjeta. Sin sincronización continua ni automatizaciones; expira a los 30 días sin uso.' },
     { id: 'basico',   name: 'Básico',   price: 3,  contacts: 10000, commands: 150,   highlight: '1 CRM conectado' },
-    { id: 'starter',  name: 'Starter',  price: 6,  contacts: 25000, commands: 400,  highlight: 'Automatizaciones ilimitadas' },
-    { id: 'pro',      name: 'Pro',      price: 19, contacts: 75000, commands: 1500,  highlight: 'Hasta 3 CRM + ecommerce · soporte por WhatsApp' },
+    { id: 'starter',  name: 'Starter',  price: 8,  contacts: 30000, commands: 500,  highlight: 'Automatizaciones ilimitadas' },
+    { id: 'pro',      name: 'Pro',      price: 19, contacts: 80000, commands: 1500,  highlight: 'Hasta 3 CRM + ecommerce · soporte por WhatsApp' },
   ],
-  enterpriseLine: '¿Más de 75 000 contactos? Business: US$ 49/mes con 200 000 contactos y 4 000 comandos al mes. ¿Varios países o requisitos especiales?',
+  enterpriseLine: '¿Más de 80 000 contactos? Business: US$ 49/mes con 250 000 contactos y 5 000 comandos al mes. ¿Varios países o requisitos especiales?',
   syncNote: 'Sincronización en tiempo real cuando tu CRM envía eventos (HubSpot, Pipedrive, Zoho, Kommo, Shopify, Tiendanube, WooCommerce, Mercado Libre…). En los demás, Comando revisa cambios cada 6 h en Básico, 30 min en Starter y 5 min en Pro.',
   commandNote: 'Un comando es cada pedido que le haces a Comando por WhatsApp, por texto o por audio. Las confirmaciones y las respuestas no cuentan.',
   addons: [
@@ -39,8 +39,8 @@ const PRICING_CONFIG = {
     intro: 'Comando complementa a tu CRM, no lo sustituye. Referencia: precios de lista de HubSpot 2026, facturación anual.',
     rows: [
       { contacts: 'Hasta 10 000',     hubspot: 'Marketing Hub Starter: $20/asiento/mes (1 000 contactos; +$50 por cada 1 000)', comando: 'Básico: $3/mes, 10 000 contactos, vendedores ilimitados' },
-      { contacts: '10 000 – 25 000', hubspot: 'Marketing Hub Professional: desde $890/mes (2 000 contactos; +$250 por 5 000)', comando: 'Starter: $6/mes, 25 000 contactos' },
-      { contacts: '25 000 – 200 000', hubspot: 'Marketing Hub Enterprise: desde $3 600/mes (10 000 contactos)',                  comando: 'Pro $19/mes (75 000) · Business $49/mes (200 000)' },
+      { contacts: '10 000 – 30 000', hubspot: 'Marketing Hub Professional: desde $890/mes (2 000 contactos; +$250 por 5 000)', comando: 'Starter: $8/mes, 30 000 contactos' },
+      { contacts: '30 000 – 250 000', hubspot: 'Marketing Hub Enterprise: desde $3 600/mes (10 000 contactos)',                  comando: 'Pro $19/mes (80 000) · Business $49/mes (250 000)' },
       { contacts: 'Asiento de ventas', hubspot: 'Sales Hub Professional: $90/asiento/mes',                                      comando: 'Sin costo por asiento' },
     ],
     message: 'Todo tu equipo opera el CRM desde WhatsApp por menos del 5 % de lo que pagas por el CRM. Vendedores ilimitados.',
@@ -49,7 +49,7 @@ const PRICING_CONFIG = {
   faq: [
     { q: '¿Cómo se calcula el precio?', a: 'Por el tamaño de tu CRM: los contactos que Comando vigila, medidos una vez al día (no se cobra por leads que entran y salen el mismo día). No cobramos por usuario: conecta a todo tu equipo sin costo por asiento. Puedes cambiar de plan cuando quieras; se prorratea.' },
     { q: '¿Qué cuenta como comando y qué pasa si me paso?', a: 'Un comando es cada pedido que le haces a Comando por WhatsApp, por texto o por audio; una nota de voz cuenta como 1,5. Las confirmaciones («sí», «ok») y las respuestas de Comando no cuentan. Te avisamos al 80 % del cupo y nunca cortamos el servicio sin aviso: puedes sumar paquetes de 500 comandos por $8 o subir de plan.' },
-    { q: '¿Qué incluye el plan Gratis?', a: '50 comandos de cupo total con 1 CRM de cualquier tamaño y vendedores ilimitados, sin tarjeta. No incluye sincronización continua ni automatizaciones; al agotar el cupo (o tras 30 días sin uso) deja de ejecutar hasta que elijas un plan.' },
+    { q: '¿Qué incluye el plan Gratis?', a: '50 comandos de cupo total con 1 CRM de hasta 10 000 contactos y vendedores ilimitados, sin tarjeta. No incluye sincronización continua ni automatizaciones; al agotar el cupo (o tras 30 días sin uso) deja de ejecutar hasta que elijas un plan.' },
     { q: '¿Cada cuánto se actualiza mi CRM en Comando?', a: 'En tiempo real cuando tu CRM envía eventos (HubSpot, Pipedrive, Zoho, Kommo, Shopify, Tiendanube, WooCommerce, Mercado Libre…). En los que no los envían, Comando revisa los cambios cada 6 h en Básico, cada 30 min en Starter y cada 5 min en Pro.' },
     { q: '¿Comando les escribe a mis clientes?', a: 'No desde tu número personal: Meta bloquea los envíos automáticos desde WhatsApp no oficial. Comando prepara el mensaje y te lo entrega listo para enviarlo con un toque (modo asistido), así que no necesitas contratar la API de WhatsApp Business para empezar. Si conectas un número oficial de WhatsApp Business, los envíos automáticos con plantillas aprobadas quedan disponibles.' },
     { q: '¿Qué pasa si pido algo que mi CRM no permite?', a: 'Comando te lo dice y te propone la alternativa que sí puede hacer (por ejemplo, crear la tarea en vez de llamar, o contar desde hoy si tu CRM no guarda historial de ese campo).' },
