@@ -789,7 +789,7 @@ html { scroll-behavior: smooth; }
   z-index: 1;
   inset: 0;
   background:
-    linear-gradient(90deg, rgba(248, 247, 243, .98) 0%, rgba(248, 247, 243, .94) 36%, rgba(248, 247, 243, .5) 49%, rgba(248, 247, 243, .12) 63%, rgba(248, 247, 243, .03) 100%),
+    linear-gradient(90deg, rgba(248, 247, 243, .96) 0%, rgba(248, 247, 243, .91) 29%, rgba(248, 247, 243, .68) 39%, rgba(248, 247, 243, .16) 52%, rgba(248, 247, 243, .02) 100%),
     radial-gradient(circle at 75% 38%, rgba(49, 95, 239, .1), transparent 27%),
     linear-gradient(180deg, rgba(255, 255, 255, .04), transparent 62%, rgba(243, 241, 234, .2));
   pointer-events: none;
