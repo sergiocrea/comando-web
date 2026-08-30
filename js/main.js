@@ -1,10 +1,10 @@
 /* ============================================================
    main.js — site UI logic (rewritten from scratch)
    Replaces the original site script + the page's inline scripts:
-   Lenis smooth scroll, data-reveal engine, divider lines, grid
+   Native scroll, data-reveal engine, divider lines, grid
    canvas spotlight, nav background + hero-logo->nav morph, mobile
    menu, scroll-scrubbed feature video + Lottie, footer
-   globe. Uses GSAP/ScrollTrigger/SplitText/ScrambleText/Lenis from
+   globe. Uses GSAP/ScrollTrigger/SplitText/ScrambleText from
    the global scope (loaded via <script> in index.html).
    ============================================================ */
 const gsap = window.gsap;
@@ -30,36 +30,7 @@ function runAfterPreloader(cb) {
 }
 
 /* ============================================================
-   1. Lenis smooth scroll (>=480px desktop, or landscape mobile)
-   ============================================================ */
-(function initLenis() {
-  const Lenis = window.Lenis;
-  if (!Lenis) return;
-  const ua = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
-  const landscape = window.innerWidth > window.innerHeight;
-  const allow = (window.innerWidth >= 480 && !ua) || (window.innerWidth >= 480 && landscape && ua);
-  if (!allow) return;
-
-  const lenis = new Lenis({
-    duration: 1.25,
-    easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-    direction: 'vertical',
-    gestureDirection: 'vertical',
-    smooth: true,
-    wheelMultiplier: 0.8,
-    mouseMultiplier: 0.8,
-    smoothTouch: true,
-    touchMultiplier: 2,
-    infinite: false,
-    lerp: 0.15,
-  });
-  window.__lenis = lenis;
-  function raf(time) { lenis.raf(time); requestAnimationFrame(raf); }
-  requestAnimationFrame(raf);
-})();
-
-/* ============================================================
-   2. data-reveal engine (block / text / scramble / fade)
+   1. data-reveal engine (block / text / scramble / fade)
    trigger: top 85%, defaults duration 1, delay 0.25, stagger 0.1
    ============================================================ */
 function initReveals() {
