@@ -144,6 +144,150 @@
     setTimeout(poll, 1000);
   }
 
+  /* ---------- Google Sheets: Nango para el refresh token, Picker para elegir hojas ---------- */
+
+  // El Picker necesita un token en el navegador. En vez de sacarlo de Nango y
+  // exponerlo, lo pedimos con Google Identity Services usando el MISMO client id:
+  // como el consentimiento de drive.file ya se dio en el paso anterior, Google lo
+  // devuelve sin volver a preguntar.
+  function googleAccessToken() {
+    return new Promise((resolve, reject) => {
+      const gis = window.google && window.google.accounts && window.google.accounts.oauth2;
+      if (!gis) { reject(new Error('No se pudo cargar Google. Revisa tu conexión.')); return; }
+      const client = gis.initTokenClient({
+        client_id: cfg.googleClientId,
+        scope: 'https://www.googleapis.com/auth/drive.file',
+        callback: (r) => (r && r.access_token ? resolve(r.access_token) : reject(new Error('Google no devolvió el permiso'))),
+        error_callback: () => reject(new Error('Se canceló el permiso de Google')),
+      });
+      client.requestAccessToken({ prompt: '' });
+    });
+  }
+
+  function loadPicker() {
+    return new Promise((resolve, reject) => {
+      if (window.google && window.google.picker) { resolve(); return; }
+      if (!window.gapi) { reject(new Error('No se pudo cargar el selector de Google')); return; }
+      window.gapi.load('picker', { callback: resolve, onerror: () => reject(new Error('No se pudo cargar el selector de Google')) });
+    });
+  }
+
+  // Devuelve los archivos elegidos. Cada seleccion es lo que concede el acceso
+  // per-archivo de drive.file: sin esto Comando no ve nada del Drive del usuario.
+  function pickSpreadsheets(accessToken) {
+    return new Promise((resolve) => {
+      const view = new window.google.picker.DocsView(window.google.picker.ViewId.SPREADSHEETS)
+        .setIncludeFolders(true)
+        .setSelectFolderEnabled(false);
+      new window.google.picker.PickerBuilder()
+        .setAppId(cfg.googleProjectNumber)
+        .setOAuthToken(accessToken)
+        .setDeveloperKey(cfg.googlePickerApiKey)
+        .addView(view)
+        .enableFeature(window.google.picker.Feature.MULTISELECT_ENABLED)
+        .setCallback((data) => {
+          if (data.action === window.google.picker.Action.PICKED) resolve(data.docs || []);
+          else if (data.action === window.google.picker.Action.CANCEL) resolve([]);
+        })
+        .build()
+        .setVisible(true);
+    });
+  }
+
+  // Lee los nombres de las pestañas para no adivinar cual sincronizar.
+  async function sheetTabs(accessToken, spreadsheetId) {
+    const res = await fetch(
+      'https://sheets.googleapis.com/v4/spreadsheets/' + encodeURIComponent(spreadsheetId) + '?fields=sheets.properties.title',
+      { headers: { authorization: 'Bearer ' + accessToken } },
+    );
+    if (!res.ok) return [];
+    const body = await res.json();
+    return (body.sheets || []).map((s) => s.properties && s.properties.title).filter(Boolean);
+  }
+
+  async function registerSheets(connectionId, accessToken, docs) {
+    const sheets = [];
+    for (const doc of docs) {
+      const tabs = await sheetTabs(accessToken, doc.id);
+      // La primera pestaña es la que ve el usuario al abrir la hoja; puede cambiarla luego.
+      sheets.push({ spreadsheetId: doc.id, sheetTitle: tabs[0] || 'Hoja 1', displayName: doc.name || undefined });
+    }
+    if (!sheets.length) return { sources: [] };
+    return api('/integrations/google-sheets/sources', {
+      method: 'POST', headers: { 'x-request-id': crypto.randomUUID() },
+      body: JSON.stringify({ connectionId, sheets }),
+    });
+  }
+
+  function renderSheets(sources) {
+    const list = $('sheet-list'); if (!list) return;
+    list.innerHTML = (sources || []).map((s) =>
+      '<li><strong>' + escapeHtml(s.displayName || s.spreadsheetId) + '</strong><span>' + escapeHtml(s.sheetTitle) + '</span></li>').join('');
+    list.hidden = !(sources || []).length;
+  }
+  function escapeHtml(value) {
+    return String(value).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+  }
+
+  async function onConnectSheets() {
+    const btn = document.querySelector('.crm-card[data-crm="google-sheets"]');
+    const status = $('crm-status');
+    if (btn) btn.disabled = true;
+    try {
+      let connectionId = null;
+      try { connectionId = localStorage.getItem('comando.sheetsConnection'); } catch (e) { /* sin storage */ }
+      if (!connectionId) {
+        const r = await api('/integrations/nango/connect-sessions', {
+          method: 'POST',
+          headers: { 'idempotency-key': crypto.randomUUID(), 'x-request-id': crypto.randomUUID() },
+          body: JSON.stringify({ integrationId: 'google-sheets' }),
+        });
+        if (!r.token || !r.connectionId) throw new Error('No recibimos la sesión de conexión');
+        const url = cfg.nangoUrl.replace(/\/$/, '') + '/oauth/connect/google-sheets?connect_session_token=' + encodeURIComponent(r.token);
+        const popup = window.open(url, 'comando-oauth', 'width=720,height=800');
+        if (!popup) window.location.href = url;
+        status.textContent = 'Autoriza el acceso en la ventana de Google…';
+        await waitForConnection(r.connectionId, popup);
+        connectionId = r.connectionId;
+        try { localStorage.setItem('comando.sheetsConnection', connectionId); } catch (e) { /* sin storage */ }
+      }
+      status.textContent = 'Elige las hojas que quieres conectar…';
+      const token = await googleAccessToken();
+      await loadPicker();
+      const docs = await pickSpreadsheets(token);
+      if (!docs.length) { status.textContent = 'No elegiste ninguna hoja. Puedes intentarlo de nuevo cuando quieras.'; if (btn) btn.disabled = false; return; }
+      const result = await registerSheets(connectionId, token, docs);
+      renderSheets(result.sources);
+      status.textContent = docs.length === 1
+        ? 'Hoja conectada. Comando la está leyendo; en unos minutos podrás preguntarle por ella desde WhatsApp.'
+        : docs.length + ' hojas conectadas. Comando las está leyendo.';
+      if (btn) { btn.classList.add('is-connected'); btn.querySelector('small').textContent = 'Conectado'; btn.disabled = false; }
+      showFieldsLink();
+    } catch (e) {
+      status.textContent = e.message;
+      if (btn) btn.disabled = false;
+    }
+  }
+
+  // Igual que HubSpot: el OAuth vuelve a Nango, así que confirmamos por sondeo.
+  function waitForConnection(connectionId, popup) {
+    const started = Date.now();
+    return new Promise((resolve, reject) => {
+      const poll = async () => {
+        if (Date.now() - started > 6 * 60 * 1000) { reject(new Error('No se completó la autorización. Vuelve a intentarlo.')); return; }
+        try {
+          const res = await api('/integrations/nango/connections/' + connectionId + '/reconcile', {
+            method: 'POST', headers: { 'x-request-id': crypto.randomUUID() },
+            body: JSON.stringify({ integrationId: 'google-sheets' }),
+          });
+          if (res.status === 'connected') { if (popup && !popup.closed) popup.close(); resolve(); return; }
+        } catch (e) { /* transitorio */ }
+        setTimeout(poll, 3000);
+      };
+      setTimeout(poll, 1000);
+    });
+  }
+
   async function boot() {
     try {
       const s = document.createElement('script');
@@ -183,6 +327,7 @@
       $('phone-change').addEventListener('click', () => { clearInterval(pollTimer); $('phone-verify').hidden = true; $('phone-form').hidden = false; });
       $('connect-hubspot').addEventListener('click', onConnectHubspot);
       document.querySelectorAll('.crm-card.is-ready[data-crm="hubspot"]').forEach((b) => b.addEventListener('click', onConnectHubspot));
+      document.querySelectorAll('.crm-card.is-ready[data-crm="google-sheets"]').forEach((b) => b.addEventListener('click', onConnectSheets));
       if (!clerk.user) {
         show('cuenta');
         clerk.mountSignUp($('clerk-signup'), {
