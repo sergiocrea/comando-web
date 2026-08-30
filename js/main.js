@@ -200,6 +200,12 @@ function initGridCanvas() {
 function initNav() {
   const nav = document.querySelector('.nav_component');
   if (nav) {
+    const syncNavHeight = () => {
+      document.documentElement.style.setProperty('--nav-height', `${Math.ceil(nav.getBoundingClientRect().height)}px`);
+    };
+    syncNavHeight();
+    window.addEventListener('resize', syncNavHeight, { passive: true });
+    if (window.ResizeObserver) new ResizeObserver(syncNavHeight).observe(nav);
     nav.style.transition = 'background 0.3s ease';
     let menuOpen = false;
     const update = () => {
@@ -316,6 +322,19 @@ function initMobileMenu() {
   const btn = document.querySelector('.w-nav-button');
   if (!btn || !links.length) return;
 
+  const unlockScroll = () => {
+    if (document.body.classList.contains('sheet-open')) return;
+    document.body.classList.remove('no-scroll');
+    document.body.style.removeProperty('overflow');
+    document.documentElement.style.removeProperty('overflow');
+  };
+  unlockScroll();
+  window.addEventListener('pageshow', unlockScroll);
+  links.forEach((link) => link.addEventListener('click', unlockScroll));
+  const desktop = window.matchMedia('(min-width: 992px)');
+  const unlockOnDesktop = () => { if (desktop.matches) unlockScroll(); };
+  desktop.addEventListener('change', unlockOnDesktop);
+
   mmGSAP('(max-width: 991px)', () => {
     gsap.set(links, { opacity: 0, y: 50, scale: 0.95, filter: 'blur(10px)' });
     const open = () => {
@@ -326,7 +345,7 @@ function initMobileMenu() {
       });
     };
     const close = () => {
-      document.body.classList.remove('no-scroll');
+      unlockScroll();
       gsap.to(links, {
         opacity: 0, y: 50, scale: 0.95,
         duration: 0.35, ease: 'power2.inOut', stagger: { each: 0.04, from: 'end' },
@@ -591,6 +610,11 @@ function initAboutFade() {
    Boot
    ============================================================ */
 function boot() {
+  if (!document.querySelector('.w-nav-button.w--open')) {
+    document.body.classList.remove('no-scroll');
+    document.body.style.removeProperty('overflow');
+    document.documentElement.style.removeProperty('overflow');
+  }
   initGridCanvas();
   initNav();
   initMobileMenu();
