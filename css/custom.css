@@ -1301,14 +1301,18 @@ html { scroll-behavior: smooth; }
 .radar-input span { flex: 1; background: #2a3942; color: #8fa3ad; border-radius: 999px; padding: .55rem .9rem; font-family: "Neuehaasunicaw 1 G", Inter, sans-serif; font-size: .8rem; }
 .radar-input i { width: 2.1rem; height: 2.1rem; border-radius: 50%; background: #00a884; display: grid; place-items: center; font-style: normal; font-size: .85rem; }
 @media (max-width: 991px) {
-  .radar-layout { grid-template-columns: minmax(0, 1fr); gap: 2.5rem; }
-  /* Apilado: se centra todo el bloque, como en «Un mensaje». El contenido de
-     las filas sigue alineado a la izquierda dentro de la tarjeta. */
-  .radar-device { order: -1; margin: 0 auto; }
-  .radar-copy { text-align: center; }
-  .radar-title, .radar-lede { margin-left: auto; margin-right: auto; }
-  .radar-card { margin-left: auto; margin-right: auto; text-align: left; }
-  .radar-cta-row { display: flex; justify-content: center; }
+  /* Apilado como «Un mensaje»: titular arriba, teléfono en medio y el resto
+     debajo. `display: contents` disuelve la columna de texto para poder
+     intercalar el teléfono entre sus hijos sin tocar el HTML. */
+  .radar-layout { grid-template-columns: minmax(0, 1fr); gap: 0; justify-content: stretch; }
+  .radar-copy { display: contents; text-align: center; }
+  .radar-eyebrow { order: 1; }
+  .radar-title { order: 2; }
+  .radar-device { order: 3; margin: 2rem auto 0; }
+  .radar-card { order: 4; margin-left: auto; margin-right: auto; text-align: left; }
+  .radar-lede { order: 5; margin-left: auto; margin-right: auto; }
+  .radar-cta-row { order: 6; display: flex; justify-content: center; }
+  .radar-title { margin-left: auto; margin-right: auto; }
 }
 @media (max-width: 767px) {
   .section_radar { padding: 3rem 0; }
