@@ -7,17 +7,16 @@ const PRICING_CONFIG = {
   billing: { annualFreeMonths: 2 },          // anual = precio mensual × 10 / 12
   featuredPlan: 'starter',
   cta: { trialBase: '/app/', trialLabel: 'Elegir plan', freeLabel: 'Empezar gratis', enterpriseHref: '#pricing-form', enterpriseLabel: 'Habla con ventas' },
-  title: 'Planes desde US$ 3 por usuario al mes.',
-  subtitle: 'Cada persona tiene su propio espejo del CRM y su propio cupo de comandos. Prueba gratis.',
+  title: 'Haz menos trabajo manual desde US$ 3 al mes.',
+  subtitle: 'Actualiza el CRM, crea seguimientos y recibe alertas desde WhatsApp. Prueba gratis.',
   // Cada plan muestra solo 4 líneas: contactos, comandos, usuario y un diferencial.
   plans: [
-    { id: 'gratis',   name: 'Gratis',   price: 0,  contacts: 10000, commands: 50,    highlight: '1 CRM conectado', note: 'Prueba individual, sin tarjeta. Sin sincronización continua ni automatizaciones; expira a los 30 días sin uso.' },
-    { id: 'basico',   name: 'Básico',   price: 3,  contacts: 10000, commands: 150,   highlight: '1 CRM conectado' },
-    { id: 'starter',  name: 'Starter',  price: 7,  contacts: 30000, commands: 500,  highlight: 'Automatizaciones ilimitadas' },
-    { id: 'pro',      name: 'Pro',      price: 19, contacts: 80000, commands: 1500,  highlight: 'Historial y soporte por WhatsApp' },
-    { id: 'business', name: 'Business', price: 49, contacts: 250000, commands: 5000, highlight: 'Operación a escala · soporte prioritario' },
+    { id: 'gratis',  name: 'Gratis',  price: 0,  contacts: 10000, commands: 50,   highlight: '1 conexión', note: 'Prueba individual, sin tarjeta. Sin sincronización continua ni automatizaciones; expira a los 30 días sin uso.' },
+    { id: 'basico',  name: 'Básico',  price: 3,  contacts: 10000, commands: 150,  highlight: '2 conexiones' },
+    { id: 'starter', name: 'Starter', price: 7,  contacts: 30000, commands: 500,  highlight: '5 conexiones' },
+    { id: 'pro',     name: 'Pro',     price: 19, contacts: 80000, commands: 1500, highlight: 'Conexiones ilimitadas' },
   ],
-  enterpriseLine: '¿Más de 250 000 contactos, varios países o requisitos especiales?',
+  enterpriseLine: '¿Más de 80 000 contactos, integraciones avanzadas o soporte dedicado?',
   syncNote: 'HubSpot y Google Sheets están disponibles hoy. Los demás conectores mostrados en la landing están en preparación.',
   commandNote: 'Un comando es cada pedido que le haces a Comando por WhatsApp, por texto o por audio. Las confirmaciones y las respuestas no cuentan.',
   addons: [
@@ -33,7 +32,7 @@ const PRICING_CONFIG = {
     'Español adaptado al país de tu equipo',
     'Los avisos que quieras, cuando los quieras. Se apagan en un mensaje',
     'Comandos por texto o audio de WhatsApp',
-    'Un espejo y un cupo independiente por usuario',
+    'Un plan individual con comandos propios',
   ],
   comparison: {
     title: '¿Cuánto es esto frente a tu CRM?',
@@ -41,10 +40,10 @@ const PRICING_CONFIG = {
     rows: [
       { contacts: 'Hasta 10 000',     hubspot: 'Marketing Hub Starter: $20/asiento/mes (1 000 contactos; +$50 por cada 1 000)', comando: 'Básico: $3/usuario/mes, espejo de 10 000 contactos' },
       { contacts: '10 000 – 30 000', hubspot: 'Marketing Hub Professional: desde $890/mes (2 000 contactos; +$250 por 5 000)', comando: 'Starter: $7/usuario/mes, espejo de 30 000 contactos' },
-      { contacts: '30 000 – 250 000', hubspot: 'Marketing Hub Enterprise: desde $3 600/mes (10 000 contactos)',                  comando: 'Pro $19/usuario/mes (80 000) · Business $49/usuario/mes (250 000)' },
-      { contacts: 'Usuario', hubspot: 'Sales Hub Professional: $90/asiento/mes',                                                comando: 'Desde $3/usuario/mes' },
+      { contacts: '30 000 – 80 000', hubspot: 'Marketing Hub Enterprise: desde $3 600/mes (10 000 contactos)', comando: 'Pro: $19/mes, 80 000 contactos' },
+      { contacts: 'Usuario', hubspot: 'Sales Hub Professional: $90/asiento/mes', comando: 'Plan individual desde $3/mes' },
     ],
-    message: 'Cada persona opera el CRM desde WhatsApp con su propio espejo y cupo.',
+    message: 'Actualiza, da seguimiento y recibe alertas sin abrir el CRM.',
     footnote: 'Precios de HubSpot sujetos a cambio. Comando funciona con cualquier plan de HubSpot, incluido el gratuito.',
   },
   faq: [
@@ -82,9 +81,9 @@ const PRICING_CONFIG = {
     const featured = p.id === C.featuredPlan;
     const free = p.price === 0;
     const m = monthly(p.price);
-    const priceHtml = free ? `<div class="price-amount">US$ 0</div><div class="price-unit">por usuario</div>`
-      : `<div class="price-amount">${money(m)}</div><div class="price-unit">por usuario / mes</div>${state.annual ? `<div class="price-annual">${money(m * 12)} al año por usuario</div>` : ''}`;
-    const lines = [p.contacts == null ? 'Contactos según tu plan' : `<b>${fmtN(p.contacts)}</b> contactos en tu espejo`, free ? `<b>${fmtN(p.commands)}</b> comandos para probar` : `<b>${fmtN(p.commands)}</b> comandos al mes`, '<b>1 usuario</b> por plan', esc(p.highlight)];
+    const priceHtml = free ? `<div class="price-amount">US$ 0</div>`
+      : `<div class="price-amount">${money(m)}<span>/mes</span></div>${state.annual ? `<div class="price-annual">${money(m * 12)} al año</div>` : ''}`;
+    const lines = [p.contacts == null ? 'Contactos según tu plan' : `<b>${fmtN(p.contacts)}</b> contactos a tu alcance`, free ? `<b>${fmtN(p.commands)}</b> comandos para probar` : `<b>${fmtN(p.commands)}</b> comandos al mes`, '<b>Plan individual</b>', esc(p.highlight)];
     const cta = free ? `<a href="${C.cta.trialBase}?plan=${p.id}" class="price-cta">${esc(C.cta.freeLabel)}</a>`
       : `<a href="${C.cta.trialBase}?plan=${p.id}" class="price-cta">${esc(C.cta.trialLabel)}</a>`;
     return `<div class="price-card${featured ? ' is-featured' : ''}${free ? ' is-free' : ''}" data-plan="${p.id}">${featured ? '<div class="price-flag">Más elegido</div>' : ''}
@@ -92,7 +91,7 @@ const PRICING_CONFIG = {
       <ul class="price-list">${lines.map((l) => `<li>${l}</li>`).join('')}</ul>${p.note ? `<div class="price-note">${esc(p.note)}</div>` : ''}${cta}</div>`;
   }
   function renderCards() {
-    return `<div class="pricing-grid is-five" id="pricing-cards">${C.plans.map(renderCard).join('')}</div>
+    return `<div class="pricing-grid is-four" id="pricing-cards">${C.plans.map(renderCard).join('')}</div>
       <div class="pricing-notes">
         <p class="pricing-note"><b>¿Qué es un comando?</b> ${esc(C.commandNote)}</p>
         <p class="pricing-note"><b>${esc(C.addonsIntro)}</b> ${C.addons.map((a) => `${esc(a.label)} = ${money(a.price)}/mes`).join(' · ')}. ${esc(C.overageNote)}</p>

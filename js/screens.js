@@ -209,3 +209,15 @@
   const list = document.getElementById('mob-res'); const btn = list && list.querySelector('.features-more'); if (!btn) return;
   btn.addEventListener('click', () => { list.classList.add('is-expanded'); btn.setAttribute('aria-expanded', 'true'); if (typeof ScrollTrigger !== 'undefined') ScrollTrigger.refresh(); });
 })();
+
+/* "Un mensaje. Tres tareas menos.": las tres tareas se marcan una tras otra al
+   entrar en pantalla. Va desacoplado del canvas para que no se desincronice. */
+(function () {
+  const card = document.querySelector('.outcome-card');
+  if (!card) return;
+  if (!('IntersectionObserver' in window)) { card.classList.add('is-in'); return; }
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => { if (entry.isIntersecting) { card.classList.add('is-in'); io.disconnect(); } });
+  }, { threshold: .35 });
+  io.observe(card);
+})();

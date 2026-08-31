@@ -32,20 +32,22 @@ sección debe sentirse parte de la misma página.
 > Nota histórica: antes del 2026-08-30 se evaluó cobrar solo por contactos con operadores
 > ilimitados. Ese modelo fue reemplazado por planes individuales; no debe volver a
 > publicarse como una capacidad vigente.
+>
+> El plan Business de $49 también se retiró de la oferta pública el 2026-08-30. Las
+> necesidades por encima de Pro pasan a una conversación comercial.
 
-| | Gratis | Básico | Starter | Pro | Business | Enterprise |
-|---|---|---|---|---|---|---|
-| Precio mensual por usuario | $0 | **$3/mes** | $7/mes | $19/mes | $49/mes | A medida |
-| Contactos en el espejo personal | hasta 10,000 | hasta 10,000 | hasta 30,000 | hasta 80,000 | hasta 250,000 | A medida |
-| Comandos incluidos (texto o audio; una nota de voz = 1.5) | 50 en total | 150 / mes | 500 / mes | 1,500 / mes | 5,000 / mes | Negociados |
-| Usuarios incluidos | 1 | 1 | 1 | 1 | 1 | Negociados |
-| CRM conectado | 1 | 1 | 1 | 1 | 1 | A medida |
-| Automatizaciones | Sin automatizaciones | Según disponibilidad | Ilimitadas | Ilimitadas | Ilimitadas | A medida |
-| Soporte | Autoservicio | Estándar | Estándar | WhatsApp | Prioritario | Dedicado + SLA |
+| | Gratis | Básico | Starter | Pro | Enterprise |
+|---|---|---|---|---|---|
+| Precio mensual del plan individual | $0 | **$3/mes** | $7/mes | $19/mes | A medida |
+| Contactos disponibles | hasta 10,000 | hasta 10,000 | hasta 30,000 | hasta 80,000 | A medida |
+| Comandos incluidos (texto o audio; una nota de voz = 1.5) | 50 en total | 150 / mes | 500 / mes | 1,500 / mes | Negociados |
+| Conexiones | 1 | 2 | 5 | Ilimitadas | A medida |
+| Usuarios incluidos | 1 | 1 | 1 | 1 | Negociados |
+| Soporte | Autoservicio | Estándar | Estándar | WhatsApp | Dedicado + SLA |
 
 Add-ons (todos los planes): **+10,000 contactos → $1/mes** · **+500 comandos → $8** (62 comandos por dólar: siempre conviene más subir de plan que acumular paquetes).
 
-Sincronización: en tiempo real cuando el CRM envía eventos (HubSpot, Pipedrive, Zoho, Kommo, Shopify, Tiendanube, WooCommerce, Mercado Libre…); en los que no, Comando revisa cambios cada 6 h (Básico), 30 min (Starter) o 5 min (Pro/Business).
+Sincronización: en tiempo real cuando el CRM envía eventos (HubSpot, Pipedrive, Zoho, Kommo, Shopify, Tiendanube, WooCommerce, Mercado Libre…); en los que no, Comando revisa cambios cada 6 h (Básico), 30 min (Starter) o 5 min (Pro).
 Anual: 2 meses gratis (toggle mensual/anual). Plan destacado: Starter.
 Al superar contactos o comandos: aviso al 80%; sugerir add-on o plan siguiente; nunca se
 corta el servicio sin aviso.
@@ -58,19 +60,19 @@ de HubSpot 2026 como referencia; citar "precios de lista HubSpot, facturación a
 |---|---|---|
 | Hasta 10,000 | Starter: $20/asiento/mes (1,000 contactos; +$50 por cada 1,000) | Básico: $3/usuario/mes, espejo de 10,000 contactos |
 | 10,000-30,000 | Professional: desde $890/mes (2,000 contactos; +$250 por 5,000) | Starter: $7/usuario/mes, espejo de 30,000 contactos |
-| 30,000-250,000 | Enterprise: desde $3,600/mes (10,000 contactos) | Pro: $19/usuario/mes (80,000) · Business: $49/usuario/mes (250,000) |
-| Usuario | Sales Hub Professional: $90/asiento/mes | Desde $3/usuario/mes |
+| 30,000-80,000 | Enterprise: desde $3,600/mes (10,000 contactos) | Pro: $19/mes, 80,000 contactos |
+| Usuario | Sales Hub Professional: $90/asiento/mes | Plan individual desde $3/mes |
 
-Mensaje clave: **"Cada persona opera el CRM desde WhatsApp con su propio espejo y
-cupo."** Nota al pie: precios de HubSpot sujetos a cambio. Comando complementa al CRM;
-no lo reemplaza.
+Mensaje clave: **"Actualiza, da seguimiento y recibe alertas sin abrir el CRM."**
+Nota al pie: cada tarjeta corresponde a un plan individual. Los precios de HubSpot están
+sujetos a cambio. Comando complementa al CRM; no lo reemplaza.
 
 ## 5. Elementos de la sección
-1. Título: "Planes desde US$ 3 por usuario al mes." Subtítulo: "Cada persona tiene su
-   propio espejo del CRM y su propio cupo de comandos. Prueba gratis."
+1. Título: "Haz menos trabajo manual desde US$ 3 al mes." Subtítulo: "Actualiza el CRM,
+   crea seguimientos y recibe alertas desde WhatsApp. Prueba gratis."
 2. Toggle mensual/anual.
-3. Cinco tarjetas (tabla de la sección 3), Starter destacada. CTAs: Básico/Starter/Pro/
-   Business → "Probar 14 días gratis" · Enterprise → "Hablar con ventas".
+3. Cuatro tarjetas (Gratis/Básico/Starter/Pro), Starter destacada. CTAs de pago →
+   "Elegir plan" · Enterprise → "Hablar con ventas".
 4. Bloque "Todos los planes incluyen": conexión al CRM en 2 minutos con login OAuth
    (sin copiar claves), confirmación antes de ejecutar cualquier cambio, historial
    auditable de cada acción, español adaptado al país del equipo, alertas en tiempo
@@ -96,11 +98,11 @@ no lo reemplaza.
 
 ## 6. Requisitos técnicos
 - Página estática (Cloudflare Pages), HTML/CSS/JS vanilla consistente con el sitio.
-- Responsive: 5 tarjetas → carrusel horizontal en móvil con la destacada centrada.
+- Responsive: 4 tarjetas → carrusel horizontal en móvil.
 - Todos los precios, límites, add-ons, tipo de cambio y textos de la comparativa en un
   único objeto JSON al inicio del archivo (`PRICING_CONFIG`) para editarlos sin tocar
   el markup.
-- CTAs: /registro?plan=basico|starter|pro|business y /contacto (Enterprise).
+- CTAs: `/app/?plan=gratis|basico|starter|pro` y conversación comercial para Enterprise.
 - Accesible (contraste AA, teclado en toggles y acordeón). Español LatAm, sin
   anglicismos innecesarios ("resumen", no "digest").
 
@@ -124,12 +126,11 @@ Márgenes por plan con TODOS los comandos incluidos consumidos y el CRM al tope 
 | Básico | $3 | $0.38 | 87% | $0.48 | 84% |
 | Starter | $7 | $1.20 | 83% | $1.54 | 78% |
 | Pro | $19 | $3.45 | 82% | $4.46 | 77% |
-| Business | $49 | $11.25 | 77% | $14.60 | 70% |
 | Gratis | $0 | ~$0.10 una vez (50 comandos); sin sincronización continua | — | — | — |
 
-Escalera de valor (comandos por dólar): Básico 50 → Starter 71 → Pro 79 → Business 102; el add-on (62/$) queda entre Básico y Starter para que el upgrade siempre gane. Márgenes calculados con 30 % de comandos por audio y cobro anual (5 % de comisión); "peor caso" = todo por audio.
+Escalera de valor (comandos por dólar): Básico 50 → Starter 71 → Pro 79; el add-on (62/$) queda entre Básico y Starter para que el upgrade siempre gane. Márgenes calculados con 30 % de comandos por audio y cobro anual (5 % de comisión); "peor caso" = todo por audio.
 
-(Contactos al tope del plan a $0.015 por 1,000/mes: Básico 10,000 → $0.15 · Starter 30,000 → $0.45 · Pro 80,000 → $1.20 · Business 250,000 → $3.75. Con un CRM sin filtro incremental el costo de contactos se duplica y el margen baja.)
+(Contactos al tope del plan a $0.015 por 1,000/mes: Básico 10,000 → $0.15 · Starter 30,000 → $0.45 · Pro 80,000 → $1.20. Con un CRM sin filtro incremental el costo de contactos se duplica y el margen baja.)
 
 Uso real esperado (60% de los comandos consumidos, 30% audio): márgenes 75-85%.
 Regla del plan Gratis: la sincronización del CRM se pausa al agotar los 50 comandos o

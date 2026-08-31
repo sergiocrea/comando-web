@@ -229,7 +229,6 @@ input[type='file']:focus-visible {
 .price-name { font-family: "Jetbrainsmono Variable", monospace; font-size: .8rem; letter-spacing: .08em; text-transform: uppercase; color: #8a8a8a; }
 .price-amount { font-family: Neuemachina, "Space Grotesk", Inter, sans-serif; font-size: 2.4rem; font-weight: 600; line-height: 1.1; }
 .price-amount span { font-family: "Jetbrainsmono Variable", monospace; font-size: .9rem; color: #8a8a8a; margin-left: .35rem; }
-.price-unit { margin-top: .15rem; color: #a8a8a8; font-family: "Jetbrainsmono Variable", monospace; font-size: .7rem; letter-spacing: .035em; }
 .price-qty { color: #4d7cff; font-family: "Jetbrainsmono Variable", monospace; font-size: .85rem; }
 .price-list { list-style: none; padding: 0; margin: .75rem 0 1.25rem; display: flex; flex-direction: column; gap: .45rem; color: #c8c8c8; font-size: .95rem; }
 .price-list li::before { content: "✓"; color: #4d7cff; margin-right: .5rem; }
@@ -289,19 +288,19 @@ input[type='file']:focus-visible {
 .w-nav-button.w--open, .w-nav-button:focus { background: transparent; box-shadow: none; outline: none; }
 
 /* pricing v2: five plans + enterprise strip */
-.pricing-grid.is-five { grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 1rem; min-width: 0; }
-.pricing-grid.is-five .price-card { min-width: 0; overflow-wrap: anywhere; }
-.pricing-grid.is-five .price-card { padding: 1.4rem 1.25rem; }
-.pricing-grid.is-five .price-amount { font-size: 2rem; }
-.pricing-grid.is-five .price-list { font-size: .88rem; gap: .4rem; }
+.pricing-grid.is-four { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1rem; min-width: 0; }
+.pricing-grid.is-four .price-card { min-width: 0; overflow-wrap: anywhere; }
+.pricing-grid.is-four .price-card { padding: 1.4rem 1.25rem; }
+.pricing-grid.is-four .price-amount { font-size: 2rem; }
+.pricing-grid.is-four .price-list { font-size: .88rem; gap: .4rem; }
 .price-card.is-free .price-cta { background: #fff; color: #0a0a0a; }
 .pricing-enterprise { z-index: 2; position: relative; display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; background: #0b0b0b; color: #fff; border: 1px solid #222; border-radius: 1rem; padding: 1.5rem 1.75rem; }
 .pricing-enterprise-title { font-family: Neuemachina, "Space Grotesk", Inter, sans-serif; font-weight: 600; font-size: 1.25rem; margin-top: .35rem; }
 .pricing-enterprise-text { color: #9a9a9a; margin-top: .25rem; font-size: .95rem; }
 .pricing-enterprise .price-cta { white-space: nowrap; padding: .9rem 1.5rem; }
-@media (max-width: 1200px) { .pricing-grid.is-five { grid-template-columns: repeat(3, 1fr); } }
-@media (max-width: 991px) { .pricing-grid.is-five { grid-template-columns: 1fr 1fr; } .pricing-enterprise { flex-direction: column; align-items: flex-start; } }
-@media (max-width: 600px) { .pricing-grid.is-five { grid-template-columns: 1fr; } }
+@media (max-width: 1200px) { .pricing-grid.is-four { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 991px) { .pricing-grid.is-four { grid-template-columns: 1fr 1fr; } .pricing-enterprise { flex-direction: column; align-items: flex-start; } }
+@media (max-width: 600px) { .pricing-grid.is-four { grid-template-columns: 1fr; } }
 
 /* ===== pricing v3 (rendered by js/pricing.js) ===== */
 .pricing-toggles { display: flex; flex-wrap: wrap; align-items: center; gap: .75rem 1.25rem; margin-top: 1.5rem; }
@@ -318,9 +317,9 @@ input[type='file']:focus-visible {
 .pricing-addons b { font-weight: 600; }
 .pricing-overage { margin-top: .4rem; font-size: .75rem; opacity: .8; max-width: 52rem; font-family: "Neuehaasunicaw 1 G", Inter, sans-serif; }
 @media (max-width: 991px) {
-  .pricing-grid.is-five { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; gap: 1rem; padding: .75rem .25rem 1rem; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
-  .pricing-grid.is-five::-webkit-scrollbar { display: none; }
-  .pricing-grid.is-five .price-card { flex: 0 0 82%; scroll-snap-align: center; }
+  .pricing-grid.is-four { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; gap: 1rem; padding: .75rem .25rem 1rem; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+  .pricing-grid.is-four::-webkit-scrollbar { display: none; }
+  .pricing-grid.is-four .price-card { flex: 0 0 82%; scroll-snap-align: center; }
 }
 /* dark blocks below the band */
 .pricing-more { background: #0a0a0a; padding: 4rem 0 2rem; }
@@ -369,8 +368,8 @@ input[type='file']:focus-visible {
 /* "Modo automático": breathing room above the text */
 .home_defence-content-wrap { margin-top: 3rem; }
 /* pricing v4: simpler cards + notes */
-.pricing-grid.is-five .price-list { font-size: .95rem; gap: .55rem; margin-bottom: 1.5rem; }
-.pricing-grid.is-five .price-list b { color: #fff; font-weight: 600; }
+.pricing-grid.is-four .price-list { font-size: .95rem; gap: .55rem; margin-bottom: 1.5rem; }
+.pricing-grid.is-four .price-list b { color: #fff; font-weight: 600; }
 .pricing-notes { position: relative; z-index: 2; margin-top: 1.25rem; max-width: 60rem; display: flex; flex-direction: column; gap: .5rem; }
 .pricing-note { margin: 0; color: #0a0a0a; font-family: "Neuehaasunicaw 1 G", Inter, sans-serif; font-size: .95rem; line-height: 1.5; }
 .pricing-note b { font-weight: 600; }
@@ -507,8 +506,8 @@ body.sheet-open { overflow: hidden; }
 @media (max-width: 767px) { #about.is-hero .section_about-component { padding-top: 5rem; } }
 /* nav: room between the brand and the links; all five pricing tiers visible */
 @media (min-width: 992px) { .nav_brand { margin-right: 3rem; } .nav_brand-name { font-size: 1.5rem; } }
-.pricing-grid.is-five { grid-template-columns: repeat(5, minmax(0, 1fr)); }
-@media (max-width: 1200px) and (min-width: 992px) { .pricing-grid.is-five { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+.pricing-grid.is-four { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+@media (max-width: 1200px) and (min-width: 992px) { .pricing-grid.is-four { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (max-width: 767px) { #about.is-hero .section_about-component { padding-top: 6.5rem; } }
 /* hero: exactly one viewport tall */
 #about.is-hero { height: 100svh; min-height: 0; }
@@ -1095,4 +1094,63 @@ html { scroll-behavior: smooth; }
   .b2b-hero-media video { display: none; }
   .power-float, .power-context, .power-bot-bubble, .power-result, .power-action-row { animation: none; }
   .b2b-button { transition: none; }
+}
+
+/* ===== "Un mensaje. Tres tareas menos.": tarjeta de resultado sobre el teléfono ===== */
+/* Anclada al CENTRO de la columna, que es donde está el teléfono: así sigue al
+   teléfono aunque la columna cambie de ancho, en vez de pegarse a su borde. */
+#about.is-hero .section_about-left { position: relative; }
+.outcome-card {
+  position: absolute; left: 50%; top: 50%; margin-left: 1rem; margin-top: 3.5rem; z-index: 3;
+  width: 20rem; padding: .35rem .25rem; list-style: none;
+  background: #fff; border: 1px solid rgba(21,21,21,.07); border-radius: 1.1rem;
+  box-shadow: 0 28px 60px -24px rgba(24,37,80,.35), 0 2px 8px rgba(24,37,80,.06);
+  font-family: "Neuehaasunicaw 1 G", Inter, system-ui, sans-serif;
+  opacity: 0; transform: translateY(14px); transition: opacity .5s ease, transform .5s ease;
+}
+.outcome-card.is-in { opacity: 1; transform: none; }
+.outcome-row {
+  display: grid; grid-template-columns: 1.6rem 1fr 1.5rem; align-items: center; gap: .7rem;
+  padding: .7rem .85rem;
+  opacity: 0; transform: translateY(6px); transition: opacity .45s ease, transform .45s ease;
+}
+.outcome-row + .outcome-row { box-shadow: inset 0 1px 0 rgba(21,21,21,.07); }
+.outcome-card.is-in .outcome-row { opacity: 1; transform: none; }
+/* Escalonado: cada tarea aparece después de la anterior, para que se lea como una secuencia. */
+.outcome-card.is-in .outcome-row:nth-child(1) { transition-delay: .15s; }
+.outcome-card.is-in .outcome-row:nth-child(2) { transition-delay: .75s; }
+.outcome-card.is-in .outcome-row:nth-child(3) { transition-delay: 1.35s; }
+.outcome-n { font-family: "Jetbrainsmono Variable", ui-monospace, monospace; font-size: .68rem; color: #9a9c98; letter-spacing: .02em; }
+.outcome-text { display: flex; flex-direction: column; gap: .1rem; min-width: 0; }
+.outcome-text strong { font-size: .95rem; font-weight: 600; color: #151515; line-height: 1.25; }
+.outcome-text small { font-size: .78rem; color: #6b6f6b; line-height: 1.3; }
+.outcome-check {
+  width: 1.5rem; height: 1.5rem; border-radius: 50%; background: #315fef;
+  display: grid; place-items: center; justify-self: end;
+  transform: scale(.4); opacity: 0; transition: transform .4s cubic-bezier(.2,1.4,.4,1), opacity .3s ease;
+}
+.outcome-check::after {
+  content: ""; width: .42rem; height: .78rem; margin-top: -.16rem;
+  border: solid #fff; border-width: 0 2px 2px 0; transform: rotate(45deg);
+}
+.outcome-card.is-in .outcome-check { transform: none; opacity: 1; }
+.outcome-card.is-in .outcome-row:nth-child(1) .outcome-check { transition-delay: .45s; }
+.outcome-card.is-in .outcome-row:nth-child(2) .outcome-check { transition-delay: 1.05s; }
+.outcome-card.is-in .outcome-row:nth-child(3) .outcome-check { transition-delay: 1.65s; }
+@media (min-width: 768px) and (max-width: 1299px) {
+  /* Menos aire entre columnas: la tarjeta se estrecha y se recoge hacia el
+     teléfono para no invadir el botón de la derecha. */
+  .outcome-card { width: 16.5rem; margin-left: -2rem; margin-top: 4.5rem; }
+  .outcome-text small { font-size: .74rem; }
+}
+@media (max-width: 767px) {
+  /* En móvil deja de flotar: la columna se apila y la tarjeta cae bajo el
+     teléfono, solapando el borde lo justo para leerse como su consecuencia. */
+  /* La regla base alinea a flex-end; en columna eso empujaría el teléfono a la derecha. */
+  #about.is-hero .section_about-left { flex-direction: column; align-items: center; }
+  .outcome-card { position: static; width: 100%; max-width: 22rem; margin: -1.25rem auto 0; }
+  .outcome-row { padding: .65rem .75rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .outcome-card, .outcome-row, .outcome-check { transition: none; }
 }
