@@ -1159,3 +1159,6 @@ html { scroll-behavior: smooth; }
   #about.is-hero { height: auto; min-height: 100svh; }
   #about.is-hero .section_about-component { height: auto; min-height: 100svh; }
 }
+/* Sin el badge, el orden de la columna es titular → tarjeta → botón. */
+#about.is-hero .about_cta-row { margin-top: 1.75rem; }
+@media (max-width: 767px) { #about.is-hero .about_cta-row { margin-top: .25rem; } }
