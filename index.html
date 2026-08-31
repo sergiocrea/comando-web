@@ -59,7 +59,7 @@
     <!-- Webflow-generated layout stylesheet (fonts + layout), served from its public CDN -->
     <link href="assets/css/webflow.css" rel="stylesheet" type="text/css" />
     <!-- Custom styles (reconstructed inline utility + component styles) -->
-    <link href="css/custom.css?v=105" rel="stylesheet" type="text/css" />
+    <link href="css/custom.css?v=107" rel="stylesheet" type="text/css" />
     <script>/* La landing se monta desde arriba: sus animaciones por scroll se miden al cargar. Si el navegador restaura la posicion, ScrollTrigger calcula progresos con medidas a medio asentar y deja secciones en opacity 0 (la de Producto se veia negra). */if("scrollRestoration" in history)history.scrollRestoration="manual";</script>
 <script type="text/javascript">
       !(function (o, c) {
@@ -484,79 +484,86 @@
         <section id="radar" class="section_radar" aria-labelledby="radar-title">
           <div class="padding-global">
             <div class="container-large">
-              <div class="radar-head">
-                <div class="radar-eyebrow">RADAR</div>
-                <h2 id="radar-title" class="radar-title">
-                  Comando no espera<br />a que preguntes.
-                </h2>
-                <p class="radar-lede">
-                  Vigila tu pipeline y te dice qué hacer hoy. Te avisa a ti,
-                  nunca a tus clientes.
-                </p>
-              </div>
-              <div class="radar-grid">
-                <div class="radar-phone" role="img" aria-label="Comando avisa por WhatsApp de una oportunidad en riesgo">
-                  <div class="radar-alert">
-                    <div class="radar-alert-head">
-                      <span class="radar-dot" aria-hidden="true"></span>
-                      Oportunidad en riesgo
-                    </div>
-                    <p class="radar-alert-deal">
-                      <strong>Constructora Andina</strong><span>US$ 18,400 · Negociación</span>
-                    </p>
-                    <ul class="radar-why">
-                      <li>7 días sin actividad</li>
-                      <li>Cierre estimado en 10 días</li>
-                      <li>Cotización enviada, sin respuesta posterior</li>
-                    </ul>
-                    <p class="radar-advice">
-                      Recomiendo hacer seguimiento hoy y resolver la objeción
-                      de precio.
-                    </p>
-                    <div class="radar-replies">
-                      <span class="is-primary">Preparar acción</span>
-                      <span>Ver</span>
-                      <span>Mañana</span>
-                    </div>
-                    <time class="radar-time">08:05</time>
-                  </div>
-                  <div class="radar-digest">
-                    <strong>Buenos días.</strong> Encontré 7 cosas que
-                    requieren atención: 2 oportunidades en riesgo, 3
-                    seguimientos pendientes y 2 con buena señal.
-                    <time>07:00</time>
+              <div class="radar-layout">
+                <div class="radar-copy">
+                  <div class="radar-eyebrow">RADAR</div>
+                  <h2 id="radar-title" class="radar-title">
+                    Comando no espera<br />a que preguntes.
+                  </h2>
+                  <ol class="radar-card" aria-label="Radar de hoy">
+                    <li class="radar-row">
+                      <span class="radar-n">01</span>
+                      <span class="radar-text">
+                        <strong>2 oportunidades en riesgo</strong>
+                        <small>Constructora Andina · US$ 18,400 · 7 días sin actividad</small>
+                      </span>
+                      <span class="radar-flag is-risk" aria-hidden="true"></span>
+                    </li>
+                    <li class="radar-row">
+                      <span class="radar-n">02</span>
+                      <span class="radar-text">
+                        <strong>3 seguimientos pendientes</strong>
+                        <small>El más antiguo lleva 6 días sin respuesta</small>
+                      </span>
+                      <span class="radar-flag is-warn" aria-hidden="true"></span>
+                    </li>
+                    <li class="radar-row">
+                      <span class="radar-n">03</span>
+                      <span class="radar-text">
+                        <strong>2 con buena señal</strong>
+                        <small>Pidieron precio esta semana</small>
+                      </span>
+                      <span class="radar-flag is-good" aria-hidden="true"></span>
+                    </li>
+                  </ol>
+                  <p class="radar-lede">
+                    Te avisa a ti, nunca a tus clientes. Y solo ejecuta cuando
+                    lo confirmas.
+                  </p>
+                  <div class="radar-cta-row">
+                    <a href="/app/" class="btn-primary"
+                      >Probar gratis ahora<span class="btn-arrow" aria-hidden="true">→</span></a
+                    >
                   </div>
                 </div>
-                <ol class="radar-steps">
-                  <li>
-                    <span class="radar-n">01</span>
-                    <div>
-                      <strong>Detecta</strong>
-                      <p>Encuentra lo que se enfría en tu CRM.</p>
+                <div class="radar-device" role="img" aria-label="Comando avisa por WhatsApp de una oportunidad en riesgo y prepara la acción">
+                  <div class="radar-screen">
+                    <div class="radar-status"><span>8:05</span><span>●●● ▲ ▮</span></div>
+                    <div class="radar-wa-head">
+                      <span class="radar-avatar">&gt;_</span>
+                      <span class="radar-wa-name">Comando<small>en línea</small></span>
                     </div>
-                  </li>
-                  <li>
-                    <span class="radar-n">02</span>
-                    <div>
-                      <strong>Explica</strong>
-                      <p>Te muestra en qué datos se apoya.</p>
+                    <div class="radar-chat">
+                      <div class="radar-msg is-bot">
+                        <div class="radar-bubble">
+                          <b>🔴 Constructora Andina · US$ 18,400</b>
+                          7 días sin actividad y el cierre es en 10.
+                          La cotización salió hace 8 días, sin respuesta.
+                          <span class="radar-time">08:05</span>
+                        </div>
+                      </div>
+                      <div class="radar-msg is-bot">
+                        <div class="radar-bubble">
+                          Recomiendo seguimiento hoy. ¿Preparo la acción?
+                          <span class="radar-time">08:05</span>
+                        </div>
+                      </div>
+                      <div class="radar-msg is-me">
+                        <div class="radar-bubble">
+                          prepárala
+                          <span class="radar-time">08:12 <i>✓✓</i></span>
+                        </div>
+                      </div>
+                      <div class="radar-msg is-bot">
+                        <div class="radar-bubble">
+                          Listo ✓ Tarea para hoy 16:00 y nota en el deal.
+                          <span class="radar-time">08:12</span>
+                        </div>
+                      </div>
                     </div>
-                  </li>
-                  <li>
-                    <span class="radar-n">03</span>
-                    <div>
-                      <strong>Prioriza</strong>
-                      <p>Ordena por lo que importa hoy, no solo por el monto.</p>
-                    </div>
-                  </li>
-                  <li>
-                    <span class="radar-n">04</span>
-                    <div>
-                      <strong>Ejecuta con tu permiso</strong>
-                      <p>Aplica la acción en tu CRM cuando confirmas.</p>
-                    </div>
-                  </li>
-                </ol>
+                    <div class="radar-input"><span>Escribe un comando…</span><i>🎤</i></div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>

@@ -1234,54 +1234,74 @@ html { scroll-behavior: smooth; }
 .uc-dot.is-on i { border-color: #315fef; background: #315fef; box-shadow: 0 0 0 4px rgba(49, 95, 239, .22); }
 .uc-dot.is-on { color: #151515; }
 
-/* ===== Radar: la capa proactiva ===== */
+/* ===== Radar: la capa proactiva. Mismo lenguaje que «Un mensaje», espejado
+   (teléfono a la derecha) para que dos secciones seguidas no se vean clonadas. ===== */
 .section_radar {
   position: relative; z-index: 2;
-  padding: 5rem 0 4rem;
-  color: #eef1f6;
-  background:
-    radial-gradient(circle at 18% 18%, rgba(49, 95, 239, .22), transparent 42%),
-    #0a0d14;
+  color: #151515;
+  background-color: #f3f1ea;
+  background-image:
+    radial-gradient(circle at 78% 38%, rgba(49, 95, 239, .16), transparent 34%),
+    linear-gradient(rgba(34, 34, 34, .055) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(34, 34, 34, .055) 1px, transparent 1px);
+  background-size: auto, 40px 40px, 40px 40px;
+  padding: 5rem 0 4.5rem;
+  /* El nav es fijo: sin esto, saltar desde el menú deja el eyebrow debajo. */
+  scroll-margin-top: calc(var(--nav-height, 5rem) + .5rem);
 }
-.radar-head { max-width: 46rem; }
-.radar-eyebrow { font-family: "Jetbrainsmono Variable", ui-monospace, monospace; font-size: .74rem; letter-spacing: .12em; color: #6f94ff; }
-.radar-title { font-family: Neuemachina, "Space Grotesk", Inter, sans-serif; font-weight: 600; font-size: clamp(2.1rem, 4.2vw, 3.3rem); line-height: 1.06; letter-spacing: -.02em; color: #fff; margin: 1rem 0 0; }
-.radar-lede { font-family: "Neuehaasunicaw 1 G", Inter, sans-serif; font-size: 1.08rem; line-height: 1.55; color: #a7b0c2; margin: 1.1rem 0 0; max-width: 34rem; }
-.radar-grid { display: grid; grid-template-columns: minmax(0, 24rem) minmax(0, 1fr); gap: 4rem; align-items: center; margin-top: 3rem; }
-/* Aviso de Comando: es un mensaje entrante, así que se alinea como tal. */
-.radar-phone { display: flex; flex-direction: column; gap: .75rem; }
-.radar-alert { position: relative; padding: 1.1rem 1.15rem 1.35rem; background: #151b28; border: 1px solid rgba(255, 255, 255, .09); border-radius: 1.1rem .3rem 1.1rem 1.1rem; box-shadow: 0 26px 60px -28px rgba(0, 0, 0, .9); }
-.radar-alert-head { display: flex; align-items: center; gap: .5rem; font-family: "Jetbrainsmono Variable", ui-monospace, monospace; font-size: .68rem; letter-spacing: .08em; text-transform: uppercase; color: #ff8b7a; }
-.radar-dot { width: .5rem; height: .5rem; border-radius: 50%; background: #ff5f45; box-shadow: 0 0 0 4px rgba(255, 95, 69, .18); }
-.radar-alert-deal { margin: .8rem 0 .1rem; font-family: "Neuehaasunicaw 1 G", Inter, sans-serif; }
-.radar-alert-deal strong { display: block; font-size: 1.05rem; font-weight: 600; color: #fff; }
-.radar-alert-deal span { font-size: .82rem; color: #9aa4b8; }
-.radar-why { list-style: none; margin: .9rem 0 0; padding: 0; display: flex; flex-direction: column; gap: .35rem; }
-.radar-why li { position: relative; padding-left: 1rem; font-family: "Neuehaasunicaw 1 G", Inter, sans-serif; font-size: .85rem; color: #b8c1d2; }
-.radar-why li::before { content: ""; position: absolute; left: 0; top: .52em; width: .35rem; height: .35rem; border-radius: 50%; background: #6f94ff; }
-.radar-advice { margin: 1rem 0 0; font-family: "Neuehaasunicaw 1 G", Inter, sans-serif; font-size: .92rem; line-height: 1.45; color: #eef1f6; }
-.radar-replies { display: flex; flex-wrap: wrap; gap: .45rem; margin-top: 1.05rem; }
-.radar-replies span { padding: .45rem .8rem; border: 1px solid rgba(255, 255, 255, .16); border-radius: 999px; font-family: "Neuehaasunicaw 1 G", Inter, sans-serif; font-size: .8rem; color: #cdd5e4; }
-.radar-replies .is-primary { background: #315fef; border-color: #315fef; color: #fff; font-weight: 600; }
-.radar-time { position: absolute; right: 1rem; bottom: .5rem; font-size: .6rem; color: rgba(238, 241, 246, .4); }
-.radar-digest { position: relative; padding: .85rem 1rem 1.35rem; background: rgba(255, 255, 255, .05); border: 1px solid rgba(255, 255, 255, .07); border-radius: 1.1rem .3rem 1.1rem 1.1rem; font-family: "Neuehaasunicaw 1 G", Inter, sans-serif; font-size: .86rem; line-height: 1.45; color: #b8c1d2; }
-.radar-digest strong { color: #fff; }
-.radar-digest time { position: absolute; right: 1rem; bottom: .45rem; font-size: .6rem; color: rgba(238, 241, 246, .35); }
-.radar-steps { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: minmax(0, 1fr); gap: 1.5rem; }
-.radar-steps li { display: flex; gap: .85rem; }
-.radar-n { font-family: "Jetbrainsmono Variable", ui-monospace, monospace; font-size: .7rem; color: #6f94ff; padding-top: .2rem; }
-.radar-steps strong { display: block; font-family: "Neuehaasunicaw 1 G", Inter, sans-serif; font-size: 1.02rem; font-weight: 600; color: #fff; }
-.radar-steps p { margin: .35rem 0 0; font-family: "Neuehaasunicaw 1 G", Inter, sans-serif; font-size: .88rem; line-height: 1.5; color: #a7b0c2; }
-.radar-note { margin: 3rem 0 0; padding-top: 1.25rem; border-top: 1px solid rgba(255, 255, 255, .09); font-family: "Neuehaasunicaw 1 G", Inter, sans-serif; font-size: .9rem; color: #8d97ab; }
+.radar-layout { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 26rem); gap: 4rem; align-items: center; }
+.radar-eyebrow { font-family: "Jetbrainsmono Variable", ui-monospace, monospace; font-size: .74rem; letter-spacing: .12em; color: #315fef; }
+.radar-title { font-family: Neuemachina, "Space Grotesk", Inter, sans-serif; font-weight: 500; font-size: clamp(2.2rem, 4.4vw, 3.4rem); line-height: 1.05; letter-spacing: -.025em; color: #151515; margin: .9rem 0 0; }
+/* Tarjeta blanca, como la de «Tres tareas menos» pero con estado en vez de check. */
+.radar-card {
+  list-style: none; margin: 2rem 0 0; padding: .35rem .25rem; width: 26rem; max-width: 100%;
+  background: #fff; border: 1px solid rgba(21, 21, 21, .07); border-radius: 1.1rem;
+  box-shadow: 0 24px 50px -26px rgba(24, 37, 80, .32), 0 2px 8px rgba(24, 37, 80, .05);
+}
+.radar-row { display: grid; grid-template-columns: 1.6rem 1fr .8rem; align-items: center; gap: .7rem; padding: .7rem .85rem; }
+.radar-row + .radar-row { box-shadow: inset 0 1px 0 rgba(21, 21, 21, .07); }
+.radar-n { font-family: "Jetbrainsmono Variable", ui-monospace, monospace; font-size: .68rem; color: #9a9c98; }
+.radar-text { display: flex; flex-direction: column; gap: .1rem; min-width: 0; font-family: "Neuehaasunicaw 1 G", Inter, sans-serif; }
+.radar-text strong { font-size: .95rem; font-weight: 600; color: #151515; line-height: 1.25; }
+.radar-text small { font-size: .78rem; color: #6b6f6b; line-height: 1.3; }
+.radar-flag { width: .7rem; height: .7rem; border-radius: 50%; justify-self: end; }
+.radar-flag.is-risk { background: #e5484d; box-shadow: 0 0 0 4px rgba(229, 72, 77, .14); }
+.radar-flag.is-warn { background: #f0a020; box-shadow: 0 0 0 4px rgba(240, 160, 32, .14); }
+.radar-flag.is-good { background: #2f9e63; box-shadow: 0 0 0 4px rgba(47, 158, 99, .14); }
+.radar-lede { font-family: "Neuehaasunicaw 1 G", Inter, sans-serif; font-size: .95rem; line-height: 1.5; color: #5f625f; margin: 1.25rem 0 0; max-width: 26rem; }
+.radar-cta-row { margin-top: 1.5rem; }
+.section_radar .btn-primary { color: #fff; background: #151515; box-shadow: 0 12px 30px rgba(21, 21, 21, .16); font-size: 1rem; }
+.section_radar .btn-primary:hover { background: #315fef; }
+/* Teléfono en CSS: sin canvas ni imágenes, así no pesa en la carga. */
+.radar-device { width: 100%; max-width: 22rem; margin: 0 auto; background: #0b0b0b; border: 2px solid #2b2b2b; border-radius: 2.6rem; padding: .55rem; position: relative; box-shadow: 0 0 0 1px rgba(21, 21, 21, .06), 0 34px 70px -30px rgba(24, 37, 80, .5); }
+.radar-device::before { content: ""; position: absolute; left: 50%; top: 1rem; width: 6.5rem; height: 1.45rem; margin-left: -3.25rem; background: #000; border-radius: 999px; z-index: 2; }
+.radar-screen { background: #0b141a; border-radius: 2.1rem; overflow: hidden; display: flex; flex-direction: column; }
+.radar-status { display: flex; justify-content: space-between; padding: 1rem 1.6rem .4rem; font-family: "Neuehaasunicaw 1 G", Inter, sans-serif; font-weight: 600; font-size: .8rem; color: #fff; }
+.radar-status span:last-child { font-size: .62rem; letter-spacing: -.05em; }
+.radar-wa-head { display: flex; align-items: center; gap: .6rem; padding: .5rem .9rem .7rem; background: #1f2c34; color: #fff; font-family: "Neuehaasunicaw 1 G", Inter, sans-serif; }
+.radar-avatar { display: grid; place-items: center; width: 2rem; height: 2rem; border-radius: 50%; background: #315fef; color: #fff; font-family: "Jetbrainsmono Variable", monospace; font-size: .7rem; }
+.radar-wa-name { font-size: .95rem; font-weight: 600; line-height: 1.1; }
+.radar-wa-name small { display: block; font-weight: 400; font-size: .7rem; color: #8fa3ad; margin-top: .15rem; }
+.radar-chat { display: flex; flex-direction: column; gap: .4rem; padding: .9rem .7rem .6rem; background: #0b141a radial-gradient(rgba(255, 255, 255, .04) 1px, transparent 1px) 0 0 / 14px 14px; }
+.radar-msg { display: flex; }
+.radar-msg.is-me { justify-content: flex-end; }
+.radar-bubble { position: relative; max-width: 90%; padding: .55rem .7rem 1.05rem; border-radius: .85rem; font-family: "Neuehaasunicaw 1 G", Inter, sans-serif; font-size: .84rem; line-height: 1.38; color: #e9edef; background: #202c33; border-top-left-radius: .2rem; }
+.radar-bubble b { display: block; margin-bottom: .15rem; font-weight: 600; }
+.radar-msg.is-me .radar-bubble { background: #005c4b; border-top-left-radius: .85rem; border-top-right-radius: .2rem; }
+.radar-time { position: absolute; right: .55rem; bottom: .25rem; font-size: .58rem; color: rgba(255, 255, 255, .55); }
+.radar-time i { font-style: normal; color: #53bdeb; }
+.radar-input { display: flex; align-items: center; gap: .5rem; padding: .5rem .7rem .9rem; background: #0b141a; }
+.radar-input span { flex: 1; background: #2a3942; color: #8fa3ad; border-radius: 999px; padding: .55rem .9rem; font-family: "Neuehaasunicaw 1 G", Inter, sans-serif; font-size: .8rem; }
+.radar-input i { width: 2.1rem; height: 2.1rem; border-radius: 50%; background: #00a884; display: grid; place-items: center; font-style: normal; font-size: .85rem; }
 @media (max-width: 991px) {
-  .radar-grid { grid-template-columns: minmax(0, 1fr); gap: 2.5rem; }
-  .radar-phone { max-width: 26rem; }
+  .radar-layout { grid-template-columns: minmax(0, 1fr); gap: 2.5rem; }
+  .radar-device { order: -1; }
 }
 @media (max-width: 767px) {
-  .section_radar { padding: 3.5rem 0 3rem; }
-  .radar-grid { margin-top: 2rem; }
-  .radar-steps { gap: 1.35rem; }
-  .radar-note { margin-top: 2rem; }
+  .section_radar { padding: 3rem 0; }
+  .radar-card { margin-top: 1.5rem; }
+  .radar-row { padding: .65rem .75rem; }
+  .section_radar .btn-primary { width: 100%; justify-content: center; }
 }
 /* El mockup del hero no cabe en móvil sin competir con el titular y el CTA. */
 @media (max-width: 767px) { .b2b-hero-visual { display: none; } }
