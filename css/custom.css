@@ -1162,3 +1162,27 @@ html { scroll-behavior: smooth; }
 /* Sin el badge, el orden de la columna es titular → tarjeta → botón. */
 #about.is-hero .about_cta-row { margin-top: 1.75rem; }
 @media (max-width: 767px) { #about.is-hero .about_cta-row { margin-top: .25rem; } }
+/* Hero: menos carga visual. El marco del chat (cabecera "Comando · en línea",
+   fondo del panel y su resplandor) competía con el mensaje; se quedan solo el
+   mensaje, la respuesta y el cuadro de acciones, flotando sobre el video. */
+.power-panel {
+  padding: 0; background: none; border: 0; box-shadow: none;
+  backdrop-filter: none; -webkit-backdrop-filter: none; transform: none;
+}
+.power-panel::before { display: none; }
+.power-chat-stage {
+  min-height: 0; padding: 0 .2rem; overflow: visible;
+  background: none; border-radius: 0;
+}
+/* Sin el panel detrás, las burbujas necesitan su propia sombra para despegarse del video. */
+.power-context, .power-bot-bubble { box-shadow: 0 14px 34px rgba(9, 20, 30, .28); }
+.power-result {
+  width: 100%; margin: .9rem 0 0; transform: none;
+  box-shadow: 0 24px 55px rgba(7, 18, 28, .22);
+}
+/* Header más bajo: el nav ocupaba 116 px y comía la primera pantalla.
+   Solo en escritorio; en móvil el burger necesita su área táctil. */
+@media (min-width: 992px) {
+  .nav_component.w-nav { padding-top: .7rem; padding-bottom: .7rem; }
+  .nav_component .nav_menu > .nav_menu_link:last-child { padding: .6rem 1.1rem; }
+}
