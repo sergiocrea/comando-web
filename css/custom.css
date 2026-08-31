@@ -1096,15 +1096,14 @@ html { scroll-behavior: smooth; }
   .b2b-button { transition: none; }
 }
 
-/* ===== "Un mensaje. Tres tareas menos.": tarjeta de resultado bajo el teléfono ===== */
-/* Va DEBAJO, solapando solo la barra de escribir: flotando sobre la pantalla
-   tapaba justo los mensajes que dan sentido al titular. */
-#about.is-hero .section_about-left { flex-direction: column; align-items: center; }
+/* ===== "Un mensaje. Tres tareas menos.": tarjeta de resultado ===== */
+/* Vive en la columna derecha, bajo el CTA: sobre el teléfono tapaba los mensajes
+   que dan sentido al titular, y debajo se recortaba en pantallas bajas porque la
+   sección mide 100svh con overflow hidden. Aquí no compite con nada. */
 .outcome-card {
-  position: relative; z-index: 3;
-  width: 22rem; max-width: 100%; margin: -2.75rem 0 0; padding: .35rem .25rem; list-style: none;
+  width: 24rem; max-width: 100%; margin: 2rem 0 0; padding: .35rem .25rem; list-style: none;
   background: #fff; border: 1px solid rgba(21,21,21,.07); border-radius: 1.1rem;
-  box-shadow: 0 28px 60px -24px rgba(24,37,80,.35), 0 2px 8px rgba(24,37,80,.06);
+  box-shadow: 0 24px 50px -26px rgba(24,37,80,.32), 0 2px 8px rgba(24,37,80,.05);
   font-family: "Neuehaasunicaw 1 G", Inter, system-ui, sans-serif;
   opacity: 0; transform: translateY(14px); transition: opacity .5s ease, transform .5s ease;
 }
@@ -1137,10 +1136,26 @@ html { scroll-behavior: smooth; }
 .outcome-card.is-in .outcome-row:nth-child(1) .outcome-check { transition-delay: .45s; }
 .outcome-card.is-in .outcome-row:nth-child(2) .outcome-check { transition-delay: 1.05s; }
 .outcome-card.is-in .outcome-row:nth-child(3) .outcome-check { transition-delay: 1.65s; }
+/* Pantallas bajas: la sección mide 100svh, así que la tarjeta se compacta antes
+   de que la columna derecha se quede sin sitio. */
+@media (min-width: 768px) and (max-height: 780px) {
+  .outcome-card { margin-top: 1.25rem; }
+  .outcome-row { padding: .5rem .85rem; }
+  .outcome-text small { font-size: .74rem; }
+}
 @media (max-width: 767px) {
-  .outcome-card { width: 100%; max-width: 22rem; margin-top: -1.5rem; }
+  /* En móvil la columna derecha es display:contents, así que la tarjeta se
+     ordena entre el teléfono y el botón. */
+  .outcome-card { order: 4; width: 100%; max-width: 22rem; margin: 0 auto 1.1rem; align-self: center; }
   .outcome-row { padding: .65rem .75rem; }
 }
 @media (prefers-reduced-motion: reduce) {
   .outcome-card, .outcome-row, .outcome-check { transition: none; }
+}
+/* La sección tenía altura rígida de 100svh con overflow hidden, así que en
+   ventanas bajas recortaba la tarjeta. Que crezca cuando el contenido no cabe;
+   el teléfono ya está topado a 100svh - 7rem y no se dispara. */
+@media (min-width: 768px) {
+  #about.is-hero { height: auto; min-height: 100svh; }
+  #about.is-hero .section_about-component { height: auto; min-height: 100svh; }
 }
