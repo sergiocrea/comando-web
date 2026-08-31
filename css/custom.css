@@ -1096,13 +1096,13 @@ html { scroll-behavior: smooth; }
   .b2b-button { transition: none; }
 }
 
-/* ===== "Un mensaje. Tres tareas menos.": tarjeta de resultado sobre el teléfono ===== */
-/* Anclada al CENTRO de la columna, que es donde está el teléfono: así sigue al
-   teléfono aunque la columna cambie de ancho, en vez de pegarse a su borde. */
-#about.is-hero .section_about-left { position: relative; }
+/* ===== "Un mensaje. Tres tareas menos.": tarjeta de resultado bajo el teléfono ===== */
+/* Va DEBAJO, solapando solo la barra de escribir: flotando sobre la pantalla
+   tapaba justo los mensajes que dan sentido al titular. */
+#about.is-hero .section_about-left { flex-direction: column; align-items: center; }
 .outcome-card {
-  position: absolute; left: 50%; top: 50%; margin-left: 1rem; margin-top: 3.5rem; z-index: 3;
-  width: 20rem; padding: .35rem .25rem; list-style: none;
+  position: relative; z-index: 3;
+  width: 22rem; max-width: 100%; margin: -2.75rem 0 0; padding: .35rem .25rem; list-style: none;
   background: #fff; border: 1px solid rgba(21,21,21,.07); border-radius: 1.1rem;
   box-shadow: 0 28px 60px -24px rgba(24,37,80,.35), 0 2px 8px rgba(24,37,80,.06);
   font-family: "Neuehaasunicaw 1 G", Inter, system-ui, sans-serif;
@@ -1137,18 +1137,8 @@ html { scroll-behavior: smooth; }
 .outcome-card.is-in .outcome-row:nth-child(1) .outcome-check { transition-delay: .45s; }
 .outcome-card.is-in .outcome-row:nth-child(2) .outcome-check { transition-delay: 1.05s; }
 .outcome-card.is-in .outcome-row:nth-child(3) .outcome-check { transition-delay: 1.65s; }
-@media (min-width: 768px) and (max-width: 1299px) {
-  /* Menos aire entre columnas: la tarjeta se estrecha y se recoge hacia el
-     teléfono para no invadir el botón de la derecha. */
-  .outcome-card { width: 16.5rem; margin-left: -2rem; margin-top: 4.5rem; }
-  .outcome-text small { font-size: .74rem; }
-}
 @media (max-width: 767px) {
-  /* En móvil deja de flotar: la columna se apila y la tarjeta cae bajo el
-     teléfono, solapando el borde lo justo para leerse como su consecuencia. */
-  /* La regla base alinea a flex-end; en columna eso empujaría el teléfono a la derecha. */
-  #about.is-hero .section_about-left { flex-direction: column; align-items: center; }
-  .outcome-card { position: static; width: 100%; max-width: 22rem; margin: -1.25rem auto 0; }
+  .outcome-card { width: 100%; max-width: 22rem; margin-top: -1.5rem; }
   .outcome-row { padding: .65rem .75rem; }
 }
 @media (prefers-reduced-motion: reduce) {
