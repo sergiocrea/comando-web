@@ -1256,12 +1256,12 @@ html { scroll-behavior: smooth; }
   /* El nav es fijo: sin esto, saltar desde el menú deja el eyebrow debajo. */
   scroll-margin-top: calc(var(--nav-height, 5rem) + .5rem);
 }
-.radar-layout { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 26rem); gap: 4rem; align-items: center; }
+.radar-layout { display: grid; grid-template-columns: minmax(0, 30rem) minmax(0, 22rem); justify-content: center; gap: 6rem; align-items: center; }
 .radar-eyebrow { font-family: "Jetbrainsmono Variable", ui-monospace, monospace; font-size: .74rem; letter-spacing: .12em; color: #315fef; }
-.radar-title { font-family: Neuemachina, "Space Grotesk", Inter, sans-serif; font-weight: 500; font-size: clamp(2.2rem, 4.4vw, 3.4rem); line-height: 1.05; letter-spacing: -.025em; color: #151515; margin: .9rem 0 0; }
+.radar-title { font-family: Neuemachina, "Space Grotesk", Inter, sans-serif; font-weight: 500; font-size: clamp(2.1rem, 3.9vw, 3.05rem); line-height: 1.05; letter-spacing: -.025em; color: #151515; margin: .9rem 0 0; }
 /* Tarjeta blanca, como la de «Tres tareas menos» pero con estado en vez de check. */
 .radar-card {
-  list-style: none; margin: 2rem 0 0; padding: .35rem .25rem; width: 26rem; max-width: 100%;
+  list-style: none; margin: 2rem 0 0; padding: .35rem .25rem; width: 100%; max-width: 30rem;
   background: #fff; border: 1px solid rgba(21, 21, 21, .07); border-radius: 1.1rem;
   box-shadow: 0 24px 50px -26px rgba(24, 37, 80, .32), 0 2px 8px rgba(24, 37, 80, .05);
 }
@@ -1275,7 +1275,7 @@ html { scroll-behavior: smooth; }
 .radar-flag.is-risk { background: #e5484d; box-shadow: 0 0 0 4px rgba(229, 72, 77, .14); }
 .radar-flag.is-warn { background: #f0a020; box-shadow: 0 0 0 4px rgba(240, 160, 32, .14); }
 .radar-flag.is-good { background: #2f9e63; box-shadow: 0 0 0 4px rgba(47, 158, 99, .14); }
-.radar-lede { font-family: "Neuehaasunicaw 1 G", Inter, sans-serif; font-size: .95rem; line-height: 1.5; color: #5f625f; margin: 1.25rem 0 0; max-width: 26rem; }
+.radar-lede { font-family: "Neuehaasunicaw 1 G", Inter, sans-serif; font-size: .95rem; line-height: 1.5; color: #5f625f; margin: 1.25rem 0 0; max-width: 30rem; }
 .radar-cta-row { margin-top: 1.5rem; }
 .section_radar .btn-primary { color: #fff; background: #151515; box-shadow: 0 12px 30px rgba(21, 21, 21, .16); font-size: 1rem; }
 .section_radar .btn-primary:hover { background: #315fef; }
