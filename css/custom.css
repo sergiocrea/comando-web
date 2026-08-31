@@ -1233,3 +1233,53 @@ html { scroll-behavior: smooth; }
 .uc-dot.is-past { color: #5f625f; }
 .uc-dot.is-on i { border-color: #315fef; background: #315fef; box-shadow: 0 0 0 4px rgba(49, 95, 239, .22); }
 .uc-dot.is-on { color: #151515; }
+
+/* ===== Radar: la capa proactiva ===== */
+.section_radar {
+  position: relative; z-index: 2;
+  padding: 5rem 0 4rem;
+  color: #eef1f6;
+  background:
+    radial-gradient(circle at 18% 18%, rgba(49, 95, 239, .22), transparent 42%),
+    #0a0d14;
+}
+.radar-head { max-width: 46rem; }
+.radar-eyebrow { font-family: "Jetbrainsmono Variable", ui-monospace, monospace; font-size: .74rem; letter-spacing: .12em; color: #6f94ff; }
+.radar-title { font-family: Neuemachina, "Space Grotesk", Inter, sans-serif; font-weight: 600; font-size: clamp(2.1rem, 4.2vw, 3.3rem); line-height: 1.06; letter-spacing: -.02em; color: #fff; margin: 1rem 0 0; }
+.radar-lede { font-family: "Neuehaasunicaw 1 G", Inter, sans-serif; font-size: 1.08rem; line-height: 1.55; color: #a7b0c2; margin: 1.1rem 0 0; max-width: 34rem; }
+.radar-grid { display: grid; grid-template-columns: minmax(0, 24rem) minmax(0, 1fr); gap: 4rem; align-items: center; margin-top: 3rem; }
+/* Aviso de Comando: es un mensaje entrante, así que se alinea como tal. */
+.radar-phone { display: flex; flex-direction: column; gap: .75rem; }
+.radar-alert { position: relative; padding: 1.1rem 1.15rem 1.35rem; background: #151b28; border: 1px solid rgba(255, 255, 255, .09); border-radius: 1.1rem .3rem 1.1rem 1.1rem; box-shadow: 0 26px 60px -28px rgba(0, 0, 0, .9); }
+.radar-alert-head { display: flex; align-items: center; gap: .5rem; font-family: "Jetbrainsmono Variable", ui-monospace, monospace; font-size: .68rem; letter-spacing: .08em; text-transform: uppercase; color: #ff8b7a; }
+.radar-dot { width: .5rem; height: .5rem; border-radius: 50%; background: #ff5f45; box-shadow: 0 0 0 4px rgba(255, 95, 69, .18); }
+.radar-alert-deal { margin: .8rem 0 .1rem; font-family: "Neuehaasunicaw 1 G", Inter, sans-serif; }
+.radar-alert-deal strong { display: block; font-size: 1.05rem; font-weight: 600; color: #fff; }
+.radar-alert-deal span { font-size: .82rem; color: #9aa4b8; }
+.radar-why { list-style: none; margin: .9rem 0 0; padding: 0; display: flex; flex-direction: column; gap: .35rem; }
+.radar-why li { position: relative; padding-left: 1rem; font-family: "Neuehaasunicaw 1 G", Inter, sans-serif; font-size: .85rem; color: #b8c1d2; }
+.radar-why li::before { content: ""; position: absolute; left: 0; top: .52em; width: .35rem; height: .35rem; border-radius: 50%; background: #6f94ff; }
+.radar-advice { margin: 1rem 0 0; font-family: "Neuehaasunicaw 1 G", Inter, sans-serif; font-size: .92rem; line-height: 1.45; color: #eef1f6; }
+.radar-replies { display: flex; flex-wrap: wrap; gap: .45rem; margin-top: 1.05rem; }
+.radar-replies span { padding: .45rem .8rem; border: 1px solid rgba(255, 255, 255, .16); border-radius: 999px; font-family: "Neuehaasunicaw 1 G", Inter, sans-serif; font-size: .8rem; color: #cdd5e4; }
+.radar-replies .is-primary { background: #315fef; border-color: #315fef; color: #fff; font-weight: 600; }
+.radar-time { position: absolute; right: 1rem; bottom: .5rem; font-size: .6rem; color: rgba(238, 241, 246, .4); }
+.radar-digest { position: relative; padding: .85rem 1rem 1.35rem; background: rgba(255, 255, 255, .05); border: 1px solid rgba(255, 255, 255, .07); border-radius: 1.1rem .3rem 1.1rem 1.1rem; font-family: "Neuehaasunicaw 1 G", Inter, sans-serif; font-size: .86rem; line-height: 1.45; color: #b8c1d2; }
+.radar-digest strong { color: #fff; }
+.radar-digest time { position: absolute; right: 1rem; bottom: .45rem; font-size: .6rem; color: rgba(238, 241, 246, .35); }
+.radar-steps { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: minmax(0, 1fr); gap: 1.5rem; }
+.radar-steps li { display: flex; gap: .85rem; }
+.radar-n { font-family: "Jetbrainsmono Variable", ui-monospace, monospace; font-size: .7rem; color: #6f94ff; padding-top: .2rem; }
+.radar-steps strong { display: block; font-family: "Neuehaasunicaw 1 G", Inter, sans-serif; font-size: 1.02rem; font-weight: 600; color: #fff; }
+.radar-steps p { margin: .35rem 0 0; font-family: "Neuehaasunicaw 1 G", Inter, sans-serif; font-size: .88rem; line-height: 1.5; color: #a7b0c2; }
+.radar-note { margin: 3rem 0 0; padding-top: 1.25rem; border-top: 1px solid rgba(255, 255, 255, .09); font-family: "Neuehaasunicaw 1 G", Inter, sans-serif; font-size: .9rem; color: #8d97ab; }
+@media (max-width: 991px) {
+  .radar-grid { grid-template-columns: minmax(0, 1fr); gap: 2.5rem; }
+  .radar-phone { max-width: 26rem; }
+}
+@media (max-width: 767px) {
+  .section_radar { padding: 3.5rem 0 3rem; }
+  .radar-grid { margin-top: 2rem; }
+  .radar-steps { gap: 1.35rem; }
+  .radar-note { margin-top: 2rem; }
+}

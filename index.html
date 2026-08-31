@@ -59,7 +59,7 @@
     <!-- Webflow-generated layout stylesheet (fonts + layout), served from its public CDN -->
     <link href="assets/css/webflow.css" rel="stylesheet" type="text/css" />
     <!-- Custom styles (reconstructed inline utility + component styles) -->
-    <link href="css/custom.css?v=102" rel="stylesheet" type="text/css" />
+    <link href="css/custom.css?v=104" rel="stylesheet" type="text/css" />
     <script>/* La landing se monta desde arriba: sus animaciones por scroll se miden al cargar. Si el navegador restaura la posicion, ScrollTrigger calcula progresos con medidas a medio asentar y deja secciones en opacity 0 (la de Producto se veia negra). */if("scrollRestoration" in history)history.scrollRestoration="manual";</script>
 <script type="text/javascript">
       !(function (o, c) {
@@ -326,6 +326,8 @@
                     data-wf-component-context="%5B%7B%22componentId%22%3A%22396176c6-906a-9f74-c6d0-8a4663dfdea9%22%2C%22instanceId%22%3A%22ad43a7dc-e35f-2320-39af-52425e607e28%22%7D%5D"
                     class="nav_menu_link w-nav-link"
                     >PRODUCTO</a
+                  ><a href="#radar" class="nav_menu_link w-nav-link"
+                    >RADAR</a
                   ><a
                     class="neoconda-logo w-inline-block w--current"
                     data-wf-component-context="%5B%7B%22componentId%22%3A%22396176c6-906a-9f74-c6d0-8a4663dfdea9%22%2C%22instanceId%22%3A%22ad43a7dc-e35f-2320-39af-52425e607e28%22%7D%5D"
@@ -407,8 +409,9 @@
                     <span>Sin cambiar de CRM.</span>
                   </h1>
                   <p class="b2b-hero-lede">
-                    Actualiza el CRM, crea seguimientos y coordina al equipo
-                    con un solo mensaje de WhatsApp.
+                    Actualiza el CRM y coordina al equipo con un mensaje de
+                    WhatsApp. Y cuando algo se enfría, Comando te avisa antes
+                    de que lo pierdas.
                   </p>
                   <div class="b2b-hero-actions">
                     <a href="/app/" class="b2b-button is-primary"
@@ -476,6 +479,90 @@
             <span>MENOS ADMINISTRACIÓN</span><i></i>
             <span>DATOS MÁS FRESCOS</span><i></i>
             <span>DECISIONES CON CONTEXTO</span>
+          </div>
+        </section>
+        <section id="radar" class="section_radar" aria-labelledby="radar-title">
+          <div class="padding-global">
+            <div class="container-large">
+              <div class="radar-head">
+                <div class="radar-eyebrow">RADAR</div>
+                <h2 id="radar-title" class="radar-title">
+                  Comando no espera<br />a que preguntes.
+                </h2>
+                <p class="radar-lede">
+                  Vigila tu pipeline, detecta lo que se está enfriando y te
+                  dice qué hacer hoy. Te avisa a ti, nunca a tus clientes.
+                </p>
+              </div>
+              <div class="radar-grid">
+                <div class="radar-phone" role="img" aria-label="Comando avisa por WhatsApp de una oportunidad en riesgo">
+                  <div class="radar-alert">
+                    <div class="radar-alert-head">
+                      <span class="radar-dot" aria-hidden="true"></span>
+                      Oportunidad en riesgo
+                    </div>
+                    <p class="radar-alert-deal">
+                      <strong>Constructora Andina</strong><span>US$ 18,400 · Negociación</span>
+                    </p>
+                    <ul class="radar-why">
+                      <li>7 días sin actividad</li>
+                      <li>Cierre estimado en 10 días</li>
+                      <li>Cotización enviada, sin respuesta posterior</li>
+                    </ul>
+                    <p class="radar-advice">
+                      Recomiendo hacer seguimiento hoy y resolver la objeción
+                      de precio.
+                    </p>
+                    <div class="radar-replies">
+                      <span class="is-primary">Preparar acción</span>
+                      <span>Ver</span>
+                      <span>Mañana</span>
+                    </div>
+                    <time class="radar-time">08:05</time>
+                  </div>
+                  <div class="radar-digest">
+                    <strong>Buenos días.</strong> Encontré 7 cosas que
+                    requieren atención: 2 oportunidades en riesgo, 3
+                    seguimientos pendientes y 2 con buena señal.
+                    <time>07:00</time>
+                  </div>
+                </div>
+                <ol class="radar-steps">
+                  <li>
+                    <span class="radar-n">01</span>
+                    <div>
+                      <strong>Detecta</strong>
+                      <p>Revisa tu CRM y encuentra lo que se enfría: sin actividad, sin próximo paso, con la fecha de cierre encima.</p>
+                    </div>
+                  </li>
+                  <li>
+                    <span class="radar-n">02</span>
+                    <div>
+                      <strong>Explica</strong>
+                      <p>Nunca dice solo «está en riesgo»: te muestra en qué datos se apoya, para que puedas discutirlo.</p>
+                    </div>
+                  </li>
+                  <li>
+                    <span class="radar-n">03</span>
+                    <div>
+                      <strong>Prioriza</strong>
+                      <p>Ordena por lo que de verdad importa hoy: monto, urgencia, silencio y etapa, no solo por el monto.</p>
+                    </div>
+                  </li>
+                  <li>
+                    <span class="radar-n">04</span>
+                    <div>
+                      <strong>Ejecuta cuando tú lo confirmas</strong>
+                      <p>Prepara la acción y la aplica en tu CRM al recibir tu «sí». Nada sensible se ejecuta solo.</p>
+                    </div>
+                  </li>
+                </ol>
+              </div>
+              <p class="radar-note">
+                Todo aviso llega a tu WhatsApp o a tu panel. Comando no
+                escribe a tus clientes.
+              </p>
+            </div>
           </div>
         </section>
         <div id="about" class="section-relative-wrap is-hero">
