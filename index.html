@@ -59,8 +59,9 @@
     <!-- Webflow-generated layout stylesheet (fonts + layout), served from its public CDN -->
     <link href="assets/css/webflow.css" rel="stylesheet" type="text/css" />
     <!-- Custom styles (reconstructed inline utility + component styles) -->
-    <link href="css/custom.css?v=96" rel="stylesheet" type="text/css" />
-    <script type="text/javascript">
+    <link href="css/custom.css?v=98" rel="stylesheet" type="text/css" />
+    <script>/* La landing se monta desde arriba: sus animaciones por scroll se miden al cargar. Si el navegador restaura la posicion, ScrollTrigger calcula progresos con medidas a medio asentar y deja secciones en opacity 0 (la de Producto se veia negra). */if("scrollRestoration" in history)history.scrollRestoration="manual";</script>
+<script type="text/javascript">
       !(function (o, c) {
         var n = c.documentElement,
           t = " w-mod-";
@@ -427,10 +428,6 @@
                   role="img"
                   aria-label="Un mensaje en WhatsApp actualiza el CRM, crea un seguimiento y avisa al equipo"
                 >
-                  <div class="power-float is-impact" aria-hidden="true">
-                    <span class="power-float-icon">1→3</span>
-                    Un mensaje hace todo esto
-                  </div>
                   <div class="power-panel" aria-hidden="true">
                     <div class="power-chat-stage">
                       <div class="power-context">
@@ -452,7 +449,7 @@
                     <div class="power-result">
                       <div class="power-result-title">
                         <span>✦</span>
-                        <strong>Entendido. Preparé 3 acciones.</strong>
+                        <strong>Un mensaje hace todo esto</strong>
                       </div>
                       <div class="power-action-row">
                         <span class="power-action-icon">01</span>
@@ -2023,7 +2020,7 @@
     <script src="js/screens.js?v=15"></script>
     <script src="js/usecases.js?v=17" defer></script>
     <script src="js/pricing.js?v=15" defer></script>
-    <script type="module" src="js/main.js?v=25"></script>
+    <script type="module" src="js/main.js?v=26"></script>
     <script src="js/hero2d.js?v=4"></script>
   </body>
 </html>

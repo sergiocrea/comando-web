@@ -625,6 +625,13 @@ function boot() {
   initReveals();
   initDividers();
   ScrollTrigger.refresh();
+  // Segundo refresco cuando el layout ya asentó. Al recargar con la página
+  // desplazada, las posiciones se miden antes de las fuentes, el video y el
+  // canvas; con medidas viejas el scrub de #about arranca en opacity 0 y la
+  // sección se ve negra hasta recargar arriba del todo.
+  const settle = () => ScrollTrigger.refresh();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(settle);
+  setTimeout(settle, 700);
 }
 
 if (document.readyState === 'complete') runAfterPreloader(boot);

@@ -1186,3 +1186,9 @@ html { scroll-behavior: smooth; }
   .nav_component.w-nav { padding-top: .7rem; padding-bottom: .7rem; }
   .nav_component .nav_menu > .nav_menu_link:last-child { padding: .6rem 1.1rem; }
 }
+/* Móvil: el teléfono de «Lo que puedes pedirle» ocupaba 203 px de 390 y el flujo
+   de dentro quedaba ilegible. Se lleva casi al ancho de la columna. */
+@media (max-width: 767px) {
+  #scope-1 .section_middle-slider,
+  #lottiee-section .section_middle-slider { width: 86% !important; }
+}
