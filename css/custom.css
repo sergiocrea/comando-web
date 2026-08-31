@@ -1183,8 +1183,8 @@ html { scroll-behavior: smooth; }
 /* Header más bajo: el nav ocupaba 116 px y comía la primera pantalla.
    Solo en escritorio; en móvil el burger necesita su área táctil. */
 @media (min-width: 992px) {
-  .nav_component.w-nav { padding-top: .7rem; padding-bottom: .7rem; }
-  .nav_component .nav_menu > .nav_menu_link:last-child { padding: .6rem 1.1rem; }
+  .nav_component.w-nav { padding-top: .4rem; padding-bottom: .4rem; }
+  .nav_component .nav_menu > .nav_menu_link:last-child { padding: .5rem 1.05rem; }
 }
 /* Móvil: el teléfono de «Lo que puedes pedirle» ocupaba 203 px de 390 y el flujo
    de dentro quedaba ilegible. Se lleva casi al ancho de la columna. */
@@ -1192,3 +1192,44 @@ html { scroll-behavior: smooth; }
   #scope-1 .section_middle-slider,
   #lottiee-section .section_middle-slider { width: 86% !important; }
 }
+
+/* ===== «Un día con Comando» en claro, como la sección de «Un mensaje» ===== */
+.section_usecases {
+  color: #151515;
+  background-color: #f3f1ea;
+  background-image:
+    radial-gradient(circle at 82% 30%, rgba(49, 95, 239, .14), transparent 34%),
+    linear-gradient(rgba(34, 34, 34, .055) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(34, 34, 34, .055) 1px, transparent 1px);
+  background-size: auto, 40px 40px, 40px 40px;
+}
+.section_usecases .section_features-eyebrow { color: #315fef; }
+.section_usecases .section_features-heading { color: #151515; }
+.uc-subtitle { color: #5f625f; }
+/* Pestañas y chips: sobre fondo claro el contraste se invierte. */
+.uc-tab { background: rgba(255, 255, 255, .8); border-color: rgba(21, 21, 21, .12); color: #3d403d; }
+.uc-tab:hover { border-color: rgba(49, 95, 239, .45); color: #151515; }
+.uc-tab.is-on { background: #315fef; border-color: #315fef; color: #fff; }
+.uc-chip { border-color: rgba(21, 21, 21, .14); color: #6b6f6b; }
+.uc-chip.is-on { color: #315fef; border-color: rgba(49, 95, 239, .5); background: rgba(49, 95, 239, .09); }
+.uc-tab:focus-visible, .uc-chip:focus-visible, .uc-step:focus-visible { outline-color: #315fef; }
+/* El teléfono sigue oscuro: es un teléfono. Solo gana sombra para separarse del fondo. */
+.uc-phone { box-shadow: 0 0 0 1px rgba(21, 21, 21, .06), 0 34px 70px -30px rgba(24, 37, 80, .45); }
+.uc-card-meta { color: #315fef; }
+.uc-card-title { color: #151515; }
+.uc-step { border-color: rgba(21, 21, 21, .12); color: #5f625f; background: rgba(255, 255, 255, .55); }
+.uc-step:hover { border-color: rgba(21, 21, 21, .22); color: #2b2e2b; }
+.uc-step.is-on { border-color: rgba(49, 95, 239, .5); background: rgba(49, 95, 239, .08); color: #151515; }
+.uc-step-time { color: #315fef; }
+.uc-close { color: #151515; }
+.section_usecases .btn-primary { color: #fff; background: #151515; box-shadow: 0 12px 30px rgba(21, 21, 21, .16); }
+.section_usecases .btn-primary:hover { background: #315fef; }
+/* Línea de tiempo de móvil */
+.uc-timeline li:not(:last-child)::before { background: rgba(21, 21, 21, .16); }
+.uc-dot { color: #8a8d89; }
+.uc-dot i { border-color: rgba(21, 21, 21, .28); background: #f3f1ea; }
+.uc-dot span { background: transparent; }
+.uc-dot.is-past i { border-color: #315fef; }
+.uc-dot.is-past { color: #5f625f; }
+.uc-dot.is-on i { border-color: #315fef; background: #315fef; box-shadow: 0 0 0 4px rgba(49, 95, 239, .22); }
+.uc-dot.is-on { color: #151515; }
