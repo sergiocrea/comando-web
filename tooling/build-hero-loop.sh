@@ -1,6 +1,6 @@
 #!/bin/bash
 # Prepara un clip suelto como video de fondo del hero.
-# Uso: tooling/build-hero-loop.sh <clip.mp4> <version>   (p.ej. v5)
+# Uso: tooling/build-hero-loop.sh <clip.mp4> <version> [ancho]   (p.ej. v5 1280)
 # Salida: assets/videos/benefits-superpowers-<version>.mp4 y su póster.
 #
 # El clip de origen suele venir anunciado como "loop" y no serlo: el último
@@ -8,7 +8,7 @@
 # cola se funde sobre la cabeza y se recorta del final, como en
 # build-benefits-video.sh, para que el bucle no tenga costura.
 set -euo pipefail
-SRC="${1:?clip de origen}"; VER="${2:?version, p.ej. v5}"
+SRC="${1:?clip de origen}"; VER="${2:?version, p.ej. v5}"; W="${3:-1280}"
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 TMP="$(mktemp -d)"; trap 'rm -rf "$TMP"' EXIT
 FADE=0.5
@@ -27,7 +27,7 @@ ffmpeg -v error -y -i "$SRC" -an -filter_complex "\
 OUT="$ROOT/assets/videos/benefits-superpowers-${VER}.mp4"; CRF=26
 while :; do
   ffmpeg -v error -y -i "$TMP/loop.mp4" -an -c:v libx264 -crf $CRF -preset slow \
-    -pix_fmt yuv420p -movflags +faststart -vf "scale=1280:-2" "$OUT"
+    -pix_fmt yuv420p -movflags +faststart -vf "scale=${W}:-2" "$OUT"
   SIZE=$(stat -f%z "$OUT"); echo "crf $CRF -> $((SIZE/1024)) KB"
   [ "$SIZE" -le "$BUDGET" ] && break; CRF=$((CRF+2)); [ $CRF -gt 36 ] && break
 done

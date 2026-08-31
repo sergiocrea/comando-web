@@ -1035,11 +1035,18 @@ html { scroll-behavior: smooth; }
       linear-gradient(180deg, rgba(248, 247, 243, .93) 0%, rgba(248, 247, 243, .8) 27rem, rgba(248, 247, 243, .96) 55rem, #f3f1ea 100%),
       url("../assets/img/hero-superpowers-world-v1.jpg") 60% 5rem / auto 48rem no-repeat;
   }
-  .b2b-hero-media video { object-position: 54% center; }
+  /* El video de móvil es vertical: el hero ocupa la pantalla y el texto baja al
+     pie, de modo que la persona se ve en la mitad superior en vez de quedar
+     tapada por el titular. */
+  .b2b-hero { min-height: 100svh; display: flex; flex-direction: column; }
+  .b2b-hero-media video { object-position: center 8%; }
   .b2b-hero-glow {
-    background: linear-gradient(180deg, rgba(248, 247, 243, .91) 0%, rgba(248, 247, 243, .76) 28rem, rgba(248, 247, 243, .93) 57rem, rgba(243, 241, 234, .98) 100%);
+    background: linear-gradient(180deg, rgba(248, 247, 243, .34) 0%, rgba(248, 247, 243, .1) 26%, rgba(248, 247, 243, .72) 54%, rgba(243, 241, 234, .97) 76%, #f3f1ea 100%);
   }
-  .b2b-hero-padding { padding-top: calc(var(--nav-height, 4rem) + 1.65rem); padding-bottom: 3.25rem; }
+  .b2b-hero-padding {
+    flex: 1; display: flex; flex-direction: column; justify-content: flex-end;
+    padding-top: calc(var(--nav-height, 4rem) + 1.25rem); padding-bottom: 2.25rem;
+  }
   .b2b-eyebrow { margin-bottom: 1.35rem; font-size: .7rem; }
   .b2b-hero-title { max-width: 12ch; font-size: clamp(2.85rem, 11.8vw, 4.2rem); }
   .b2b-hero-lede { margin-top: 1.5rem; font-size: 1.02rem; }
@@ -1295,9 +1302,13 @@ html { scroll-behavior: smooth; }
 .radar-input i { width: 2.1rem; height: 2.1rem; border-radius: 50%; background: #00a884; display: grid; place-items: center; font-style: normal; font-size: .85rem; }
 @media (max-width: 991px) {
   .radar-layout { grid-template-columns: minmax(0, 1fr); gap: 2.5rem; }
-  /* Apilado: el teléfono se alinea con el texto. Centrado (margin auto) quedaba
-     descuadrado respecto al titular y la tarjeta, que van a la izquierda. */
-  .radar-device { order: -1; margin: 0; }
+  /* Apilado: se centra todo el bloque, como en «Un mensaje». El contenido de
+     las filas sigue alineado a la izquierda dentro de la tarjeta. */
+  .radar-device { order: -1; margin: 0 auto; }
+  .radar-copy { text-align: center; }
+  .radar-title, .radar-lede { margin-left: auto; margin-right: auto; }
+  .radar-card { margin-left: auto; margin-right: auto; text-align: left; }
+  .radar-cta-row { display: flex; justify-content: center; }
 }
 @media (max-width: 767px) {
   .section_radar { padding: 3rem 0; }
