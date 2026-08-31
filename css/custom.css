@@ -1283,3 +1283,5 @@ html { scroll-behavior: smooth; }
   .radar-steps { gap: 1.35rem; }
   .radar-note { margin-top: 2rem; }
 }
+/* El mockup del hero no cabe en móvil sin competir con el titular y el CTA. */
+@media (max-width: 767px) { .b2b-hero-visual { display: none; } }

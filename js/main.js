@@ -501,9 +501,10 @@ function initSliderParallax() {
       const p2 = Math.min(1, Math.max(0, (window.innerHeight - rect.top) / rect.height));
       // row 1 starts just below the top band; the travel adapts to the viewport so the last row is reachable on short screens
       const colH = (left || bottom) ? Math.max(left ? left.offsetHeight : 0, bottom ? bottom.offsetHeight : 0) : 0;
-      // Antes 18: la primera fila entraba por debajo de la mitad y en el primer
-      // scroll las tarjetas quedaban muy abajo respecto al titular.
-      const startY = 2;
+      // 18 dejaba la primera fila por debajo de la mitad; 2 la metía dentro del
+      // degradado que difumina la banda superior (los primeros 15% del overlay).
+      // 10 la deja legible y pegada al titular.
+      const startY = 13;
       const endY = colH ? Math.min(-28, -((colH - window.innerHeight * 0.8) / colH) * 100) : -28;
       const y = startY - p2 * (startY - endY);
       if (left) left.style.transform = `translateY(${y}%)`;
