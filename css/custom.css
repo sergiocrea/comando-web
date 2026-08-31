@@ -1316,6 +1316,8 @@ html { scroll-behavior: smooth; }
 }
 @media (max-width: 767px) {
   .section_radar { padding: 3rem 0; }
+  /* Un 10% más estrecho que el ancho de columna: el teléfono respira. */
+  .radar-device { max-width: 19.8rem; }
   .radar-card { margin-top: 1.5rem; }
   .radar-row { padding: .65rem .75rem; }
   .section_radar .btn-primary { width: 100%; justify-content: center; }

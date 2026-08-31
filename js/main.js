@@ -610,6 +610,32 @@ function initAboutFade() {
 }
 
 /* ============================================================
+   11. Anclas internas con el alto del nav descontado
+   ============================================================ */
+/* El nav es fijo. Webflow intercepta los enlaces internos y deja la sección
+   pegada al borde superior, así que su primera línea queda debajo del nav; y
+   como lo hace por JS, el scroll-margin-top del CSS no llega a aplicarse. Este
+   handler va en fase de captura para resolverlo antes que el suyo. */
+function initAnchorOffset() {
+  document.addEventListener('click', (event) => {
+    const link = event.target.closest('a[href^="#"]');
+    if (!link || link.getAttribute('href') === '#') return;
+    const id = decodeURIComponent(link.getAttribute('href').slice(1));
+    const target = document.getElementById(id);
+    if (!target) return;
+    event.preventDefault();
+    event.stopPropagation();
+    const nav = document.querySelector('.nav_component');
+    const offset = (nav ? nav.getBoundingClientRect().height : 0) + 8;
+    window.scrollTo({
+      top: Math.max(0, target.getBoundingClientRect().top + window.scrollY - offset),
+      behavior: 'smooth',
+    });
+    history.replaceState(null, '', `#${id}`);
+  }, true);
+}
+
+/* ============================================================
    Boot
    ============================================================ */
 function boot() {
@@ -627,6 +653,7 @@ function boot() {
   initAboutFade();
   initReveals();
   initDividers();
+  initAnchorOffset();
   ScrollTrigger.refresh();
   // Segundo refresco cuando el layout ya asentó. Al recargar con la página
   // desplazada, las posiciones se miden antes de las fuentes, el video y el
