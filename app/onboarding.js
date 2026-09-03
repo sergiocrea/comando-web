@@ -21,17 +21,25 @@
   // Con el CRM conectado ya tiene sentido elegir qué campos puede consultar Comando.
   function showFieldsLink() { const el = $('fields-next'); if (el) el.hidden = false; }
 
-  async function token() {
+  async function token(skipCache) {
     // El template "comando" añade tenant_id (public_metadata) y el audience del engine.
-    return clerk.session.getToken({ template: cfg.clerkJwtTemplate });
+    return clerk.session.getToken({ template: cfg.clerkJwtTemplate, skipCache: skipCache === true });
   }
   async function api(path, options) {
-    const t = await token();
-    if (!t) throw new Error('Sesión no disponible');
-    const res = await fetch(cfg.engineUrl + path, {
-      ...options,
-      headers: { authorization: 'Bearer ' + t, 'content-type': 'application/json', ...(options && options.headers) },
-    });
+    const request = async (skipCache) => {
+      const t = await token(skipCache);
+      if (!t) throw new Error('Sesión no disponible');
+      return fetch(cfg.engineUrl + path, {
+        ...options,
+        headers: { authorization: 'Bearer ' + t, 'content-type': 'application/json', ...(options && options.headers) },
+      });
+    };
+    // Los JWT de plantilla de Clerk duran un minuto. Si uno vence entre
+    // getToken() y la validación del engine, fuerza uno nuevo y repite una vez.
+    // Se conservan los headers originales (incluido x-request-id), por lo que
+    // las mutaciones siguen siendo idempotentes en el backend.
+    let res = await request(false);
+    if (res.status === 401) res = await request(true);
     const body = await res.json().catch(() => ({}));
     if (!res.ok) throw Object.assign(new Error(body.message || ('Error ' + res.status)), { status: res.status, body });
     return body;
