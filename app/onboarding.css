@@ -85,6 +85,14 @@
 .crm-card[disabled] { cursor: not-allowed; opacity: .45; filter: grayscale(1); }
 .crm-card.is-connected { border-color: var(--accent); opacity: 1; }
 .crm-card.is-connected small { color: var(--accent); }
+.ob-btn-danger { background: transparent; border: 1px solid #d76868; color: #ff9b9b; }
+.ob-btn-danger:hover { background: #2a1517; }
+.crm-recovery { margin-top: 14px; padding: 14px; border: 1px solid #b7832f; border-radius: 12px; background: #211b10; }
+.crm-recovery strong { color: #ffd27d; }
+.crm-recovery p { color: var(--muted); font-size: 13px; line-height: 1.5; margin: 6px 0 0; }
+.crm-recovery .ob-actions { margin-top: 12px; align-items: center; }
+.ob-link-danger { color: #ff9b9b; margin: 0; }
+.ob-link-danger:disabled { opacity: .5; cursor: default; }
 
 /* enlace al panel de campos (/app/dashboard/), visible cuando el CRM ya está conectado */
 .ob-next { margin: 16px 0 0; padding-top: 14px; border-top: 1px solid var(--line); font-size: 13px; line-height: 1.5; }

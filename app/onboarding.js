@@ -5,6 +5,9 @@
   const $ = (id) => document.getElementById(id);
   const steps = { cuenta: $('step-cuenta'), whatsapp: $('step-whatsapp'), crm: $('step-crm') };
   let clerk, pollTimer, picker;
+  let activeCrmConnection = null;
+  let recoverableCrmConnection = null;
+  const crmNames = { hubspot: 'HubSpot', salesforce: 'Salesforce' };
 
   function show(step) {
     Object.entries(steps).forEach(([k, el]) => { el.hidden = k !== step; });
@@ -62,15 +65,19 @@
     if (wa.status === 'verified') {
       show('crm');
       $('open-whatsapp').href = 'https://wa.me/' + (window.COMANDO_NUMBER || '');
-      $('crm-status').textContent = status.crmConnected ? 'CRM conectado. Comando ya sincroniza tus contactos.' : '';
-      if (status.crmConnected) {
-        const hb = document.querySelector('.crm-card[data-crm="hubspot"]'); if (hb) { hb.classList.add('is-connected'); hb.disabled = true; hb.querySelector('small').textContent = 'Conectado'; }
-        const cta = $('connect-hubspot'); if (cta) cta.style.display = 'none';
-        showFieldsLink();
-      }
-      else {
-        let pending = null; try { pending = localStorage.getItem('comando.pendingHubspotConnection'); } catch (e) { /* sin storage */ }
-        if (pending) { $('crm-status').textContent = 'Confirmando la conexión con HubSpot…'; pollReconcile(pending, null, null); }
+      refreshConnections(status.crmConnected).catch(() => undefined);
+      let pending = null;
+      try {
+        const current = localStorage.getItem('comando.pendingCrmConnection');
+        if (current) pending = JSON.parse(current);
+        else {
+          const legacy = localStorage.getItem('comando.pendingHubspotConnection');
+          if (legacy) pending = { connectionId: legacy, provider: 'hubspot' };
+        }
+      } catch (e) { /* sin storage */ }
+      if (pending && pending.connectionId && pending.provider) {
+        $('crm-status').textContent = 'Confirmando la conexión con ' + (crmNames[pending.provider] || pending.provider) + '…';
+        pollReconcile(pending.connectionId, null, null, pending.provider, pending.recovering === true);
       }
       return;
     }
@@ -97,51 +104,167 @@
     } finally { btn.disabled = false; }
   }
 
-  async function onConnectHubspot() {
-    const btn = document.querySelector('.crm-card[data-crm="hubspot"]') || $('connect-hubspot'); btn.disabled = true;
+  function resetCrmCards() {
+    Object.keys(crmNames).forEach((provider) => {
+      const card = document.querySelector('.crm-card[data-crm="' + provider + '"]');
+      if (!card) return;
+      card.classList.remove('is-connected'); card.disabled = false;
+      card.querySelector('small').textContent = 'Conectar';
+    });
+  }
+
+  function hideRecovery() {
+    recoverableCrmConnection = null;
+    $('crm-recovery').hidden = true;
+  }
+
+  function showRecovery(connection) {
+    recoverableCrmConnection = connection;
+    const name = crmNames[connection.provider] || connection.name;
+    const deadline = new Date(connection.purgeAfter).toLocaleString();
+    $('crm-recovery-name').textContent = name;
+    $('crm-recovery-copy').textContent =
+      'Comando no puede consultar este CRM. Conservaremos su copia sincronizada hasta ' +
+      deadline + '. Si vuelves a autorizarlo antes, recuperaremos la configuración y los datos existentes.';
+    $('recover-crm').textContent = 'Volver a vincular ' + name + ' y recuperar';
+    $('crm-recovery').hidden = false;
+  }
+
+  async function refreshConnections(fallbackConnected) {
+    resetCrmCards(); activeCrmConnection = null; hideRecovery(); $('disconnect-crm').hidden = true;
+    $('fields-next').hidden = true;
+    try {
+      const result = await api('/integrations/connections');
+      activeCrmConnection = (result.connections || []).find((item) => item.bound && item.status === 'active') || null;
+      if (activeCrmConnection) {
+        const name = crmNames[activeCrmConnection.provider] || activeCrmConnection.name;
+        $('crm-status').textContent = name + ' conectado. Comando solo consultará este CRM.';
+        Object.keys(crmNames).forEach((provider) => {
+          const candidate = document.querySelector('.crm-card[data-crm="' + provider + '"]');
+          if (candidate) { candidate.disabled = true; candidate.querySelector('small').textContent = 'Desconecta el CRM activo'; }
+        });
+        const card = document.querySelector('.crm-card[data-crm="' + activeCrmConnection.provider + '"]');
+        if (card) { card.classList.add('is-connected'); card.disabled = true; card.querySelector('small').textContent = 'Conectado'; }
+        $('disconnect-crm').hidden = false; showFieldsLink();
+      } else {
+        const retained = (result.connections || []).find((item) => item.recoverable && crmNames[item.provider]);
+        if (retained) {
+          showRecovery(retained);
+          $('crm-status').textContent = 'No hay un CRM conectado. Puedes recuperar el anterior o vincular uno nuevo.';
+        } else if (!fallbackConnected) $('crm-status').textContent = '';
+      }
+    } catch (e) {
+      if (fallbackConnected) $('crm-status').textContent = 'CRM conectado. Comando ya sincroniza tus contactos.';
+    }
+  }
+
+  async function onConnectCrm(provider) {
+    const btn = document.querySelector('.crm-card[data-crm="' + provider + '"]');
+    if (!btn || btn.disabled) return;
+    btn.disabled = true;
     const status = $('crm-status');
     try {
       const r = await api('/integrations/nango/connect-sessions', {
         method: 'POST',
         headers: { 'idempotency-key': crypto.randomUUID(), 'x-request-id': crypto.randomUUID() },
-        body: JSON.stringify({ integrationId: 'hubspot' }),
+        body: JSON.stringify({ integrationId: provider }),
       });
-      if (!r.token || !r.connectionId) throw new Error('No recibimos la sesión de conexión');
-      // OAuth directo (sin ventana de Nango): el proveedor pide autorización y vuelve a Nango.
-      const url = cfg.nangoUrl.replace(/\/$/, '') + '/oauth/connect/hubspot?connect_session_token=' + encodeURIComponent(r.token);
-      const popup = window.open(url, 'comando-oauth', 'width=720,height=800');
-      if (!popup) window.location.href = url;
-      status.textContent = 'Autoriza el acceso en la ventana de HubSpot… (esta página se actualiza sola)';
-      try { localStorage.setItem('comando.pendingHubspotConnection', r.connectionId); } catch (e) { /* sin storage */ }
-      pollReconcile(r.connectionId, popup, btn);
+      beginCrmOauth(provider, r, btn, false);
     } catch (e) { status.textContent = e.message; btn.disabled = false; }
+  }
+
+  function beginCrmOauth(provider, session, btn, recovering) {
+    if (!session.token || !session.connectionId) throw new Error('No recibimos la sesión de conexión');
+    const url = cfg.nangoUrl.replace(/\/$/, '') + '/oauth/connect/' + encodeURIComponent(provider) + '?connect_session_token=' + encodeURIComponent(session.token);
+    const popup = window.open(url, 'comando-oauth', 'width=720,height=800');
+    if (!popup) window.location.href = url;
+    $('crm-status').textContent = 'Autoriza el acceso en la ventana de ' + crmNames[provider] + '… (esta página se actualiza sola)';
+    try {
+      localStorage.setItem('comando.pendingCrmConnection', JSON.stringify({
+        connectionId: session.connectionId, provider, recovering,
+      }));
+    } catch (e) { /* sin storage */ }
+    pollReconcile(session.connectionId, popup, btn, provider, recovering);
+  }
+
+  async function onRecoverCrm() {
+    if (!recoverableCrmConnection) return;
+    const retained = recoverableCrmConnection;
+    const btn = $('recover-crm'); btn.disabled = true;
+    try {
+      const session = await api('/integrations/connections/' + retained.id + '/recovery-session', {
+        method: 'POST', headers: { 'x-request-id': crypto.randomUUID() }, body: '{}',
+      });
+      beginCrmOauth(retained.provider, session, btn, true);
+    } catch (e) {
+      $('crm-status').textContent = e.message;
+      btn.disabled = false;
+    }
   }
 
   // Confirma la conexión con el backend. Se retoma en cualquier pestaña/recarga
   // porque el OAuth vuelve a Nango, no a esta página.
-  function pollReconcile(connectionId, popup, btn) {
+  function pollReconcile(connectionId, popup, btn, provider, recovering) {
     const status = $('crm-status');
     const started = Date.now();
-    const done = () => { try { localStorage.removeItem('comando.pendingHubspotConnection'); } catch (e) { /* sin storage */ } };
+    const done = () => { try { localStorage.removeItem('comando.pendingCrmConnection'); localStorage.removeItem('comando.pendingHubspotConnection'); } catch (e) { /* sin storage */ } };
     const poll = async () => {
       if (Date.now() - started > 6 * 60 * 1000) { status.textContent = 'No se completó la autorización. Vuelve a intentarlo.'; if (btn) btn.disabled = false; done(); return; }
       try {
         const res = await api('/integrations/nango/connections/' + connectionId + '/reconcile', {
-          method: 'POST', headers: { 'x-request-id': crypto.randomUUID() }, body: JSON.stringify({ integrationId: 'hubspot' }),
+          method: 'POST', headers: { 'x-request-id': crypto.randomUUID() }, body: JSON.stringify({ integrationId: provider }),
         });
         if (res.status === 'connected') {
           if (popup && !popup.closed) popup.close();
-          status.textContent = 'HubSpot conectado. Comando está importando tus contactos; en unos minutos podrás preguntar por ellos desde WhatsApp.';
-          const hb = btn || document.querySelector('.crm-card[data-crm="hubspot"]');
+          status.textContent = recovering
+            ? crmNames[provider] + ' recuperado. Comando reactivó la copia retenida y actualizará los cambios recientes.'
+            : crmNames[provider] + ' conectado. Comando está importando tus datos; en unos minutos podrás preguntar por ellos desde WhatsApp.';
+          const hb = btn || document.querySelector('.crm-card[data-crm="' + provider + '"]');
           if (hb) { hb.classList.add('is-connected'); hb.disabled = true; hb.querySelector('small').textContent = 'Conectado'; }
           const cta = $('connect-hubspot'); if (cta) cta.style.display = 'none';
-          showFieldsLink();
+          showFieldsLink(); await refreshConnections(true);
           done(); return;
         }
       } catch (e) { /* transitorio */ }
       setTimeout(poll, 3000);
     };
     setTimeout(poll, 1000);
+  }
+
+  async function onDisconnectCrm() {
+    if (!activeCrmConnection) return;
+    const name = crmNames[activeCrmConnection.provider] || activeCrmConnection.name;
+    if (!window.confirm('¿Desconectar ' + name + '? Comando dejará de consultarlo inmediatamente. La copia sincronizada se borrará automáticamente en 7 días.')) return;
+    const btn = $('disconnect-crm'); btn.disabled = true;
+    try {
+      const result = await api('/integrations/connections/' + activeCrmConnection.id, {
+        method: 'DELETE', headers: { 'x-request-id': crypto.randomUUID() },
+        body: JSON.stringify({ purgeMode: 'after-grace', reason: 'onboarding_crm_switch' }),
+      });
+      const when = new Date(result.purgeAfter).toLocaleString();
+      $('crm-status').textContent = name + ' desconectado. Comando ya no lo consulta; la copia local se eliminará el ' + when + '.';
+      await refreshConnections(false);
+    } catch (e) { $('crm-status').textContent = e.message; }
+    finally { btn.disabled = false; }
+  }
+
+  async function onPurgeCrm() {
+    if (!recoverableCrmConnection) return;
+    const retained = recoverableCrmConnection;
+    const name = crmNames[retained.provider] || retained.name;
+    if (!window.confirm('¿Eliminar ahora la copia de ' + name + '? Esta acción es irreversible y ya no podrás recuperarla.')) return;
+    const btn = $('purge-crm'); btn.disabled = true;
+    try {
+      const result = await api('/integrations/connections/' + retained.id, {
+        method: 'DELETE', headers: { 'x-request-id': crypto.randomUUID() },
+        body: JSON.stringify({ purgeMode: 'immediate', reason: 'operator_delete_now' }),
+      });
+      await refreshConnections(false);
+      $('crm-status').textContent = result.purged
+        ? 'La copia local de ' + name + ' fue eliminada definitivamente.'
+        : 'La eliminación no se completó porque existe una retención legal activa.';
+    } catch (e) { $('crm-status').textContent = e.message; }
+    finally { btn.disabled = false; }
   }
 
   /* ---------- Google Sheets: Nango para el refresh token, Picker para elegir hojas ---------- */
@@ -354,8 +477,11 @@
       picker = window.ComandoPhonePicker.mount($('phone-picker'));
       $('phone-form').addEventListener('submit', onPhoneSubmit);
       $('phone-change').addEventListener('click', () => { clearInterval(pollTimer); $('phone-verify').hidden = true; $('phone-form').hidden = false; });
-      $('connect-hubspot').addEventListener('click', onConnectHubspot);
-      document.querySelectorAll('.crm-card.is-ready[data-crm="hubspot"]').forEach((b) => b.addEventListener('click', onConnectHubspot));
+      $('connect-hubspot').addEventListener('click', () => onConnectCrm('hubspot'));
+      document.querySelectorAll('.crm-card.is-ready[data-crm="hubspot"], .crm-card.is-ready[data-crm="salesforce"]').forEach((b) => b.addEventListener('click', () => onConnectCrm(b.dataset.crm)));
+      $('disconnect-crm').addEventListener('click', onDisconnectCrm);
+      $('recover-crm').addEventListener('click', onRecoverCrm);
+      $('purge-crm').addEventListener('click', onPurgeCrm);
       document.querySelectorAll('.crm-card.is-ready[data-crm="google-sheets"]').forEach((b) => b.addEventListener('click', onConnectSheets));
       if (!clerk.user) {
         show('cuenta');

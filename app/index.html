@@ -63,13 +63,13 @@
   <section id="step-crm" class="ob-card" hidden>
     <h1>¡Listo! Tu WhatsApp está vinculado</h1>
     <p>Ya puedes escribirle a Comando. Prueba con: <em>"muéstrame mis contactos de esta semana"</em>.</p>
-    <p class="ob-muted">¿No tienes CRM? Conecta tu hoja de Google y Comando trabaja sobre ella. Hoy HubSpot y Google Sheets; los demás, muy pronto.</p>
+    <p class="ob-muted">Conecta HubSpot, Salesforce o una hoja de Google. Solo el CRM activo se consulta cuando hablas con Comando.</p>
     <div class="crm-grid" role="list">
       <button type="button" class="crm-card is-ready" data-crm="hubspot" role="listitem"><img src="../assets/img/logos/hubspot.svg" alt=""><span>HubSpot</span><small>Conectar</small></button>
       <button type="button" class="crm-card is-ready" data-crm="google-sheets" role="listitem"><img src="../assets/img/logos/googlesheets.svg" alt=""><span>Google Sheets</span><small>Conectar</small></button>
       <button type="button" class="crm-card" data-crm="pipedrive" disabled role="listitem"><img src="../assets/img/logos/pipedrive.svg" alt=""><span>Pipedrive</span><small>Próximamente</small></button>
       <button type="button" class="crm-card" data-crm="zoho" disabled role="listitem"><img src="../assets/img/logos/zoho.svg" alt=""><span>Zoho CRM</span><small>Próximamente</small></button>
-      <button type="button" class="crm-card" data-crm="salesforce" disabled role="listitem"><img src="../assets/img/logos/salesforce.svg" alt=""><span>Salesforce</span><small>Próximamente</small></button>
+      <button type="button" class="crm-card is-ready" data-crm="salesforce" role="listitem"><img src="../assets/img/logos/salesforce.svg" alt=""><span>Salesforce</span><small>Conectar</small></button>
       <button type="button" class="crm-card" data-crm="kommo" disabled role="listitem"><img src="../assets/img/logos/kommo.svg" alt=""><span>Kommo</span><small>Próximamente</small></button>
       <button type="button" class="crm-card" data-crm="shopify" disabled role="listitem"><img src="../assets/img/logos/shopify.svg" alt=""><span>Shopify</span><small>Próximamente</small></button>
       <button type="button" class="crm-card" data-crm="tiendanube" disabled role="listitem"><img src="../assets/img/logos/tiendanube.svg" alt=""><span>Tiendanube</span><small>Próximamente</small></button>
@@ -79,8 +79,17 @@
     </div>
     <ul id="sheet-list" class="sheet-list" hidden></ul>
     <p id="crm-status" class="ob-muted ob-small"></p>
+    <section id="crm-recovery" class="crm-recovery" aria-live="polite" hidden>
+      <strong><span id="crm-recovery-name"></span> está desvinculado</strong>
+      <p id="crm-recovery-copy"></p>
+      <div class="ob-actions">
+        <button type="button" id="recover-crm" class="ob-btn">Volver a vincular y recuperar</button>
+        <button type="button" id="purge-crm" class="ob-link ob-link-danger">Eliminar datos ahora</button>
+      </div>
+    </section>
     <div class="ob-actions">
       <button type="button" id="connect-hubspot" class="ob-btn" hidden>Conectar HubSpot</button>
+      <button type="button" id="disconnect-crm" class="ob-btn ob-btn-danger" hidden>Desconectar CRM</button>
       <a class="ob-btn ob-btn-secondary" id="open-whatsapp" target="_blank" rel="noopener">Ir a WhatsApp</a>
     </div>
     <p id="fields-next" class="ob-next" hidden>
@@ -94,6 +103,6 @@
 <script src="https://accounts.google.com/gsi/client" async></script>
 <script src="https://apis.google.com/js/api.js" async></script>
 <script src="phone-picker.js?v=3"></script>
-<script src="onboarding.js?v=9" defer></script>
+<script src="onboarding.js?v=11" defer></script>
 </body>
 </html>
