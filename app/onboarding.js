@@ -64,7 +64,10 @@
     const wa = status.whatsapp || {};
     if (wa.status === 'verified') {
       show('crm');
-      $('open-whatsapp').href = 'https://wa.me/' + (window.COMANDO_NUMBER || '');
+      const comandoDigits = String(status.comandoNumber || window.COMANDO_NUMBER || '').replace(/\D/g, '');
+      const whatsappLink = status.waLink || (comandoDigits ? 'https://wa.me/' + comandoDigits : '');
+      $('open-whatsapp').href = whatsappLink;
+      $('open-whatsapp').hidden = !whatsappLink;
       refreshConnections(status.crmConnected).catch(() => undefined);
       let pending = null;
       try {
