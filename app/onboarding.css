@@ -1,5 +1,6 @@
 :root{--bg:#0b1416;--card:#101c1f;--line:#1e2f33;--text:#e6f0f1;--muted:#8fa5a9;--accent:#2fd28f;--accent-ink:#06261a;--error:#ff7b7b}
 *{box-sizing:border-box}html,body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,system-ui,-apple-system,sans-serif;-webkit-font-smoothing:antialiased}
+[hidden]{display:none!important}
 .ob{max-width:520px;margin:0 auto;padding:40px 20px 80px}
 .ob-logo img{height:28px;display:block;margin-bottom:32px}
 .ob-steps{display:flex;gap:18px;list-style:none;padding:0;margin:0 0 24px;color:var(--muted);font-size:14px}

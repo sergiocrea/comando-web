@@ -121,6 +121,8 @@
   function showRecovery(connection) {
     recoverableCrmConnection = connection;
     const name = crmNames[connection.provider] || connection.name;
+    const card = document.querySelector('.crm-card[data-crm="' + connection.provider + '"]');
+    if (card) card.querySelector('small').textContent = 'Conectar desde cero';
     const deadline = new Date(connection.purgeAfter).toLocaleString();
     $('crm-recovery-name').textContent = name;
     $('crm-recovery-copy').textContent =
@@ -221,7 +223,6 @@
             : crmNames[provider] + ' conectado. Comando está importando tus datos; en unos minutos podrás preguntar por ellos desde WhatsApp.';
           const hb = btn || document.querySelector('.crm-card[data-crm="' + provider + '"]');
           if (hb) { hb.classList.add('is-connected'); hb.disabled = true; hb.querySelector('small').textContent = 'Conectado'; }
-          const cta = $('connect-hubspot'); if (cta) cta.style.display = 'none';
           showFieldsLink(); await refreshConnections(true);
           done(); return;
         }
@@ -477,7 +478,6 @@
       picker = window.ComandoPhonePicker.mount($('phone-picker'));
       $('phone-form').addEventListener('submit', onPhoneSubmit);
       $('phone-change').addEventListener('click', () => { clearInterval(pollTimer); $('phone-verify').hidden = true; $('phone-form').hidden = false; });
-      $('connect-hubspot').addEventListener('click', () => onConnectCrm('hubspot'));
       document.querySelectorAll('.crm-card.is-ready[data-crm="hubspot"], .crm-card.is-ready[data-crm="salesforce"]').forEach((b) => b.addEventListener('click', () => onConnectCrm(b.dataset.crm)));
       $('disconnect-crm').addEventListener('click', onDisconnectCrm);
       $('recover-crm').addEventListener('click', onRecoverCrm);
