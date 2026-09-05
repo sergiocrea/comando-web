@@ -15,7 +15,7 @@
    ============================================================ */
 (function () {
   const root = document.getElementById('demo-root');
-  if (!root) return;
+  if (!root || root.closest('[hidden]')) return; // la sección está oculta de momento
 
   const API = 'api/demo';
   const SESSION_MAX = 30;

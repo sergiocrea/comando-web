@@ -59,7 +59,7 @@
     <!-- Webflow-generated layout stylesheet (fonts + layout), served from its public CDN -->
     <link href="assets/css/webflow.css" rel="stylesheet" type="text/css" />
     <!-- Custom styles (reconstructed inline utility + component styles) -->
-    <link href="css/custom.css?v=131" rel="stylesheet" type="text/css" />
+    <link href="css/custom.css?v=133" rel="stylesheet" type="text/css" />
     <script>/* La landing se monta desde arriba: sus animaciones por scroll se miden al cargar. Si el navegador restaura la posicion, ScrollTrigger calcula progresos con medidas a medio asentar y deja secciones en opacity 0 (la de Producto se veia negra). */if("scrollRestoration" in history)history.scrollRestoration="manual";</script>
 <script type="text/javascript">
       !(function (o, c) {
@@ -327,6 +327,7 @@
                     data-wf-element-id="f02cc71b-e7d3-6fc2-0549-0a0207eeb824"
                     data-wf-component-context="%5B%7B%22componentId%22%3A%22396176c6-906a-9f74-c6d0-8a4663dfdea9%22%2C%22instanceId%22%3A%22ad43a7dc-e35f-2320-39af-52425e607e28%22%7D%5D"
                     class="nav_menu_link w-nav-link"
+                    hidden
                     >PRUÉBALO</a
                   ><a
                     class="neoconda-logo w-inline-block w--current"
@@ -409,24 +410,23 @@
             <div class="container-large">
               <div class="b2b-hero-grid">
                 <div class="b2b-hero-copy">
-                  <div class="b2b-eyebrow"><span class="b2b-eyebrow-mark" aria-hidden="true">›_</span>Operador de CRM por WhatsApp</div>
                   <h1 id="b2b-hero-title" class="b2b-hero-title">
                     Actualiza tu CRM
-                    <span>sin salir de WhatsApp.</span>
+                    <span>con un mensaje.</span>
                   </h1>
                   <p class="b2b-hero-lede">
-                    Un mensaje actualiza el CRM, crea el seguimiento y avisa
-                    al equipo. Y si algo se enfría, Comando te avisa a tiempo.
+                    Escríbele por WhatsApp y Comando actualiza el CRM, crea el
+                    seguimiento y avisa al equipo. Y si algo se enfría, te avisa a tiempo.
                   </p>
                   <div class="b2b-hero-actions">
                     <a href="/app/?mode=signup" class="b2b-button is-primary"
                       >Empezar gratis <span aria-hidden="true">→</span></a
                     >
-                    <a href="#demo" class="b2b-button is-secondary"
-                      >Probar la demo <span aria-hidden="true">↓</span></a
+                    <a href="#como-funciona" class="b2b-button is-secondary"
+                      >Cómo funciona <span aria-hidden="true">↓</span></a
                     >
                   </div>
-                  <p class="b2b-hero-note"><span>Sin tarjeta</span>&nbsp;· <span>30 comandos de prueba</span>&nbsp;· <span>Tu CRM se conecta en 2 minutos</span></p>
+                  <p class="b2b-hero-note"><span>Sin tarjeta</span>&nbsp;· <span>Tu CRM se conecta en 2 minutos</span></p>
                 </div>
                 <div
                   class="b2b-hero-visual"
@@ -491,7 +491,7 @@
             <div class="container-large"><div id="usecases-root"></div></div>
           </div>
         </div>
-        <section id="demo" class="section_radar section_demo" aria-labelledby="demo-title">
+        <section id="demo" class="section_radar section_demo" aria-labelledby="demo-title" hidden>
           <div class="padding-global">
             <div class="container-large"><div id="demo-root"></div></div>
           </div>
@@ -1548,7 +1548,6 @@
                   <div class="footer-col">
                     <div class="footer-col-title">PRODUCTO</div>
                     <a href="#casos">Casos</a
-                    ><a href="#demo">Pruébalo</a
                     ><a href="#specs">Conectores</a><a href="#CTA">Precios</a>
                   </div>
                   <div class="footer-col">
@@ -1586,8 +1585,8 @@
     <script src="assets/vendor/ScrambleTextPlugin.min.js"></script>
     <!-- ===== Our own rewritten site logic ===== -->
     <script src="js/screens.js?v=15"></script>
-    <script src="js/usecases.js?v=18" defer></script>
-    <script src="js/demo.js?v=2" defer></script>
+    <script src="js/usecases.js?v=19" defer></script>
+    <script src="js/demo.js?v=3" defer></script>
     <script src="js/pricing.js?v=15" defer></script>
     <script type="module" src="js/main.js?v=31"></script>
     <script src="js/hero2d.js?v=4"></script>

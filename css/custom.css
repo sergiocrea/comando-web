@@ -1285,7 +1285,7 @@ html { scroll-behavior: smooth; }
 }
 
 /* ---------- Demo «Pruébalo» (reemplaza a Radar y «Un mensaje» mientras están ocultos) ---------- */
-#radar[hidden], #about[hidden] { display: none !important; }
+#radar[hidden], #about[hidden], #demo[hidden], .nav_menu_link[hidden] { display: none !important; }
 .section_demo { scroll-margin-top: calc(var(--nav-height, 5rem) + .5rem); }
 .demo-lede { margin-top: 1rem; }
 .demo-lede b { color: #151515; font-weight: 600; }
@@ -1324,3 +1324,11 @@ html { scroll-behavior: smooth; }
 .uc-step-pro { cursor: default; border-style: dashed; }
 .uc-step-pro b { color: #4d7cff; font-weight: 600; }
 .uc-step-pro:hover { border-color: inherit; }
+
+/* ---------- Casos de uso: encabezado compacto también en escritorio ---------- */
+.section_usecases { padding: 3rem 0 3rem; }
+.section_usecases .section_features-header-component { grid-row-gap: .6rem; row-gap: .6rem; }
+.section_usecases .section_features-heading { font-size: clamp(1.5rem, 1rem + 1.6vw, 2.35rem); }
+.uc-subtitle { display: none; }
+.uc-tabs { margin-top: 1.25rem; }
+.uc-anchor { display: block; height: 0; scroll-margin-top: calc(var(--nav-height, 5rem) + 1rem); }

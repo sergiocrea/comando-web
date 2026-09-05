@@ -64,6 +64,7 @@
       <div class="section_features-header-component"><div class="section_features-eyebrow">UN DÍA CON COMANDO</div>
         <h2 class="section_features-heading">${esc(D.seccion.titulo)}</h2>
         <p class="uc-subtitle">${esc(D.seccion.subtitulo)}</p></div>
+      <span id="como-funciona" class="uc-anchor" aria-hidden="true"></span>
       <div class="uc-tabs" role="tablist" aria-label="Rol">${D.roles.map((r, i) => `<button type="button" role="tab" class="uc-tab${i === state.rol ? ' is-on' : ''}" aria-selected="${i === state.rol}" data-rol="${i}">${esc(r)}</button>`).join('')}</div>
       <div class="uc-chips" role="group" aria-label="Sector">${D.verticales.map((v, i) => `<button type="button" class="uc-chip${i === state.vertical ? ' is-on' : ''}" aria-pressed="${i === state.vertical}" data-vertical="${i}">${esc(v)}</button>`).join('')}</div>
       <div class="uc-layout">
