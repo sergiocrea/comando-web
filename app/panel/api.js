@@ -7,7 +7,7 @@
      equivalente para pedirlo por WhatsApp. Ver README.md: tabla de endpoints.
    - `createMockApi()` sirve los datos de mock-data.js con una pequeña latencia. */
 
-import { MOCK, MOCK_DELAY_MS } from './mock-data.js?v=2';
+import { MOCK, MOCK_DELAY_MS } from './mock-data.js?v=4';
 
 const PENDING = (reason) => ({ pending: true, reason });
 
@@ -42,6 +42,8 @@ export function createApi(cfg, getToken) {
 
   return {
     mode: 'live',
+    /** Llamada directa (la usa setup.js para el flujo de WhatsApp y de conexión). */
+    raw: (path, options = {}) => call(path, options),
     me: () => call('/auth/me'),
     connections: async () => (await call('/integrations/connections')).connections || [],
     sheets: () => optional(async () => (await call('/integrations/google-sheets/sources')).sources || [], 'sheets'),
@@ -82,6 +84,7 @@ export function createMockApi() {
   const a = MOCK.agent;
   return {
     mode: 'mock',
+    raw: (path, options) => { log('raw ' + path, options && options.body); return wait(path.includes('whatsapp/start') ? { comandoNumber: '+51 912 000 000', code: 'K7Q2ZP', waLink: 'https://wa.me/51912000000?text=VERIFICAR%20K7Q2ZP' } : path.includes('reconcile') ? { status: 'connected' } : path.includes('connect-sessions') ? { token: 'mock', connectionId: 'mock-conn' } : { ok: true, purged: true, purgeAfter: new Date(Date.now() + 7 * 864e5).toISOString() }); },
     me: () => wait(MOCK.me),
     connections: () => wait(MOCK.connections),
     sheets: () => wait(MOCK.connections[1].sources),

@@ -7,11 +7,12 @@
    - una sola acción principal por fila; lo demás va dentro de «más»;
    - vocabulario del operador (plata en juego, parado, sin dueño, repetidos), nunca del sistema. */
 
-import { isPending } from './api.js?v=2';
+import { isPending } from './api.js?v=4';
+import { crmBlock, crmActions, whatsappStep } from './setup.js?v=4';
 import {
   esc, num, money, pct, fmtTime, fmtDate, fmtDateTime, monthName, dayLabel, sameDay, rel, isToday, isPast, isoDay,
   wa, waBtn, askLine, chip, statusChip, bar, spark, kpi, card, row, moreBox, empty, soon, toast, ICON, SIGNAL_PHRASE,
-} from './ui.js?v=2';
+} from './ui.js?v=4';
 
 /** Renderiza una parte según el estado de su dato. */
 function part(v, fn, opts = {}) {
@@ -150,7 +151,8 @@ const hoy = {
     const last = card('Lo último que pediste', part(d.history, (hs) => list(hs.filter((h) => h.status !== 'pending').slice(0, 5), histRow, 'Todavía no le has escrito a Comando.'), { what: 'Lo último que pediste', phrase: 'qué fue lo último que hice' }),
       { right: waBtn('deshacer', 'Deshacer lo último', 'btn sm ghost') });
 
-    return `<div class="stack">${welcome}${kpis}${tray}<div class="two">${review}${last}</div></div>`;
+    const noCrm = me.status === 'ok' && me.crmConnected === false ? `<div class="card setup-nudge"><div class="row"><div class="row-ico ok">🔌</div><div class="row-body"><div class="row-title">Conecta tu CRM y Comando empieza a trabajar</div><div class="row-sub">HubSpot, Salesforce o una hoja de Google, con el login del propio sistema. Sin CRM ya puedes escribirle por WhatsApp; con CRM ve tu embudo, te avisa y ejecuta.</div></div><div class="row-actions"><a class="btn sm primary" href="#/cuenta">Conectar mi CRM</a></div></div></div>` : '';
+    return `<div class="stack">${welcome}${noCrm}${kpis}${tray}<div class="two">${review}${last}</div></div>`;
   },
   act: { ...recActions(), ...taskActions(), ...approvalActions() },
 };
@@ -367,19 +369,17 @@ const cuenta = {
       { what: 'El consumo', phrase: 'cuántos comandos me quedan', extra: `Tu plan: ${PLAN[String(me.plan || '').toLowerCase()] || me.plan || '—'}.` });
     const cuentaCard = card('Tu cuenta', `<div class="list">
       ${row({ ico: '👤', title: esc(ctx.user?.fullName || me.name || '—'), sub: esc(ctx.user?.primaryEmailAddress?.emailAddress || me.email || ''), primary: `<button class="btn sm" data-act="acc:profile">Editar</button>` })}
-      ${row({ ico: ICON.wa, title: `WhatsApp ${me.whatsapp ? statusChip(me.whatsapp.status) : ''}`, sub: `${esc(me.whatsapp?.phone || 'Sin vincular')} · le escribes a Comando al ${esc(me.comandoNumber || '')}`, primary: `<a class="btn sm ghost" href="../">Cambiar número</a>` })}
+      ${row({ ico: ICON.wa, title: `WhatsApp ${me.whatsapp ? statusChip(me.whatsapp.status) : ''}`, sub: `${esc(me.whatsapp?.phone || 'Sin vincular')} · le escribes a Comando al ${esc(me.comandoNumber || '')}`, primary: `<button class="btn sm ghost" data-act="wa:change">Cambiar número</button>` })}
+      <div id="wa-change-box"></div>
       <div class="row"><div class="row-ico">💳</div><div class="row-body">${plan}</div><div class="row-actions"><a class="btn sm" href="../../#precios">Cambiar de plan</a></div></div>
     </div>`);
 
     const conns = val(d.connections, []); const active = conns.find((c) => c.bound && c.status === 'active'); const recoverable = conns.find((c) => c.recoverable);
     const h = val(d.health, null); const mk = val(d.mk, null);
-    const crmRow = active ? row({ ico: logo(active.provider), title: `${esc(NAMES[active.provider] || active.name)} ${chip('conectado', 'ok')}`, sub: `${h ? syncLine(h.sync) + ' · ' : ''}${active.mirror ? `${num(active.mirror.contacts)} contactos · ${num(active.mirror.deals)} negocios` : ''}`, primary: `<a class="btn sm ghost" href="../#step-crm">Cambiar</a>`, more: `<a class="btn sm" href="../dashboard/">Qué puede consultar Comando</a>` })
-      : recoverable ? `<p class="note warn"><b>${esc(NAMES[recoverable.provider] || recoverable.name)} está desvinculado.</b> Guardamos tu copia hasta el ${esc(fmtDate(recoverable.purgeAfter, true))}. <a href="../#step-crm">Volver a vincular</a></p>`
-        : `<div class="empty"><b>Sin CRM conectado</b><a class="btn primary" href="../#step-crm">Conectar mi CRM</a></div>`;
-    const sheetRows = val(d.sheets, []).map((s) => row({ ico: logo('googlesheets'), title: esc(s.displayName || s.spreadsheetId), sub: `Google Sheets · pestaña «${esc(s.sheetTitle)}»`, primary: waBtn('cuántas filas tiene ' + (s.displayName || 'la hoja'), 'Preguntar', 'btn sm ghost') })).join('');
     const adRows = mk ? mk.accounts.filter((a) => a.status !== 'soon').map((a) => row({ ico: logo(a.provider), title: `${esc(a.name)} ${a.status === 'active' ? chip('conectada', 'ok') : chip('falta autorizar', 'warn')}`, sub: esc(a.channels.join(' · ')), primary: a.status === 'pending' ? '<button class="btn sm primary" data-act="mk:connect">Autorizar</button>' : '<a class="btn sm ghost" href="#/marketing">Ver campañas</a>' })).join('') : '';
-    const conexiones = card('Tu CRM y tus cuentas', `<div class="list">${crmRow}${sheetRows}${adRows}</div><p class="hint" style="margin-top:12px">¿Otro CRM o una hoja más? <a href="../#step-crm">Conectar</a> · Cuentas de anuncios: <button class="btn sm ghost" data-act="mk:connect">Conectar</button></p>`,
-      { sub: 'Se conectan con el login del propio sistema, sin copiar claves.' });
+    const conexiones = card('Tu CRM', `${active && h ? `<p class="status-line" style="margin-bottom:12px">${syncLine(h.sync)}${active.mirror ? `<span class="hint">${num(active.mirror.contacts)} contactos · ${num(active.mirror.deals)} negocios en tu espejo</span>` : ''}</p>` : ''}${crmBlock(ctx, conns, val(d.sheets, []))}`,
+      { sub: 'Se conecta con el login del propio CRM, sin copiar claves. Solo el CRM activo se consulta cuando hablas con Comando.' });
+    const anuncios = card('Tus cuentas de anuncios', adRows ? `<div class="list">${adRows}</div>` : `<div class="empty"><b>Sin cuentas conectadas</b>Meta (Facebook e Instagram) y TikTok Ads, con el mismo login seguro.</div>`, { sub: 'Para la sección Marketing.', right: '<button class="btn sm" data-act="mk:connect">Conectar</button>' });
 
     const equipo = card('Tu equipo', part(d.team, (t) => { const ROLE = { owner: ['Dueño', 'ok'], admin: ['Admin', 'ok'], supervisor: ['Supervisor', 'info'], agent: ['Vendedor', ''], analyst: ['Analista', 'info'] };
       const owners = (h && h.owners) || { crmOwners: t.crmOwners, comandoPeople: t.people.length };
@@ -395,13 +395,15 @@ const cuenta = {
     const privacidad = card('Privacidad y salida', `<ul class="plain"><li>Tus datos se quedan en tu CRM; Comando guarda solo los campos que activaste.</li><li>Lo que le escribes se conserva 90 días para poder diagnosticar fallos; nadie lo lee sin tu pedido.</li><li>Nunca le escribe a tus clientes desde tu número: prepara el mensaje y lo mandas tú.</li></ul>
       <div class="inline-list" style="margin-top:12px"><a class="btn sm ghost" href="../../privacidad.html">Política de privacidad</a><a class="btn sm ghost" href="mailto:hola@comando.pro">Pedir el borrado de mi cuenta</a><button class="btn sm danger" data-act="acc:signout">Cerrar sesión</button></div>`);
 
-    return `<div class="stack">${head(this.title, this.sub)}${cuentaCard}${conexiones}<div class="two">${equipo}${sabe}</div>${privacidad}</div>`;
+    return `<div class="stack">${head(this.title, this.sub)}${cuentaCard}${conexiones}${anuncios}<div class="two">${equipo}${sabe}</div>${privacidad}</div>`;
   },
   act: {
     'acc:profile': (el, ctx) => (ctx.clerk ? ctx.clerk.openUserProfile() : toast('En modo de prueba no hay sesión.')),
     'acc:signout': async (el, ctx) => { if (!ctx.clerk) return toast('En modo de prueba no hay sesión.'); await ctx.clerk.signOut(); location.href = '../'; },
     'team:invite': () => { toast('Cada persona se registra con su propio WhatsApp en comando.pro/app. Te copiamos el enlace.'); navigator.clipboard?.writeText(location.origin + '/app/'); },
     'mk:connect': marketing.act['mk:connect'],
+    'wa:change': (el, ctx, d, reload) => { const box = document.getElementById('wa-change-box'); if (!box) return; el.disabled = true; whatsappStep(box, ctx, (s) => { toast('WhatsApp vinculado.', 'ok'); ctx.cache = {}; reload(); }); box.scrollIntoView({ behavior: 'smooth', block: 'start' }); },
+    ...crmActions,
   },
 };
 

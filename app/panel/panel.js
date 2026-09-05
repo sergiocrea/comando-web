@@ -4,9 +4,10 @@
    - Cada sección carga sus datos con Promise.allSettled: una parte que falle o que
      aún no exista en el engine no tumba la página. */
 
-import { createApi, createMockApi } from './api.js?v=2';
-import { SECTIONS } from './sections.js?v=2';
-import { esc, setWaBase, wa, skeleton, toast, ICON, isToday, isPast } from './ui.js?v=2';
+import { createApi, createMockApi } from './api.js?v=4';
+import { SECTIONS } from './sections.js?v=4';
+import { whatsappStep, resumePendingConnection } from './setup.js?v=4';
+import { esc, setWaBase, wa, skeleton, toast, ICON, isToday, isPast } from './ui.js?v=4';
 
 const cfg = window.COMANDO_CONFIG || {};
 const $ = (id) => document.getElementById(id);
@@ -122,19 +123,42 @@ async function start() {
     return;
   }
   // Datos de cabecera: número de Comando (para los enlaces a WhatsApp) y nombre.
-  try {
-    const me = await ctx.api.me();
+  // Tras crear la cuenta, el webhook de Clerk tarda unos segundos en aprovisionar el
+  // tenant; hasta entonces /auth/me responde 401. Se reintenta en vez de fallar.
+  let me = null;
+  for (let i = 0; i < 20; i += 1) {
+    try { me = await ctx.api.me(); break; }
+    catch (e) { if (e.status !== 401 || mock) { console.warn('[panel] /auth/me', e); break; } await new Promise((r) => setTimeout(r, 1500)); }
+  }
+  if (me) {
     ctx.me = me;
     if (me.waLink || me.comandoNumber) setWaBase(me.waLink || 'https://wa.me/' + String(me.comandoNumber).replace(/\D/g, ''));
     $('wa-top').href = wa('qué merece mi atención hoy');
-    if (me.whatsapp && me.whatsapp.status !== 'verified' && !mock) {
-      $('page').innerHTML = `<div class="state"><h2>Primero vincula tu WhatsApp</h2><p>El panel muestra lo que Comando hace por ti desde WhatsApp; sin número vinculado no hay nada que mostrar todavía.</p><a class="btn primary" href="../">Vincular WhatsApp</a></div>`;
-      return;
-    }
     const name = me.name || ctx.user?.firstName || 'Tu cuenta';
     $('user-button').innerHTML = `<span class="avatar" title="${esc(name)}">${esc(name.slice(0, 1).toUpperCase())}</span>`;
     $('side-foot').innerHTML = `<b>${esc(name)}</b>${esc(me.whatsapp?.phone || '')}`;
-  } catch (e) { console.warn('[panel] /auth/me', e); }
+    // Sin WhatsApp verificado no hay nada que mostrar: el paso 2 vive aquí mismo.
+    const needsWa = !me.whatsapp || me.whatsapp.status !== 'verified' || params.get('wa') === 'pending';
+    if (needsWa) {
+      document.body.classList.add('is-setup');
+      $('top-title').textContent = 'Vincula tu WhatsApp';
+      whatsappStep($('page'), ctx, (s) => {
+        document.body.classList.remove('is-setup');
+        if (s.waLink || s.comandoNumber) setWaBase(s.waLink || 'https://wa.me/' + String(s.comandoNumber).replace(/\D/g, ''));
+        $('side-foot').innerHTML = `<b>${esc(name)}</b>${esc(s.whatsapp?.phone || '')}`;
+        toast('Listo: tu WhatsApp está vinculado.', 'ok');
+        ctx.cache = {};
+        location.hash = s.crmConnected ? '#/hoy' : '#/cuenta';
+        route(true);
+      });
+      return;
+    }
+    // Una conexión de CRM a medio autorizar (OAuth en otra pestaña) se retoma sola.
+    resumePendingConnection(ctx, () => { ctx.cache = {}; route(true); });
+  } else if (!mock) {
+    $('page').innerHTML = `<div class="state"><h2>No pudimos preparar tu cuenta</h2><p>Recarga la página en unos segundos.</p><button class="btn primary" data-reload>Reintentar</button></div>`;
+    return;
+  }
   // Insignia de Hoy: cuántas cosas esperan al operador (sin bloquear la carga).
   Promise.allSettled([ctx.api.tasks(), ctx.api.approvals(), ctx.api.recommendations(), ctx.api.history()]).then(([t, a, r, h]) => {
     const arr = (x) => (x.status === 'fulfilled' && Array.isArray(x.value) ? x.value : []);

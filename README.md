@@ -9,7 +9,7 @@ Landing de Comando (plataforma de integraciones y automatizaciones para CRM). Es
 - `js/main.js` — lógica de UI reescrita: Lenis (smooth scroll), motor `data-reveal` (fade/block/text/scramble), líneas divisorias, grid canvas con spotlight (≥992px), fondo/morph de la barra de navegación, menú móvil, video de features scrubbeado por scroll en 5 fases + Lottie, countdown y globo del footer.
 - `js/hero2d.js` — preloader (contador + salida escalonada) y el hero: teléfono con chat de WhatsApp dibujado en un canvas 2D.
 - `js/explode3d.js` — la vista explosionada: rotación (0→0.32) y explosión por capas en el eje Y (0.32→0.95) dirigidas por scroll, con los labels/hotspots que aparecen cerca del final.
-- `app/` — zona con sesión (`noindex`, no se enlaza desde el footer público): `app/index.html` es el onboarding (Clerk → WhatsApp → CRM); `app/dashboard/` es "Qué puede consultar Comando", donde el operador elige qué campos de su CRM puede consultar y editar (ver `app/dashboard/README.md`, mock en `/app/dashboard/?mock=1`); `app/panel/` es el panel interno del operador (Hoy, recordatorios, calendario, qué revisar en el CRM, embudo, avisos y automatizaciones, historial, aprobaciones, marketing, cuenta). `app/panel/README.md` es el contrato con el engine: qué endpoints existen y cuáles faltan; se revisa sin backend en `/app/panel/?mock=1`.
+- `app/` — zona con sesión (`noindex`, no se enlaza desde el footer público): `app/index.html` es el acceso (Clerk: iniciar sesión o crear cuenta) con la sección «Lo que puedes pedirle» al lado, que antes vivía en la landing; al entrar manda a `app/panel/`, el panel interno del operador (Hoy, Agenda, Mi CRM, Avisos, Marketing, Cuenta), donde también viven vincular WhatsApp y conectar el CRM (`app/panel/setup.js`). `app/dashboard/` es "Qué puede consultar Comando", donde el operador elige qué campos de su CRM puede consultar y editar (ver `app/dashboard/README.md`, mock en `/app/dashboard/?mock=1`). `app/panel/README.md` es el contrato con el engine: qué endpoints existen y cuáles faltan; se revisa sin backend en `/app/panel/?mock=1` (y el paso de WhatsApp con `&wa=pending`).
 
 ## Cómo correrlo
 
@@ -33,7 +33,7 @@ Debe servirse por HTTP (no abrir el `index.html` con `file://`), porque usa mód
 ## Pantallas dibujadas en canvas (sin video)
 
 - `js/hero2d.js` — preloader + hero en un solo `<canvas>` 2D: marco del iPhone, chat de WhatsApp (modo oscuro) y burbujas flotantes que sobresalen del teléfono. El operador tipea comandos en lenguaje natural (tomados de `comando-pro/docs/research/command-training-dataset`) y Comando responde; los guiones están en `SCENARIOS`/`ACTIVE`. La inclinación 3D es CSS (`perspective` + `rotateY`). Sin Three.js ni WebGL.
-- `js/screens.js` — `window.drawFeatureScreen(ctx, w, h, frame)` dibuja la UI de features por frame (0–680 @30fps: boot → log de eventos → pipeline de automatización → sync CRM). `main.js` lo scrubbea por scroll en `#scroll-video` y los `<canvas class="screen-loop">` (bloques responsive) lo reproducen en loop.
+- `js/screens.js` — `window.drawFeatureScreen(ctx, w, h, frame)` dibuja la UI de features por frame (0–680 @30fps: boot → log de eventos → pipeline de automatización → sync CRM). los `<canvas class="screen-loop">` lo reproducen en loop; hoy se usa en el teléfono de la pantalla de acceso (`app/index.html`). La sección «Lo que puedes pedirle» (scrub por scroll en `#scroll-video`) se retiró de la landing y vive en `/app/`.
 
 ## Pendientes de marca
 

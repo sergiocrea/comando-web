@@ -3,107 +3,60 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Comando — Crear cuenta</title>
+<title>Comando — Entrar</title>
 <meta name="robots" content="noindex">
+<meta name="theme-color" content="#ffffff">
 <link rel="icon" href="../assets/img/favicon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link href="onboarding.css?v=9" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@700&display=swap" rel="stylesheet">
+<link href="auth.css?v=1" rel="stylesheet">
 <!-- Config publica: la clave publishable de Clerk NO es secreta -->
 <script>
   window.COMANDO_CONFIG = {
     clerkPublishableKey: 'pk_test_cmVsYXhpbmctZm94LTQ3Ni5jbGVyay5hY2NvdW50cy5kZXYk',
     clerkFrontendApi: 'relaxing-fox-476.clerk.accounts.dev',
-    clerkJwtTemplate: 'comando',
-    engineUrl: 'https://app.comando.pro/api',
-    nangoUrl: 'https://integrations.comando.pro',
-    // Publicas por diseno: el client ID identifica la app y la clave del Picker
-    // esta restringida por referrer en Google Cloud.
-    googleClientId: '569595012288-6aqbsiffcjt8tl6vj54eb9hr4lupnj9c.apps.googleusercontent.com',
-    googlePickerApiKey: 'AIzaSyDqGt8YqI904BwIWkeZkcuhkvZPlfaRxpQ',
-    googleProjectNumber: '569595012288',
   };
 </script>
 </head>
 <body>
-<main class="ob">
-  <a class="ob-logo" href="../"><span class="cmd-wordmark" aria-label="Comando"><span aria-hidden="true">comand</span><span class="cmd-o" aria-hidden="true"></span></span></a>
-
-  <ol class="ob-steps" aria-label="Pasos">
-    <li data-step="cuenta"><span>1</span> Cuenta</li>
-    <li data-step="whatsapp"><span>2</span> WhatsApp</li>
-    <li data-step="crm"><span>3</span> CRM</li>
-  </ol>
-
-  <!-- Paso 1: Clerk monta aquí su formulario (Google + email) -->
-  <section id="step-cuenta" class="ob-card ob-card-clerk" hidden>
-    <div id="clerk-signup"></div>
-  </section>
-
-  <!-- Paso 2: número de WhatsApp -->
-  <section id="step-whatsapp" class="ob-card" hidden>
-    <h1>Vincula tu WhatsApp</h1>
-    <p class="ob-muted">Comando funciona desde tu propio WhatsApp: escribe el número completo con código de país desde el que enviarás los comandos.</p>
-    <form id="phone-form" class="ob-form">
-      <label>Número de WhatsApp</label>
-      <div id="phone-picker"></div>
-      <button type="submit" class="ob-btn">Continuar</button>
-      <p id="phone-error" class="ob-error" role="alert" hidden></p>
-    </form>
-    <div id="phone-verify" hidden>
-      <p>Envía este mensaje <strong>desde el número que registraste</strong> al WhatsApp de Comando (<span id="comando-number"></span>):</p>
-      <p class="ob-code" id="verify-message"></p>
-      <a id="wa-link" class="ob-btn" target="_blank" rel="noopener">Abrir WhatsApp y enviar</a>
-      <p class="ob-muted ob-small">El código vence en 15 minutos. Esperando tu mensaje… <span class="ob-spinner" aria-hidden="true"></span></p>
-      <button type="button" id="phone-change" class="ob-link">Cambiar número</button>
+<div class="auth">
+  <aside class="auth-side" aria-label="Lo que puedes pedirle a Comando">
+    <div class="auth-side-inner">
+      <a class="cmd-wordmark" href="../" aria-label="Comando"><span aria-hidden="true">comand</span><span class="cmd-o" aria-hidden="true"></span></a>
+      <div class="eyebrow">LO QUE PUEDES PEDIRLE</div>
+      <div class="auth-phone" aria-hidden="true"><canvas class="screen-loop" width="360" height="684"></canvas></div>
+      <h1>Actualiza, avisa y da seguimiento desde WhatsApp.</h1>
+      <p class="lead">Le escribes a Comando como a una persona. Él interpreta, te muestra qué va a hacer, espera tu CONFIRMAR y lo ejecuta en tu CRM.</p>
+      <ol class="cmd-list">
+        <li><span class="n">01</span><div><h3>El CRM queda al día</h3><p class="cmd">Cuando entre un lead nuevo, avísame por aquí.</p></div></li>
+        <li><span class="n">02</span><div><h3>Ningún lead espera</h3><p class="cmd">Si un lead lleva 15 minutos sin contacto, avisa al supervisor.</p></div></li>
+        <li><span class="n">03</span><div><h3>Una sola versión de la verdad</h3><p class="cmd">Cada mañana a las 7 dime qué leads entraron ayer y quién no los ha tocado.</p></div></li>
+        <li><span class="n">04</span><div><h3>Ningún seguimiento se pierde</h3><p class="cmd">A quien no responda la cotización, recuérdamelo a los 3, 5 y 7 días con el mensaje listo.</p></div></li>
+        <li><span class="n">05</span><div><h3>Cada lead entra listo para trabajar</h3><p class="cmd">Apenas llegue un lead de Meta, avísame y déjame la bienvenida lista para enviar.</p></div></li>
+        <li><span class="n">06</span><div><h3>Entérate antes de que se enfríe</h3><p class="cmd">Si se pierde un deal de más de 20 000, avísame con el motivo.</p></div></li>
+        <li><span class="n">07</span><div><h3>Cada oportunidad tiene responsable</h3><p class="cmd">Reparte los leads de la zona norte entre Ana y Luis; si nadie los toma, dímelo.</p></div></li>
+        <li><span class="n">08</span><div><h3>La próxima acción siempre clara</h3><p class="cmd">Un día antes de cada cita, pásame el recordatorio para el cliente y avísame si no confirma.</p></div></li>
+        <li><span class="n">09</span><div><h3>Recupera oportunidades a tiempo</h3><p class="cmd">Si alguien abandona el carrito, en una hora pásame el mensaje con el enlace para recuperarlo.</p></div></li>
+        <li><span class="n">10</span><div><h3>Decide sin perseguir reportes</h3><p class="cmd">Cada viernes envíame los KPIs de la semana por vendedor.</p></div></li>
+      </ol>
+      <p class="auth-side-foot">Funciona con HubSpot, Salesforce y Google Sheets. Nada cambia en tu CRM sin que confirmes. <a href="../#precios">Ver planes</a></p>
     </div>
-  </section>
+  </aside>
 
-  <!-- Paso 3: CRM opcional -->
-  <section id="step-crm" class="ob-card" hidden>
-    <h1>¡Listo! Tu WhatsApp está vinculado</h1>
-    <p>Ya puedes escribirle a Comando. Prueba con: <em>"muéstrame mis contactos de esta semana"</em>.</p>
-    <p class="ob-muted">Conecta HubSpot, Salesforce o una hoja de Google. Solo el CRM activo se consulta cuando hablas con Comando.</p>
-    <div class="crm-grid" role="list">
-      <button type="button" class="crm-card is-ready" data-crm="hubspot" role="listitem"><img src="../assets/img/logos/hubspot.svg" alt=""><span>HubSpot</span><small>Conectar</small></button>
-      <button type="button" class="crm-card is-ready" data-crm="google-sheets" role="listitem"><img src="../assets/img/logos/googlesheets.svg" alt=""><span>Google Sheets</span><small>Conectar</small></button>
-      <button type="button" class="crm-card" data-crm="pipedrive" disabled role="listitem"><img src="../assets/img/logos/pipedrive.svg" alt=""><span>Pipedrive</span><small>Próximamente</small></button>
-      <button type="button" class="crm-card" data-crm="zoho" disabled role="listitem"><img src="../assets/img/logos/zoho.svg" alt=""><span>Zoho CRM</span><small>Próximamente</small></button>
-      <button type="button" class="crm-card is-ready" data-crm="salesforce" role="listitem"><img src="../assets/img/logos/salesforce.svg" alt=""><span>Salesforce</span><small>Conectar</small></button>
-      <button type="button" class="crm-card" data-crm="kommo" disabled role="listitem"><img src="../assets/img/logos/kommo.svg" alt=""><span>Kommo</span><small>Próximamente</small></button>
-      <button type="button" class="crm-card" data-crm="shopify" disabled role="listitem"><img src="../assets/img/logos/shopify.svg" alt=""><span>Shopify</span><small>Próximamente</small></button>
-      <button type="button" class="crm-card" data-crm="tiendanube" disabled role="listitem"><img src="../assets/img/logos/tiendanube.svg" alt=""><span>Tiendanube</span><small>Próximamente</small></button>
-      <button type="button" class="crm-card" data-crm="woocommerce" disabled role="listitem"><img src="../assets/img/logos/woocommerce.svg" alt=""><span>WooCommerce</span><small>Próximamente</small></button>
-      <button type="button" class="crm-card" data-crm="mercadolibre" disabled role="listitem"><img src="../assets/img/logos/mercadolibre.svg" alt=""><span>Mercado Libre</span><small>Próximamente</small></button>
-      <button type="button" class="crm-card" data-crm="vtex" disabled role="listitem"><img src="../assets/img/logos/vtex.svg" alt=""><span>VTEX</span><small>Próximamente</small></button>
+  <main class="auth-main">
+    <div class="auth-brand">
+      <a class="cmd-wordmark" href="../" aria-label="Comando"><span aria-hidden="true">comand</span><span class="cmd-o" aria-hidden="true"></span></a>
+      <a class="back" href="../">← comando.pro</a>
     </div>
-    <ul id="sheet-list" class="sheet-list" hidden></ul>
-    <p id="crm-status" class="ob-muted ob-small"></p>
-    <section id="crm-recovery" class="crm-recovery" aria-live="polite" hidden>
-      <strong><span id="crm-recovery-name"></span> está desvinculado</strong>
-      <p id="crm-recovery-copy"></p>
-      <div class="ob-actions">
-        <button type="button" id="recover-crm" class="ob-btn">Volver a vincular y recuperar</button>
-        <button type="button" id="purge-crm" class="ob-link ob-link-danger">Eliminar datos ahora</button>
-      </div>
-    </section>
-    <div class="ob-actions">
-      <button type="button" id="disconnect-crm" class="ob-btn ob-btn-danger" hidden>Desconectar CRM</button>
-      <a class="ob-btn ob-btn-secondary" id="open-whatsapp" target="_blank" rel="noopener">Ir a WhatsApp</a>
+    <div class="auth-box">
+      <p class="auth-loading" id="auth-loading"><span class="spinner"></span> Cargando…</p>
+      <div id="clerk-root"></div>
+      <p id="auth-error" class="auth-error" role="alert" hidden></p>
+      <p class="auth-foot">Al continuar aceptas los <a href="../terminos.html">términos</a> y la <a href="../privacidad.html">política de privacidad</a>. Después vinculas tu WhatsApp y, si quieres, tu CRM.</p>
     </div>
-    <p id="fields-next" class="ob-next" hidden>
-      <a href="panel/">Ir a mi panel &rarr;</a>
-      <span>Tus recordatorios, qué merece tu atención, qué revisar en tu CRM, tus avisos y tu equipo.</span>
-      <a href="dashboard/" style="display:inline-block;margin-top:8px">Qué puede consultar Comando &rarr;</a>
-      <span>Elige qué campos de tu CRM puede leer y cuáles puede modificar cuando le escribes.</span>
-    </p>
-  </section>
-
-  <p id="fatal" class="ob-error" role="alert" hidden></p>
-</main>
-<script src="https://accounts.google.com/gsi/client" async></script>
-<script src="https://apis.google.com/js/api.js" async></script>
-<script src="phone-picker.js?v=3"></script>
-<script src="onboarding.js?v=14" defer></script>
+  </main>
+</div>
+<script src="../js/screens.js"></script>
+<script src="auth.js?v=1" defer></script>
 </body>
 </html>

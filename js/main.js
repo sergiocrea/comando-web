@@ -591,7 +591,7 @@ function initAboutFade() {
     if (!targets.length) return;
     gsap.fromTo(targets, { opacity: 1 }, {
       opacity: 0, ease: 'none',
-      scrollTrigger: { trigger: '#features-padding', start: 'top 30%', end: 'top top', scrub: true },
+      scrollTrigger: { trigger: '#casos', start: 'top 30%', end: 'top top', scrub: true },
     });
   });
 

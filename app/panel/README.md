@@ -62,6 +62,7 @@ Cuenta. La lista completa de eliminaciones con su motivo está en `docs/rediseno
 | `index.html` | shell: barra lateral (escritorio), barra inferior (móvil), cabecera con el botón de WhatsApp y la cuenta, `COMANDO_CONFIG` |
 | `panel.js` | sesión de Clerk (misma que `/app/`), rutas por hash, carga con `Promise.allSettled`, delegación de clics y formularios, insignia de Hoy (cuántas cosas esperan) |
 | `sections.js` | las 6 secciones: `load` (qué pide), `view` (cómo se ve), `act` (clics), `forms` (envíos) |
+| `setup.js` | puesta en marcha dentro del panel: vincular WhatsApp (número → código VERIFICAR → sondeo) y conectar el CRM (HubSpot/Salesforce por Nango, Google Sheets con el selector de Google, desconectar, recuperar, purgar). Antes era el onboarding de `/app/`; ahora `/app/` solo es el acceso con Clerk |
 | `api.js` | cliente del engine (Bearer, reintento si el JWT venció, `x-request-id`); cada método devuelve datos o `{pending:true}` si el endpoint aún no existe (404/501); `createMockApi` para `?mock=1` |
 | `mock-data.js` | fixtures de un tenant inmobiliario con el vocabulario del portal de pruebas |
 | `ui.js` | escape, formatos LatAm (`S/ 9.870.000`), chips, `row()` (una acción principal + «más»), `wa()` con la frase, frases «te avisa cuando…» por señal, toasts, iconos |
@@ -73,6 +74,7 @@ Sin build ni dependencias: módulos ES nativos. Servir por HTTP:
 ```bash
 cd comando-web && python3 -m http.server 8000
 # http://localhost:8000/app/panel/?mock=1   ← sin backend, todas las secciones con datos
+# http://localhost:8000/app/panel/?mock=1&wa=pending   ← el paso «Vincula tu WhatsApp» dentro del panel
 # http://localhost:8000/app/panel/          ← sesión de Clerk + engine real
 ```
 
