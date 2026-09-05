@@ -1422,3 +1422,44 @@ html { scroll-behavior: smooth; }
 /* El menú fijo debe quedar por encima de las secciones con z-index propio
    (los casos de uso, z-index 3, tapaban los enlaces al pasar por debajo). */
 .nav_fixed { z-index: 20; }
+
+/* ---------- Hero: categoría explícita, titular literal, microcopy bajo el CTA, CRMs a la vista ---------- */
+.b2b-hero-title { max-width: 19ch; font-size: clamp(3.4rem, 5.6vw, 6.2rem); }
+.b2b-hero-note { margin: .85rem 0 0; font-family: "Neuehaasunicaw 1 G", Inter, sans-serif; font-size: .88rem; line-height: 1.5; color: var(--b2b-muted); }
+.b2b-hero-with { display: flex; flex-wrap: wrap; align-items: center; gap: .6rem 1rem; margin-top: 1.5rem; font-family: "Jetbrainsmono Variable", monospace; font-size: .66rem; letter-spacing: .1em; text-transform: uppercase; color: var(--b2b-muted); }
+.b2b-hero-with b { display: inline-flex; align-items: center; gap: .45rem; font-family: "Neuehaasunicaw 1 G", Inter, sans-serif; font-size: .9rem; font-weight: 600; letter-spacing: 0; text-transform: none; color: var(--b2b-ink); }
+.b2b-hero-with img { width: 1.35rem; height: 1.35rem; object-fit: contain; }
+.b2b-hero-with a { font-family: "Neuehaasunicaw 1 G", Inter, sans-serif; font-size: .9rem; letter-spacing: 0; text-transform: none; color: var(--b2b-blue); text-decoration: none; }
+.b2b-hero-with a:hover { text-decoration: underline; }
+@media (max-width: 1100px) { .b2b-hero-title { font-size: clamp(3.1rem, 4.6vw, 4.6rem); } }
+@media (max-width: 767px) {
+  /* El copy del hero creció (categoría, microcopy y CRMs): el velo sube para que
+     el texto no quede sobre el video. Distancias fijas desde abajo, como el original. */
+  .b2b-hero-glow {
+    background: linear-gradient(to top,
+      #f3f1ea 0,
+      rgba(243, 241, 234, .97) 24rem,
+      rgba(245, 244, 238, .92) 31rem,
+      rgba(248, 247, 243, .78) 37rem,
+      rgba(248, 247, 243, .4) 43rem,
+      rgba(248, 247, 243, .1) 48rem,
+      rgba(248, 247, 243, .2) 100%);
+  }
+  .b2b-hero-title { max-width: 12ch; font-size: clamp(2.6rem, 11vw, 3.8rem); }
+  .b2b-hero-with { gap: .5rem .8rem; }
+  .b2b-hero-with b { font-size: .84rem; }
+}
+
+/* El mockup del hero ya no depende de un bucle de 8 s: mensaje, respuesta y las tres
+   acciones entran en menos de un segundo y se quedan. Quien llega ve la explicación
+   completa sin esperar. */
+@keyframes pw-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+@keyframes pw-in-result { from { opacity: 0; transform: translateY(12px) rotate(-.55deg); } to { opacity: 1; transform: rotate(-.55deg); } }
+.power-context { animation: pw-in .5s ease-out both; }
+.power-bot-bubble { animation: pw-in .5s ease-out .25s both; }
+.power-result { animation: pw-in-result .6s ease-out .45s both; }
+.power-action-row { animation: pw-in .4s ease-out .75s both; }
+.power-action-row:nth-of-type(2) { animation-delay: .88s; }
+.power-action-row:nth-of-type(3) { animation-delay: 1.01s; }
+.power-action-row:nth-of-type(4) { animation-delay: 1.14s; }
+@media (max-width: 767px) { .power-result { animation-name: pw-in; } }
