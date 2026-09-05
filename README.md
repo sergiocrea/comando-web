@@ -9,7 +9,7 @@ Landing de Comando (plataforma de integraciones y automatizaciones para CRM). Es
 - `js/main.js` — lógica de UI reescrita: Lenis (smooth scroll), motor `data-reveal` (fade/block/text/scramble), líneas divisorias, grid canvas con spotlight (≥992px), fondo/morph de la barra de navegación, menú móvil, video de features scrubbeado por scroll en 5 fases + Lottie, countdown y globo del footer.
 - `js/hero2d.js` — preloader (contador + salida escalonada) y el hero: teléfono con chat de WhatsApp dibujado en un canvas 2D.
 - `js/explode3d.js` — la vista explosionada: rotación (0→0.32) y explosión por capas en el eje Y (0.32→0.95) dirigidas por scroll, con los labels/hotspots que aparecen cerca del final.
-- `app/` — zona con sesión (`noindex`, no se enlaza desde el footer público): `app/index.html` es el onboarding (Clerk → WhatsApp → CRM) y `app/dashboard/` es "Qué puede consultar Comando", donde el operador elige qué campos de su CRM puede consultar y editar. Ver `app/dashboard/README.md`; se revisa sin backend en `/app/dashboard/?mock=1`.
+- `app/` — zona con sesión (`noindex`, no se enlaza desde el footer público): `app/index.html` es el onboarding (Clerk → WhatsApp → CRM); `app/dashboard/` es "Qué puede consultar Comando", donde el operador elige qué campos de su CRM puede consultar y editar (ver `app/dashboard/README.md`, mock en `/app/dashboard/?mock=1`); `app/panel/` es el panel interno del operador (Hoy, recordatorios, calendario, qué revisar en el CRM, embudo, avisos y automatizaciones, historial, aprobaciones, marketing, cuenta). `app/panel/README.md` es el contrato con el engine: qué endpoints existen y cuáles faltan; se revisa sin backend en `/app/panel/?mock=1`.
 
 ## Cómo correrlo
 
