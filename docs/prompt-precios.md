@@ -24,7 +24,7 @@ sección debe sentirse parte de la misma página.
 - Cada usuario tiene su propio **espejo del CRM**, con el límite de contactos del plan.
 - Uso justo en **comandos** (texto o audio; paquete incluido por plan + add-on).
 - Alertas en **tiempo real** por eventos del CRM en todos los planes.
-- Plan **Gratis como prueba individual con cupo**: 50 comandos en total, 1 usuario,
+- Plan **Gratis como prueba individual con cupo**: 30 comandos en total, 1 usuario,
   1 CRM y un espejo de hasta 10,000 contactos, sin tarjeta. Al agotar el cupo deja de
   ejecutar hasta que el usuario elija un plan.
 - Moneda: USD. Anual = 2 meses gratis.
@@ -126,14 +126,14 @@ Márgenes por plan con TODOS los comandos incluidos consumidos y el CRM al tope 
 | Básico | $3 | $0.38 | 87% | $0.48 | 84% |
 | Starter | $7 | $1.20 | 83% | $1.54 | 78% |
 | Pro | $19 | $3.45 | 82% | $4.46 | 77% |
-| Gratis | $0 | ~$0.10 una vez (50 comandos); sin sincronización continua | — | — | — |
+| Gratis | $0 | ~$0.14 una vez (30 comandos); sin sincronización continua | — | — | — |
 
 Escalera de valor (comandos por dólar): Básico 50 → Starter 71 → Pro 79; el add-on (62/$) queda entre Básico y Starter para que el upgrade siempre gane. Márgenes calculados con 30 % de comandos por audio y cobro anual (5 % de comisión); "peor caso" = todo por audio.
 
 (Contactos al tope del plan a $0.015 por 1,000/mes: Básico 10,000 → $0.15 · Starter 30,000 → $0.45 · Pro 80,000 → $1.20. Con un CRM sin filtro incremental el costo de contactos se duplica y el margen baja.)
 
 Uso real esperado (60% de los comandos consumidos, 30% audio): márgenes 75-85%.
-Regla del plan Gratis: la sincronización del CRM se pausa al agotar los 50 comandos o
+Regla del plan Gratis: la sincronización del CRM se pausa al agotar los 30 comandos o
 tras 30 días sin uso; su espejo nunca supera 10,000 contactos.
 Plataforma fija ~$175/mes (Temporal Cloud piso $100, VM ~$65, Redis $5, Neon ~$5).
 Recalcular el punto de equilibrio con la mezcla real de planes y usuarios. Reglas para el agente: no bajar precios ni subir

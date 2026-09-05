@@ -11,7 +11,7 @@ const PRICING_CONFIG = {
   subtitle: 'Actualiza el CRM, crea seguimientos y recibe alertas desde WhatsApp. Prueba gratis.',
   // Cada plan muestra solo 4 líneas: contactos, comandos, usuario y un diferencial.
   plans: [
-    { id: 'gratis',  name: 'Gratis',  price: 0,  contacts: 10000, commands: 50,   highlight: '1 conexión', note: 'Prueba individual, sin tarjeta. Sin sincronización continua ni automatizaciones; expira a los 30 días sin uso.' },
+    { id: 'gratis',  name: 'Gratis',  price: 0,  contacts: 10000, commands: 30,   highlight: '1 conexión', note: 'Prueba individual, sin tarjeta. Sin sincronización continua ni automatizaciones; expira a los 30 días sin uso.' },
     { id: 'basico',  name: 'Básico',  price: 3,  contacts: 10000, commands: 150,  highlight: '2 conexiones' },
     { id: 'starter', name: 'Starter', price: 7,  contacts: 30000, commands: 500,  highlight: '5 conexiones' },
     { id: 'pro',     name: 'Pro',     price: 19, contacts: 80000, commands: 1500, highlight: 'Conexiones ilimitadas' },
@@ -49,7 +49,7 @@ const PRICING_CONFIG = {
   faq: [
     { q: '¿Cómo se calcula el precio?', a: 'Cada persona usa un plan según los contactos que necesita tener en su espejo del CRM. Si dos usuarios necesitan hasta 10 000 contactos cada uno, cada uno usa un plan Básico de US$ 3 al mes. Puedes cambiar de plan cuando quieras; se prorratea.' },
     { q: '¿Qué cuenta como comando y qué pasa si me paso?', a: 'Un comando es cada pedido que le haces a Comando por WhatsApp, por texto o por audio; una nota de voz cuenta como 1,5. Las confirmaciones («sí», «ok») y las respuestas de Comando no cuentan. Te avisamos al 80 % del cupo y nunca cortamos el servicio sin aviso: puedes sumar paquetes de 500 comandos por $8 o subir de plan.' },
-    { q: '¿Qué incluye el plan Gratis?', a: '50 comandos para una persona, con un espejo de hasta 10 000 contactos y 1 CRM conectado, sin tarjeta. No incluye sincronización continua ni automatizaciones; al agotar el cupo (o tras 30 días sin uso) deja de ejecutar hasta que elijas un plan.' },
+    { q: '¿Qué incluye el plan Gratis?', a: '30 comandos para una persona, con un espejo de hasta 10 000 contactos y 1 CRM conectado, sin tarjeta. No incluye sincronización continua ni automatizaciones; al agotar el cupo (o tras 30 días sin uso) deja de ejecutar hasta que elijas un plan.' },
     { q: '¿Cada cuánto se actualiza mi CRM en Comando?', a: 'HubSpot sincroniza los cambios compatibles mediante sus eventos y Google Sheets se consulta cuando se lo pides. La frecuencia y cobertura de nuevos conectores se publicará a medida que estén disponibles.' },
     { q: '¿Comando les escribe a mis clientes?', a: 'No desde tu número personal: Meta bloquea los envíos automáticos desde WhatsApp no oficial. Comando prepara el mensaje y te lo entrega listo para enviarlo con un toque (modo asistido), así que no necesitas contratar la API de WhatsApp Business para empezar. Si conectas un número oficial de WhatsApp Business, los envíos automáticos con plantillas aprobadas quedan disponibles.' },
     { q: '¿Qué pasa si pido algo que mi CRM no permite?', a: 'Comando te lo dice y te propone la alternativa que sí puede hacer (por ejemplo, crear la tarea en vez de llamar, o contar desde hoy si tu CRM no guarda historial de ese campo).' },

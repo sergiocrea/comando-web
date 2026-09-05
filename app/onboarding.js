@@ -476,7 +476,7 @@
           formFieldLabel__emailAddress_username: 'Correo',
           backButton: 'Volver',
           signUp: {
-            start: { title: 'Crea tu cuenta gratis', subtitle: '50 comandos de prueba, sin tarjeta. Tu CRM se conecta después, si quieres.', actionText: '¿Ya tienes cuenta?', actionLink: 'Inicia sesión' },
+            start: { title: 'Crea tu cuenta gratis', subtitle: '30 comandos de prueba, sin tarjeta. Tu CRM se conecta después, si quieres.', actionText: '¿Ya tienes cuenta?', actionLink: 'Inicia sesión' },
             emailCode: { title: 'Revisa tu correo', subtitle: 'Escribe el código que te enviamos', formTitle: 'Código de verificación', formSubtitle: 'Escribe el código enviado a tu correo', resendButton: '¿No llegó? Reenviar' },
             continue: { title: 'Completa tus datos', subtitle: 'Un último paso para crear tu cuenta' },
           },
