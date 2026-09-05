@@ -1391,3 +1391,30 @@ html { scroll-behavior: smooth; }
 @media (max-width: 767px) {
   .b2b-hero-lede { color: #3f423f; text-shadow: 0 1px 2px rgba(248, 247, 243, .95), 0 0 14px rgba(248, 247, 243, .8), 0 0 26px rgba(248, 247, 243, .6); }
 }
+
+/* ---------- Demo «Pruébalo» (reemplaza a Radar y «Un mensaje» mientras están ocultos) ---------- */
+#radar[hidden], #about[hidden] { display: none !important; }
+.section_demo { scroll-margin-top: calc(var(--nav-height, 5rem) + .5rem); }
+.demo-lede { margin-top: 1rem; }
+.demo-lede b { color: #151515; font-weight: 600; }
+.demo-chips { display: flex; flex-wrap: wrap; gap: .5rem; margin-top: 1.25rem; }
+.demo-chip { font: inherit; font-family: "Jetbrainsmono Variable", ui-monospace, monospace; font-size: .72rem; letter-spacing: .01em; color: #315fef; background: #fff; border: 1px solid rgba(49, 95, 239, .35); border-radius: 999px; padding: .45rem .8rem; cursor: pointer; transition: background .15s, color .15s; text-align: left; }
+.demo-chip:hover { background: #315fef; color: #fff; }
+.demo-chat { height: 26rem; overflow-y: auto; scroll-behavior: smooth; scrollbar-width: thin; scrollbar-color: rgba(255,255,255,.2) transparent; }
+.demo-chat .radar-bubble { white-space: normal; }
+.demo-chat .radar-bubble b { display: inline; margin: 0; }
+.demo-input input { flex: 1; min-width: 0; background: #2a3942; color: #e9edef; border: 0; border-radius: 999px; padding: .6rem .9rem; font-family: "Neuehaasunicaw 1 G", Inter, sans-serif; font-size: .85rem; outline: none; }
+.demo-input input::placeholder { color: #8fa3ad; }
+.demo-input input:focus { box-shadow: 0 0 0 2px rgba(0, 168, 132, .5); }
+.demo-input button { width: 2.2rem; height: 2.2rem; flex: 0 0 auto; border: 0; border-radius: 50%; background: #00a884; color: #fff; font-size: .85rem; cursor: pointer; display: grid; place-items: center; }
+.demo-input button:hover { background: #02c39a; }
+.demo-typing { display: inline-flex; gap: .3rem; align-items: center; padding: .7rem .8rem; }
+.demo-typing i { width: .4rem; height: .4rem; border-radius: 50%; background: #8fa3ad; animation: demo-dot 1.1s infinite ease-in-out; }
+.demo-typing i:nth-child(2) { animation-delay: .15s; } .demo-typing i:nth-child(3) { animation-delay: .3s; }
+@keyframes demo-dot { 0%, 60%, 100% { transform: translateY(0); opacity: .5; } 30% { transform: translateY(-3px); opacity: 1; } }
+@media (max-width: 991px) {
+  .demo-layout .demo-lede { order: 4; }
+  .demo-layout .demo-chips { order: 5; justify-content: center; }
+  .demo-layout .radar-cta-row { order: 6; }
+  .demo-chat { height: 22rem; }
+}
