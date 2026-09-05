@@ -1418,3 +1418,7 @@ html { scroll-behavior: smooth; }
   .demo-layout .radar-cta-row { order: 6; }
   .demo-chat { height: 22rem; }
 }
+
+/* El menú fijo debe quedar por encima de las secciones con z-index propio
+   (los casos de uso, z-index 3, tapaban los enlaces al pasar por debajo). */
+.nav_fixed { z-index: 20; }

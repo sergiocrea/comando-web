@@ -633,6 +633,30 @@ function initAnchorOffset() {
     });
     history.replaceState(null, '', `#${id}`);
   }, true);
+
+  // Al abrir la página con un ancla (comando.pro/#demo) el arranque manual del
+  // scroll la deja en el hero. Cuando el preloader ya salió, se va a la sección.
+  const scrollToHash = () => {
+    const id = decodeURIComponent(location.hash.slice(1));
+    const target = id && document.getElementById(id);
+    if (!target) return;
+    const nav = document.querySelector('.nav_component');
+    const offset = (nav ? nav.getBoundingClientRect().height : 0) + 8;
+    window.scrollTo({ top: Math.max(0, target.getBoundingClientRect().top + window.scrollY - offset), behavior: 'auto' });
+  };
+  if (location.hash.length > 1) {
+    const pre = document.getElementById('preloader');
+    const started = Date.now();
+    const tick = () => {
+      const gone = !pre || getComputedStyle(pre).display === 'none' || pre.getBoundingClientRect().bottom <= 0 || Date.now() - started > 6000;
+      // La página sigue creciendo un momento (casos, demo, precios se montan por JS):
+      // se reajusta varias veces hasta que la altura se asienta.
+      if (gone) { scrollToHash(); [300, 900, 1800, 3000].forEach((ms) => setTimeout(scrollToHash, ms)); return; }
+      setTimeout(tick, 150);
+    };
+    if (document.readyState === 'complete') tick(); else window.addEventListener('load', tick, { once: true });
+  }
+  window.addEventListener('hashchange', scrollToHash);
 }
 
 /* ============================================================
