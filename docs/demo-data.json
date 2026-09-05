@@ -1,0 +1,887 @@
+{
+  "_": "Datos de la demo «Pruébalo» (js/demo.js y functions/api/demo.js). `crm` es la inmobiliaria de ejemplo; `intents` son las intenciones que entiende el modo local (palabras clave normalizadas: minúsculas, sin tildes) con frases reales del banco de comandos de comando-pro; `examples` son los chips.",
+  "crm": {
+    "empresa": "Inmobiliaria Rojas (Lima)",
+    "moneda": "S/",
+    "contactos": 174,
+    "empresas": 33,
+    "negocios_abiertos": 41,
+    "plata_en_juego": "S/ 9.870.000",
+    "etapas": [
+      {
+        "nombre": "Lead nuevo",
+        "n": 9,
+        "monto": "S/ 1.650.000"
+      },
+      {
+        "nombre": "Contactado",
+        "n": 7,
+        "monto": "S/ 1.480.000"
+      },
+      {
+        "nombre": "Visita",
+        "n": 6,
+        "monto": "S/ 1.720.000"
+      },
+      {
+        "nombre": "Separación",
+        "n": 2,
+        "monto": "S/ 1.000.000"
+      },
+      {
+        "nombre": "Negociación",
+        "n": 17,
+        "monto": "S/ 4.020.000"
+      }
+    ],
+    "ganados_mes": {
+      "n": 3,
+      "monto": "S/ 1.120.000"
+    },
+    "perdidos_mes": {
+      "n": 2,
+      "monto": "S/ 430.000",
+      "motivo": "Sin financiamiento"
+    },
+    "parados_15d": {
+      "n": 12,
+      "monto": "S/ 2.140.000",
+      "lista": [
+        "Torres del Parque 402 (S/ 610.000) · 19 días",
+        "Miraflores Sky 1502 (S/ 380.000) · 16 días",
+        "Surco Garden 305 (S/ 390.000) · 15 días",
+        "Miraflores Sky 903 · 15 días",
+        "Surco Garden 210 · 15 días",
+        "San Isidro Prime 404 · 15 días"
+      ]
+    },
+    "sin_dueno": {
+      "n": 8,
+      "lista": [
+        "Ana Quispe · Urbania",
+        "Luis Herrera · Adondevivir",
+        "Familia Torres · Meta Ads"
+      ]
+    },
+    "en_espera": {
+      "n": 5,
+      "lista": [
+        "Ana Quispe · Urbania · 9 h sin contacto",
+        "Luis Herrera · Adondevivir · 7 h",
+        "Rosa Chávez · Meta Ads · 3 h"
+      ]
+    },
+    "leads_anoche": {
+      "n": 6,
+      "lista": [
+        "Ana Quispe · Urbania · 21:10",
+        "Luis Herrera · Adondevivir · 22:05",
+        "Rosa Chávez · Meta Ads · 23:40"
+      ]
+    },
+    "duplicados": {
+      "grupos": 5,
+      "fichas": 11,
+      "lista": [
+        "999 111 222 · Ana Quispe / Ana Q. (2)",
+        "987 333 444 · Luis Herrera (3)",
+        "986 555 666 · Familia Torres (2)"
+      ]
+    },
+    "sin_monto": {
+      "n": 9,
+      "de": 41
+    },
+    "sin_telefono": {
+      "n": 14,
+      "de": 174
+    },
+    "sin_fecha_cierre": {
+      "n": 14,
+      "de": 41
+    },
+    "cierran_este_mes": {
+      "n": 7,
+      "monto": "S/ 1.860.000",
+      "lista": [
+        "San Isidro Prime 801 · S/ 295.000 · domingo",
+        "Torres del Parque 402 · S/ 610.000 · día 14",
+        "Surco Garden 210 · S/ 190.000 · día 19"
+      ]
+    },
+    "cierre_vencido": {
+      "n": 3,
+      "lista": [
+        "Miraflores Sky 1502 · venció hace 4 días",
+        "Surco Garden 305 · venció hace 2 días",
+        "Torres del Parque 1101 · venció ayer"
+      ]
+    },
+    "separacion": [
+      {
+        "nombre": "Torres del Parque 402",
+        "monto": "S/ 610.000",
+        "dias": 22
+      },
+      {
+        "nombre": "Surco Garden 305",
+        "monto": "S/ 390.000",
+        "dias": 8
+      }
+    ],
+    "tareas_hoy": [
+      "10:00 Llamar a Familia Rojas · Torres del Parque 402",
+      "12:30 Enviar cotización a Carla Mendoza",
+      "16:00 Visita al piso 8 con Jorge Paredes"
+    ],
+    "fuentes": [
+      {
+        "nombre": "Urbania",
+        "n": 61
+      },
+      {
+        "nombre": "Adondevivir",
+        "n": 44
+      },
+      {
+        "nombre": "Meta Ads",
+        "n": 38
+      },
+      {
+        "nombre": "Referido",
+        "n": 8
+      },
+      {
+        "nombre": "Sin fuente",
+        "n": 23
+      }
+    ],
+    "distritos": {
+      "miraflores": 23,
+      "san isidro": 17,
+      "surco": 31,
+      "barranco": 6,
+      "la molina": 9,
+      "jesus maria": 12
+    },
+    "proyectos": {
+      "torres del parque": {
+        "n": 15,
+        "monto": "S/ 4.100.000"
+      },
+      "miraflores sky": {
+        "n": 11,
+        "monto": "S/ 2.950.000"
+      },
+      "san isidro prime": {
+        "n": 8,
+        "monto": "S/ 1.920.000"
+      },
+      "surco garden": {
+        "n": 7,
+        "monto": "S/ 900.000"
+      }
+    },
+    "top5": [
+      "Torres del Parque 402 · S/ 610.000 · Separación",
+      "Torres del Parque 1101 · S/ 470.000 · Negociación",
+      "Surco Garden 305 · S/ 390.000 · Separación",
+      "Miraflores Sky 1502 · S/ 380.000 · Negociación",
+      "San Isidro Prime 801 · S/ 295.000 · Negociación"
+    ],
+    "mis_negocios": {
+      "n": 33,
+      "monto": "S/ 8.120.000"
+    },
+    "personas": {
+      "ana": "Ana Torres",
+      "ale": "Ale Torres",
+      "luis": "Luis Herrera",
+      "diego": "Diego Ramos",
+      "lima": "Equipo Comercial Lima",
+      "norte": "Equipo Comercial Norte"
+    },
+    "contactos_ejemplo": [
+      "Ana Quispe · 987 111 222",
+      "Carla Mendoza · 986 333 444",
+      "Jorge Paredes · 999 555 666"
+    ],
+    "limites": {
+      "reasignar_sin_aprobar": 10,
+      "envio_max_soles": 50,
+      "descuento_max_pct": 10
+    },
+    "umbral_grande": "S/ 300.000",
+    "crm": "HubSpot",
+    "sincronizado_hace": "6 min"
+  },
+  "intents": [
+    {
+      "id": "greet",
+      "re": "^(hola|holi|buenas|buenos dias|buenas tardes|buenas noches|hey|que tal|alo)\\b"
+    },
+    {
+      "id": "thanks",
+      "kw": [
+        "gracias",
+        "genial",
+        "perfecto",
+        "buenisimo"
+      ]
+    },
+    {
+      "id": "voice",
+      "kw": [
+        "audio",
+        "nota de voz",
+        "por voz",
+        "hablarte"
+      ]
+    },
+    {
+      "id": "rule_cadence",
+      "re": "\\b(cada|todos los|todas las|una vez por|semanal|diario|los lunes|los viernes)\\b",
+      "kw": [
+        "avisa",
+        "avisame",
+        "dime",
+        "manda",
+        "mandame",
+        "pasame",
+        "revisa",
+        "recuerda",
+        "envia",
+        "enviame",
+        "programa",
+        "resumen",
+        "reporte",
+        "pipeline"
+      ]
+    },
+    {
+      "id": "rule_event",
+      "re": "\\b(cuando|si|apenas|cada vez que|siempre que|en cuanto|llegue|entre)\\b|→|->",
+      "kw": [
+        "avisa",
+        "avisame",
+        "dime",
+        "etiqueta",
+        "asigna",
+        "asignalo",
+        "asignaselo",
+        "crea",
+        "creame",
+        "manda",
+        "notifica",
+        "que vaya",
+        "que vayan",
+        "aviso",
+        "asignes",
+        "asignar",
+        "→",
+        "->",
+        "que se lo"
+      ],
+      "needs": [
+        "lead",
+        "contacto",
+        "negocio",
+        "cuando",
+        "si ",
+        "apenas",
+        "cada vez",
+        "llegue",
+        "entre",
+        "cotizacion",
+        "separacion"
+      ]
+    },
+    {
+      "id": "pause_rule",
+      "kw": [
+        "pausa la regla",
+        "pausa el aviso",
+        "apaga el aviso",
+        "apaga la regla",
+        "deja de mandarme",
+        "deja de avisarme",
+        "no me avises mas",
+        "pausar aviso",
+        "pausame"
+      ]
+    },
+    {
+      "id": "decline_call",
+      "kw": [
+        "llama a",
+        "llamalos",
+        "llamar a",
+        "llamale",
+        "llamalo",
+        "que llames",
+        "marcale",
+        "hazle una llamada"
+      ]
+    },
+    {
+      "id": "decline_delete",
+      "kw": [
+        "borra",
+        "borrame",
+        "elimina",
+        "eliminar",
+        "bórrame",
+        "limpia los duplicados",
+        "limpiame la base",
+        "fusiona",
+        "fusionalos",
+        "unelos"
+      ]
+    },
+    {
+      "id": "decline_calls_count",
+      "kw": [
+        "cuantas llamadas",
+        "llamadas hizo",
+        "llamadas de la semana",
+        "llamadas hicimos"
+      ]
+    },
+    {
+      "id": "broadcast",
+      "kw": [
+        "manda",
+        "mandales",
+        "mandale",
+        "envia",
+        "enviales",
+        "enviale",
+        "escribele",
+        "escribeles",
+        "wsp",
+        "whatsapp a todos",
+        "plantilla",
+        "promo",
+        "mensaje a todos",
+        "mensaje a los",
+        "masivo",
+        "masiva"
+      ],
+      "needs": [
+        "plantilla",
+        "promo",
+        "mensaje",
+        "todos",
+        "los de",
+        "wsp",
+        "whatsapp",
+        "a los",
+        "a las"
+      ]
+    },
+    {
+      "id": "task",
+      "kw": [
+        "recuerdame",
+        "recordame",
+        "recuerda",
+        "acuerdame",
+        "tarea",
+        "agendame",
+        "agenda una",
+        "ponme un recordatorio",
+        "recordatorio para"
+      ]
+    },
+    {
+      "id": "tag",
+      "kw": [
+        "etiqueta",
+        "etiquetame",
+        "etiquetalos",
+        "ponles vip",
+        "ponle vip",
+        "marca como",
+        "marcalos como",
+        "marcame como",
+        "tag ",
+        "ponle la etiqueta",
+        "→ etiqueta"
+      ]
+    },
+    {
+      "id": "lost",
+      "kw": [
+        "dale perdido",
+        "marca perdido",
+        "marcalo perdido",
+        "cerrado perdido",
+        "se cayo",
+        "pasalo a perdido",
+        "como perdido"
+      ]
+    },
+    {
+      "id": "move_stage",
+      "re": "\\b(mueve|mover|move|pasa|pasalo|pasala|cambia|actualiza|sube a|ponlo en|ponle etapa|→)\\b",
+      "kw": [
+        "etapa",
+        "negociacion",
+        "visita",
+        "separacion",
+        "cerrado",
+        "contactado",
+        "ganado",
+        "lead nuevo"
+      ]
+    },
+    {
+      "id": "note",
+      "kw": [
+        "anota",
+        "anotame",
+        "nota en",
+        "nota:",
+        "una nota",
+        "apunta",
+        "apuntame",
+        "ponle una nota",
+        "agrega una nota",
+        "deja nota"
+      ]
+    },
+    {
+      "id": "assign",
+      "kw": [
+        "asigna",
+        "asignale",
+        "asignalo",
+        "asignaselo",
+        "asignaselos",
+        "pasale",
+        "pasaselo",
+        "pasaselos",
+        "reparte",
+        "repartelos",
+        "repartelo",
+        "que se encargue",
+        "dale a ",
+        "dejaselo a",
+        "se lo llevo",
+        "reasigna",
+        "→ ale",
+        "→ ana",
+        "→ luis",
+        "→ diego",
+        "→ lima",
+        "→ norte",
+        "-> ale",
+        "-> ana",
+        "-> luis",
+        "-> diego",
+        "-> lima",
+        "-> norte",
+        "para ale",
+        "para ana",
+        "para luis",
+        "para diego"
+      ]
+    },
+    {
+      "id": "update_field",
+      "kw": [
+        "cambia el distrito",
+        "ponle surco",
+        "ponle miraflores",
+        "cambia distrito",
+        "actualiza el distrito",
+        "cambia el telefono",
+        "cambia el correo",
+        "ponle de distrito",
+        "corrige el",
+        "distrito surco",
+        "distrito miraflores",
+        "distrito san isidro",
+        "distrito barranco",
+        "distrito la molina",
+        "corrigelo",
+        "corrige",
+        "corrigeme",
+        "es surco",
+        "es miraflores",
+        "es san isidro",
+        "ponle de distrito"
+      ]
+    },
+    {
+      "id": "create_record",
+      "kw": [
+        "crea el contacto",
+        "crea contacto",
+        "nuevo contacto",
+        "carga a ",
+        "cargame a",
+        "registra a",
+        "este me escribio",
+        "agrega el contacto",
+        "agregame a"
+      ]
+    },
+    {
+      "id": "money",
+      "re": "\\b(sube|subele|subelo|baja|bajale|bajalo|aumenta|incrementa|descuento|rebaja|\\+\\s?\\d)\\b",
+      "kw": [
+        "%",
+        "por ciento",
+        "porciento",
+        "mil",
+        "monto"
+      ]
+    },
+    {
+      "id": "report_waiting",
+      "kw": [
+        "en espera",
+        "esperando",
+        "sin atender",
+        "sin contactar",
+        "sin contacto",
+        "nadie los ha contactado",
+        "nadie ha contactado",
+        "no los han contactado",
+        "no los han tocado",
+        "sin respuesta",
+        "sin responder",
+        "no ha respondido",
+        "no han respondido",
+        "sin llamar",
+        "por atender"
+      ]
+    },
+    {
+      "id": "report_stale",
+      "kw": [
+        "parado",
+        "parados",
+        "sin movimiento",
+        "sin actividad",
+        "estancad",
+        "nadie ha tocado",
+        "nadie los ha tocado",
+        "sin tocar",
+        "frio",
+        "frios",
+        "quietos",
+        "dormidos",
+        "abandonados",
+        "olvidados",
+        "no se mueven",
+        "sin novedades",
+        "no han tenido actividad",
+        "no tienen actividad",
+        "sin ninguna actividad",
+        "no han tenido movimiento",
+        "hace dos semanas",
+        "nadie ha tocado"
+      ]
+    },
+    {
+      "id": "report_no_owner",
+      "kw": [
+        "sin dueno",
+        "sin responsable",
+        "sin propietario",
+        "sin asignar",
+        "sin nadie",
+        "sin vendedor",
+        "no tienen dueno",
+        "huerfanos",
+        "nadie los lleva"
+      ]
+    },
+    {
+      "id": "report_duplicates",
+      "kw": [
+        "repetido",
+        "repetidos",
+        "duplicado",
+        "duplicados",
+        "dobles",
+        "mismo telefono",
+        "mismo correo",
+        "dos veces"
+      ]
+    },
+    {
+      "id": "report_separation",
+      "kw": [
+        "separacion",
+        "separaciones",
+        "separaron",
+        "separo"
+      ]
+    },
+    {
+      "id": "report_won",
+      "kw": [
+        "gane",
+        "ganados",
+        "ganado",
+        "cerre",
+        "cerramos",
+        "cerrados",
+        "vendi",
+        "vendimos",
+        "vendidos",
+        "ventas del mes",
+        "cuanto vendi",
+        "cuanto cerre"
+      ]
+    },
+    {
+      "id": "report_lost",
+      "kw": [
+        "perdidos",
+        "perdi",
+        "perdimos",
+        "se cayeron",
+        "cuantos se cayeron",
+        "motivo de perdida",
+        "por que se perdieron",
+        "desestimados"
+      ]
+    },
+    {
+      "id": "report_closing",
+      "kw": [
+        "cierran este mes",
+        "cierran",
+        "fecha de cierre",
+        "cierres",
+        "por cerrar",
+        "cierre vencido",
+        "cierres vencidos",
+        "se les paso la fecha",
+        "fecha vencida",
+        "a punto de cerrar",
+        "cerca de cerrar"
+      ]
+    },
+    {
+      "id": "report_money",
+      "kw": [
+        "plata",
+        "dinero",
+        "en juego",
+        "cuanto suman",
+        "cuanto suma",
+        "monto total",
+        "pipeline abierto",
+        "cuanto tengo abierto",
+        "cuanto hay abierto",
+        "valor del pipeline",
+        "cuanto tengo en el embudo"
+      ]
+    },
+    {
+      "id": "report_top",
+      "kw": [
+        "top",
+        "mas grandes",
+        "mas gordos",
+        "mayor monto",
+        "mayores a",
+        "mas de 300",
+        "mas de 200",
+        "de mas de",
+        "los mas caros",
+        "mas altos",
+        "los cinco",
+        "los 5",
+        "los tres",
+        "los 3",
+        ">",
+        "300k",
+        "200k",
+        "mayores",
+        "superior a",
+        "pasan de"
+      ]
+    },
+    {
+      "id": "report_stage",
+      "kw": [
+        "por etapa",
+        "x etapa",
+        "en cada etapa",
+        "pipeline",
+        "embudo",
+        "porcentaje",
+        "en porcentajes",
+        "etapas"
+      ]
+    },
+    {
+      "id": "report_new_leads",
+      "kw": [
+        "entraron",
+        "llegaron",
+        "entro",
+        "llego",
+        "nuevos",
+        "nuevas",
+        "anoche",
+        "ayer",
+        "hoy",
+        "esta semana",
+        "este mes",
+        "del mes",
+        "de la semana",
+        "se crearon"
+      ],
+      "needs": [
+        "lead",
+        "leds",
+        "contacto",
+        "contactos",
+        "negocio",
+        "negocios",
+        "entraron",
+        "llegaron",
+        "nuevos"
+      ]
+    },
+    {
+      "id": "report_sources",
+      "kw": [
+        "fuente",
+        "fuentes",
+        "de donde",
+        "por canal",
+        "canales",
+        "campana",
+        "campanas",
+        "por donde llegan",
+        "de donde me llegan",
+        "por portal"
+      ]
+    },
+    {
+      "id": "report_tasks",
+      "kw": [
+        "tareas",
+        "pendientes",
+        "para hoy",
+        "que tengo hoy",
+        "q tengo",
+        "agenda de hoy",
+        "mi agenda",
+        "que me toca",
+        "que tengo para hoy",
+        "recordatorios"
+      ]
+    },
+    {
+      "id": "report_mine",
+      "kw": [
+        "mis negocios",
+        "mi cartera",
+        "lo mio",
+        "los mios",
+        "las mias",
+        "asignados a mi",
+        "que llevo yo",
+        "cartera completa"
+      ]
+    },
+    {
+      "id": "report_person",
+      "re": "\\b(negocios|contactos|leads|cartera) de (ana|ale|luis|diego|lima|norte)\\b"
+    },
+    {
+      "id": "report_missing",
+      "kw": [
+        "sin monto",
+        "sin importe",
+        "sin telefono",
+        "sin celular",
+        "sin numero",
+        "sin correo",
+        "sin mail",
+        "sin email",
+        "incompletos",
+        "les falta",
+        "sin fecha",
+        "sin datos",
+        "vacios",
+        "sin llenar",
+        "no tienen monto",
+        "no tiene monto",
+        "no tienen telefono",
+        "no tiene telefono",
+        "no tienen correo",
+        "sin registrar",
+        "no esta registrado",
+        "monto registrado",
+        "telefono registrado"
+      ]
+    },
+    {
+      "id": "report_counts",
+      "kw": [
+        "cuantos contactos",
+        "cuantas empresas",
+        "total contactos",
+        "total empresas",
+        "cuanta gente",
+        "cuantos clientes",
+        "cuantas personas",
+        "toda mi base"
+      ]
+    },
+    {
+      "id": "report_segment",
+      "re": "\\b(cuantos|cuantas|cuales|dame|pasame|muestrame|mostrame|lista|listame|quienes|tirame|ver|telefonos|celulares|nombre y telefono|desglosa|desglosame|separa|distribuyen|los de|las de|negocios|contactos|leads|leds|empresas|matricula|demora|puntual|aprobado)\\b|\\+|:"
+    },
+    {
+      "id": "crm_status",
+      "kw": [
+        "que crm",
+        "cual crm",
+        "hubspot",
+        "conectado",
+        "sincroniz",
+        "actualizado el crm",
+        "cuando se actualizo",
+        "esta al dia"
+      ]
+    },
+    {
+      "id": "ambiguous",
+      "kw": [
+        "los buenos",
+        "los mejores",
+        "calientes",
+        "calentitos",
+        "siguiente etapa",
+        "sgte etapa",
+        "actualiza ese",
+        "actualizalo",
+        "ese que te dije",
+        "esos",
+        "estos",
+        "los de siempre",
+        "ayudame con el crm",
+        "no entiendo nada"
+      ]
+    }
+  ],
+  "examples": [
+    "cuánta plata hay en juego ahorita",
+    "qué negocios llevan 15 días sin movimiento",
+    "etiqueta VIP a los contactos de Miraflores",
+    "recuérdame mañana a las 10 llamar a Ana",
+    "avísame cada lunes si hay contactos repetidos",
+    "cuando entre un lead sin teléfono, avísame"
+  ]
+}
