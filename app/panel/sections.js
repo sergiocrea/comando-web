@@ -66,16 +66,39 @@ const hoy = {
         <div class="kpi"><div class="kpi-label">Presupuesto de hoy</div><div class="kpi-value">${ag.kpis ? `${ag.kpis.budgetUsedToday}<small>de ${ag.kpis.budgetToday}</small>` : `<small>${ag.preferences?.dailyMessageLimit ?? '—'} por día</small>`}</div></div>
       </div>`, { sub: `Horario silencioso ${esc(ag.preferences?.quietStart || '')}–${esc(ag.preferences?.quietEnd || '')} · ${ag.preferences?.proactiveEnabled === false ? 'proactividad apagada' : 'proactividad encendida'}`, more: 'Configurar', moreHref: '#/avisos' }) : '';
 
+    const feats = [
+      { eyebrow: 'Nuevo', title: 'Marketing conectado a tu CRM', text: 'Campañas de Facebook, Instagram y TikTok con atribución hasta la venta, automatizaciones y un analista humano.', href: '#/marketing', bg: 'linear-gradient(135deg, #0B2E24 0%, #00A76F 100%)' },
+      { eyebrow: 'Galería', title: '43 automatizaciones probadas', text: 'Velocidad de respuesta, negocios estancados, seguimiento de cotización, recordatorios de visita. Se activan con una frase.', href: '#/avisos', bg: 'linear-gradient(135deg, #1A1033 0%, #8E33FF 100%)' },
+      { eyebrow: 'Briefing', title: 'Qué merece tu atención, cada mañana', text: 'Elige la cadencia y la hora. Nunca llega vacío y siempre acepta respuesta.', href: '#/avisos', bg: 'linear-gradient(135deg, #0A2A33 0%, #00B8D9 100%)' },
+    ];
+    const fi = ((ctx.feat || 0) % feats.length + feats.length) % feats.length; const f = feats[fi];
+    const art = `<svg viewBox="0 0 360 260" fill="none" aria-hidden="true">
+      <rect x="120" y="20" width="120" height="220" rx="22" fill="#0F1A1F" stroke="#2E4A3E" stroke-width="3"/>
+      <rect x="132" y="42" width="96" height="176" rx="12" fill="#0B1416"/>
+      <rect x="140" y="56" width="62" height="22" rx="11" fill="#1F3A2E"/><rect x="158" y="86" width="62" height="22" rx="11" fill="#00A76F"/>
+      <rect x="140" y="116" width="74" height="22" rx="11" fill="#1F3A2E"/><rect x="148" y="146" width="72" height="22" rx="11" fill="#00A76F"/>
+      <rect x="20" y="60" width="130" height="44" rx="14" fill="#fff"/><rect x="34" y="74" width="70" height="8" rx="4" fill="#C4CDD5"/><rect x="34" y="88" width="46" height="8" rx="4" fill="#DFE3E8"/>
+      <rect x="215" y="150" width="125" height="44" rx="14" fill="#5BE49B"/><rect x="229" y="164" width="60" height="8" rx="4" fill="#0B2E24"/><rect x="229" y="178" width="84" height="8" rx="4" fill="#118D57"/>
+      <circle cx="300" cy="70" r="26" fill="#00A76F"/><path d="M288 70l8 8 16-16" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>`;
+    const hero = `<div class="hero">
+      <div class="welcome"><div class="welcome-body"><h2>${greet} 👋<br>${esc(me.name || 'operador')}</h2>
+        <p>${recs.length ? `Tienes <b>${recs.length} tarjeta${recs.length === 1 ? '' : 's'}</b> que merece${recs.length === 1 ? '' : 'n'} tu atención` : 'Nada urgente por ahora'}${todayTasks.length ? ` y <b>${todayTasks.length} tarea${todayTasks.length === 1 ? '' : 's'}</b> para hoy` : ''}${overdue.length ? `, ${overdue.length} vencida${overdue.length === 1 ? '' : 's'}` : ''}. Pídele a Comando lo que necesites por WhatsApp; aquí lo ves ordenado.</p>
+        ${waBtn('qué merece mi atención hoy', 'Escribir a Comando', 'btn primary')}</div><div class="welcome-art">${art}</div></div>
+      <div class="featured" style="--featured-bg:${f.bg}"><div class="featured-dots">${feats.map((_, i) => `<i class="${i === fi ? 'is-on' : ''}"></i>`).join('')}</div>
+        <div class="featured-arrows"><button data-act="feat:prev" aria-label="Anterior">‹</button><button data-act="feat:next" aria-label="Siguiente">›</button></div>
+        <div class="featured-eyebrow">${esc(f.eyebrow)}</div><h3>${esc(f.title)}</h3><p>${esc(f.text)}</p><a class="cover" href="${f.href}" aria-label="${esc(f.title)}"></a></div>
+    </div>`;
+
     return `<div class="stack">
-      <div class="page-head"><div><h1>${greet}, ${esc(me.name || 'operador')}</h1><p>${esc(fmtDateTime(new Date().toISOString()))}. Escríbele a Comando por WhatsApp para pedir o cambiar cualquier cosa que veas aquí.</p></div>
-        <div class="page-actions">${waBtn('qué merece mi atención hoy', 'Escribir a Comando', 'btn primary')}</div></div>
+      ${hero}
       ${kpis}${pendingBox}
       <div class="two wide">${attention}${todayList}</div>
       <div class="two">${healthBox}${notif}</div>
       ${activity}
     </div>`;
   },
-  act: recActions(),
+  act: { ...recActions(), 'feat:next': (el, ctx, d, reload, rerender) => { ctx.feat = (ctx.feat || 0) + 1; rerender(); }, 'feat:prev': (el, ctx, d, reload, rerender) => { ctx.feat = (ctx.feat || 0) - 1; rerender(); } },
 };
 
 function syncChip(s) {

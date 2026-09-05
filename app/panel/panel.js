@@ -109,6 +109,19 @@ $('page').addEventListener('submit', async (ev) => {
 });
 
 $('top-menu').addEventListener('click', () => openSide(true));
+/* búsqueda de secciones (⌘K) */
+const sInput = $('search-input'); const sList = $('search-list');
+function searchRender() {
+  const q = sInput.value.trim().toLowerCase();
+  const hits = SECTIONS.filter((s) => !q || (s.title + ' ' + s.sub).toLowerCase().includes(q)).slice(0, 8);
+  sList.innerHTML = hits.map((s, i) => `<a href="#/${s.id}" class="${i === 0 ? 'is-on' : ''}">${esc(s.title)}</a>`).join('') || '<a>Sin resultados</a>';
+  sList.hidden = !document.activeElement || document.activeElement !== sInput;
+}
+sInput.addEventListener('input', searchRender);
+sInput.addEventListener('focus', searchRender);
+sInput.addEventListener('blur', () => setTimeout(() => { sList.hidden = true; }, 150));
+sInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') { const a = sList.querySelector('a[href]'); if (a) { location.hash = a.getAttribute('href'); sInput.value = ''; sInput.blur(); } } if (e.key === 'Escape') sInput.blur(); });
+window.addEventListener('keydown', (e) => { if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') { e.preventDefault(); sInput.focus(); } });
 $('side-close').addEventListener('click', () => openSide(false));
 $('scrim').addEventListener('click', () => openSide(false));
 window.addEventListener('hashchange', () => route(false));
@@ -152,6 +165,7 @@ async function start() {
     if (aps) badges.aprobaciones = { n: aps, red: true };
     const recs = r.status === 'fulfilled' && Array.isArray(r.value) ? r.value.filter((x) => x.status === 'pending').length : 0;
     if (recs) badges.hoy = { n: recs };
+    if (recs) { $('bell-badge').textContent = recs; $('bell-badge').hidden = false; }
     renderNav(badges);
   });
   route(false);

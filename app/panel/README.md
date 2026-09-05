@@ -1,5 +1,7 @@
 # `/app/panel/` — Panel interno del operador de Comando
 
+Lenguaje visual tomado del dashboard de Minimals (fondo claro, tarjetas blancas con sombra suave y radio 16, Public Sans, verde `#00A76F`, barra lateral clara, banner de bienvenida oscuro y tarjeta destacada).
+
 Lo que el operador ve cuando entra a `comando.pro/app/panel/`: sus recordatorios, qué merece
 su atención, qué debe revisar en su CRM, su calendario, sus avisos y automatizaciones, su
 historial, las aprobaciones de su equipo, la sección de marketing y su cuenta.
@@ -58,7 +60,7 @@ La tabla de la sección 4 dice qué existe hoy y qué hay que construir.
 | `api.js` | cliente del engine (Bearer, reintento si el JWT venció, `x-request-id`); cada método devuelve datos o `{pending:true}` si el endpoint aún no existe (404/501); `createMockApi` para `?mock=1` |
 | `mock-data.js` | fixtures de un tenant inmobiliario con el vocabulario del portal de pruebas |
 | `ui.js` | escape, formatos LatAm (`S/ 9.870.000`, `71 %`), chips, `wa()` con la frase, toasts, iconos |
-| `panel.css` | tokens de `../onboarding.css`, layout con barra lateral (cajón bajo 960 px), componentes |
+| `panel.css` | tema claro estilo Minimals (tokens, sombras, Public Sans), layout con barra lateral (cajón bajo 1200 px), componentes |
 
 Sin build ni dependencias: módulos ES nativos. Servir por HTTP:
 
