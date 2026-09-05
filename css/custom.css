@@ -180,7 +180,6 @@ input[type='file']:focus-visible {
 /* SplitText line wrapper used by the reveal engine */
 .split-line { display: block; }
 
-
 /* ---- Comando brand: shift legacy green artwork to the blue accent ---- */
 .form-bg, .responsive-form-bg, img[src*="responsive-form-bg"], img[src*="Mobile-top"], img[src*="Mobile-bottom"] { filter: hue-rotate(74deg) saturate(0.85); }
 
@@ -757,6 +756,11 @@ html { scroll-behavior: smooth; }
 .nav_component .cmd-wordmark, .nav_component .nav_brand-name { color: #111; }
 .nav_component .nav_burger span { background: #111; }
 
+/* ===== Hero =====
+   Todo el hero en un solo bloque (base, mockup, banda de conectores y móvil),
+   en vez de sobrescrituras acumuladas al final del archivo. Jerarquía: categoría
+   → titular literal → una bajada de dos líneas → CTA + microcopy de fricción →
+   banda con los conectores (única aparición de los logos). */
 .b2b-hero {
   --b2b-ink: #151515;
   --b2b-muted: #5f625f;
@@ -766,7 +770,6 @@ html { scroll-behavior: smooth; }
   min-height: auto;
   color: var(--b2b-ink);
   background: #f3f1ea url("../assets/img/hero-superpowers-world-v1.jpg") center center / cover no-repeat;
-  background-color: #f3f1ea;
   overflow: hidden;
 }
 .b2b-hero-media {
@@ -784,12 +787,14 @@ html { scroll-behavior: smooth; }
   object-position: center center;
   filter: saturate(1.08) contrast(1.06);
 }
+/* Escritorio: el velo se concentra en la columna del texto y deja respirar el
+   video en el centro, detrás del mockup. */
 .b2b-hero-glow {
   position: absolute;
   z-index: 1;
   inset: 0;
   background:
-    linear-gradient(90deg, rgba(248, 247, 243, .96) 0%, rgba(248, 247, 243, .91) 29%, rgba(248, 247, 243, .68) 39%, rgba(248, 247, 243, .16) 52%, rgba(248, 247, 243, .02) 100%),
+    linear-gradient(90deg, rgba(248, 247, 243, .95) 0%, rgba(248, 247, 243, .88) 29%, rgba(248, 247, 243, .62) 39%, rgba(248, 247, 243, .14) 52%, rgba(248, 247, 243, .02) 100%),
     radial-gradient(circle at 75% 38%, rgba(49, 95, 239, .1), transparent 27%),
     linear-gradient(180deg, rgba(255, 255, 255, .04), transparent 62%, rgba(243, 241, 234, .2));
   pointer-events: none;
@@ -801,14 +806,13 @@ html { scroll-behavior: smooth; }
   grid-template-columns: minmax(0, 1.08fr) minmax(25rem, .92fr);
   align-items: center;
   gap: clamp(3rem, 7vw, 7rem);
-  min-height: 0;
 }
 .b2b-hero-copy { max-width: 52rem; }
 .b2b-eyebrow {
   display: inline-flex;
   align-items: center;
   gap: .65rem;
-  margin-bottom: 1.75rem;
+  margin-bottom: 1.4rem;
   font-family: "Jetbrainsmono Variable", monospace;
   font-size: .78rem;
   line-height: 1;
@@ -827,11 +831,11 @@ html { scroll-behavior: smooth; }
   font-size: .8rem;
 }
 .b2b-hero-title {
-  max-width: 15ch;
+  max-width: 19ch;
   margin: 0;
   color: var(--b2b-ink);
   font-family: Neuemachina, "Space Grotesk", Inter, sans-serif;
-  font-size: clamp(4rem, 6.4vw, 7.25rem);
+  font-size: clamp(3.4rem, 5.6vw, 6.2rem);
   font-weight: 600;
   line-height: .94;
   letter-spacing: -.067em;
@@ -840,14 +844,14 @@ html { scroll-behavior: smooth; }
 .b2b-hero-title span { display: block; color: var(--b2b-blue); }
 .b2b-hero-lede {
   max-width: 36rem;
-  margin: 1.35rem 0 0;
+  margin: 1.25rem 0 0;
   color: var(--b2b-muted);
   font-family: "Neuehaasunicaw 1 G", Inter, Arial, sans-serif;
   font-size: clamp(1.08rem, 1.35vw, 1.3rem);
-  line-height: 1.55;
+  line-height: 1.5;
   text-wrap: pretty;
 }
-.b2b-hero-actions { display: flex; flex-wrap: wrap; gap: .8rem; margin-top: 1.35rem; }
+.b2b-hero-actions { display: flex; flex-wrap: wrap; gap: .8rem; margin-top: 1.5rem; }
 .b2b-button {
   display: inline-flex;
   align-items: center;
@@ -868,215 +872,173 @@ html { scroll-behavior: smooth; }
 .b2b-button.is-primary { color: #fff; background: #151515; }
 .b2b-button.is-primary:hover { background: var(--b2b-blue); border-color: var(--b2b-blue); }
 .b2b-button.is-secondary:hover { background: #fff; }
-.b2b-proof-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: .65rem 1.25rem;
-  list-style: none;
-  margin: 1.35rem 0 0;
-  padding: 0;
-  color: #4f5350;
-  font-family: "Neuehaasunicaw 1 G", Inter, sans-serif;
-  font-size: .88rem;
-}
-.b2b-proof-list li::before { content: "✓"; color: var(--b2b-blue); font-weight: 700; margin-right: .42rem; }
-.b2b-connected { margin-top: 1.4rem; }
-.b2b-connected > span {
-  display: block;
-  margin-bottom: .8rem;
-  color: #777a76;
-  font-family: "Jetbrainsmono Variable", monospace;
-  font-size: .65rem;
-  letter-spacing: .12em;
-}
-.b2b-connected-logos { display: flex; flex-wrap: wrap; gap: .65rem; }
-.b2b-connected-logos span {
-  display: inline-flex;
-  align-items: center;
-  gap: .5rem;
-  padding: .55rem .75rem;
-  color: #272927;
-  background: rgba(255, 255, 255, .68);
-  border: 1px solid rgba(21, 21, 21, .11);
-  border-radius: .65rem;
-  font-family: "Neuehaasunicaw 1 G", Inter, sans-serif;
-  font-size: .78rem;
-  font-weight: 600;
-}
-.b2b-connected-logos img { width: 1.1rem; height: 1.1rem; object-fit: contain; }
+/* Lo que pasa al pulsar el CTA, en una sola línea. */
+.b2b-hero-note { margin: .85rem 0 0; font-family: "Neuehaasunicaw 1 G", Inter, sans-serif; font-size: .88rem; line-height: 1.5; color: var(--b2b-muted); }
+/* Si no cabe en una línea, parte solo después de un separador. */
+.b2b-hero-note span { white-space: nowrap; }
 
+/* Mockup «un mensaje hace todo esto»: mensaje y cuadro de acciones flotando
+   sobre el video, sin marco de chat. Entra en menos de un segundo y se queda. */
 .b2b-hero-visual { position: relative; width: min(100%, 28rem); margin: 0 auto; padding: 1.7rem .6rem 1rem; }
-.power-panel {
-  position: relative;
-  z-index: 2;
-  width: 100%;
-  padding: .7rem;
-  background: rgba(11, 20, 26, .87);
-  border: 1px solid rgba(255, 255, 255, .18);
-  border-radius: 1.8rem;
-  box-shadow: 0 36px 90px rgba(9, 20, 30, .26), 0 4px 14px rgba(20, 20, 20, .12);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  transform: rotate(.45deg);
+.power-panel { position: relative; z-index: 2; width: 100%; }
+.power-chat-stage { padding: 0 .2rem; }
+.power-context {
+  position: relative; width: 86%; margin-left: auto; padding: .85rem .9rem 1.25rem;
+  background: #005c4b; border-radius: 1rem .25rem 1rem 1rem;
+  box-shadow: 0 14px 34px rgba(9, 20, 30, .28);
+  animation: pw-in .5s ease-out both;
 }
-.power-panel::before {
-  content: "";
-  position: absolute;
-  z-index: -1;
-  inset: 2.2rem -1rem -1rem 1.7rem;
-  border-radius: inherit;
-  background: #315fef;
-  opacity: .14;
-}
-.power-panel-head { display: flex; align-items: center; justify-content: space-between; gap: .75rem; padding: .35rem .45rem .8rem; }
-.power-brand { display: flex; align-items: center; gap: .65rem; color: #fff; font-family: "Neuehaasunicaw 1 G", Inter, sans-serif; font-size: .86rem; font-weight: 700; }
-.power-brand small { display: block; margin-top: .08rem; color: #9eb0ba; font-size: .65rem; font-weight: 450; }
-.power-brand-mark { display: grid; place-items: center; width: 2rem; height: 2rem; padding: .4rem; background: #25d366; border-radius: 50%; }
-.power-brand-mark img { width: 100%; height: 100%; object-fit: contain; }
-.power-live { display: inline-flex; align-items: center; gap: .4rem; padding: .35rem .55rem; color: #b9e6d8; background: rgba(24, 139, 104, .18); border-radius: 999px; font-family: "Jetbrainsmono Variable", monospace; font-size: .58rem; }
-.power-live i { width: .42rem; height: .42rem; border-radius: 50%; background: #35a85c; box-shadow: 0 0 0 3px rgba(53, 168, 92, .14); }
-.power-chat-stage {
-  min-height: 12.8rem;
-  padding: .9rem;
-  overflow: hidden;
-  background: #0b141a radial-gradient(rgba(255, 255, 255, .045) 1px, transparent 1px) 0 0 / 15px 15px;
-  border-radius: 1.3rem;
-}
-.power-context { position: relative; width: 86%; margin-left: auto; padding: .85rem .9rem 1.25rem; background: #005c4b; border-radius: 1rem .25rem 1rem 1rem; animation: power-message-in 8.33s both infinite; }
 .power-context p { margin: 0; color: #e9edef; font-family: "Neuehaasunicaw 1 G", Inter, sans-serif; font-size: .78rem; line-height: 1.4; }
-.power-context time, .power-bot-bubble time { position: absolute; right: .6rem; bottom: .28rem; color: rgba(233, 237, 239, .58); font-family: "Neuehaasunicaw 1 G", Inter, sans-serif; font-size: .54rem; }
+.power-context time { position: absolute; right: .6rem; bottom: .28rem; color: rgba(233, 237, 239, .58); font-family: "Neuehaasunicaw 1 G", Inter, sans-serif; font-size: .54rem; }
 .power-context time i { color: #53bdeb; font-style: normal; }
-.power-bot-bubble { position: relative; display: flex; align-items: flex-start; gap: .45rem; width: 79%; margin-top: .55rem; padding: .75rem .75rem 1.15rem; color: #e9edef; background: #202c33; border-radius: .25rem 1rem 1rem 1rem; animation: power-bot-in 8.33s both infinite; }
-.power-bot-bubble > span { color: #6f94ff; }
-.power-bot-bubble p { margin: 0; font-family: "Neuehaasunicaw 1 G", Inter, sans-serif; font-size: .73rem; line-height: 1.38; }
-.power-result { position: relative; z-index: 4; width: calc(100% + 1.35rem); margin: -3.15rem -.65rem -.9rem -.7rem; padding: 1rem; background: rgba(250, 250, 247, .98); border: 1px solid rgba(21, 21, 21, .13); border-radius: 1.1rem; box-shadow: 0 24px 55px rgba(7, 18, 28, .25); transform: rotate(-.55deg); animation: power-result-in 8.33s both infinite; }
+.power-result {
+  position: relative; z-index: 4; width: 100%; margin: .9rem 0 0; padding: 1rem;
+  background: rgba(250, 250, 247, .98); border: 1px solid rgba(21, 21, 21, .13); border-radius: 1.1rem;
+  box-shadow: 0 24px 55px rgba(7, 18, 28, .22);
+  animation: pw-in-result .6s ease-out .45s both;
+}
 .power-result-title { display: flex; gap: .5rem; align-items: center; margin-bottom: .65rem; color: #171717; font-family: "Neuehaasunicaw 1 G", Inter, sans-serif; font-size: .8rem; }
 .power-result-title > span { color: #315fef; }
-.power-action-row { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: .7rem; padding: .68rem 0; border-top: 1px solid #deded9; animation: power-action-in 8.33s both infinite; }
-.power-action-row:nth-of-type(2) { animation-delay: .12s; }
-.power-action-row:nth-of-type(3) { animation-delay: .24s; }
-.power-action-row:nth-of-type(4) { animation-delay: .36s; }
+.power-action-row { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: .7rem; padding: .68rem 0; border-top: 1px solid #deded9; animation: pw-in .4s ease-out .75s both; }
+.power-action-row:nth-of-type(2) { animation-delay: .88s; }
+.power-action-row:nth-of-type(3) { animation-delay: 1.01s; }
+.power-action-row:nth-of-type(4) { animation-delay: 1.14s; }
 .power-action-row p { margin: 0; color: #242424; font-family: "Neuehaasunicaw 1 G", Inter, sans-serif; font-size: .76rem; line-height: 1.2; }
 .power-action-row small { display: block; margin-top: .2rem; color: #797b77; font-size: .67rem; }
 .power-action-row > i { display: grid; place-items: center; width: 1.15rem; height: 1.15rem; color: #fff; background: #315fef; border-radius: 50%; font-size: .6rem; font-style: normal; }
 .power-action-icon { color: #777; font-family: "Jetbrainsmono Variable", monospace; font-size: .6rem; }
 .power-confirm { width: 100%; margin-top: .55rem; padding: .72rem 1rem; color: #fff; background: #151515; border: 0; border-radius: .65rem; font-family: "Neuehaasunicaw 1 G", Inter, sans-serif; font-size: .78rem; font-weight: 650; text-align: left; }
 .power-confirm span { float: right; }
-.power-float {
-  position: absolute;
-  z-index: 3;
-  display: inline-flex;
-  align-items: center;
-  gap: .55rem;
-  padding: .65rem .8rem;
-  color: #1e211f;
-  background: rgba(255, 255, 255, .96);
-  border: 1px solid rgba(21, 21, 21, .12);
-  border-radius: .8rem;
-  box-shadow: 0 16px 38px rgba(24, 37, 80, .13);
-  font-family: "Neuehaasunicaw 1 G", Inter, sans-serif;
-  font-size: .72rem;
-  font-weight: 650;
-  animation: power-float 4.5s ease-in-out infinite;
-}
-.power-float.is-impact { top: -.15rem; right: -.75rem; }
-.power-float-icon { display: grid; place-items: center; min-width: 1.45rem; height: 1.45rem; padding: 0 .2rem; color: #fff; background: #315fef; border-radius: .4rem; font-family: "Jetbrainsmono Variable", monospace; font-size: .65rem; }
-@keyframes power-float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-7px); } }
-@keyframes power-message-in { 0%, 4% { opacity: 0; transform: translateY(10px) scale(.98); } 12%, 92% { opacity: 1; transform: none; } 100% { opacity: 0; } }
-@keyframes power-bot-in { 0%, 13% { opacity: 0; transform: translateY(9px); } 23%, 86% { opacity: 1; transform: none; } 96%, 100% { opacity: 0; } }
-@keyframes power-result-in { 0%, 22% { opacity: 0; transform: translateY(14px) rotate(-.55deg); } 33%, 76% { opacity: 1; transform: rotate(-.55deg); } 89%, 100% { opacity: 0; transform: translateY(8px) rotate(-.55deg); } }
-@keyframes power-action-in { 0%, 27% { opacity: 0; transform: translateX(9px); } 38%, 78% { opacity: 1; transform: none; } 90%, 100% { opacity: 0; } }
+@keyframes pw-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+@keyframes pw-in-result { from { opacity: 0; transform: translateY(12px) rotate(-.55deg); } to { opacity: 1; transform: rotate(-.55deg); } }
+
+/* Banda de conectores: la única aparición de los logos. CSS puro y SVG
+   monocromos (11 KB los doce): no añade JS ni peticiones que compitan con el video. */
 .b2b-hero-band {
   position: relative;
   z-index: 2;
   display: flex;
-  justify-content: center;
   align-items: center;
-  gap: clamp(1rem, 3vw, 3rem);
+  gap: 1.5rem;
   padding: 1.15rem 1.25rem;
   color: #fff;
   background: #151515;
-  font-family: "Jetbrainsmono Variable", monospace;
-  font-size: .68rem;
-  letter-spacing: .1em;
+  overflow: hidden;
 }
-.b2b-hero-band i { width: .28rem; height: .28rem; border-radius: 50%; background: #4d7cff; }
+.band-label {
+  flex: 0 0 auto; font-family: "Jetbrainsmono Variable", ui-monospace, monospace;
+  font-size: .6rem; letter-spacing: .14em; text-transform: uppercase; color: #7c8697;
+}
+/* La máscara evita el corte seco en los extremos. */
+.band-track {
+  flex: 1 1 auto; display: flex; min-width: 0; overflow: hidden;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 4%, #000 96%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 4%, #000 96%, transparent);
+}
+/* Dos filas idénticas desplazándose -100%: el bucle no tiene costura. */
+.band-row {
+  flex: 0 0 auto; display: flex; align-items: center; gap: 2.25rem;
+  margin: 0; padding: 0 1.125rem 0 0; list-style: none;
+  animation: band-scroll 34s linear infinite;
+}
+.band-row li { display: flex; align-items: center; gap: .5rem; white-space: nowrap; }
+.band-row img { width: 1.35rem; height: 1.35rem; object-fit: contain; opacity: .85; }
+.band-row span {
+  font-family: "Jetbrainsmono Variable", ui-monospace, monospace;
+  font-size: .62rem; letter-spacing: .08em; text-transform: uppercase; color: #b6bdc9;
+}
+@keyframes band-scroll { to { transform: translateX(-100%); } }
+.b2b-hero-band:hover .band-row { animation-play-state: paused; }
 
-@media (max-width: 1100px) {
-  .b2b-hero-grid { grid-template-columns: minmax(0, 1fr) minmax(22rem, .8fr); gap: 3rem; }
-  .b2b-hero-title { font-size: clamp(3.5rem, 6vw, 5.5rem); }
-}
 @media (min-width: 992px) {
   .b2b-hero-padding { padding-top: calc(var(--nav-height, 5rem) + 1.6rem); padding-bottom: 2rem; }
   .b2b-hero-grid { grid-template-columns: minmax(0, 1.2fr) minmax(24rem, .8fr); gap: clamp(2.5rem, 5vw, 5rem); }
-  .b2b-hero-title { max-width: 15ch; font-size: clamp(3.35rem, 4.15vw, 4.8rem); }
   .b2b-hero-visual { width: min(100%, 27rem); margin-right: 0; }
 }
+@media (max-width: 1100px) {
+  .b2b-hero-grid { grid-template-columns: minmax(0, 1fr) minmax(22rem, .8fr); gap: 3rem; }
+  .b2b-hero-title { font-size: clamp(3.1rem, 4.6vw, 4.6rem); }
+}
 @media (max-width: 991px) {
-  .nav_component.w-nav.is-scrolled,
-  .nav_component.w-nav.is-open { background: #f8f7f3 !important; }
-  .w-nav-overlay .nav_menu, .nav_menu.w--nav-menu-open { background: #f8f7f3; }
-  .w-nav-overlay .nav_menu_link, .nav_menu.w--nav-menu-open .nav_menu_link { color: #151515 !important; }
   .b2b-hero-padding { padding-top: calc(var(--nav-height, 4.5rem) + 1.75rem); }
-  .b2b-hero {
-    background-position: center, 58% 6rem;
-    background-size: cover, auto 58rem;
-    background-repeat: no-repeat;
-  }
-  .b2b-hero-grid { grid-template-columns: 1fr; gap: 4rem; min-height: auto; }
+  .b2b-hero-grid { grid-template-columns: 1fr; gap: 4rem; }
   .b2b-hero-copy { max-width: 48rem; }
   .b2b-hero-title { max-width: 14ch; font-size: clamp(3.65rem, 9vw, 5.4rem); }
   .b2b-hero-visual { width: min(88%, 29rem); }
 }
 @media (max-width: 767px) {
-  .nav_component .nav_menu > .nav_menu_link:last-child { margin-top: 1rem; text-align: center; }
+  /* Composición móvil: el video (vertical, la persona con el teléfono) ocupa
+     la pantalla entera y el copy va en una hoja translúcida anclada abajo,
+     como una bottom sheet. La persona se ve completa en la mitad superior y
+     el texto tiene su propia zona clara en vez de un velo que tape el video. */
   .b2b-hero {
-    background:
-      linear-gradient(180deg, rgba(248, 247, 243, .93) 0%, rgba(248, 247, 243, .8) 27rem, rgba(248, 247, 243, .96) 55rem, #f3f1ea 100%),
-      url("../assets/img/hero-superpowers-world-v1.jpg") 60% 5rem / auto 48rem no-repeat;
+    min-height: 100vh; min-height: 100svh;
+    display: flex; flex-direction: column;
+    background: #f3f1ea url("../assets/img/hero-superpowers-world-v1.jpg") center top / cover no-repeat;
   }
-  /* El video de móvil es vertical: el hero ocupa la pantalla y el texto baja al
-     pie, de modo que la persona se ve en la mitad superior en vez de quedar
-     tapada por el titular. */
-  .b2b-hero { min-height: 100svh; display: flex; flex-direction: column; }
-  /* En móviles altos, `cover` recortaba un 18% del ancho y se comía el monitor
-     de la izquierda y la tablet de la derecha, que son justo lo que hace legible
-     la idea de que el equipo se multiplica. Fijando la caja a la relación del
-     video (9:16) y anclándola arriba, se ve el fotograma entero y el degradado
-     funde su borde inferior con el fondo crema. */
-  .b2b-hero-media {
-    inset: 0 0 auto 0;
-    height: auto;
-    aspect-ratio: 720 / 1280;
-  }
-  .b2b-hero-media video { object-position: center center; }
-  /* Anclado al borde inferior, no en porcentajes: en un iPhone corto los tramos
-     porcentuales encogían la zona clara y el velo se comía a la persona. Con
-     distancias fijas desde abajo, la parte legible mide lo mismo en 667 y en
-     844 px de alto. */
-  .b2b-hero-glow {
-    background: linear-gradient(to top,
-      #f3f1ea 0,
-      rgba(243, 241, 234, .97) 7rem,
-      rgba(245, 244, 238, .93) 15rem,
-      rgba(248, 247, 243, .72) 20.5rem,
-      rgba(248, 247, 243, .12) 28rem,
-      rgba(248, 247, 243, .2) 100%);
-  }
+  .b2b-hero-media video { object-position: 50% 0; }
+  /* Solo aclara la franja justo encima de la hoja, para que su borde no
+     choque contra el suelo oscuro del video. */
+  .b2b-hero-glow { background: linear-gradient(180deg, transparent 42%, rgba(243, 241, 234, .55) 100%); }
   .b2b-hero-padding {
     flex: 1; display: flex; flex-direction: column; justify-content: flex-end;
-    padding-top: calc(var(--nav-height, 4rem) + 1.25rem); padding-bottom: 2.25rem;
+    padding: calc(var(--nav-height, 4rem) + 1rem) 0 0;
   }
-  .b2b-eyebrow { margin-bottom: 1.35rem; font-size: .7rem; }
-  .b2b-hero-title { max-width: 12ch; font-size: clamp(2.85rem, 11.8vw, 4.2rem); }
-  .b2b-hero-lede { margin-top: 1.5rem; font-size: 1.02rem; }
-  .b2b-hero-actions { display: grid; grid-template-columns: 1fr; }
-  .b2b-button { width: 100%; }
-  .b2b-hero-visual { width: 100%; padding: 1.4rem 0 2.4rem; }
-  .power-panel { transform: none; border-radius: 1.25rem; }
-  .power-result { width: calc(100% + .4rem); margin-left: -.2rem; margin-right: -.2rem; }
-  .power-float.is-impact { right: -.2rem; top: -.2rem; }
-  .b2b-hero-band { justify-content: flex-start; overflow: hidden; white-space: nowrap; font-size: .58rem; }
+  .b2b-hero-grid { display: block; }
+  .b2b-hero-copy {
+    max-width: none;
+    padding: 1.5rem 1.25rem 1.4rem;
+    background: rgba(243, 241, 234, .9);
+    -webkit-backdrop-filter: blur(18px) saturate(1.15);
+    backdrop-filter: blur(18px) saturate(1.15);
+    border-top: 1px solid rgba(255, 255, 255, .75);
+    border-radius: 1.6rem 1.6rem 0 0;
+    box-shadow: 0 -16px 40px rgba(21, 21, 21, .08);
+  }
+  .b2b-eyebrow { margin-bottom: .9rem; font-size: .66rem; }
+  .b2b-eyebrow-mark { width: 1.45rem; height: 1.45rem; font-size: .7rem; }
+  .b2b-hero-title { max-width: 12ch; font-size: clamp(2.35rem, 10.4vw, 3rem); }
+  .b2b-hero-lede { margin-top: .85rem; font-size: .96rem; line-height: 1.45; color: #3f423f; }
+  /* Los dos botones caben en una fila: el CTA no baja de la primera pantalla. */
+  .b2b-hero-actions { display: grid; grid-template-columns: 1fr 1fr; gap: .6rem; margin-top: 1.1rem; }
+  .b2b-button { min-height: 3.1rem; padding: .7rem .9rem; gap: .5rem; font-size: .92rem; white-space: nowrap; }
+  .b2b-hero-note { margin-top: .75rem; font-size: .76rem; }
+  /* El mockup no cabe en móvil sin competir con el titular y el CTA. */
+  .b2b-hero-visual { display: none; }
+  .b2b-hero-band { gap: .9rem; padding: .85rem 1.25rem; }
+  .band-label { font-size: .55rem; }
+  .band-track {
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 12%, #000 92%, transparent);
+    mask-image: linear-gradient(90deg, transparent, #000 12%, #000 92%, transparent);
+  }
+  .band-row { gap: 1.6rem; padding-right: .8rem; animation-duration: 26s; }
+}
+/* iPhone corto (SE y similares): la hoja se aprieta y el video sube 3 rem para
+   que la persona siga a la vista por encima de ella. */
+@media (max-width: 767px) and (max-height: 720px) {
+  .b2b-hero-media { top: -3rem; }
+  .b2b-hero-copy { padding-top: 1.1rem; padding-bottom: 1.1rem; }
+  .b2b-hero-title { font-size: clamp(2.1rem, 9.2vw, 2.6rem); }
+  .b2b-hero-lede { margin-top: .7rem; font-size: .9rem; }
+  .b2b-hero-actions { margin-top: .9rem; }
+}
+@media (max-width: 359px) {
+  .b2b-hero-actions { grid-template-columns: 1fr; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .b2b-hero-media video { display: none; }
+  .power-context, .power-result, .power-action-row, .band-row { animation: none; }
+  .b2b-button { transition: none; }
+}
+
+@media (max-width: 991px) {
+  .nav_component.w-nav.is-scrolled,
+  .nav_component.w-nav.is-open { background: #f8f7f3 !important; }
+  .w-nav-overlay .nav_menu, .nav_menu.w--nav-menu-open { background: #f8f7f3; }
+  .w-nav-overlay .nav_menu_link, .nav_menu.w--nav-menu-open .nav_menu_link { color: #151515 !important; }
+}
+@media (max-width: 767px) {
+  .nav_component .nav_menu > .nav_menu_link:last-child { margin-top: 1rem; text-align: center; }
 }
 
 /* The second act is the concrete product proof: light, technical and calm. */
@@ -1110,17 +1072,8 @@ html { scroll-behavior: smooth; }
     background-size: auto, 28px 28px, 28px 28px;
   }
 }
-@media (max-width: 430px) {
-  .b2b-hero-title { font-size: 2.75rem; }
-  .power-float { font-size: .64rem; }
-  .power-float.is-impact { right: 0; }
-  .power-action-row { gap: .5rem; }
-}
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
-  .b2b-hero-media video { display: none; }
-  .power-float, .power-context, .power-bot-bubble, .power-result, .power-action-row { animation: none; }
-  .b2b-button { transition: none; }
 }
 
 /* ===== "Un mensaje. Tres tareas menos.": tarjeta de resultado ===== */
@@ -1189,24 +1142,6 @@ html { scroll-behavior: smooth; }
 /* Sin el badge, el orden de la columna es titular → tarjeta → botón. */
 #about.is-hero .about_cta-row { margin-top: 1.75rem; }
 @media (max-width: 767px) { #about.is-hero .about_cta-row { margin-top: .25rem; } }
-/* Hero: menos carga visual. El marco del chat (cabecera "Comando · en línea",
-   fondo del panel y su resplandor) competía con el mensaje; se quedan solo el
-   mensaje, la respuesta y el cuadro de acciones, flotando sobre el video. */
-.power-panel {
-  padding: 0; background: none; border: 0; box-shadow: none;
-  backdrop-filter: none; -webkit-backdrop-filter: none; transform: none;
-}
-.power-panel::before { display: none; }
-.power-chat-stage {
-  min-height: 0; padding: 0 .2rem; overflow: visible;
-  background: none; border-radius: 0;
-}
-/* Sin el panel detrás, las burbujas necesitan su propia sombra para despegarse del video. */
-.power-context, .power-bot-bubble { box-shadow: 0 14px 34px rgba(9, 20, 30, .28); }
-.power-result {
-  width: 100%; margin: .9rem 0 0; transform: none;
-  box-shadow: 0 24px 55px rgba(7, 18, 28, .22);
-}
 /* Header más bajo: el nav ocupaba 116 px y comía la primera pantalla.
    Solo en escritorio; en móvil el burger necesita su área táctil. */
 @media (min-width: 992px) {
@@ -1342,55 +1277,6 @@ html { scroll-behavior: smooth; }
   .radar-row { padding: .65rem .75rem; }
   .section_radar .btn-primary { width: 100%; justify-content: center; }
 }
-/* El mockup del hero no cabe en móvil sin competir con el titular y el CTA. */
-@media (max-width: 767px) { .b2b-hero-visual { display: none; } }
-
-/* ===== Banda del hero: carrusel de conectores =====
-   CSS puro y SVG monocromos (11 KB los doce juntos): no añade JS ni peticiones
-   que compitan con el video del hero. */
-.b2b-hero-band { gap: 1.5rem; overflow: hidden; }
-.band-label {
-  flex: 0 0 auto; font-family: "Jetbrainsmono Variable", ui-monospace, monospace;
-  font-size: .6rem; letter-spacing: .14em; text-transform: uppercase; color: #7c8697;
-}
-/* La máscara evita el corte seco en los extremos. */
-.band-track {
-  flex: 1 1 auto; display: flex; min-width: 0; overflow: hidden;
-  -webkit-mask-image: linear-gradient(90deg, transparent, #000 4%, #000 96%, transparent);
-  mask-image: linear-gradient(90deg, transparent, #000 4%, #000 96%, transparent);
-}
-/* Dos filas idénticas desplazándose -100%: el bucle no tiene costura. */
-.band-row {
-  flex: 0 0 auto; display: flex; align-items: center; gap: 2.25rem;
-  margin: 0; padding: 0 1.125rem 0 0; list-style: none;
-  animation: band-scroll 34s linear infinite;
-}
-.band-row li { display: flex; align-items: center; gap: .5rem; white-space: nowrap; }
-.band-row img { width: 1.35rem; height: 1.35rem; object-fit: contain; opacity: .85; }
-.band-row span {
-  font-family: "Jetbrainsmono Variable", ui-monospace, monospace;
-  font-size: .62rem; letter-spacing: .08em; text-transform: uppercase; color: #b6bdc9;
-}
-@keyframes band-scroll { to { transform: translateX(-100%); } }
-.b2b-hero-band:hover .band-row { animation-play-state: paused; }
-@media (max-width: 767px) {
-  .b2b-hero-band { gap: .9rem; }
-  .band-label { display: none; }
-  .band-row { gap: 1.6rem; padding-right: .8rem; animation-duration: 26s; }
-}
-@media (prefers-reduced-motion: reduce) { .band-row { animation: none; } }
-/* iPhone corto (SE y similares): el bloque de texto ocupaba casi todo el hero y
-   dejaba al video sin sitio. */
-@media (max-width: 767px) and (max-height: 720px) {
-  .b2b-hero-title { font-size: clamp(2.35rem, 9.5vw, 3.1rem); }
-  .b2b-hero-lede { margin-top: 1rem; font-size: .95rem; }
-  .b2b-hero-actions { margin-top: 1.1rem; gap: .6rem; }
-  .b2b-hero-padding { padding-bottom: 1.5rem; }
-}
-/* La bajada va sobre la imagen y en gris claro se perdía; en móvil se oscurece. */
-@media (max-width: 767px) {
-  .b2b-hero-lede { color: #3f423f; text-shadow: 0 1px 2px rgba(248, 247, 243, .95), 0 0 14px rgba(248, 247, 243, .8), 0 0 26px rgba(248, 247, 243, .6); }
-}
 
 /* ---------- Demo «Pruébalo» (reemplaza a Radar y «Un mensaje» mientras están ocultos) ---------- */
 #radar[hidden], #about[hidden] { display: none !important; }
@@ -1423,43 +1309,12 @@ html { scroll-behavior: smooth; }
    (los casos de uso, z-index 3, tapaban los enlaces al pasar por debajo). */
 .nav_fixed { z-index: 20; }
 
-/* ---------- Hero: categoría explícita, titular literal, microcopy bajo el CTA, CRMs a la vista ---------- */
-.b2b-hero-title { max-width: 19ch; font-size: clamp(3.4rem, 5.6vw, 6.2rem); }
-.b2b-hero-note { margin: .85rem 0 0; font-family: "Neuehaasunicaw 1 G", Inter, sans-serif; font-size: .88rem; line-height: 1.5; color: var(--b2b-muted); }
-.b2b-hero-with { display: flex; flex-wrap: wrap; align-items: center; gap: .6rem 1rem; margin-top: 1.5rem; font-family: "Jetbrainsmono Variable", monospace; font-size: .66rem; letter-spacing: .1em; text-transform: uppercase; color: var(--b2b-muted); }
-.b2b-hero-with b { display: inline-flex; align-items: center; gap: .45rem; font-family: "Neuehaasunicaw 1 G", Inter, sans-serif; font-size: .9rem; font-weight: 600; letter-spacing: 0; text-transform: none; color: var(--b2b-ink); }
-.b2b-hero-with img { width: 1.35rem; height: 1.35rem; object-fit: contain; }
-.b2b-hero-with a { font-family: "Neuehaasunicaw 1 G", Inter, sans-serif; font-size: .9rem; letter-spacing: 0; text-transform: none; color: var(--b2b-blue); text-decoration: none; }
-.b2b-hero-with a:hover { text-decoration: underline; }
-@media (max-width: 1100px) { .b2b-hero-title { font-size: clamp(3.1rem, 4.6vw, 4.6rem); } }
-@media (max-width: 767px) {
-  /* El copy del hero creció (categoría, microcopy y CRMs): el velo sube para que
-     el texto no quede sobre el video. Distancias fijas desde abajo, como el original. */
-  .b2b-hero-glow {
-    background: linear-gradient(to top,
-      #f3f1ea 0,
-      rgba(243, 241, 234, .97) 24rem,
-      rgba(245, 244, 238, .92) 31rem,
-      rgba(248, 247, 243, .78) 37rem,
-      rgba(248, 247, 243, .4) 43rem,
-      rgba(248, 247, 243, .1) 48rem,
-      rgba(248, 247, 243, .2) 100%);
-  }
-  .b2b-hero-title { max-width: 12ch; font-size: clamp(2.6rem, 11vw, 3.8rem); }
-  .b2b-hero-with { gap: .5rem .8rem; }
-  .b2b-hero-with b { font-size: .84rem; }
-}
-
-/* El mockup del hero ya no depende de un bucle de 8 s: mensaje, respuesta y las tres
-   acciones entran en menos de un segundo y se quedan. Quien llega ve la explicación
-   completa sin esperar. */
-@keyframes pw-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
-@keyframes pw-in-result { from { opacity: 0; transform: translateY(12px) rotate(-.55deg); } to { opacity: 1; transform: rotate(-.55deg); } }
-.power-context { animation: pw-in .5s ease-out both; }
-.power-bot-bubble { animation: pw-in .5s ease-out .25s both; }
-.power-result { animation: pw-in-result .6s ease-out .45s both; }
-.power-action-row { animation: pw-in .4s ease-out .75s both; }
-.power-action-row:nth-of-type(2) { animation-delay: .88s; }
-.power-action-row:nth-of-type(3) { animation-delay: 1.01s; }
-.power-action-row:nth-of-type(4) { animation-delay: 1.14s; }
-@media (max-width: 767px) { .power-result { animation-name: pw-in; } }
+/* ---------- Casos de uso: el día empieza con un aviso de Comando (7:30) ---------- */
+.uc-msg.is-proactive .uc-bubble { border-left: 3px solid #4d7cff; max-width: 92%; }
+.uc-pro-tag { display: block; margin-bottom: .2rem; font-family: "Jetbrainsmono Variable", ui-monospace, monospace; font-size: .6rem; letter-spacing: .08em; text-transform: uppercase; color: #8fb0ff; font-weight: 500; }
+.uc-msg.is-proactive + .uc-msg.is-user { margin-top: .5rem; }
+.uc-dot.is-pro { cursor: default; }
+.uc-dot.is-pro i { border-style: dashed; border-color: #4d7cff; }
+.uc-step-pro { cursor: default; border-style: dashed; }
+.uc-step-pro b { color: #4d7cff; font-weight: 600; }
+.uc-step-pro:hover { border-color: inherit; }
