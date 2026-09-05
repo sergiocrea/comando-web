@@ -7,7 +7,7 @@
      equivalente para pedirlo por WhatsApp. Ver README.md: tabla de endpoints.
    - `createMockApi()` sirve los datos de mock-data.js con una pequeña latencia. */
 
-import { MOCK, MOCK_DELAY_MS } from './mock-data.js?v=1';
+import { MOCK, MOCK_DELAY_MS } from './mock-data.js?v=2';
 
 const PENDING = (reason) => ({ pending: true, reason });
 

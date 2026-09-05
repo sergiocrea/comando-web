@@ -50,6 +50,18 @@ export const SIGNALS = {
   reconcile_age_hours: 'Sincronización', duplicate_records: 'Duplicados', stale_records: 'Sin actividad', unassigned_records: 'Sin dueño', open_tasks: 'Tareas abiertas', signal_count: 'Señal',
 };
 export const signalLabel = (t) => SIGNALS[t] || t;
+/** Cómo se lee cada señal como frase «te avisa cuando…» (sin la palabra «señal»). */
+export const SIGNAL_PHRASE = {
+  deal_inactive: (th) => `un negocio lleva ${th.inactiveDays} días sin que nadie lo toque`,
+  close_date_approaching: (th) => `un negocio cierra en menos de ${th.closeDateApproachingDays} días`,
+  close_date_overdue: () => 'pasó la fecha de cierre y el negocio sigue abierto',
+  missing_next_step: () => 'un negocio se queda sin siguiente paso',
+  overdue_task: () => 'se te vence una tarea',
+  stage_stalled: (th) => `un negocio lleva ${th.stageStalledDays} días en la misma etapa`,
+  high_value_attention: (th, cur) => `un negocio grande (desde ${cur}) necesita atención`,
+  missing_owner: () => 'entra un contacto o negocio sin dueño',
+  missing_critical_data: () => 'un negocio está sin monto, etapa o fecha de cierre',
+};
 export const COMMAND_LABELS = {
   TAG: 'Etiquetar', UNTAG: 'Quitar etiqueta', UPDATE_FIELD: 'Actualizar campo', BROADCAST: 'Enviar plantilla', NOTE: 'Nota', ASSIGN: 'Asignar', MOVE_STAGE: 'Mover etapa',
   CREATE_TASK: 'Crear tarea', CANCEL_TASK: 'Cancelar tarea', NOTIFY: 'Aviso', GENERATE_REPORT: 'Reporte', CREATE_AUTOMATION_RULE: 'Regla por evento', CREATE_AGENT_RULE: 'Aviso con cadencia',
@@ -77,6 +89,11 @@ export function kpi(label, value, sub, opts = {}) {
 export function card(title, body, opts = {}) {
   return `<section class="card ${opts.cls || ''}"><div class="card-head"><div><h2>${esc(title)}</h2>${opts.sub ? `<p>${opts.sub}</p>` : ''}</div>${opts.more ? `<a class="more" href="${opts.moreHref || '#'}">${esc(opts.more)}</a>` : ''}${opts.right || ''}</div>${body}</section>`;
 }
+/** Un elemento de lista: icono, texto, UNA acción principal y lo demás plegado en «más». */
+export function row({ ico = '•', cls = '', title = '', sub = '', meta = '', side = '', primary = '', more = '', attrs = '', done = false }) {
+  return `<div class="row ${done ? 'is-done' : ''}" ${attrs}><div class="row-ico ${cls}">${ico}</div><div class="row-body"><div class="row-title">${title}</div>${sub ? `<div class="row-sub">${sub}</div>` : ''}${meta ? `<div class="row-meta">${meta}</div>` : ''}</div>${side || primary ? `<div class="row-actions">${side}${primary}</div>` : ''}${more ? moreBox(more) : ''}</div>`;
+}
+export const moreBox = (html, label = 'más') => `<details class="more"><summary>${esc(label)}</summary><div class="more-body">${html}</div></details>`;
 export function empty(title, text) { return `<div class="empty"><b>${esc(title)}</b>${esc(text || '')}</div>`; }
 /** Estado de una parte del panel cuyo endpoint aún no está en el engine. */
 export function soon(what, phrase, extra = '') {
@@ -106,5 +123,6 @@ export const ICON = {
   plug: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 2v6M15 2v6M6 8h12v4a6 6 0 0 1-12 0zM12 18v4"/></svg>',
   users: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.9M16 3.1a4 4 0 0 1 0 7.8"/></svg>',
   card: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>',
+  user: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>',
   gear: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>',
 };
