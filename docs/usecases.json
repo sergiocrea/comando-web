@@ -53,7 +53,8 @@
         }
       ],
       "resultado": "Ningún seguimiento olvidado. Cero minutos escribiendo en el CRM.",
-      "evidencia": "cotizacion"
+      "evidencia": "cotizacion",
+      "proactivo": "☀️ Buenos días. Anoche entraron 6 leads de los portales y 2 siguen sin dueño. Además, 4 cotizaciones cumplen 3 días sin respuesta. Responde VER para la lista."
     },
     {
       "rol": "Vendedor",
@@ -74,7 +75,8 @@
         }
       ],
       "resultado": "Los presupuestos se cierran mientras aún importan.",
-      "evidencia": "toques"
+      "evidencia": "toques",
+      "proactivo": "⏰ 7 presupuestos de esta semana siguen sin respuesta; el de Marta Pérez (ortodoncia) vence el viernes. Responde VER y te paso los mensajes listos."
     },
     {
       "rol": "Vendedor",
@@ -95,7 +97,8 @@
         }
       ],
       "resultado": "Cartera viva, pedidos recurrentes que no se pierden.",
-      "evidencia": "toques"
+      "evidencia": "toques",
+      "proactivo": "📉 9 clientes de tu cartera llevan más de 30 días sin comprar. Ferretería El Sol ya va por 42. Responde VER para verlos con su último pedido."
     },
     {
       "rol": "Vendedor",
@@ -116,7 +119,8 @@
         }
       ],
       "resultado": "Cada carrito abandonado tiene una segunda oportunidad.",
-      "evidencia": "carrito"
+      "evidencia": "carrito",
+      "proactivo": "🛒 Hoy se abandonaron 5 carritos de más de $200; el mayor es de Andrea Gómez ($480). Responde VER y te dejo los mensajes de recuperación listos."
     },
     {
       "rol": "Jefe de ventas",
@@ -137,7 +141,8 @@
         }
       ],
       "resultado": "Cada lead tiene dueño en minutos, no en días.",
-      "evidencia": "speed"
+      "evidencia": "speed",
+      "proactivo": "📊 Lunes 8:00 · 38 deals activos, 6 estancados más de 10 días (4 de Luis). Responde VER para el detalle por vendedor."
     },
     {
       "rol": "Jefe de ventas",
@@ -158,7 +163,8 @@
         }
       ],
       "resultado": "Menos sillas vacías, más tratamientos iniciados.",
-      "evidencia": "noshow"
+      "evidencia": "noshow",
+      "proactivo": "📅 Mañana hay 41 citas y 14 siguen sin confirmar, 5 de primera consulta. Responde VER para repartirlas a las asesoras."
     },
     {
       "rol": "Jefe de ventas",
@@ -179,7 +185,8 @@
         }
       ],
       "resultado": "Decisiones con datos del día, no del cierre de mes.",
-      "evidencia": "estancados"
+      "evidencia": "estancados",
+      "proactivo": "📊 7:00 · Equipo al 62 % de la cuota mensual; 8 pedidos llevan más de 24 h sin cotización. Responde VER para verlos por vendedor."
     },
     {
       "rol": "Jefe de ventas",
@@ -200,7 +207,8 @@
         }
       ],
       "resultado": "Cero pedidos olvidados, cero clientes preguntando «¿y mi pedido?».",
-      "evidencia": "carrito"
+      "evidencia": "carrito",
+      "proactivo": "⚠️ 2 pedidos de más de $500 llevan 24 h en «Pendiente de pago»: 1031 ($640) y 1037 ($512). Responde VER o LUEGO."
     },
     {
       "rol": "Dueño del negocio",
@@ -221,7 +229,8 @@
         }
       ],
       "resultado": "Un WhatsApp al final del día vale más que tres dashboards.",
-      "evidencia": "estancados"
+      "evidencia": "estancados",
+      "proactivo": "🔴 Se perdió Torre Norte 1203 ($95,000). Motivo: financiamiento no aprobado. Esta semana van 4 separaciones. Responde POR QUÉ para el detalle."
     },
     {
       "rol": "Dueño del negocio",
@@ -242,7 +251,8 @@
         }
       ],
       "resultado": "Números claros, sin esperar al contador.",
-      "evidencia": "noshow"
+      "evidencia": "noshow",
+      "proactivo": "📊 Semana pasada: 46 pacientes nuevos, 19 presupuestos aceptados ($38,000), ausencias 9 %. Responde VER para el detalle por tratamiento."
     },
     {
       "rol": "Dueño del negocio",
@@ -263,7 +273,8 @@
         }
       ],
       "resultado": "Cobras a tiempo y sabes dónde está el margen.",
-      "evidencia": "toques"
+      "evidencia": "toques",
+      "proactivo": "💸 3 clientes superan 15 días de atraso; el mayor es Bodegas Centro, $12,400 a 18 días. Tienes el recordatorio listo: responde VER."
     },
     {
       "rol": "Dueño del negocio",
@@ -284,7 +295,8 @@
         }
       ],
       "resultado": "Decides con el dato del día, desde el celular.",
-      "evidencia": "carrito"
+      "evidencia": "carrito",
+      "proactivo": "☀️ Ayer: $6,420 en 38 pedidos, ticket $169; más vendido: zapatilla Runner. Responde VER para el desglose por canal."
     },
     {
       "rol": "Atención y postventa",
@@ -305,7 +317,8 @@
         }
       ],
       "resultado": "Cada cliente atendido como si fuera el único.",
-      "evidencia": "noshow"
+      "evidencia": "noshow",
+      "proactivo": "📅 Mañana hay 6 visitas; a las 17:00 te dejo los 6 recordatorios listos. Hoy 2 clientes llevan 3 días sin responder tras su visita. Responde VER."
     },
     {
       "rol": "Atención y postventa",
@@ -326,7 +339,8 @@
         }
       ],
       "resultado": "Pacientes que regresan, sin llamadas de recordatorio.",
-      "evidencia": "noshow"
+      "evidencia": "noshow",
+      "proactivo": "🩺 Hoy tienes 12 seguimientos post-tratamiento listos; el primero, Rosa Díaz (extracción de ayer). Responde VER para empezar."
     },
     {
       "rol": "Atención y postventa",
@@ -347,7 +361,8 @@
         }
       ],
       "resultado": "Menos reclamos repetidos, clientes que recompran.",
-      "evidencia": "toques"
+      "evidencia": "toques",
+      "proactivo": "🚚 Hoy salieron 14 pedidos a despacho; los avisos con guía y fecha están listos. Hay 1 reclamo sin atender desde ayer. Responde VER."
     },
     {
       "rol": "Atención y postventa",
@@ -368,7 +383,8 @@
         }
       ],
       "resultado": "Clientes que vuelven y lo cuentan.",
-      "evidencia": "carrito"
+      "evidencia": "carrito",
+      "proactivo": "⭐ 22 pedidos se entregaron ayer: tienes los mensajes de reseña listos. 1 pregunta de Mercado Libre lleva 2 h sin respuesta. Responde VER."
     },
     {
       "rol": "Vendedor",
@@ -389,7 +405,8 @@
         }
       ],
       "resultado": "Ningún postulante se enfría antes de matricularse.",
-      "evidencia": "speed"
+      "evidencia": "speed",
+      "proactivo": "☀️ Anoche entraron 14 postulantes de «Matrícula 2027»; 5 siguen sin contacto, 3 de Administración. Responde VER para la lista con celular."
     },
     {
       "rol": "Vendedor",
@@ -410,7 +427,8 @@
         }
       ],
       "resultado": "Cada test drive termina en una cotización con seguimiento.",
-      "evidencia": "cotizacion"
+      "evidencia": "cotizacion",
+      "proactivo": "🚗 6 personas hicieron test drive esta semana y ninguna tiene cotización. La más antigua: Jorge Salas (Kicks, martes). Responde VER."
     },
     {
       "rol": "Vendedor",
@@ -431,7 +449,8 @@
         }
       ],
       "resultado": "Renovaciones a tiempo y solicitudes que no se quedan en el cajón.",
-      "evidencia": "toques"
+      "evidencia": "toques",
+      "proactivo": "📆 23 pólizas de tu cartera vencen en 30 días; las 3 mayores suman $9,800. Responde VER y te paso los recordatorios listos."
     },
     {
       "rol": "Vendedor",
@@ -452,7 +471,8 @@
         }
       ],
       "resultado": "Cada propuesta tiene su siguiente paso agendado.",
-      "evidencia": "toques"
+      "evidencia": "toques",
+      "proactivo": "📨 4 propuestas llevan más de 5 días sin respuesta; Clínica Norte ($3,500/mes) es la mayor. Responde VER para los seguimientos listos."
     },
     {
       "rol": "Jefe de ventas",
@@ -473,7 +493,8 @@
         }
       ],
       "resultado": "Cada postulante tiene asesor en minutos, no en días.",
-      "evidencia": "speed"
+      "evidencia": "speed",
+      "proactivo": "📊 7:00 · 62 postulantes nuevos (Administración 21, Marketing 18, Sistemas 23); 9 llevan más de 1 hora sin contacto. Responde VER."
     },
     {
       "rol": "Jefe de ventas",
@@ -494,7 +515,8 @@
         }
       ],
       "resultado": "Decisiones con datos del día, no del cierre de mes.",
-      "evidencia": "estancados"
+      "evidencia": "estancados",
+      "proactivo": "📊 Lunes · 48 cotizaciones esta semana (Marco 14, Lucía 12); 9 prospectos estancados más de 7 días. Responde VER por vendedor."
     },
     {
       "rol": "Jefe de ventas",
@@ -515,7 +537,8 @@
         }
       ],
       "resultado": "Ninguna póliza vence sin que alguien la haya gestionado.",
-      "evidencia": "toques"
+      "evidencia": "toques",
+      "proactivo": "⚠️ 3 solicitudes de crédito llevan más de 48 h en «Evaluación»; Ferretería Sol ($15,000) es la mayor. Responde VER o LUEGO."
     },
     {
       "rol": "Jefe de ventas",
@@ -536,7 +559,8 @@
         }
       ],
       "resultado": "Sabes qué canal cierra y quién necesita ayuda, cada semana.",
-      "evidencia": "estancados"
+      "evidencia": "estancados",
+      "proactivo": "📊 Lunes · 17 propuestas abiertas ($42,000); 6 con más de 10 días sin respuesta, 4 de Sofía. Responde VER por ejecutivo."
     },
     {
       "rol": "Dueño del negocio",
@@ -557,7 +581,8 @@
         }
       ],
       "resultado": "Un WhatsApp al final del día vale más que tres dashboards.",
-      "evidencia": "speed"
+      "evidencia": "speed",
+      "proactivo": "📊 Viernes · 310 postulantes, 84 preinscritos, 37 matriculados esta semana. «Matrícula 2027» convierte al 11,9 %. Responde VER por programa."
     },
     {
       "rol": "Dueño del negocio",
@@ -578,7 +603,8 @@
         }
       ],
       "resultado": "Decides con el dato del día, desde el celular.",
-      "evidencia": "estancados"
+      "evidencia": "estancados",
+      "proactivo": "🔴 Se perdió una Hilux cotizada en $38,000. Motivo: financiamiento no aprobado. Esta semana van 11 unidades. Responde POR QUÉ."
     },
     {
       "rol": "Dueño del negocio",
@@ -599,7 +625,8 @@
         }
       ],
       "resultado": "Cobras a tiempo y sabes dónde está el margen.",
-      "evidencia": "toques"
+      "evidencia": "toques",
+      "proactivo": "💸 4 clientes superan 15 días de atraso; el mayor es Taller Ruiz, $2,100 a 19 días. Recordatorio listo: responde VER."
     },
     {
       "rol": "Dueño del negocio",
@@ -620,7 +647,8 @@
         }
       ],
       "resultado": "Ves la salud de la agencia sin abrir ninguna herramienta.",
-      "evidencia": "estancados"
+      "evidencia": "estancados",
+      "proactivo": "⚠️ 2 clientes llevan más de 30 días sin reuniones ni entregables: Dulce Hogar (34) y Studio Kai (31). Responde VER o LUEGO."
     },
     {
       "rol": "Atención y postventa",
@@ -641,7 +669,8 @@
         }
       ],
       "resultado": "Menos deserción en las primeras semanas.",
-      "evidencia": "noshow"
+      "evidencia": "noshow",
+      "proactivo": "🎓 Mañana inicia Marketing Digital: 18 recordatorios listos con aula 204 y horario. 3 alumnos faltaron a sus dos primeras clases. Responde VER."
     },
     {
       "rol": "Atención y postventa",
@@ -662,7 +691,8 @@
         }
       ],
       "resultado": "Clientes que vuelven al taller y a la sala de ventas.",
-      "evidencia": "noshow"
+      "evidencia": "noshow",
+      "proactivo": "🔧 Mañana hay 9 citas de mantenimiento; a las 17:00 te dejo los recordatorios. Hoy 4 entregas cumplen 5 días: mensajes de reseña listos. Responde VER."
     },
     {
       "rol": "Atención y postventa",
@@ -683,7 +713,8 @@
         }
       ],
       "resultado": "Cada cliente sabe en qué va su trámite sin llamar.",
-      "evidencia": "toques"
+      "evidencia": "toques",
+      "proactivo": "🚨 Familia Cárdenas registró un siniestro (choque leve): tarea creada y mensaje con los 4 pasos listo. 2 siniestros llevan 5 días sin actualizar. Responde VER."
     },
     {
       "rol": "Atención y postventa",
@@ -704,7 +735,8 @@
         }
       ],
       "resultado": "Renovaciones que llegan solas, sin correr al final del contrato.",
-      "evidencia": "toques"
+      "evidencia": "toques",
+      "proactivo": "📈 Lunes · 12 resúmenes semanales listos para tus clientes, empezando por Clínica Norte. 1 ticket lleva 4 h sin respuesta. Responde VER."
     }
   ]
 }

@@ -8,6 +8,7 @@
   if (!root) return;
   const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
   const TIMES = ['8:05', '11:30', '18:40'];
+  const PRO_TIME = '7:30'; // el aviso con el que Comando abre el día, antes de que nadie pregunte
   const state = { rol: 0, vertical: 0 };
   let D = null;
 
@@ -20,24 +21,29 @@
     return `<div class="uc-msg is-user${i < upTo ? ' is-in' : ''}"><div class="uc-bubble">${esc(m.u)}<span class="uc-time">${TIMES[i] || ''} <i>✓✓</i></span></div></div>
       <div class="uc-msg is-bot${i < upTo ? ' is-in' : ''}"><div class="uc-bubble">${esc(m.r)}<span class="uc-time">${TIMES[i] || ''}</span></div></div>`;
   }
-  function chatHtml(c) { return c.comandos.map((m, i) => msgHtml(m, i, step + 1)).join(''); }
+  function proHtml(c) {
+    if (!c.proactivo) return '';
+    return `<div class="uc-msg is-bot is-in is-proactive"><div class="uc-bubble"><b class="uc-pro-tag">Comando te avisa</b>${esc(c.proactivo)}<span class="uc-time">${PRO_TIME}</span></div></div>`;
+  }
+  function chatHtml(c) { return proHtml(c) + c.comandos.map((m, i) => msgHtml(m, i, step + 1)).join(''); }
   function timelineHtml(c) {
-    return c.comandos.map((m, i) => `<li><button type="button" class="uc-dot${i === step ? ' is-on' : ''}${i < step ? ' is-past' : ''}" data-step="${i}" aria-label="Enviar el mensaje de las ${TIMES[i] || ''}"><i></i><span>${TIMES[i] || ''}</span></button></li>`).join('');
+    return (c.proactivo ? `<li class="is-pro"><span class="uc-dot is-pro" aria-label="Aviso de Comando a las ${PRO_TIME}"><i></i><span>${PRO_TIME}</span></span></li>` : '') + c.comandos.map((m, i) => `<li><button type="button" class="uc-dot${i === step ? ' is-on' : ''}${i < step ? ' is-past' : ''}" data-step="${i}" aria-label="Enviar el mensaje de las ${TIMES[i] || ''}"><i></i><span>${TIMES[i] || ''}</span></button></li>`).join('');
   }
   function outcomeHtml(c) {
     return `<div class="uc-card-meta">${esc(c.rol)} · ${esc(c.vertical)}</div><h3 class="uc-card-title">${esc(c.titulo)}</h3>
-      <ol class="uc-steps">${c.comandos.map((m, i) => `<li><button type="button" class="uc-step${i === step ? ' is-on' : ''}" data-step="${i}"><span class="uc-step-time">${TIMES[i] || ''}</span><span class="uc-step-text">${esc(m.u)}</span></button></li>`).join('')}</ol>
+      <ol class="uc-steps">${c.proactivo ? `<li><div class="uc-step uc-step-pro"><span class="uc-step-time">${PRO_TIME}</span><span class="uc-step-text"><b>Comando te avisa.</b> ${esc(c.proactivo)}</span></div></li>` : ''}${c.comandos.map((m, i) => `<li><button type="button" class="uc-step${i === step ? ' is-on' : ''}" data-step="${i}"><span class="uc-step-time">${TIMES[i] || ''}</span><span class="uc-step-text">${esc(m.u)}</span></button></li>`).join('')}</ol>
       <div class="uc-result">${esc(c.resultado)}</div>
 `;
   }
   function showStep(i, fromUser) {
     step = i;
-    const msgs = [...root.querySelectorAll('.uc-msg')];
+    const msgs = [...root.querySelectorAll('.uc-msg:not(.is-proactive)')];
+    const pro = root.querySelector('.uc-msg.is-proactive');
     msgs.forEach((m, k) => m.classList.toggle('is-in', Math.floor(k / 2) <= step));
     // fixed-height chat, no scroll: drop the oldest exchanges until everything fits
     const chatEl = root.querySelector('.uc-chat'); const cs = getComputedStyle(chatEl);
     const avail = chatEl.clientHeight - parseFloat(cs.paddingTop) - parseFloat(cs.paddingBottom); const gap = parseFloat(cs.rowGap) || 0;
-    const used = () => { const v = msgs.filter((m) => m.classList.contains('is-in')); return v.reduce((a, m) => a + m.offsetHeight + parseFloat(getComputedStyle(m).marginTop), 0) + gap * (v.length - 1); };
+    const used = () => { const v = msgs.filter((m) => m.classList.contains('is-in')); return (pro ? pro.offsetHeight + gap : 0) + v.reduce((a, m) => a + m.offsetHeight + parseFloat(getComputedStyle(m).marginTop), 0) + gap * (v.length - 1); };
     for (let first = 0; first < step && used() > avail + 1; first++) {
       msgs[first * 2].classList.remove('is-in'); msgs[first * 2 + 1].classList.remove('is-in');
     }
@@ -89,5 +95,5 @@
     restartTimer(6000);
     if (typeof ScrollTrigger !== 'undefined') ScrollTrigger.refresh();
   }
-  fetch('docs/usecases.json?v=8').then((r) => r.json()).then((d) => { D = d; render(); showStep(0, 'init'); requestAnimationFrame(() => root.querySelector('.uc-layout').classList.add('is-in')); if (typeof ScrollTrigger !== 'undefined') ScrollTrigger.refresh(); }).catch(() => {});
+  fetch('docs/usecases.json?v=9').then((r) => r.json()).then((d) => { D = d; render(); showStep(0, 'init'); requestAnimationFrame(() => root.querySelector('.uc-layout').classList.add('is-in')); if (typeof ScrollTrigger !== 'undefined') ScrollTrigger.refresh(); }).catch(() => {});
 })();
