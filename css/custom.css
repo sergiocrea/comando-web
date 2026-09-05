@@ -654,18 +654,24 @@ body.sheet-open { overflow: hidden; }
   .uc-result { border-left: 0; padding-left: 0; border-top: 3px solid #4d7cff; padding-top: 1rem; display: inline-block; }
 }
 @media (max-width: 767px) {
-  .section_usecases { padding: 3rem 0 2rem; }
-  .uc-subtitle { font-size: .95rem; margin-top: .75rem; }
+  /* En móvil el encabezado se comía media pantalla antes del teléfono: menos aire
+     entre etiqueta y título, sin subtítulo (las pestañas ya invitan a elegir) y
+     pestañas pegadas al título. */
+  .section_usecases { padding: 2rem 0 2rem; }
+  .section_usecases .section_features-header-component { grid-row-gap: .55rem; row-gap: .55rem; }
+  .section_usecases .section_features-heading { font-size: clamp(1.5rem, 6.4vw, 1.9rem); }
+  .uc-subtitle { display: none; }
   .uc-tabs, .uc-chips { flex-wrap: nowrap; justify-content: flex-start; overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; margin-left: -1.25rem; margin-right: -1.25rem; padding: .25rem 1.25rem; scroll-snap-type: x proximity; }
   .uc-tabs::-webkit-scrollbar, .uc-chips::-webkit-scrollbar { display: none; }
   .uc-tab, .uc-chip { scroll-snap-align: center; flex: 0 0 auto; }
-  .uc-tab { padding: .8rem 1.1rem; font-size: .82rem; }
-  .uc-tabs { margin-top: 1.75rem; }
+  .uc-tab { padding: .7rem 1rem; font-size: .8rem; }
+  .uc-tabs { margin-top: .9rem; }
+  .uc-chips { margin-top: .35rem; }
   .uc-layout { margin-top: 1.25rem; grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: "phone timeline"; gap: 1rem .5rem; align-items: start; }
   .uc-outcome { display: none; }
   .uc-phone { grid-area: phone; max-width: 100%; border-radius: 2.2rem; }
   .uc-timeline { grid-area: timeline; display: block; padding-top: 4.5rem; }
-  .uc-layout { margin-top: 1.5rem; }
+  .uc-layout { margin-top: 1rem; }
   .uc-steps { display: none; }
   .uc-card-meta { margin-bottom: .4rem; }
   .uc-card-title { margin-bottom: 0; }
