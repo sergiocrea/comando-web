@@ -1057,11 +1057,11 @@ html { scroll-behavior: smooth; }
   .b2b-hero-glow {
     background: linear-gradient(to top,
       #f3f1ea 0,
-      rgba(243, 241, 234, .96) 6.5rem,
-      rgba(248, 247, 243, .84) 11rem,
-      rgba(248, 247, 243, .5) 16.5rem,
-      rgba(248, 247, 243, .1) 23rem,
-      rgba(248, 247, 243, .22) 100%);
+      rgba(243, 241, 234, .97) 7rem,
+      rgba(245, 244, 238, .93) 15rem,
+      rgba(248, 247, 243, .72) 20.5rem,
+      rgba(248, 247, 243, .12) 28rem,
+      rgba(248, 247, 243, .2) 100%);
   }
   .b2b-hero-padding {
     flex: 1; display: flex; flex-direction: column; justify-content: flex-end;
