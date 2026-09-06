@@ -1,29 +1,43 @@
-/* Utilidades de presentación del panel: escape, formatos LatAm, chips, enlaces a
-   WhatsApp con la frase lista para pedirle a Comando, toasts. Sin dependencias. */
+/* Utilidades de presentación del panel: escape, formatos por idioma, chips,
+   enlaces a WhatsApp con la frase lista para pedirle a Comando, toasts.
+   Lo único que importa: el diccionario. */
+import { t, locale, localeTag } from '../i18n.js?v=1';
 
 export const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 
 const SYMBOL = { PEN: 'S/', USD: '$', MXN: 'MX$', COP: 'COP$', CLP: 'CLP$', ARS: 'AR$', BRL: 'R$' };
-export function num(n) { if (n == null || Number.isNaN(Number(n))) return '—'; return Number(n).toLocaleString('es-PE').replace(/,/g, '.'); }
-export function money(n, currency = 'PEN') { if (n == null) return '—'; return (SYMBOL[currency] || currency) + ' ' + num(Math.round(n)); }
-export function pct(x, digits = 0) { if (x == null) return '—'; return (x * 100).toFixed(digits).replace('.', ',') + ' %'; }
-export function compact(n) { if (n == null) return '—'; const a = Math.abs(n); if (a >= 1e6) return (n / 1e6).toFixed(1).replace('.', ',') + ' M'; if (a >= 1e3) return Math.round(n / 1e3) + ' k'; return num(n); }
+export function num(n) { if (n == null || Number.isNaN(Number(n))) return t('common.dash'); return Number(n).toLocaleString(localeTag()); }
+export function money(n, currency = 'PEN') { if (n == null) return t('common.dash'); return (SYMBOL[currency] || currency) + ' ' + num(Math.round(n)); }
+export function pct(x, digits = 0) { if (x == null) return t('common.dash'); return (x * 100).toLocaleString(localeTag(), { minimumFractionDigits: digits, maximumFractionDigits: digits }) + ' %'; }
+export function compact(n) {
+  if (n == null) return t('common.dash');
+  const a = Math.abs(n);
+  if (a >= 1e6) return (n / 1e6).toLocaleString(localeTag(), { maximumFractionDigits: 1 }) + ' ' + t('ui.million');
+  if (a >= 1e3) return Math.round(n / 1e3) + ' ' + t('ui.thousand');
+  return num(n);
+}
 
-const DOW = ['dom', 'lun', 'mar', 'mié', 'jue', 'vie', 'sáb'];
-const MONTHS = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
-export function fmtTime(iso) { const d = new Date(iso); return d.toLocaleTimeString('es-PE', { hour: '2-digit', minute: '2-digit', hour12: false }); }
-export function fmtDate(iso, withYear) { const d = new Date(iso); return `${d.getDate()} ${MONTHS[d.getMonth()].slice(0, 3)}${withYear ? ' ' + d.getFullYear() : ''}`; }
-export function fmtDateTime(iso) { return `${DOW[new Date(iso).getDay()]} ${fmtDate(iso)} · ${fmtTime(iso)}`; }
-export function monthName(d) { return `${MONTHS[d.getMonth()]} ${d.getFullYear()}`; }
-export function dayLabel(d) { return `${DOW[d.getDay()]} ${d.getDate()} de ${MONTHS[d.getMonth()]}`; }
+const dow = () => t('ui.dow').split(',');
+const months = () => t('ui.months').split(',');
+export function fmtTime(iso) { const d = new Date(iso); return d.toLocaleTimeString(localeTag(), { hour: '2-digit', minute: '2-digit', hour12: locale() === 'en' }); }
+export function fmtDate(iso, withYear) {
+  const d = new Date(iso);
+  const month = months()[d.getMonth()].slice(0, 3);
+  // En inglés el mes va delante; en castellano y portugués, detrás.
+  const core = locale() === 'en' ? `${month} ${d.getDate()}` : `${d.getDate()} ${month}`;
+  return `${core}${withYear ? ' ' + d.getFullYear() : ''}`;
+}
+export function fmtDateTime(iso) { return `${dow()[new Date(iso).getDay()]} ${fmtDate(iso)} · ${fmtTime(iso)}`; }
+export function monthName(d) { return `${months()[d.getMonth()]} ${d.getFullYear()}`; }
+export function dayLabel(d) { return t('ui.dayLabel', { dow: dow()[d.getDay()], day: d.getDate(), month: months()[d.getMonth()] }); }
 export function sameDay(a, b) { return a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate(); }
 export function rel(iso) {
   if (!iso) return '';
   const diff = new Date(iso).getTime() - Date.now();
   const abs = Math.abs(diff); const past = diff < 0;
-  const unit = abs < 3.6e6 ? [Math.round(abs / 6e4), 'min'] : abs < 8.64e7 ? [Math.round(abs / 3.6e6), 'h'] : [Math.round(abs / 8.64e7), 'd'];
-  const t = unit[0] + ' ' + unit[1];
-  return past ? 'hace ' + t : 'en ' + t;
+  const unit = abs < 3.6e6 ? [Math.round(abs / 6e4), t('ui.min')] : abs < 8.64e7 ? [Math.round(abs / 3.6e6), t('ui.hour')] : [Math.round(abs / 8.64e7), t('ui.day')];
+  const when = unit[0] + ' ' + unit[1];
+  return past ? t('ui.ago', { t: when }) : t('ui.in', { t: when });
 }
 export function isToday(iso) { return sameDay(new Date(iso), new Date()); }
 export function isPast(iso) { return new Date(iso).getTime() < Date.now(); }
@@ -33,47 +47,50 @@ export function isoDay(d) { return d.toISOString().slice(0, 10); }
 let waBase = 'https://wa.me/';
 export function setWaBase(link) { if (link) waBase = link.replace(/\?.*$/, ''); }
 export const wa = (phrase) => waBase + (phrase ? '?text=' + encodeURIComponent(phrase) : '');
-export function waBtn(phrase, label = 'Pedir por WhatsApp', cls = 'btn sm wa') {
+export function waBtn(phrase, label, cls = 'btn sm wa') {
+  label = label ?? t('common.askOnWhatsApp');
   return `<a class="${cls}" href="${wa(phrase)}" target="_blank" rel="noopener" title="${esc(phrase)}">${ICON.wa}${esc(label)}</a>`;
 }
-export function askLine(phrase, prefix = 'Por WhatsApp:') {
-  return `<div class="ask-line">${esc(prefix)} <q>${esc(phrase)}</q> <a href="${wa(phrase)}" target="_blank" rel="noopener">enviar</a></div>`;
+export function askLine(phrase, prefix) {
+  prefix = prefix ?? t('common.onWhatsApp');
+  return `<div class="ask-line">${esc(prefix)} <q>${esc(phrase)}</q> <a href="${wa(phrase)}" target="_blank" rel="noopener">${esc(t('common.send'))}</a></div>`;
 }
 
 /* ---------- piezas ---------- */
 export const chip = (text, kind = '') => `<span class="chip ${kind}">${esc(text)}</span>`;
-export const SEVERITY = { critical: ['Crítico', 'bad'], high: ['Alta', 'bad'], warning: ['Media', 'warn'], info: ['Baja', 'info'], ok: ['Bien', 'ok'] };
-export const sevChip = (s) => { const [t, k] = SEVERITY[s] || [s, '']; return chip(t, k); };
-export const SIGNALS = {
-  deal_inactive: 'Negocio inactivo', close_date_approaching: 'Cierre próximo', close_date_overdue: 'Cierre vencido', missing_next_step: 'Sin siguiente paso',
-  overdue_task: 'Tarea vencida', stage_stalled: 'Estancado en etapa', high_value_attention: 'Alto valor', missing_owner: 'Sin dueño', missing_critical_data: 'Datos incompletos',
-  reconcile_age_hours: 'Sincronización', duplicate_records: 'Duplicados', stale_records: 'Sin actividad', unassigned_records: 'Sin dueño', open_tasks: 'Tareas abiertas', signal_count: 'Señal',
-};
-export const signalLabel = (t) => SIGNALS[t] || t;
+const SEVERITY_KIND = { critical: 'bad', high: 'bad', warning: 'warn', info: 'info', ok: 'ok' };
+export const sevChip = (s) => chip(SEVERITY_KIND[s] ? t('sev.' + s) : s, SEVERITY_KIND[s] || '');
+const SIGNAL_TYPES = new Set([
+  'deal_inactive', 'close_date_approaching', 'close_date_overdue', 'missing_next_step', 'overdue_task',
+  'stage_stalled', 'high_value_attention', 'missing_owner', 'missing_critical_data', 'reconcile_age_hours',
+  'duplicate_records', 'stale_records', 'unassigned_records', 'open_tasks', 'signal_count',
+]);
+export const signalLabel = (type) => (SIGNAL_TYPES.has(type) ? t('signal.' + type) : type);
 /** Cómo se lee cada señal como frase «te avisa cuando…» (sin la palabra «señal»). */
 export const SIGNAL_PHRASE = {
-  deal_inactive: (th) => `un negocio lleva ${th.inactiveDays} días sin que nadie lo toque`,
-  close_date_approaching: (th) => `un negocio cierra en menos de ${th.closeDateApproachingDays} días`,
-  close_date_overdue: () => 'pasó la fecha de cierre y el negocio sigue abierto',
-  missing_next_step: () => 'un negocio se queda sin siguiente paso',
-  overdue_task: () => 'se te vence una tarea',
-  stage_stalled: (th) => `un negocio lleva ${th.stageStalledDays} días en la misma etapa`,
-  high_value_attention: (th, cur) => `un negocio grande (desde ${cur}) necesita atención`,
-  missing_owner: () => 'entra un contacto o negocio sin dueño',
-  missing_critical_data: () => 'un negocio está sin monto, etapa o fecha de cierre',
+  deal_inactive: (th) => t('phrase.deal_inactive', { days: th.inactiveDays }),
+  close_date_approaching: (th) => t('phrase.close_date_approaching', { days: th.closeDateApproachingDays }),
+  close_date_overdue: () => t('phrase.close_date_overdue'),
+  missing_next_step: () => t('phrase.missing_next_step'),
+  overdue_task: () => t('phrase.overdue_task'),
+  stage_stalled: (th) => t('phrase.stage_stalled', { days: th.stageStalledDays }),
+  high_value_attention: (th, cur) => t('phrase.high_value_attention', { amount: cur }),
+  missing_owner: () => t('phrase.missing_owner'),
+  missing_critical_data: () => t('phrase.missing_critical_data'),
 };
-export const COMMAND_LABELS = {
-  TAG: 'Etiquetar', UNTAG: 'Quitar etiqueta', UPDATE_FIELD: 'Actualizar campo', BROADCAST: 'Enviar plantilla', NOTE: 'Nota', ASSIGN: 'Asignar', MOVE_STAGE: 'Mover etapa',
-  CREATE_TASK: 'Crear tarea', CANCEL_TASK: 'Cancelar tarea', NOTIFY: 'Aviso', GENERATE_REPORT: 'Reporte', CREATE_AUTOMATION_RULE: 'Regla por evento', CREATE_AGENT_RULE: 'Aviso con cadencia',
-  PAUSE_AUTOMATION: 'Pausar', RESUME_AUTOMATION: 'Reanudar', UPDATE_MONEY: 'Montos', APPLY_DISCOUNT: 'Descuento', CREATE_RECORD: 'Crear registro',
+const COMMAND_TYPES = new Set([
+  'TAG', 'UNTAG', 'UPDATE_FIELD', 'BROADCAST', 'NOTE', 'ASSIGN', 'MOVE_STAGE', 'CREATE_TASK', 'CANCEL_TASK',
+  'NOTIFY', 'GENERATE_REPORT', 'CREATE_AUTOMATION_RULE', 'CREATE_AGENT_RULE', 'PAUSE_AUTOMATION',
+  'RESUME_AUTOMATION', 'UPDATE_MONEY', 'APPLY_DISCOUNT', 'CREATE_RECORD',
+]);
+export const commandLabel = (type) => (COMMAND_TYPES.has(type) ? t('cmd.' + type) : type);
+const STATUS_KIND = {
+  executed: 'ok', pending: 'warn', awaiting_approval: 'warn', cancelled: '', failed: 'bad', declined: '',
+  expired: '', approved: 'ok', rejected: 'bad', active: 'ok', paused: 'warn', sent: 'ok', deferred: 'info',
+  suppressed: '', open: '', completed: 'ok', snoozed: 'info', verified: 'ok', soon: 'soon',
 };
-export const STATUS = {
-  executed: ['Ejecutado', 'ok'], pending: ['Esperando CONFIRMAR', 'warn'], awaiting_approval: ['Esperando aprobación', 'warn'], cancelled: ['Cancelado', ''],
-  failed: ['Falló · revertido', 'bad'], declined: ['No se pudo', ''], expired: ['Venció', ''], approved: ['Aprobado', 'ok'], rejected: ['Rechazado', 'bad'],
-  active: ['Activa', 'ok'], paused: ['Pausada', 'warn'], sent: ['Enviado', 'ok'], deferred: ['Diferido', 'info'], suppressed: ['No enviado', ''],
-  open: ['Abierta', ''], completed: ['Hecha', 'ok'], snoozed: ['Pospuesta', 'info'], verified: ['Verificado', 'ok'], soon: ['Próximamente', 'soon'],
-};
-export const statusChip = (s) => { const [t, k] = STATUS[s] || [s, '']; return chip(t, k); };
+export const statusLabel = (s) => (s in STATUS_KIND ? t('status.' + s) : s);
+export const statusChip = (s) => chip(statusLabel(s), STATUS_KIND[s] || '');
 
 export function bar(label, value, max, opts = {}) {
   const w = max ? Math.max(2, Math.round((value / max) * 100)) : 0;
@@ -93,11 +110,12 @@ export function card(title, body, opts = {}) {
 export function row({ ico = '•', cls = '', title = '', sub = '', meta = '', side = '', primary = '', more = '', attrs = '', done = false }) {
   return `<div class="row ${done ? 'is-done' : ''}" ${attrs}><div class="row-ico ${cls}">${ico}</div><div class="row-body"><div class="row-title">${title}</div>${sub ? `<div class="row-sub">${sub}</div>` : ''}${meta ? `<div class="row-meta">${meta}</div>` : ''}</div>${side || primary ? `<div class="row-actions">${side}${primary}</div>` : ''}${more ? moreBox(more) : ''}</div>`;
 }
-export const moreBox = (html, label = 'más') => `<details class="more"><summary>${esc(label)}</summary><div class="more-body">${html}</div></details>`;
-export function empty(title, text) { return `<div class="empty"><b>${esc(title)}</b>${esc(text || '')}</div>`; }
+export const moreBox = (html, label) => `<details class="more"><summary>${esc(label ?? t('common.more'))}</summary><div class="more-body">${html}</div></details>`;
+export function empty(title, text) { return `<div class="empty"><b>${esc(title ?? t('common.none'))}</b>${esc(text || '')}</div>`; }
 /** Estado de una parte del panel cuyo endpoint aún no está en el engine. */
 export function soon(what, phrase, extra = '') {
-  return `<div class="soon-box"><b>${esc(what)}</b> se activa en tu cuenta muy pronto.${extra ? ' ' + esc(extra) : ''}${phrase ? `<div class="ask">${askLine(phrase, 'Mientras tanto, pídelo por WhatsApp:')}</div>` : ''}</div>`;
+  const line = t('common.comingSoon', { what: '\u0000' }).split('\u0000');
+  return `<div class="soon-box">${esc(line[0] || '')}<b>${esc(what ?? t('common.thisPart'))}</b>${esc(line[1] || '')}${extra ? ' ' + esc(extra) : ''}${phrase ? `<div class="ask">${askLine(phrase, t('common.meanwhileAsk'))}</div>` : ''}</div>`;
 }
 export function skeleton(n = 4) { return `<div class="skel">${'<i></i>'.repeat(n)}</div>`; }
 

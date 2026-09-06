@@ -1041,8 +1041,19 @@ html { scroll-behavior: smooth; }
   .w-nav-overlay .nav_menu, .nav_menu.w--nav-menu-open { background: #f8f7f3; }
   .w-nav-overlay .nav_menu_link, .nav_menu.w--nav-menu-open .nav_menu_link { color: #151515 !important; }
 }
-@media (max-width: 767px) {
-  .nav_component .nav_menu > .nav_menu_link:last-child { margin-top: 1rem; text-align: center; }
+/* El menú de móvil: el botón de entrar es un BOTÓN, no una barra de lado a
+   lado pegada al enlace de arriba. Se le da su aire, se ciñe a su texto y se
+   alinea con los demás enlaces, que es donde el pulgar ya está mirando. */
+@media (max-width: 991px) {
+  .w-nav-overlay .nav_menu > .nav_menu_link:last-child,
+  .nav_menu.w--nav-menu-open > .nav_menu_link:last-child {
+    align-self: flex-start;
+    width: auto;
+    margin-top: 1.75rem;
+    padding: .85rem 1.6rem;
+    font-size: 1.15rem;
+    text-align: center;
+  }
 }
 
 /* The second act is the concrete product proof: light, technical and calm. */
