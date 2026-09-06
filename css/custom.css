@@ -1038,18 +1038,19 @@ html { scroll-behavior: smooth; }
 @media (max-width: 991px) {
   .nav_component.w-nav.is-scrolled,
   .nav_component.w-nav.is-open { background: #f8f7f3 !important; }
-  .w-nav-overlay .nav_menu, .nav_menu.w--nav-menu-open { background: #f8f7f3; }
-  .w-nav-overlay .nav_menu_link, .nav_menu.w--nav-menu-open .nav_menu_link { color: #151515 !important; }
+  .nav_menu[data-nav-menu-open] { background: #f8f7f3; }
+  .nav_menu[data-nav-menu-open] .nav_menu_link { color: #151515 !important; }
 }
 /* El menú de móvil: el botón de entrar es un BOTÓN, no una barra de lado a
    lado pegada al enlace de arriba. Se le da su aire, se ciñe a su texto y se
-   alinea con los demás enlaces, que es donde el pulgar ya está mirando. */
+   alinea con los demás enlaces, que es donde el pulgar ya está mirando.
+   Hasta ahora no se cumplía —el menú no era flex, así que `align-self` no
+   hacía nada y el `margin:auto` de Webflow lo estiraba—; los márgenes en cero
+   son lo que faltaba. */
 @media (max-width: 991px) {
-  .w-nav-overlay .nav_menu > .nav_menu_link:last-child,
-  .nav_menu.w--nav-menu-open > .nav_menu_link:last-child {
+  .nav_menu[data-nav-menu-open] > .nav_menu_link:last-child {
     align-self: flex-start;
-    width: auto;
-    margin-top: 1.75rem;
+    margin: 1.75rem 0 0;
     padding: .85rem 1.6rem;
     font-size: 1.15rem;
     text-align: center;
@@ -1370,21 +1371,202 @@ html { scroll-behavior: smooth; }
 .price-amount s { margin-left: .5rem; font-family: "Jetbrainsmono Variable", monospace; font-size: .95rem; font-weight: 400; color: #7d7d7d; text-decoration-thickness: 1px; }
 .price-off { display: inline-block; align-self: flex-start; width: fit-content; margin-top: .45rem; padding: .18rem .5rem; border-radius: .3rem; background: rgba(77, 124, 255, .16); color: #8fb0ff; font-family: "Jetbrainsmono Variable", monospace; font-size: .68rem; letter-spacing: .06em; text-transform: uppercase; }
 
-/* Selector de idioma de las páginas generadas (/en/, /pt/).
-   Flota sobre la barra en vez de vivir dentro del menú de Webflow: el markup de
-   la barra lo genera Webflow y meterle un elemento a mano se pierde en la
-   siguiente exportación. Arriba a la derecha, discreto: quien lo necesita lo
-   busca ahí, y quien ya está en su idioma no tiene por qué verlo. */
+/* ============================================================
+   La barra de navegación: menú y selector de idioma
+   Un solo bloque al final para que gane a las capas anteriores sin `!important`
+   de más, y para que lo del nav se lea junto en vez de repartido por el fichero.
+   ============================================================ */
+
+/* ---------- Selector de idioma ----------
+   Antes flotaba fijo arriba a la derecha, con fondo oscuro propio sobre una
+   barra crema: se leía como un widget pegado encima, no como parte del sitio.
+   Ahora cuelga de `.nav_menu`, entre PRECIOS e INGRESAR. Tres cosas salen
+   gratis de ahí: hereda el color y el aire de la barra; en móvil viaja dentro
+   del menú cuando Webflow mueve `.nav_menu` al overlay; y deja de verse encima
+   del preloader —la barra vive en `.nav_fixed` (z-index 20) y el preloader es
+   z-index 100, así que queda debajo sin necesidad de JS—.
+   El aspecto es el de un control segmentado: pista hundida, idioma actual en
+   blanco elevado. En negro competiría con el botón INGRESAR, que es el único
+   elemento que debe pesar en la barra. */
 .lang-switch {
-  position: fixed; top: .85rem; right: .9rem; z-index: 1200;
-  display: flex; align-items: center; gap: .1rem;
-  padding: .18rem .3rem; border-radius: .45rem;
-  background: rgba(10, 10, 10, .55);
-  backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
-  font-family: "Jetbrainsmono Variable", monospace; font-size: .68rem; letter-spacing: .06em;
+  display: inline-flex;
+  align-items: center;
+  gap: .1rem;
+  padding: .2rem;
+  border: 1px solid rgba(17, 17, 17, .1);
+  border-radius: 999px;
+  background: rgba(17, 17, 17, .045);
+  font-family: "Jetbrainsmono Variable", ui-monospace, monospace;
+  font-size: .7rem;
+  letter-spacing: .06em;
+  line-height: 1;
 }
-.lang-switch a, .lang-switch .lang-switch-current { padding: .2rem .35rem; border-radius: .3rem; text-decoration: none; }
-.lang-switch a { color: rgba(255, 255, 255, .62); }
-.lang-switch a:hover, .lang-switch a:focus-visible { color: #fff; background: rgba(255, 255, 255, .12); }
-.lang-switch .lang-switch-current { color: #0a0a0a; background: #d7ff3e; font-weight: 600; }
-@media (max-width: 767px) { .lang-switch { top: .6rem; right: .6rem; font-size: .62rem; } }
+.lang-switch a,
+.lang-switch .lang-switch-current {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.1rem;
+  padding: .32rem .4rem;
+  border-radius: 999px;
+  text-decoration: none;
+  transition: color .15s ease, background .15s ease;
+}
+.lang-switch a { color: #5f625f; }
+.lang-switch a:hover { color: #151515; background: rgba(17, 17, 17, .08); }
+.lang-switch .lang-switch-current {
+  color: #151515;
+  background: #fff;
+  box-shadow: 0 1px 2px rgba(17, 17, 17, .14);
+  font-weight: 600;
+}
+.lang-switch a:focus-visible {
+  outline: 2px solid #315fef;
+  outline-offset: 2px;
+}
+
+/* ---------- Escritorio ---------- */
+@media (min-width: 992px) {
+  /* Webflow repartía los enlaces con el `margin:auto` de `.w-nav-link`: el hueco
+     entre uno y otro dependía del largo de la palabra y el CTA quedaba a la
+     deriva. Un grupo pegado a la derecha, con el mismo ritmo entre todos, se
+     recorre de una pasada. */
+  .nav_component .nav_menu {
+    width: auto;
+    margin-left: auto;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 2rem;
+  }
+  .nav_component .nav_menu_link { margin: 0; }
+  /* `.nav_clip-path` es un div vacío decorativo que reservaba 10,2 rem a la
+     derecha y forzaba 4 rem de alto: robaba sitio al menú y subía la barra. */
+  .nav_component .nav_clip-path { display: none; }
+  /* El idioma se separa del bloque de secciones: es otra clase de decisión. */
+  .nav_component .nav_menu .lang-switch { margin-left: .5rem; }
+
+  /* Subrayado al pasar: el color solo no basta para decir «esto se puede
+     pulsar», y en monoespaciada en mayúsculas el cambio de tono se nota poco. */
+  .nav_component .nav_menu > .nav_menu_link:not(:last-child)::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -.45rem;
+    height: 2px;
+    background: currentColor;
+    transform: scaleX(0);
+    transform-origin: left center;
+    transition: transform .2s ease;
+  }
+  .nav_component .nav_menu > .nav_menu_link:not(:last-child):hover::after,
+  .nav_component .nav_menu > .nav_menu_link:not(:last-child):focus-visible::after {
+    transform: scaleX(1);
+  }
+}
+
+/* El botón INGRESAR heredaba el `:hover` azul de los enlaces: texto azul sobre
+   negro, ilegible. Al pasar se invierte el fondo, que es lo que se espera de un
+   botón. */
+.nav_component .nav_menu > .nav_menu_link:last-child {
+  transition: background .18s ease, color .18s ease;
+}
+.nav_component .nav_menu > .nav_menu_link:last-child:hover {
+  color: #fff !important;
+  background: #315fef;
+}
+
+/* Foco visible con teclado. Webflow lo apagaba (`.w-nav-button:focus{outline:0}`)
+   y los enlaces nunca lo tuvieron: sin esto la barra no se puede recorrer con
+   Tab sin adivinar dónde estás. */
+.nav_component .nav_menu_link:focus-visible,
+.nav_component .w-nav-button:focus-visible {
+  outline: 2px solid #315fef;
+  outline-offset: 3px;
+  border-radius: .3rem;
+}
+
+/* ---------- Móvil (el menú a pantalla completa) ---------- */
+@media (max-width: 991px) {
+  /* Área táctil del botón: 26 px de rayas con 10 px de aire quedaban en 38 px,
+     por debajo del mínimo de 44. */
+  .nav_component .w-nav-button.nav_menu-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 2.75rem;
+    min-height: 2.75rem;
+    padding: .6rem;
+    border-radius: .5rem;
+  }
+
+  /* Webflow abre el menú con `[data-nav-menu-open]{display:block!important}`:
+     el `display:flex` que había en este fichero nunca llegó a aplicarse y con
+     él se caían en silencio `gap`, `align-self` y `order`. Se recupera aquí,
+     con el mismo peso, porque el menú se ordena de arriba abajo y el idioma
+     tiene que poder irse al final. El atributo es el estado abierto de verdad;
+     `.w--nav-menu-open` no existe en esta versión de Webflow. */
+  .nav_component .nav_menu[data-nav-menu-open] {
+    display: flex !important;
+    flex-direction: column;
+    /* `100vh` en móvil cuenta la barra del navegador: el final del menú caía
+       fuera de la pantalla. `100dvh` es lo que se ve de verdad. */
+    min-height: 100dvh;
+    /* El menú arranca justo debajo de la barra, no a una altura inventada. */
+    padding: calc(var(--nav-height, 4.5rem) + 1.25rem) 1.5rem
+             max(2rem, env(safe-area-inset-bottom) + 1.25rem);
+    /* En móvil apaisado los enlaces no caben: que el menú haga su propio
+       scroll en vez de recortarse, y sin arrastrar la página de detrás. */
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    /* Sin hueco entre filas: las separa la línea, no el aire. */
+    gap: 0;
+  }
+
+  /* Filas de lista, no palabras sueltas: cada enlace ocupa el ancho, mide 56 px
+     de alto y una línea muy tenue marca dónde acaba uno y empieza el otro. */
+  .nav_menu[data-nav-menu-open] > .nav_menu_link:not(:last-child) {
+    margin: 0;
+    align-self: stretch;
+    min-height: 3.5rem;
+    padding: .85rem 0;
+    font-size: 1.45rem;
+    letter-spacing: .03em;
+    border-bottom: 1px solid rgba(17, 17, 17, .09);
+  }
+  /* Webflow alinea el contenido de los enlaces a la izquierda; dentro de un
+     botón el texto va centrado. Y 52 px de alto para el pulgar. */
+  .nav_menu[data-nav-menu-open] > .nav_menu_link:last-child {
+    justify-content: center;
+    min-height: 3.25rem;
+  }
+
+  /* El idioma cierra el menú, abajo del todo: es lo que menos se usa y lo que
+     no debe competir con INGRESAR. `order` lo baja aunque en el HTML vaya
+     antes del botón (ahí tiene que estar para que `:last-child` siga siendo el
+     botón). */
+  .nav_menu .lang-switch {
+    order: 9;
+    margin-top: auto;
+    align-self: flex-start;
+    font-size: .8rem;
+    /* El menú entra escalonado con GSAP y el selector entra con él; hasta que
+       la animación arranca queda escondido para que no parpadee. */
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  /* 44 px de alto también aquí: en el menú se toca con el pulgar, no con el
+     ratón. */
+  .nav_menu .lang-switch a,
+  .nav_menu .lang-switch .lang-switch-current {
+    min-width: 3.4rem;
+    min-height: 2.75rem;
+    padding: .5rem .9rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav_component .nav_menu_link::after,
+  .lang-switch a,
+  .lang-switch .lang-switch-current { transition: none; }
+}

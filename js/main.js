@@ -318,7 +318,9 @@ function initNav() {
    ============================================================ */
 function initMobileMenu() {
   ScrollTrigger.matchMedia; // (no-op guard so treeshakers keep import)
-  const links = gsap.utils.toArray('.nav_menu_link');
+  // El selector de idioma entra en el mismo escalonado: si no, aparece de
+  // golpe al abrir el menú mientras los enlaces todavía están llegando.
+  const links = gsap.utils.toArray('.nav_menu_link, .nav_menu .lang-switch');
   const btn = document.querySelector('.w-nav-button');
   if (!btn || !links.length) return;
 

@@ -63,7 +63,7 @@
     <!-- Webflow-generated layout stylesheet (fonts + layout), served from its public CDN -->
     <link href="/assets/css/webflow.css" rel="stylesheet" type="text/css" />
     <!-- Custom styles (reconstructed inline utility + component styles) -->
-    <link href="/css/custom.css?v=145" rel="stylesheet" type="text/css" />
+    <link href="/css/custom.css?v=146" rel="stylesheet" type="text/css" />
     <script>/* La landing se monta desde arriba: sus animaciones por scroll se miden al cargar. Si el navegador restaura la posicion, ScrollTrigger calcula progresos con medidas a medio asentar y deja secciones en opacity 0 (la de Producto se veia negra). */if("scrollRestoration" in history)history.scrollRestoration="manual";</script>
 <script type="text/javascript">
       !(function (o, c) {
@@ -77,7 +77,6 @@
     </script>
   </head>
   <body>
-    <div class="lang-switch" role="navigation" aria-label="Idioma"><a href="/" hreflang="es">ES</a><span class="lang-switch-current" aria-current="true">EN</span><a href="/pt/" hreflang="pt">PT</a></div>
     <div id="preloader" class="preloader-wrapper">
       <div id="preloader-first" class="preloader-number-wrap">
         <div class="logo_preloader w-embed">
@@ -367,7 +366,9 @@
                     data-wf-component-context="%5B%7B%22componentId%22%3A%22396176c6-906a-9f74-c6d0-8a4663dfdea9%22%2C%22instanceId%22%3A%22ad43a7dc-e35f-2320-39af-52425e607e28%22%7D%5D"
                     class="nav_menu_link mailing-list w-nav-link"
                     >PRICING</a
-                  ><a href="/app/" class="nav_menu_link w-nav-link"
+                  >
+                  <div class="lang-switch" role="group" aria-label="Language"><a href="/" hreflang="es" lang="es" title="Español">ES</a><span class="lang-switch-current" aria-current="true" lang="en" title="English">EN</span><a href="/pt/" hreflang="pt" lang="pt" title="Português">PT</a></div>
+                  <a href="/app/" class="nav_menu_link w-nav-link"
                     >SIGN IN</a
                   >
                 </nav>
@@ -1577,7 +1578,7 @@
     <script src="/js/usecases.js?v=22" defer></script>
     <script src="/js/demo.js?v=4" defer></script>
     <script src="/js/pricing.js?v=22" defer></script>
-    <script type="module" src="/js/main.js?v=33"></script>
+    <script type="module" src="/js/main.js?v=34"></script>
     <script src="/js/hero2d.js?v=5"></script>
   </body>
 </html>

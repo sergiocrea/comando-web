@@ -140,17 +140,24 @@ function translate(rawHtml, dictionary, missing) {
     .join('');
 }
 
+// Vive dentro de `.nav_menu`, entre PRECIOS e INGRESAR: el conmutador es un
+// elemento más de la barra y no una cajita flotante. Va ANTES de INGRESAR
+// porque el CSS estiliza el botón con `:last-child`.
+// Lo que se lee aquí no pasa por los catálogos —son códigos de idioma— así que
+// el nombre largo y la etiqueta del grupo se traducen a mano, en este mapa.
 const SWITCHER = (current) => {
   const label = { es: 'ES', en: 'EN', pt: 'PT' };
   const href = { es: '/', en: '/en/', pt: '/pt/' };
+  const name = { es: 'Español', en: 'English', pt: 'Português' };
+  const group = { es: 'Idioma', en: 'Language', pt: 'Idioma' };
   const links = ['es', 'en', 'pt']
     .map((locale) =>
       locale === current
-        ? `<span class="lang-switch-current" aria-current="true">${label[locale]}</span>`
-        : `<a href="${href[locale]}" hreflang="${locale}">${label[locale]}</a>`,
+        ? `<span class="lang-switch-current" aria-current="true" lang="${locale}" title="${name[locale]}">${label[locale]}</span>`
+        : `<a href="${href[locale]}" hreflang="${locale}" lang="${locale}" title="${name[locale]}">${label[locale]}</a>`,
     )
     .join('');
-  return `<div class="lang-switch" role="navigation" aria-label="Idioma">${links}</div>`;
+  return `<div class="lang-switch" role="group" aria-label="${group[current]}">${links}</div>`;
 };
 
 const HREFLANG = `    <link rel="alternate" hreflang="es" href="https://comando.pro/" />
