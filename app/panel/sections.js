@@ -450,7 +450,7 @@ function metaCard(value) {
 /* ==================================================================== CUENTA */
 const cuenta = {
   id: 'cuenta', get title() { return t('nav.cuenta'); }, get sub() { return t('sub.cuenta'); }, icon: 'user',
-  load: (api) => ({ me: api.me(), quota: api.quota(), connections: api.connections(), sheets: api.sheets(), mk: api.marketing(), team: api.team(), agent: api.agent(), health: api.health() }),
+  load: (api) => ({ me: api.me(), quota: api.quota(), connections: api.connections(), sheets: api.sheets(), mk: api.marketing(), meta: api.metaStatus(), team: api.team(), agent: api.agent(), health: api.health() }),
   view(d, ctx) {
     const me = val(d.me, {});
     const PLAN = { gratis: 'plan.gratis', free: 'plan.gratis', basico: 'plan.basico', starter: 'plan.starter', pro: 'plan.pro', enterprise: 'plan.enterprise' };
@@ -470,7 +470,20 @@ const cuenta = {
 
     const conns = val(d.connections, []); const active = conns.find((c) => c.bound && c.status === 'active'); const recoverable = conns.find((c) => c.recoverable);
     const h = val(d.health, null); const mk = val(d.mk, null);
-    const adRows = mk ? mk.accounts.filter((a) => a.status !== 'soon').map((a) => row({ ico: logo(a.provider), title: `${esc(a.name)} ${a.status === 'active' ? chip(t('mk.connected'), 'ok') : chip(t('mk.needsAuth'), 'warn')}`, sub: esc(a.channels.join(' · ')), primary: a.status === 'pending' ? `<button class="btn sm primary" data-act="mk:connect">${esc(t('cuenta.authorize'))}</button>` : `<a class="btn sm ghost" href="#/marketing">${esc(t('cuenta.seeCampaigns'))}</a>` })).join('') : '';
+    // Las cuentas de anuncios salen del MISMO sitio que la tarjeta de Marketing.
+    // Antes se leían del resumen de marketing, que todavía es de mentira: la
+    // tarjeta decía «sin cuentas conectadas» con Meta conectado de verdad, y una
+    // pantalla que se contradice con otra del mismo panel no se cree ninguna.
+    // Aquí solo se muestra el estado; gestionar sigue siendo cosa de Marketing.
+    const meta = val(d.meta, null);
+    const adRows = meta && meta.status === 'active'
+      ? (meta.accounts || []).map((a) => row({
+          ico: logo('meta'),
+          title: `${esc(a.name)} ${a.selected ? chip(t('cuenta.adAccountInUse'), 'ok') : ''}`,
+          sub: `${esc(a.accountRef)}${a.currency ? ` · ${esc(a.currency)}` : ''}`,
+          primary: `<a class="btn sm ghost" href="#/marketing">${esc(t('cuenta.seeCampaigns'))}</a>`,
+        })).join('')
+      : '';
     const conexiones = card(t('cuenta.yourCrm'), `${active && h ? `<p class="status-line" style="margin-bottom:12px">${syncLine(h.sync)}${active.mirror ? `<span class="hint">${esc(t('cuenta.mirror', { contacts: num(active.mirror.contacts), deals: num(active.mirror.deals) }))}</span>` : ''}</p>` : ''}${crmBlock(ctx, conns, val(d.sheets, []))}`,
       { sub: t('cuenta.crmSub') });
     const anuncios = card(t('cuenta.adAccounts'), adRows ? `<div class="list">${adRows}</div>` : `<div class="empty"><b>${esc(t('cuenta.noAdAccounts'))}</b>${esc(t('cuenta.noAdAccountsSub'))}</div>`, { sub: t('cuenta.forMarketing'), right: `<button class="btn sm" data-act="mk:connect">${esc(t('cuenta.connect'))}</button>` });
