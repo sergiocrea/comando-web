@@ -36,14 +36,35 @@
   // La lista se repite en el markup del héroe (index.html, .b2b-hero-band). Se
   // deja explícita en vez de clonar aquel nodo: si el héroe cambia de forma, la
   // sección no se queda muda.
+  // El tercer campo es el color de marca. Catorce logos en blanco plano se leen
+  // como un menú desplegable: la mirada no distingue una fila de la siguiente y
+  // la columna se vuelve gris. En color, cada sistema se reconoce antes de
+  // leerlo, que es justo lo que tiene que pasar aquí —el mensaje es «esto viene
+  // de TUS herramientas», y sólo funciona si las reconoces—.
+  //
+  // Los hex son los oficiales de la marca salvo donde no sobrevivirían al fondo
+  // #151515 de la tira. Ahí se sube la luminosidad conservando el tono, porque
+  // un logo que no se ve no es más fiel por llevar el hex correcto:
+  //   TikTok    #000000 → #E7E9EC   (negro sobre casi negro)
+  //   Dynamics  #002050 → #3B8CE8   (azul marino sobre casi negro)
+  //   Meta      #0467DF → #0081FB
+  //   Shopify   #7AB55C → #95BF47
+  //   WooCom.   #96588A → #B07FA6
+  // Pipedrive, Kommo, Dynamics 365 y Tiendanube no tienen entrada en Simple
+  // Icons —de donde salen los demás— y su color aquí es PROVISIONAL: tono de
+  // marca aproximado, a confirmar contra su manual.
   const CONECTORES = [
-    ['hubspot', 'HubSpot'], ['salesforce', 'Salesforce'], ['zoho', 'Zoho CRM'],
-    ['pipedrive', 'Pipedrive'], ['kommo', 'Kommo'], ['dynamics', 'Dynamics 365'],
-    ['meta', 'Meta Ads'], ['tiktok', 'TikTok Ads'], ['shopify', 'Shopify'],
-    ['woocommerce', 'WooCommerce'], ['tiendanube', 'Tiendanube'],
-    ['mercadolibre', 'Mercado Libre'], ['vtex', 'VTEX'], ['googlesheets', 'Google Sheets'],
+    ['hubspot', 'HubSpot', '#ff7a59'], ['salesforce', 'Salesforce', '#00a1e0'], ['zoho', 'Zoho CRM', '#e42527'],
+    ['pipedrive', 'Pipedrive', '#1fa971'], ['kommo', 'Kommo', '#3d8bfd'], ['dynamics', 'Dynamics 365', '#3b8ce8'],
+    ['meta', 'Meta Ads', '#0081fb'], ['tiktok', 'TikTok Ads', '#e7e9ec'], ['shopify', 'Shopify', '#95bf47'],
+    ['woocommerce', 'WooCommerce', '#b07fa6'], ['tiendanube', 'Tiendanube', '#2c6dea'],
+    ['mercadolibre', 'Mercado Libre', '#ffe600'], ['vtex', 'VTEX', '#ed125f'], ['googlesheets', 'Google Sheets', '#34a853'],
   ];
-  const feedItems = () => CONECTORES.map(([f, n]) => `<li><img src="/assets/img/logos/${f}.svg" alt="" width="22" height="22" decoding="async"/><span>${esc(n)}</span></li>`).join('');
+  // Deja de ser <img> y pasa a ser una caja enmascarada por el propio SVG: así
+  // el color lo pone el CSS (`background-color`) y no el fichero, que sigue
+  // siendo el mismo blanco que usa la franja del héroe. Un solo juego de
+  // logotipos para los dos sitios, teñido donde hace falta.
+  const feedItems = () => CONECTORES.map(([f, n, c]) => `<li><i class="uc-feed-logo" style="--uc-marca:${c};--uc-logo:url(/assets/img/logos/${f}.svg)"></i><span>${esc(n)}</span></li>`).join('');
   // `aria-hidden`: los mismos catorce nombres ya los anuncia la franja del
   // héroe, en esta misma página. Repetirlos es ruido para quien escucha.
   function feedHtml() {
