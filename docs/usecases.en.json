@@ -1,13 +1,13 @@
 {
  "seccion": {
-  "titulo": "This is how the day changes for every person on your team.",
   "subtitulo": "Comando does not replace your team: it takes away the work that slows them down. Pick a role and watch the relief in action.",
   "cierre": "Your team keeps the judgement. Comando removes the load.",
   "cta": {
    "texto": "Take work off the team",
    "sufijo": " in 2 minutes",
    "href": "/app/"
-  }
+  },
+  "eyebrow": "THIS IS HOW THE DAY CHANGES"
  },
  "roles": [
   "Sales rep",

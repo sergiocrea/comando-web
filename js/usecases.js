@@ -79,8 +79,8 @@
   function render() {
     const c = current(); step = 0;
     root.innerHTML = `
-      <div class="section_features-header-component"><div class="section_features-eyebrow">UN DÍA CON COMANDO</div>
-        <h2 class="section_features-heading">${esc(D.seccion.titulo)}</h2>
+      <div class="section_features-header-component"><div class="section_features-eyebrow">${esc(D.seccion.eyebrow || '')}</div>
+        ${D.seccion.titulo ? `<h2 class="section_features-heading">${esc(D.seccion.titulo)}</h2>` : ''}
         <p class="uc-subtitle">${esc(D.seccion.subtitulo)}</p></div>
       <span id="como-funciona" class="uc-anchor" aria-hidden="true"></span>
       <div class="uc-tabs" role="tablist" aria-label="${esc(T.rol)}">${D.roles.map((r, i) => `<button type="button" role="tab" class="uc-tab${i === state.rol ? ' is-on' : ''}" aria-selected="${i === state.rol}" data-rol="${i}">${esc(r)}</button>`).join('')}</div>
@@ -118,10 +118,10 @@
   // todavía no tiene su fichero, se usa el castellano en vez de dejar la
   // sección vacía.
   const LANG = (document.documentElement.lang || 'es').slice(0, 2);
-  const DATA = LANG === 'es' ? '/docs/usecases.json?v=10' : `/docs/usecases.${LANG}.json?v=10`;
+  const DATA = LANG === 'es' ? '/docs/usecases.json?v=12' : `/docs/usecases.${LANG}.json?v=12`;
   const loadData = () =>
     fetch(DATA)
       .then((r) => (r.ok ? r.json() : Promise.reject(new Error(String(r.status)))))
-      .catch(() => fetch('/docs/usecases.json?v=10').then((r) => r.json()));
+      .catch(() => fetch('/docs/usecases.json?v=12').then((r) => r.json()));
   loadData().then((d) => { D = d; render(); showStep(0, 'init'); requestAnimationFrame(() => root.querySelector('.uc-layout').classList.add('is-in')); if (typeof ScrollTrigger !== 'undefined') ScrollTrigger.refresh(); }).catch(() => {});
 })();

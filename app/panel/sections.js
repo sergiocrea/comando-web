@@ -13,60 +13,68 @@ import {
   esc, num, money, pct, fmtTime, fmtDate, fmtDateTime, monthName, dayLabel, sameDay, rel, isToday, isPast, isoDay,
   wa, waBtn, askLine, chip, statusChip, bar, spark, kpi, card, row, moreBox, empty, soon, toast, ICON, SIGNAL_PHRASE,
 } from './ui.js?v=4';
+import { t, tn } from '../i18n.js?v=1';
 
 /** Renderiza una parte según el estado de su dato. */
 function part(v, fn, opts = {}) {
-  if (v instanceof Error) return `<div class="empty"><b>No se pudo cargar</b>${esc(v.message)}</div>`;
-  if (isPending(v)) return soon(opts.what || 'Esta parte', opts.phrase, opts.extra);
-  if (v == null) return empty('Sin datos');
+  if (v instanceof Error) return `<div class="empty"><b>${esc(t('common.notLoaded'))}</b>${esc(v.message)}</div>`;
+  if (isPending(v)) return soon(opts.what || t('common.thisPart'), opts.phrase, opts.extra);
+  if (v == null) return empty(t('common.noData'));
   return fn(v);
 }
-const list = (items, fn, emptyMsg) => (items && items.length ? `<div class="list">${items.map(fn).join('')}</div>` : empty(emptyMsg || 'Nada por aquí'));
+const list = (items, fn, emptyMsg) => (items && items.length ? `<div class="list">${items.map(fn).join('')}</div>` : empty(emptyMsg || t('common.none')));
 const val = (v, fallback) => (v instanceof Error || isPending(v) || v == null ? fallback : v);
 const phoneLink = (phone, label) => `<a class="btn sm primary" href="https://wa.me/${esc(String(phone).replace(/\D/g, ''))}" target="_blank" rel="noopener">${ICON.wa}${esc(label)}</a>`;
 const head = (title, sub, actions = '') => `<div class="page-head"><div><h1>${esc(title)}</h1>${sub ? `<p>${esc(sub)}</p>` : ''}</div>${actions ? `<div class="page-actions">${actions}</div>` : ''}</div>`;
 const syncLine = (s) => {
   if (!s) return '';
   const age = s.reconcileAgeHours < 1 ? Math.round(s.reconcileAgeHours * 60) + ' min' : Math.round(s.reconcileAgeHours) + ' h';
-  return s.reconcileAgeHours > 30 ? chip(`${s.provider} sin actualizar hace ${age}`, 'bad') : chip(`${s.provider} al día · hace ${age}`, 'ok');
+  return s.reconcileAgeHours > 30
+    ? chip(t('sync.stale', { provider: s.provider, age }), 'bad')
+    : chip(t('sync.fresh', { provider: s.provider, age }), 'ok');
 };
 
 /* ------------------------------------------------------------- filas comunes */
-function taskRow(t) {
-  const late = t.status === 'open' && isPast(t.dueAt) && !isToday(t.dueAt);
-  const open = t.status === 'open';
+function taskRow(task) {
+  const late = task.status === 'open' && isPast(task.dueAt) && !isToday(task.dueAt);
+  const open = task.status === 'open';
   return row({
-    ico: t.kind === 'visit' ? '📍' : '⏰', cls: late ? 'warning' : t.kind === 'visit' ? 'info' : '',
-    title: esc(t.title), done: !open, attrs: `data-task="${esc(t.id)}"`,
-    sub: `${esc(isToday(t.dueAt) ? 'Hoy ' + fmtTime(t.dueAt) : fmtDateTime(t.dueAt))}${t.recordName ? ` · ${esc(t.recordName)}` : ''}${late ? ` · <span class="sev-warning">vencida ${esc(rel(t.dueAt))}</span>` : ''}`,
-    primary: open ? `<button class="btn sm primary" data-act="task:done" data-id="${esc(t.id)}">Hecha</button>` : statusChip(t.status),
-    more: open ? `${waBtn('mueve «' + t.title + '» para ', 'Mover')}${waBtn('cancela la tarea «' + t.title + '»', 'Cancelar', 'btn sm ghost')}` : '',
+    ico: task.kind === 'visit' ? '📍' : '⏰', cls: late ? 'warning' : task.kind === 'visit' ? 'info' : '',
+    title: esc(task.title), done: !open, attrs: `data-task="${esc(task.id)}"`,
+    sub: `${esc(isToday(task.dueAt) ? t('row.today', { time: fmtTime(task.dueAt) }) : fmtDateTime(task.dueAt))}${task.recordName ? ` · ${esc(task.recordName)}` : ''}${late ? ` · <span class="sev-warning">${esc(t('row.overdue', { when: rel(task.dueAt) }))}</span>` : ''}`,
+    primary: open ? `<button class="btn sm primary" data-act="task:done" data-id="${esc(task.id)}">${esc(t('row.taskDone'))}</button>` : statusChip(task.status),
+    more: open ? `${waBtn(t('wa.moveTask', { title: task.title }), t('row.move'))}${waBtn(t('wa.cancelTask', { title: task.title }), t('row.cancel'), 'btn sm ghost')}` : '',
   });
 }
 function recRow(r) {
   const sev = r.signals && r.signals[0] ? r.signals[0].severity : 'info';
   const name = r.subject && r.subject.name ? r.subject.name : r.title;
-  const primary = r.subject && r.subject.phone ? phoneLink(r.subject.phone, 'Escribirle a ' + (r.subject.contact || 'cliente')) : waBtn('muéstrame ' + name, 'Ver detalle', 'btn sm primary');
+  const primary = r.subject && r.subject.phone
+    ? phoneLink(r.subject.phone, t('row.writeTo', { who: r.subject.contact || t('row.customer') }))
+    : waBtn(t('wa.show', { name }), t('row.seeDetail'), 'btn sm primary');
   return row({
     ico: sev === 'high' || sev === 'critical' ? '🔥' : sev === 'warning' ? '⚠️' : 'ℹ️', cls: sev,
     title: esc(r.title), sub: esc(r.summary || ''), attrs: `data-rec="${esc(r.id)}"`, primary,
-    more: `${(r.availableActions || []).includes('create_task') ? waBtn('créame una tarea para ' + name, 'Crear tarea') : ''}<button class="btn sm ghost" data-act="rec:snooze" data-id="${esc(r.id)}">Luego</button><button class="btn sm ghost" data-act="rec:dismiss" data-id="${esc(r.id)}">Basta</button>${waBtn('por qué me avisaste de ' + name, 'Por qué', 'btn sm ghost')}`,
+    more: `${(r.availableActions || []).includes('create_task') ? waBtn(t('wa.createTaskFor', { name }), t('row.createTask')) : ''}<button class="btn sm ghost" data-act="rec:snooze" data-id="${esc(r.id)}">${esc(t('row.later'))}</button><button class="btn sm ghost" data-act="rec:dismiss" data-id="${esc(r.id)}">${esc(t('row.enough'))}</button>${waBtn(t('wa.whyAlert', { name }), t('row.why'), 'btn sm ghost')}`,
   });
 }
 function approvalRow(a) {
   return row({
     ico: '🔒', cls: 'warning', attrs: `data-ap="${esc(a.id)}"`,
-    title: `${esc(a.requester)} pide: ${esc(a.plan)}`, sub: `${esc(a.reason)} · vence ${esc(rel(a.expiresAt))}`,
-    primary: `<button class="btn sm primary" data-act="ap:approve" data-id="${esc(a.id)}">Aprobar</button>`,
-    more: `<div class="wa-preview">📋 <b>Plan</b>\n${(a.preview || []).map(esc).join('\n')}</div><div class="inline-list" style="margin-top:8px"><button class="btn sm danger" data-act="ap:reject" data-id="${esc(a.id)}">Rechazar</button></div>`,
+    title: esc(t('row.asks', { who: a.requester, plan: a.plan })), sub: esc(t('row.expires', { reason: a.reason, when: rel(a.expiresAt) })),
+    primary: `<button class="btn sm primary" data-act="ap:approve" data-id="${esc(a.id)}">${esc(t('row.approve'))}</button>`,
+    more: `<div class="wa-preview">📋 <b>${esc(t('row.plan'))}</b>\n${(a.preview || []).map(esc).join('\n')}</div><div class="inline-list" style="margin-top:8px"><button class="btn sm danger" data-act="ap:reject" data-id="${esc(a.id)}">${esc(t('row.reject'))}</button></div>`,
   });
 }
+const HIST_KIND = { executed: 'ok', pending: 'warn', awaiting_approval: 'warn', cancelled: '', failed: 'bad', declined: '', expired: '' };
 function histRow(h) {
-  const st = { executed: ['Hecho', 'ok'], pending: ['Espera tu CONFIRMAR', 'warn'], awaiting_approval: ['Esperando al dueño', 'warn'], cancelled: ['Cancelado', ''], failed: ['No se pudo · revertido', 'bad'], declined: ['No se pudo', ''], expired: ['Venció', ''] }[h.status] || [h.status, ''];
+  const kind = HIST_KIND[h.status];
   return row({
     ico: h.voice ? '🎤' : '💬', title: `<q>${esc(h.utterance)}</q>`,
     sub: `${esc(h.plan && h.plan !== '—' ? h.plan : (h.note || ''))} · ${esc(rel(h.at))}`,
-    primary: h.status === 'pending' ? waBtn('CONFIRMAR', 'Confirmar', 'btn sm primary') : chip(st[0], st[1]),
+    primary: h.status === 'pending'
+      ? waBtn(t('wa.confirm'), t('hist.confirm'), 'btn sm primary')
+      : chip(kind === undefined ? h.status : t('hist.' + h.status), kind || ''),
   });
 }
 const recActions = () => {
@@ -76,29 +84,29 @@ const recActions = () => {
     catch (e) { toast(e.message, 'bad'); el.disabled = false; }
   };
   return {
-    'rec:snooze': (el, ctx) => run(el, ctx, 'snooze', { snoozedUntil: new Date(Date.now() + 86_400_000).toISOString().replace(/\.\d{3}Z$/, 'Z') }, 'Te lo recuerdo mañana.'),
-    'rec:dismiss': (el, ctx) => run(el, ctx, 'dismiss', undefined, 'Listo, no te lo vuelvo a mostrar.'),
+    'rec:snooze': (el, ctx) => run(el, ctx, 'snooze', { snoozedUntil: new Date(Date.now() + 86_400_000).toISOString().replace(/\.\d{3}Z$/, 'Z') }, t('toast.remindTomorrow')),
+    'rec:dismiss': (el, ctx) => run(el, ctx, 'dismiss', undefined, t('toast.dismissed')),
   };
 };
 const taskActions = () => ({
   'task:done': async (el, ctx, d, reload) => {
     el.disabled = true;
-    try { await ctx.api.completeTask(el.dataset.id); toast('Hecha.', 'ok'); reload(); }
+    try { await ctx.api.completeTask(el.dataset.id); toast(t('toast.taskDone'), 'ok'); reload(); }
     catch (e) {
-      if (e.status === 404 || e.status === 501) { toast('Ciérrala por WhatsApp: «hecha»'); window.open(wa('hecha ' + el.closest('[data-task]').querySelector('.row-title').textContent.trim()), '_blank'); }
+      if (e.status === 404 || e.status === 501) { toast(t('toast.closeOnWhatsApp')); window.open(wa(t('wa.taskDone', { title: el.closest('[data-task]').querySelector('.row-title').textContent.trim() })), '_blank'); }
       else toast(e.message, 'bad');
       el.disabled = false;
     }
   },
 });
 const approvalActions = () => ({
-  'ap:approve': async (el, ctx, d, reload) => { el.disabled = true; try { await ctx.api.decideApproval(el.dataset.id, 'approve'); toast('Aprobado. Se ejecuta en unos segundos.', 'ok'); reload(); } catch (e) { toast(e.message, 'bad'); el.disabled = false; } },
-  'ap:reject': async (el, ctx, d, reload) => { const reason = window.prompt('¿Por qué no? (le llega a quien lo pidió)'); if (!reason) return; el.disabled = true; try { await ctx.api.decideApproval(el.dataset.id, 'reject', reason); toast('Rechazado.', 'ok'); reload(); } catch (e) { toast(e.message, 'bad'); el.disabled = false; } },
+  'ap:approve': async (el, ctx, d, reload) => { el.disabled = true; try { await ctx.api.decideApproval(el.dataset.id, 'approve'); toast(t('toast.approved'), 'ok'); reload(); } catch (e) { toast(e.message, 'bad'); el.disabled = false; } },
+  'ap:reject': async (el, ctx, d, reload) => { const reason = window.prompt(t('prompt.rejectReason')); if (!reason) return; el.disabled = true; try { await ctx.api.decideApproval(el.dataset.id, 'reject', reason); toast(t('toast.rejected'), 'ok'); reload(); } catch (e) { toast(e.message, 'bad'); el.disabled = false; } },
 });
 
 /* ===================================================================== HOY */
 const hoy = {
-  id: 'hoy', title: 'Hoy', sub: 'Qué hago ahora.', icon: 'home',
+  id: 'hoy', get title() { return t('nav.hoy'); }, get sub() { return t('sub.hoy'); }, icon: 'home',
   load: (api) => ({ me: api.me(), recs: api.recommendations(), tasks: api.tasks(), health: api.health(), pipeline: api.pipeline(), history: api.history(), approvals: api.approvals() }),
   view(d) {
     const me = val(d.me, {});
@@ -112,26 +120,26 @@ const hoy = {
     const approvals = val(d.approvals, []).filter((a) => a.status === 'pending');
     const pipe = val(d.pipeline, null);
     const hour = new Date().getHours();
-    const greet = hour < 12 ? 'Buenos días' : hour < 19 ? 'Buenas tardes' : 'Buenas noches';
+    const greet = t(hour < 12 ? 'hoy.greet.morning' : hour < 19 ? 'hoy.greet.afternoon' : 'hoy.greet.evening');
 
     /* La bandeja: una sola lista, ordenada por urgencia. */
     const items = [
-      pendingPlan ? row({ ico: '📋', cls: 'warning', title: 'Un plan espera tu <b>CONFIRMAR</b>', sub: `${esc(pendingPlan.plan)} · vence ${esc(rel(pendingPlan.expiresAt))}`, primary: waBtn('CONFIRMAR', 'Confirmar', 'btn sm primary'), more: waBtn('cancela', 'Cancelar', 'btn sm ghost') }) : '',
+      pendingPlan ? row({ ico: '📋', cls: 'warning', title: t('hoy.planWaiting'), sub: esc(t('hoy.planExpires', { plan: pendingPlan.plan, when: rel(pendingPlan.expiresAt) })), primary: waBtn(t('wa.confirm'), t('hist.confirm'), 'btn sm primary'), more: waBtn(t('wa.cancel'), t('row.cancel'), 'btn sm ghost') }) : '',
       ...approvals.map(approvalRow),
       ...overdue.map(taskRow),
       ...today.map(taskRow),
       ...recs.map(recRow),
     ].filter(Boolean);
     const count = items.length;
-    waiting.forEach((x) => items.push(row({ ico: '⏳', title: esc(x.plan), sub: 'Esperando que el dueño lo apruebe · ' + esc(rel(x.expiresAt)) })));
+    waiting.forEach((x) => items.push(row({ ico: '⏳', title: esc(x.plan), sub: esc(t('hoy.waitingOwner', { when: rel(x.expiresAt) })) })));
     const allPending = isPending(d.tasks) && isPending(d.recs);
-    const tray = card('Qué hago ahora', allPending ? soon('La bandeja', 'qué merece mi atención hoy') : (items.length ? `<div class="list">${items.join('')}</div>` : empty('Nada pendiente', 'El silencio es la buena noticia.')),
-      { sub: count ? `${count} cosa${count === 1 ? '' : 's'} que dependen de ti. Toca una y sigue.` : 'Cuando algo dependa de ti, aparece aquí.' });
+    const tray = card(t('hoy.tray'), allPending ? soon(t('hoy.trayWhat'), t('wa.whatMattersToday')) : (items.length ? `<div class="list">${items.join('')}</div>` : empty(t('hoy.nothingPending'), t('hoy.silenceIsGood'))),
+      { sub: count ? tn('hoy.dependOnYou', count) : t('hoy.whenSomething') });
 
     const kpis = `<div class="grid c3">
-      ${kpi('Plata en juego', pipe ? money(pipe.open.amount, pipe.currency) : '—', pipe ? `${num(pipe.open.count)} negocios abiertos` : (isPending(d.pipeline) ? 'Se activa pronto' : ''), { spark: pipe ? spark(pipe.stages.map((s) => s.count)) : '' })}
-      ${kpi('Para hoy', `${num(today.length)}<small>tarea${today.length === 1 ? '' : 's'}</small>`, overdue.length ? `<span class="sev-warning">${overdue.length} vencida${overdue.length === 1 ? '' : 's'}</span>` : 'Ninguna vencida')}
-      ${kpi('Te esperan', `${num(count)}<small>pendiente${count === 1 ? '' : 's'}</small>`, recs.length ? `${recs.length} merece${recs.length === 1 ? '' : 'n'} tu atención` : 'Nada urgente')}
+      ${kpi(t('hoy.moneyInPlay'), pipe ? money(pipe.open.amount, pipe.currency) : t('common.dash'), pipe ? t('hoy.openDeals', { n: num(pipe.open.count) }) : (isPending(d.pipeline) ? t('hoy.soonInAccount') : ''), { spark: pipe ? spark(pipe.stages.map((s) => s.count)) : '' })}
+      ${kpi(t('hoy.forToday'), `${num(today.length)}<small>${esc(tn('hoy.task', today.length))}</small>`, overdue.length ? `<span class="sev-warning">${esc(tn('hoy.overdue', overdue.length))}</span>` : t('hoy.noneOverdue'))}
+      ${kpi(t('hoy.waitingForYou'), `${num(count)}<small>${esc(tn('hoy.pending', count))}</small>`, recs.length ? esc(tn('hoy.deserve', recs.length)) : t('hoy.nothingUrgent'))}
     </div>`;
 
     const art = `<svg viewBox="0 0 360 260" fill="none" aria-hidden="true">
@@ -140,18 +148,18 @@ const hoy = {
       <rect x="20" y="60" width="130" height="44" rx="14" fill="#fff"/><rect x="34" y="74" width="70" height="8" rx="4" fill="#C4CDD5"/><rect x="34" y="88" width="46" height="8" rx="4" fill="#DFE3E8"/>
       <rect x="215" y="150" width="125" height="44" rx="14" fill="#5BE49B"/><rect x="229" y="164" width="60" height="8" rx="4" fill="#0B2E24"/><rect x="229" y="178" width="84" height="8" rx="4" fill="#118D57"/>
       <circle cx="300" cy="70" r="26" fill="#00A76F"/><path d="M288 70l8 8 16-16" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
-    const welcome = `<div class="welcome"><div class="welcome-body"><h2>${greet}, ${esc(me.name || 'operador')} 👋</h2>
-      <p>${count ? `Tienes <b>${count} cosa${count === 1 ? '' : 's'}</b> que dependen de ti.` : 'Nada urgente por ahora.'} Lo que necesites, pídelo por WhatsApp con una frase.</p>
-      ${waBtn('qué merece mi atención hoy', 'Escribir a Comando', 'btn primary')}</div><div class="welcome-art">${art}</div></div>`;
+    const welcome = `<div class="welcome"><div class="welcome-body"><h2>${esc(t('hoy.hello', { greet, name: me.name || t('hoy.operator') }))}</h2>
+      <p>${count ? tn('hoy.youHave', count) : esc(t('hoy.nothingUrgentNow'))} ${esc(t('hoy.askByPhrase'))}</p>
+      ${waBtn(t('wa.whatMattersToday'), t('common.writeToComando'), 'btn primary')}</div><div class="welcome-art">${art}</div></div>`;
 
-    const review = card('Qué revisar en tu CRM', part(d.health, (hh) => {
+    const review = card(t('hoy.review'), part(d.health, (hh) => {
       const top = hh.metrics.filter((m) => m.severity === 'high' || m.severity === 'warning').slice(0, 3);
       return `<div class="bars">${top.map((m) => bar(m.label, m.value, m.of || Math.max(m.value, 1), { cls: m.severity === 'high' ? 'warn' : 'blue', text: `<b>${num(m.value)}</b>${m.of ? ' / ' + num(m.of) : ''}` })).join('')}</div><div class="status-line" style="margin-top:14px">${syncLine(hh.sync)}</div>`;
-    }, { what: 'Qué revisar en tu CRM', phrase: 'qué debería revisar en mi CRM esta semana' }), { more: 'Ver todo', moreHref: '#/crm' });
-    const last = card('Lo último que pediste', part(d.history, (hs) => list(hs.filter((h) => h.status !== 'pending').slice(0, 5), histRow, 'Todavía no le has escrito a Comando.'), { what: 'Lo último que pediste', phrase: 'qué fue lo último que hice' }),
-      { right: waBtn('deshacer', 'Deshacer lo último', 'btn sm ghost') });
+    }, { what: t('hoy.review'), phrase: t('wa.whatToReview') }), { more: t('hoy.seeAll'), moreHref: '#/crm' });
+    const last = card(t('hoy.last'), part(d.history, (hs) => list(hs.filter((h) => h.status !== 'pending').slice(0, 5), histRow, t('hoy.neverWrote')), { what: t('hoy.last'), phrase: t('wa.lastThing') }),
+      { right: waBtn(t('wa.undo'), t('hoy.undoLast'), 'btn sm ghost') });
 
-    const noCrm = me.status === 'ok' && me.crmConnected === false ? `<div class="card setup-nudge"><div class="row"><div class="row-ico ok">🔌</div><div class="row-body"><div class="row-title">Conecta tu CRM y Comando empieza a trabajar</div><div class="row-sub">HubSpot, Salesforce o una hoja de Google, con el login del propio sistema. Sin CRM ya puedes escribirle por WhatsApp; con CRM ve tu embudo, te avisa y ejecuta.</div></div><div class="row-actions"><a class="btn sm primary" href="#/cuenta">Conectar mi CRM</a></div></div></div>` : '';
+    const noCrm = me.status === 'ok' && me.crmConnected === false ? `<div class="card setup-nudge"><div class="row"><div class="row-ico ok">🔌</div><div class="row-body"><div class="row-title">${esc(t('hoy.connectCrm'))}</div><div class="row-sub">${esc(t('hoy.connectCrmSub'))}</div></div><div class="row-actions"><a class="btn sm primary" href="#/cuenta">${esc(t('hoy.connectCrmBtn'))}</a></div></div></div>` : '';
     return `<div class="stack">${welcome}${noCrm}${kpis}${tray}<div class="two">${review}${last}</div></div>`;
   },
   act: { ...recActions(), ...taskActions(), ...approvalActions() },
@@ -159,7 +167,7 @@ const hoy = {
 
 /* ================================================================== AGENDA */
 const agenda = {
-  id: 'agenda', title: 'Agenda', sub: 'Tus recordatorios, visitas y cierres por día.', icon: 'cal',
+  id: 'agenda', get title() { return t('nav.agenda'); }, get sub() { return t('sub.agenda'); }, icon: 'cal',
   load: (api) => {
     const from = new Date(); from.setDate(1); from.setMonth(from.getMonth() - 1);
     const to = new Date(); to.setMonth(to.getMonth() + 2);
@@ -179,29 +187,31 @@ const agenda = {
       const clean = e.title.replace(/^Cierre esperado · /, '').replace(/ \(.*\)$/, '');
       return row({
         ico: e.kind === 'close' ? '💰' : '📍', cls: e.kind === 'close' ? 'warning' : 'info', title: esc(e.title),
-        sub: `${e.allDay ? 'Todo el día' : esc(fmtTime(e.at))} · ${e.kind === 'close' ? 'cierre esperado' : 'reunión'}`,
-        primary: e.kind === 'close' ? waBtn('cuál es el siguiente paso de ' + clean, 'Siguiente paso', 'btn sm primary') : waBtn('recuérdame «' + e.title + '» 2 horas antes', 'Recordarme', 'btn sm primary'),
+        sub: `${e.allDay ? esc(t('agenda.allDay')) : esc(fmtTime(e.at))} · ${esc(t(e.kind === 'close' ? 'agenda.expectedClose' : 'agenda.meeting'))}`,
+        primary: e.kind === 'close'
+          ? waBtn(t('wa.nextStepOf', { name: clean }), t('agenda.nextStep'), 'btn sm primary')
+          : waBtn(t('wa.remindBefore', { title: e.title }), t('agenda.remindMe'), 'btn sm primary'),
       });
     };
-    const actions = waBtn('recuérdame mañana a las 10 llamar a ', 'Nuevo recordatorio', 'btn primary');
-    const toggle = `<div class="seg"><button data-tab="lista" class="${mode === 'lista' ? 'is-on' : ''}">Lista</button><button data-tab="mes" class="${mode === 'mes' ? 'is-on' : ''}">Mes</button></div>`;
-    const pendingNote = isPending(d.cal) ? `<p class="note">Por ahora ves tus recordatorios. Los cierres esperados y las reuniones de tu CRM se suman pronto. ${askLine('qué tengo esta semana', 'Mientras tanto:')}</p>` : '';
+    const actions = waBtn(t('wa.newReminder'), t('agenda.newReminder'), 'btn primary');
+    const toggle = `<div class="seg"><button data-tab="lista" class="${mode === 'lista' ? 'is-on' : ''}">${esc(t('agenda.list'))}</button><button data-tab="mes" class="${mode === 'mes' ? 'is-on' : ''}">${esc(t('agenda.month'))}</button></div>`;
+    const pendingNote = isPending(d.cal) ? `<p class="note">${esc(t('agenda.pendingNote'))} ${askLine(t('wa.thisWeek'), t('agenda.meanwhile'))}</p>` : '';
 
     if (mode === 'lista') {
       const now = new Date(); const dayMs = 86_400_000;
       const tomorrow = new Date(now.getTime() + dayMs); const week = new Date(now.getTime() + 7 * dayMs); const month = new Date(now.getTime() + 31 * dayMs);
       const groups = [
-        ['Vencidas', events.filter((e) => e.task && isPast(e.at) && !isToday(e.at))],
-        ['Hoy', events.filter((e) => isToday(e.at))],
-        ['Mañana', events.filter((e) => sameDay(new Date(e.at), tomorrow))],
-        ['Esta semana', events.filter((e) => { const t = new Date(e.at); return t > tomorrow && !sameDay(t, tomorrow) && t <= week; })],
-        ['Más adelante', events.filter((e) => { const t = new Date(e.at); return t > week && t <= month; })],
+        [t('agenda.overdue'), events.filter((e) => e.task && isPast(e.at) && !isToday(e.at))],
+        [t('agenda.today'), events.filter((e) => isToday(e.at))],
+        [t('agenda.tomorrow'), events.filter((e) => sameDay(new Date(e.at), tomorrow))],
+        [t('agenda.thisWeek'), events.filter((e) => { const at = new Date(e.at); return at > tomorrow && !sameDay(at, tomorrow) && at <= week; })],
+        [t('agenda.later'), events.filter((e) => { const at = new Date(e.at); return at > week && at <= month; })],
       ].filter(([, xs]) => xs.length);
-      const done = tasks.filter((t) => t.status !== 'open');
-      const body = groups.length ? groups.map(([t, xs]) => `<h3 class="group-title">${t} <span>${xs.length}</span></h3><div class="list">${xs.map(evRow).join('')}</div>`).join('') : empty('Nada en los próximos 30 días', 'Pídele a Comando «recuérdame…» y aparece aquí.');
+      const done = tasks.filter((x) => x.status !== 'open');
+      const body = groups.length ? groups.map(([label, xs]) => `<h3 class="group-title">${esc(label)} <span>${xs.length}</span></h3><div class="list">${xs.map(evRow).join('')}</div>`).join('') : empty(t('agenda.nothing30'), t('agenda.nothing30Sub'));
       return `<div class="stack">${head(this.title, this.sub, actions)}${pendingNote}
-        <div class="card">${toggle}${part(d.tasks, () => body, { what: 'La agenda', phrase: 'qué tengo esta semana' })}
-        ${done.length ? moreBox(`<div class="list">${done.map(taskRow).join('')}</div>`, `Hechas · ${done.length}`) : ''}</div></div>`;
+        <div class="card">${toggle}${part(d.tasks, () => body, { what: t('agenda.what'), phrase: t('wa.thisWeek') })}
+        ${done.length ? moreBox(`<div class="list">${done.map(taskRow).join('')}</div>`, t('agenda.done', { n: done.length })) : ''}</div></div>`;
     }
 
     const st = ctx.cal || (ctx.cal = { month: new Date(new Date().getFullYear(), new Date().getMonth(), 1), sel: new Date() });
@@ -209,15 +219,15 @@ const agenda = {
     const cells = []; for (let i = 0; i < 42; i += 1) { const day = new Date(start); day.setDate(start.getDate() + i); cells.push(day); }
     const today = new Date();
     const dayEvents = (day) => events.filter((e) => sameDay(new Date(e.at), day));
-    const grid = `<div class="cal">${['lun', 'mar', 'mié', 'jue', 'vie', 'sáb', 'dom'].map((x) => `<div class="cal-dow">${x}</div>`).join('')}
+    const grid = `<div class="cal">${t('agenda.calDow').split(',').map((x) => `<div class="cal-dow">${esc(x)}</div>`).join('')}
       ${cells.map((day) => { const evs = dayEvents(day); return `<button class="cal-day ${day.getMonth() !== first.getMonth() ? 'is-other' : ''} ${sameDay(day, today) ? 'is-today' : ''} ${sameDay(day, st.sel) ? 'is-sel' : ''}" data-cal="sel" data-day="${day.toISOString()}">
         <span class="cal-num">${day.getDate()}</span><span class="cal-dots">${evs.slice(0, 4).map((e) => `<i class="ev-${e.kind}"></i>`).join('')}</span>
         ${evs.slice(0, 3).map((e) => `<span class="cal-ev ev-${e.kind}">${e.allDay ? '' : esc(fmtTime(e.at)) + ' '}${esc(e.title)}</span>`).join('')}${evs.length > 3 ? `<span class="cal-more">+${evs.length - 3}</span>` : ''}</button>`; }).join('')}</div>`;
     const sel = dayEvents(st.sel);
     return `<div class="stack">${head(this.title, this.sub, actions)}${pendingNote}
-      <div class="two wide"><div class="card">${toggle}<div class="cal-head"><button class="btn sm" data-cal="prev" aria-label="Mes anterior">‹</button><h2>${esc(monthName(first))}</h2><div><button class="btn sm" data-cal="today">Hoy</button> <button class="btn sm" data-cal="next" aria-label="Mes siguiente">›</button></div></div>${grid}
-        <div class="legend"><span><i class="ev-task"></i>Recordatorio</span><span><i class="ev-meeting"></i>Visita o reunión</span><span><i class="ev-close"></i>Cierre esperado</span></div></div>
-      ${card(dayLabel(st.sel), list(sel, evRow, 'Nada ese día.'))}</div></div>`;
+      <div class="two wide"><div class="card">${toggle}<div class="cal-head"><button class="btn sm" data-cal="prev" aria-label="${esc(t('agenda.prevMonth'))}">‹</button><h2>${esc(monthName(first))}</h2><div><button class="btn sm" data-cal="today">${esc(t('agenda.todayBtn'))}</button> <button class="btn sm" data-cal="next" aria-label="${esc(t('agenda.nextMonth'))}">›</button></div></div>${grid}
+        <div class="legend"><span><i class="ev-task"></i>${esc(t('agenda.legendTask'))}</span><span><i class="ev-meeting"></i>${esc(t('agenda.legendMeeting'))}</span><span><i class="ev-close"></i>${esc(t('agenda.legendClose'))}</span></div></div>
+      ${card(dayLabel(st.sel), list(sel, evRow, t('agenda.nothingThatDay')))}</div></div>`;
   },
   act: {
     ...taskActions(),
@@ -234,7 +244,7 @@ const agenda = {
 
 /* ==================================================================== MI CRM */
 const crm = {
-  id: 'crm', title: 'Mi CRM', sub: 'Cuánta plata hay en juego y qué está viejo, vacío, repetido o sin dueño.', icon: 'funnel',
+  id: 'crm', get title() { return t('nav.crm'); }, get sub() { return t('sub.crm'); }, icon: 'funnel',
   load: (api) => ({ pipeline: api.pipeline(), health: api.health() }),
   view(d) {
     const plata = part(d.pipeline, (p) => {
@@ -263,7 +273,7 @@ const crm = {
 
 /* ==================================================================== AVISOS */
 const avisos = {
-  id: 'avisos', title: 'Avisos', sub: 'De qué te avisa Comando, cuándo te escribe y qué más puede vigilar.', icon: 'bell',
+  id: 'avisos', get title() { return t('nav.avisos'); }, get sub() { return t('sub.avisos'); }, icon: 'bell',
   load: (api) => ({ agent: api.agent(), eventRules: api.eventRules(), policy: api.policy(), pipeline: api.pipeline(), playbooks: api.playbooks() }),
   view(d) {
     const ag = val(d.agent, null); const p = (ag && ag.preferences) || {};
@@ -319,7 +329,7 @@ const avisos = {
 
 /* ================================================================= MARKETING */
 const marketing = {
-  id: 'marketing', title: 'Marketing', sub: 'Qué te traen tus anuncios de Facebook, Instagram y TikTok, y qué dice tu analista.', icon: 'mega',
+  id: 'marketing', get title() { return t('nav.marketing'); }, get sub() { return t('sub.marketing'); }, icon: 'mega',
   load: (api) => ({ mk: api.marketing() }),
   view(d) {
     const logo = (p) => `<img class="logo-sm" src="../../assets/img/logos/${p === 'google-ads' ? 'automation' : esc(p)}.svg" alt="">`;
@@ -356,7 +366,7 @@ const marketing = {
 
 /* ==================================================================== CUENTA */
 const cuenta = {
-  id: 'cuenta', title: 'Cuenta', sub: 'Tu plan, tu CRM, tu equipo y lo que Comando sabe de ti.', icon: 'user',
+  id: 'cuenta', get title() { return t('nav.cuenta'); }, get sub() { return t('sub.cuenta'); }, icon: 'user',
   load: (api) => ({ me: api.me(), quota: api.quota(), connections: api.connections(), sheets: api.sheets(), mk: api.marketing(), team: api.team(), agent: api.agent(), health: api.health() }),
   view(d, ctx) {
     const me = val(d.me, {});

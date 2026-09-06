@@ -9,6 +9,7 @@
      confirmación por sondeo, selector de hojas de Google). */
 
 import { esc, toast, ICON, fmtDate } from './ui.js?v=4';
+import { t } from '../i18n.js?v=1';
 
 const cfg = () => window.COMANDO_CONFIG || {};
 const NAMES = { hubspot: 'HubSpot', salesforce: 'Salesforce', 'google-sheets': 'Google Sheets', pipedrive: 'Pipedrive', zoho: 'Zoho CRM', kommo: 'Kommo', shopify: 'Shopify', tiendanube: 'Tiendanube', woocommerce: 'WooCommerce', mercadolibre: 'Mercado Libre', vtex: 'VTEX' };
@@ -22,11 +23,11 @@ export function whatsappStep(root, ctx, onVerified) {
   const me = ctx.me || {};
   root.innerHTML = `<div class="setup">
     <div class="card setup-card">
-      <div class="setup-steps"><span class="is-done">1 Cuenta</span><span class="is-on">2 WhatsApp</span><span>3 CRM</span></div>
-      <h2>Vincula tu WhatsApp</h2>
-      <p class="hint">Comando funciona desde tu propio WhatsApp. Escribe el número desde el que le vas a hablar.</p>
+      <div class="setup-steps"><span class="is-done">${esc(t('setup.step1'))}</span><span class="is-on">${esc(t('setup.step2'))}</span><span>${esc(t('setup.step3'))}</span></div>
+      <h2>${esc(t('setup.wa.title'))}</h2>
+      <p class="hint">${esc(t('setup.wa.hint'))}</p>
       <form id="wa-form" class="form" style="margin-top:16px">
-        <label for="wa-locale">Idioma de las respuestas
+        <label for="wa-locale">${esc(t('setup.wa.locale'))}
           <select id="wa-locale" name="locale">
             <option value="es">Español</option>
             <option value="en">English</option>
@@ -34,21 +35,21 @@ export function whatsappStep(root, ctx, onVerified) {
           </select>
         </label>
         <div id="wa-picker"></div>
-        <div class="form-foot"><button type="submit" class="btn primary">Continuar</button><span class="form-msg bad" id="wa-error"></span></div>
+        <div class="form-foot"><button type="submit" class="btn primary">${esc(t('common.continue'))}</button><span class="form-msg bad" id="wa-error"></span></div>
       </form>
       <div id="wa-verify" hidden>
-        <p>Envía este mensaje <b>desde el número que registraste</b> al WhatsApp de Comando (<span id="wa-number"></span>):</p>
+        <p>${t('setup.wa.sendThis', { number: '<span id="wa-number"></span>' })}</p>
         <div class="setup-code" id="wa-code"></div>
-        <a id="wa-link" class="btn primary" target="_blank" rel="noopener">${ICON.wa} Abrir WhatsApp y enviar</a>
-        <p class="hint" style="margin-top:12px">El código vence en 15 minutos. Esperando tu mensaje… <span class="spinner"></span></p>
-        <button type="button" id="wa-change" class="btn ghost sm">Cambiar número</button>
+        <a id="wa-link" class="btn primary" target="_blank" rel="noopener">${ICON.wa} ${esc(t('setup.wa.open'))}</a>
+        <p class="hint" style="margin-top:12px">${esc(t('setup.wa.waiting'))} <span class="spinner"></span></p>
+        <button type="button" id="wa-change" class="btn ghost sm">${esc(t('setup.wa.change'))}</button>
       </div>
     </div>
-    <p class="hint" style="text-align:center">Luego podrás conectar HubSpot, Salesforce o una hoja de Google desde tu cuenta. No hace falta para empezar.</p>
+    <p class="hint" style="text-align:center">${esc(t('setup.wa.foot'))}</p>
   </div>`;
   const $ = (id) => root.querySelector('#' + id);
   const picker = window.ComandoPhonePicker ? window.ComandoPhonePicker.mount($('wa-picker')) : null;
-  if (!picker) { $('wa-error').textContent = 'No se pudo cargar el selector de país. Recarga la página.'; return; }
+  if (!picker) { $('wa-error').textContent = t('setup.wa.noPicker'); return; }
   if (me.whatsapp && me.whatsapp.pending && me.whatsapp.pending.phone) picker.set(me.whatsapp.pending.phone);
   // El idioma se guarda al elegirlo, no al enviar el formulario: si alguien
   // abandona en el paso del teléfono, Comando ya sabe en qué idioma
@@ -60,7 +61,7 @@ export function whatsappStep(root, ctx, onVerified) {
       ctx.api
         .raw('/auth/language', { method: 'POST', body: JSON.stringify({ locale: locale.value }) })
         .then(() => { ctx.me = { ...(ctx.me || {}), locale: locale.value }; })
-        .catch(() => { $('wa-error').textContent = 'No pude guardar el idioma. Inténtalo de nuevo.'; });
+        .catch(() => { $('wa-error').textContent = t('setup.wa.localeFailed'); });
     });
   }
   let timer = null;
@@ -110,33 +111,33 @@ export function crmBlock(ctx, connections, sheets) {
     const ready = READY.includes(p);
     const isActive = active && active.provider === p;
     const hasSheets = p === 'google-sheets' && Array.isArray(sheets) && sheets.length > 0;
-    let small = 'Próximamente'; let cls = ''; let disabled = !ready; let act = '';
+    let small = t('crm.soon'); let cls = ''; let disabled = !ready; let act = '';
     if (ready) {
-      if (isActive || hasSheets) { small = 'Conectado'; cls = 'is-connected'; disabled = p !== 'google-sheets'; act = p === 'google-sheets' ? 'crm:sheets' : ''; }
-      else if (active && p !== 'google-sheets') { small = 'Desconecta el CRM activo'; disabled = true; }
-      else { small = recoverable && recoverable.provider === p ? 'Conectar desde cero' : 'Conectar'; cls = 'is-ready'; act = p === 'google-sheets' ? 'crm:sheets' : 'crm:connect'; }
+      if (isActive || hasSheets) { small = t('crm.connected'); cls = 'is-connected'; disabled = p !== 'google-sheets'; act = p === 'google-sheets' ? 'crm:sheets' : ''; }
+      else if (active && p !== 'google-sheets') { small = t('crm.disconnectActive'); disabled = true; }
+      else { small = recoverable && recoverable.provider === p ? t('crm.connectFromScratch') : t('crm.connect'); cls = 'is-ready'; act = p === 'google-sheets' ? 'crm:sheets' : 'crm:connect'; }
     }
     return `<button type="button" class="crm-card ${cls}" data-crm="${p}" ${act ? `data-act="${act}"` : ''} ${disabled ? 'disabled' : ''}>${logo(p)}<span>${esc(NAMES[p])}</span><small>${esc(small)}</small></button>`;
   };
-  const status = pending ? `Confirmando la conexión con ${esc(NAMES[pending.provider] || pending.provider)}…`
-    : active ? `${esc(NAMES[active.provider] || active.name)} conectado. Comando solo consulta este CRM.`
-      : recoverable ? 'No hay un CRM conectado. Puedes recuperar el anterior o vincular uno nuevo.' : '';
-  const recovery = recoverable ? `<div class="note warn" style="margin-top:12px"><b>${esc(NAMES[recoverable.provider] || recoverable.name)} está desvinculado.</b> Guardamos tu copia hasta el ${esc(fmtDate(recoverable.purgeAfter, true))}; si lo vuelves a autorizar antes, recuperas la configuración y los datos.
-      <div class="inline-list" style="margin-top:10px"><button type="button" class="btn sm primary" data-act="crm:recover" data-id="${esc(recoverable.id)}" data-provider="${esc(recoverable.provider)}">Volver a vincular y recuperar</button><button type="button" class="btn sm danger" data-act="crm:purge" data-id="${esc(recoverable.id)}" data-provider="${esc(recoverable.provider)}">Eliminar datos ahora</button></div></div>` : '';
+  const status = pending ? t('crm.confirming', { name: esc(NAMES[pending.provider] || pending.provider) })
+    : active ? t('crm.onlyThis', { name: esc(NAMES[active.provider] || active.name) })
+      : recoverable ? t('crm.noneConnected') : '';
+  const recovery = recoverable ? `<div class="note warn" style="margin-top:12px">${t('crm.unlinked', { name: esc(NAMES[recoverable.provider] || recoverable.name), date: esc(fmtDate(recoverable.purgeAfter, true)) })}
+      <div class="inline-list" style="margin-top:10px"><button type="button" class="btn sm primary" data-act="crm:recover" data-id="${esc(recoverable.id)}" data-provider="${esc(recoverable.provider)}">${esc(t('crm.relink'))}</button><button type="button" class="btn sm danger" data-act="crm:purge" data-id="${esc(recoverable.id)}" data-provider="${esc(recoverable.provider)}">${esc(t('crm.purgeNow'))}</button></div></div>` : '';
   const sheetList = Array.isArray(sheets) && sheets.length ? `<ul class="sheet-list">${sheets.map((s) => `<li>${logo('google-sheets')}<b>${esc(s.displayName || s.spreadsheetId)}</b><span>${esc(s.sheetTitle)}</span></li>`).join('')}</ul>` : '';
-  const foot = active ? `<div class="inline-list" style="margin-top:12px"><a class="btn sm" href="../dashboard/">Qué puede consultar Comando</a><button type="button" class="btn sm danger" data-act="crm:disconnect" data-id="${esc(active.id)}" data-provider="${esc(active.provider)}">Desconectar ${esc(NAMES[active.provider] || '')}</button></div>` : '';
+  const foot = active ? `<div class="inline-list" style="margin-top:12px"><a class="btn sm" href="../dashboard/">${esc(t('crm.whatCanSee'))}</a><button type="button" class="btn sm danger" data-act="crm:disconnect" data-id="${esc(active.id)}" data-provider="${esc(active.provider)}">${esc(t('crm.disconnect', { name: NAMES[active.provider] || '' }))}</button></div>` : '';
   return `<div class="crm-grid" role="list">${[...READY, ...SOON].map(cardFor).join('')}</div>${sheetList}<p class="hint crm-status" id="crm-status" style="margin-top:10px">${status}</p>${recovery}${foot}`;
 }
 
 const status = (msg) => { const el = document.getElementById('crm-status'); if (el) el.textContent = msg; };
 
 function beginOauth(ctx, provider, session, recovering, reload) {
-  if (ctx.api.mode === 'mock') { toast('En modo de prueba no se abre la autorización de ' + (NAMES[provider] || provider) + '.'); return; }
-  if (!session.token || !session.connectionId) throw new Error('No recibimos la sesión de conexión');
+  if (ctx.api.mode === 'mock') { toast(t('crm.mockOauth', { name: NAMES[provider] || provider })); return; }
+  if (!session.token || !session.connectionId) throw new Error(t('crm.noSession'));
   const url = String(cfg().nangoUrl || '').replace(/\/$/, '') + '/oauth/connect/' + encodeURIComponent(provider) + '?connect_session_token=' + encodeURIComponent(session.token);
   const popup = window.open(url, 'comando-oauth', 'width=720,height=800');
   if (!popup) window.location.href = url;
-  status('Autoriza el acceso en la ventana de ' + (NAMES[provider] || provider) + '… (esta página se actualiza sola)');
+  status(t('crm.authorizeIn', { name: NAMES[provider] || provider }));
   setPending({ connectionId: session.connectionId, provider, recovering });
   pollReconcile(ctx, session.connectionId, provider, recovering, popup, reload);
 }
@@ -145,13 +146,13 @@ function beginOauth(ctx, provider, session, recovering, reload) {
 export function pollReconcile(ctx, connectionId, provider, recovering, popup, reload) {
   const started = Date.now();
   const poll = async () => {
-    if (Date.now() - started > 6 * 60 * 1000) { status('No se completó la autorización. Vuelve a intentarlo.'); setPending(null); reload(); return; }
+    if (Date.now() - started > 6 * 60 * 1000) { status(t('crm.authTimeout')); setPending(null); reload(); return; }
     try {
       const res = await ctx.api.raw('/integrations/nango/connections/' + connectionId + '/reconcile', { method: 'POST', headers: rid(), body: JSON.stringify({ integrationId: provider }) });
       if (res.status === 'connected') {
         if (popup && !popup.closed) popup.close();
         setPending(null);
-        toast(recovering ? (NAMES[provider] || provider) + ' recuperado. Comando reactivó tu copia.' : (NAMES[provider] || provider) + ' conectado. Comando está importando tus datos.', 'ok');
+        toast(t(recovering ? 'crm.recovered' : 'crm.connectedToast', { name: NAMES[provider] || provider }), 'ok');
         reload(); return;
       }
     } catch (e) { /* transitorio */ }
@@ -167,7 +168,7 @@ function waitForGoogle(isReady, what, timeoutMs) {
     const deadline = Date.now() + (timeoutMs || 10000);
     const timer = setInterval(() => {
       if (isReady()) { clearInterval(timer); resolve(); return; }
-      if (Date.now() >= deadline) { clearInterval(timer); reject(new Error('No se pudo cargar ' + what + '. Revisa tu conexión y vuelve a intentar.')); }
+      if (Date.now() >= deadline) { clearInterval(timer); reject(new Error(t('crm.googleLoadFailed', { what }))); }
     }, 100);
   });
 }
@@ -176,8 +177,8 @@ async function googleAccessToken() {
   return new Promise((resolve, reject) => {
     const client = window.google.accounts.oauth2.initTokenClient({
       client_id: cfg().googleClientId, scope: 'https://www.googleapis.com/auth/drive.file',
-      callback: (r) => (r && r.access_token ? resolve(r.access_token) : reject(new Error('Google no devolvió el permiso'))),
-      error_callback: () => reject(new Error('Se canceló el permiso de Google')),
+      callback: (r) => (r && r.access_token ? resolve(r.access_token) : reject(new Error(t('crm.googleNoGrant')))),
+      error_callback: () => reject(new Error(t('crm.googleCancelled'))),
     });
     client.requestAccessToken({ prompt: '' });
   });
@@ -206,7 +207,7 @@ function waitForConnection(ctx, connectionId, popup) {
   const started = Date.now();
   return new Promise((resolve, reject) => {
     const poll = async () => {
-      if (Date.now() - started > 6 * 60 * 1000) { reject(new Error('No se completó la autorización. Vuelve a intentarlo.')); return; }
+      if (Date.now() - started > 6 * 60 * 1000) { reject(new Error(t('crm.authTimeout'))); return; }
       try {
         const res = await ctx.api.raw('/integrations/nango/connections/' + connectionId + '/reconcile', { method: 'POST', headers: rid(), body: JSON.stringify({ integrationId: 'google-sheets' }) });
         if (res.status === 'connected') { if (popup && !popup.closed) popup.close(); resolve(); return; }
@@ -234,7 +235,7 @@ export const crmActions = {
   },
   'crm:disconnect': async (el, ctx, d, reload) => {
     const name = NAMES[el.dataset.provider] || 'el CRM';
-    if (!window.confirm('¿Desconectar ' + name + '? Comando deja de consultarlo al instante. La copia se borra sola en 7 días.')) return;
+    if (!window.confirm(t('crm.confirmDisconnect', { name }))) return;
     el.disabled = true;
     try {
       const result = await ctx.api.raw('/integrations/connections/' + el.dataset.id, { method: 'DELETE', headers: rid(), body: JSON.stringify({ purgeMode: 'after-grace', reason: 'onboarding_crm_switch' }) });
@@ -243,11 +244,11 @@ export const crmActions = {
   },
   'crm:purge': async (el, ctx, d, reload) => {
     const name = NAMES[el.dataset.provider] || 'el CRM';
-    if (!window.confirm('¿Eliminar ahora la copia de ' + name + '? No se puede deshacer.')) return;
+    if (!window.confirm(t('crm.confirmPurge', { name }))) return;
     el.disabled = true;
     try {
       const result = await ctx.api.raw('/integrations/connections/' + el.dataset.id, { method: 'DELETE', headers: rid(), body: JSON.stringify({ purgeMode: 'immediate', reason: 'operator_delete_now' }) });
-      toast(result.purged ? 'La copia de ' + name + ' fue eliminada.' : 'No se completó: hay una retención legal activa.', result.purged ? 'ok' : 'bad'); reload();
+      toast(result.purged ? t('crm.purged', { name }) : t('crm.purgeBlocked'), result.purged ? 'ok' : 'bad'); reload();
     } catch (e) { toast(e.message, 'bad'); el.disabled = false; }
   },
   'crm:sheets': async (el, ctx, d, reload) => {
@@ -257,7 +258,7 @@ export const crmActions = {
       try { connectionId = localStorage.getItem('comando.sheetsConnection'); } catch (e) { /* sin storage */ }
       if (!connectionId) {
         const r = await ctx.api.raw('/integrations/nango/connect-sessions', { method: 'POST', headers: { 'idempotency-key': crypto.randomUUID(), ...rid() }, body: JSON.stringify({ integrationId: 'google-sheets' }) });
-        if (!r.token || !r.connectionId) throw new Error('No recibimos la sesión de conexión');
+        if (!r.token || !r.connectionId) throw new Error(t('crm.noSession'));
         const url = String(cfg().nangoUrl || '').replace(/\/$/, '') + '/oauth/connect/google-sheets?connect_session_token=' + encodeURIComponent(r.token);
         const popup = window.open(url, 'comando-oauth', 'width=720,height=800');
         if (!popup) window.location.href = url;
@@ -274,7 +275,7 @@ export const crmActions = {
       const sheets = [];
       for (const doc of docs) { const tabs = await sheetTabs(token, doc.id); sheets.push({ spreadsheetId: doc.id, sheetTitle: tabs[0] || 'Hoja 1', displayName: doc.name || undefined }); }
       await ctx.api.raw('/integrations/google-sheets/sources', { method: 'POST', headers: rid(), body: JSON.stringify({ connectionId, sheets }) });
-      toast(docs.length === 1 ? 'Hoja conectada. Comando la está leyendo.' : docs.length + ' hojas conectadas.', 'ok');
+      toast(docs.length === 1 ? t('crm.sheetConnected') : t('crm.sheetsConnected', { n: docs.length }), 'ok');
       reload();
     } catch (e) { status(e.message); el.disabled = false; }
   },

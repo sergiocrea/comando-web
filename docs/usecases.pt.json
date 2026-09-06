@@ -1,13 +1,13 @@
 {
  "seccion": {
-  "titulo": "É assim que muda o dia de cada pessoa do seu time.",
   "subtitulo": "O Comando não substitui seu time: tira dele o trabalho que o trava. Escolha um papel e veja o alívio na prática.",
   "cierre": "Seu time mantém o critério. O Comando tira a carga.",
   "cta": {
    "texto": "Tirar trabalho do time",
    "sufijo": " em 2 minutos",
    "href": "/app/"
-  }
+  },
+  "eyebrow": "ASSIM MUDA O DIA"
  },
  "roles": [
   "Vendedor",
