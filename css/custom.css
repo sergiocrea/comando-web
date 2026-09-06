@@ -925,15 +925,11 @@ html { scroll-behavior: smooth; }
   z-index: 2;
   display: flex;
   align-items: center;
-  gap: 1.5rem;
-  padding: 1.15rem 1.25rem;
+  gap: 0;
+  padding: 1.15rem 0;
   color: #fff;
   background: #151515;
   overflow: hidden;
-}
-.band-label {
-  flex: 0 0 auto; font-family: "Jetbrainsmono Variable", ui-monospace, monospace;
-  font-size: .6rem; letter-spacing: .14em; text-transform: uppercase; color: #7c8697;
 }
 /* La máscara evita el corte seco en los extremos. */
 .band-track {
@@ -1013,8 +1009,7 @@ html { scroll-behavior: smooth; }
   .b2b-hero-note { margin-top: .75rem; font-size: .76rem; }
   /* El mockup no cabe en móvil sin competir con el titular y el CTA. */
   .b2b-hero-visual { display: none; }
-  .b2b-hero-band { gap: .9rem; padding: .85rem 1.25rem; }
-  .band-label { font-size: .55rem; }
+  .b2b-hero-band { gap: 0; padding: .85rem 0; }
   .band-row span { font-size: .74rem; }
   .band-row img { width: 1.35rem; height: 1.35rem; }
   .band-track {
@@ -1335,7 +1330,7 @@ html { scroll-behavior: smooth; }
 .section_usecases .section_features-heading { font-size: clamp(1.5rem, 1rem + 1.6vw, 2.35rem); }
 .uc-subtitle { display: none; }
 .uc-tabs { margin-top: 1.25rem; }
-.uc-anchor { display: block; height: 0; scroll-margin-top: calc(var(--nav-height, 5rem) + 1rem); }
+.uc-anchor, .section-anchor { display: block; height: 0; scroll-margin-top: calc(var(--nav-height, 5rem) + 1rem); }
 
 /* La frase de cierre de cada caso heredaba el gris claro del tema oscuro y no se leía sobre el fondo crema. */
 .uc-result { color: #2b2e2b; border-left-color: #315fef; }

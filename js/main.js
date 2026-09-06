@@ -617,6 +617,20 @@ function initAboutFade() {
    como lo hace por JS, el scroll-margin-top del CSS no llega a aplicarse. Este
    handler va en fase de captura para resolverlo antes que el suyo. */
 function initAnchorOffset() {
+  const navOffset = () => {
+    const nav = document.querySelector('.nav_component');
+    return (nav ? nav.getBoundingClientRect().height : 0) + 8;
+  };
+  const goTo = (target, smooth) => window.scrollTo({
+    top: Math.max(0, target.getBoundingClientRect().top + window.scrollY - navOffset()),
+    behavior: smooth ? 'smooth' : 'auto',
+  });
+  /* La sección se elige desde el menú, no desde la barra de direcciones: el
+     desplazamiento es suave y la URL se queda limpia, sin el #ancla. */
+  const cleanUrl = () => {
+    if (location.hash) history.replaceState(null, '', location.pathname + location.search);
+  };
+
   document.addEventListener('click', (event) => {
     const link = event.target.closest('a[href^="#"]');
     if (!link || link.getAttribute('href') === '#') return;
@@ -625,38 +639,34 @@ function initAnchorOffset() {
     if (!target) return;
     event.preventDefault();
     event.stopPropagation();
-    const nav = document.querySelector('.nav_component');
-    const offset = (nav ? nav.getBoundingClientRect().height : 0) + 8;
-    window.scrollTo({
-      top: Math.max(0, target.getBoundingClientRect().top + window.scrollY - offset),
-      behavior: 'smooth',
-    });
-    history.replaceState(null, '', `#${id}`);
+    goTo(target, true);
+    cleanUrl();
   }, true);
 
-  // Al abrir la página con un ancla (comando.pro/#demo) el arranque manual del
-  // scroll la deja en el hero. Cuando el preloader ya salió, se va a la sección.
-  const scrollToHash = () => {
-    const id = decodeURIComponent(location.hash.slice(1));
-    const target = id && document.getElementById(id);
-    if (!target) return;
-    const nav = document.querySelector('.nav_component');
-    const offset = (nav ? nav.getBoundingClientRect().height : 0) + 8;
-    window.scrollTo({ top: Math.max(0, target.getBoundingClientRect().top + window.scrollY - offset), behavior: 'auto' });
-  };
-  if (location.hash.length > 1) {
+  // Un enlace compartido con ancla (comando.pro/#precios) sigue funcionando: el
+  // arranque manual del scroll deja la página en el hero, así que al salir el
+  // preloader se va a la sección y recién ahí se limpia la URL.
+  const wanted = location.hash.length > 1 ? decodeURIComponent(location.hash.slice(1)) : '';
+  if (wanted) {
+    const settle = () => { const t = document.getElementById(wanted); if (t) goTo(t, false); };
     const pre = document.getElementById('preloader');
     const started = Date.now();
     const tick = () => {
       const gone = !pre || getComputedStyle(pre).display === 'none' || pre.getBoundingClientRect().bottom <= 0 || Date.now() - started > 6000;
-      // La página sigue creciendo un momento (casos, demo, precios se montan por JS):
+      // La página sigue creciendo un momento (casos y precios se montan por JS):
       // se reajusta varias veces hasta que la altura se asienta.
-      if (gone) { scrollToHash(); [300, 900, 1800, 3000].forEach((ms) => setTimeout(scrollToHash, ms)); return; }
+      if (gone) { settle(); [300, 900, 1800, 3000].forEach((ms) => setTimeout(settle, ms)); setTimeout(cleanUrl, 3200); return; }
       setTimeout(tick, 150);
     };
     if (document.readyState === 'complete') tick(); else window.addEventListener('load', tick, { once: true });
   }
-  window.addEventListener('hashchange', scrollToHash);
+  window.addEventListener('hashchange', () => {
+    const id = decodeURIComponent(location.hash.slice(1));
+    const target = id && document.getElementById(id);
+    if (!target) return;
+    goTo(target, true);
+    cleanUrl();
+  });
 }
 
 /* ============================================================
