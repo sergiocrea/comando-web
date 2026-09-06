@@ -25,7 +25,9 @@ a { color: var(--primary-dark); }
 .auth-error { color: var(--error); font-size: 14px; margin: 8px 0 0; }
 .auth-foot { color: var(--g500); font-size: 12px; margin: 20px 0 0; line-height: 1.6; }
 #clerk-root .cl-rootBox, #clerk-root .cl-cardBox, #clerk-root .cl-card { width: 100% !important; max-width: 100% !important; min-width: 0 !important; }
-#clerk-root .cl-cardBox { box-shadow: none !important; }
+/* Clerk recorta la tarjeta, y su insignia «Last used» se dibuja fuera del borde
+   del botón de Google: con overflow oculto salía cortada por la mitad. */
+#clerk-root .cl-cardBox { box-shadow: none !important; overflow: visible !important; }
 #clerk-root .cl-internal-b3fm6y, #clerk-root .cl-footer { background: transparent !important; }
 
 /* ---------- lo que puedes pedirle ---------- */
@@ -53,7 +55,8 @@ a { color: var(--primary-dark); }
   .auth-side .cmd-wordmark { margin-bottom: 48px; display: inline-flex; }
   .auth-side h1 { font-size: 40px; }
   .auth-phone { display: block; float: right; width: 220px; margin: -20px 0 24px 32px; shape-outside: margin-box; }
-  .auth-main { order: 1; position: sticky; top: 0; height: 100vh; justify-content: center; padding: 40px 56px; }
+  /* El costado derecho deja aire para lo que Clerk dibuja fuera de la tarjeta. */
+  .auth-main { order: 1; position: sticky; top: 0; height: 100vh; justify-content: center; padding: 40px 72px; }
   .auth-brand { position: absolute; top: 28px; right: 56px; left: 56px; }
   .auth-brand .cmd-wordmark { display: none; }
   .cmd-list { grid-template-columns: 1fr 1fr; clear: both; }
