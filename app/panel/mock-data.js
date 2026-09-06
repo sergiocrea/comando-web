@@ -19,6 +19,7 @@ export const MOCK = {
     operatorId: 'op-demo',
     plan: 'starter',
     role: 'owner',
+    locale: 'es',
     name: 'Sergio',
     email: 'sergio@inmobiliariarojas.pe',
     comandoNumber: '+51 912 000 000',

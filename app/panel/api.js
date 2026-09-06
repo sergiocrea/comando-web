@@ -84,7 +84,7 @@ export function createMockApi() {
   const a = MOCK.agent;
   return {
     mode: 'mock',
-    raw: (path, options) => { log('raw ' + path, options && options.body); return wait(path.includes('whatsapp/start') ? { comandoNumber: '+51 912 000 000', code: 'K7Q2ZP', waLink: 'https://wa.me/51912000000?text=VERIFICAR%20K7Q2ZP' } : path.includes('reconcile') ? { status: 'connected' } : path.includes('connect-sessions') ? { token: 'mock', connectionId: 'mock-conn' } : { ok: true, purged: true, purgeAfter: new Date(Date.now() + 7 * 864e5).toISOString() }); },
+    raw: (path, options) => { log('raw ' + path, options && options.body); return wait(path.includes('whatsapp/start') ? { comandoNumber: '+51 912 000 000', code: 'K7Q2ZP', waLink: 'https://wa.me/51912000000?text=VERIFICAR%20K7Q2ZP' } : path.includes('/auth/language') ? { status: 'ok' } : path.includes('reconcile') ? { status: 'connected' } : path.includes('connect-sessions') ? { token: 'mock', connectionId: 'mock-conn' } : { ok: true, purged: true, purgeAfter: new Date(Date.now() + 7 * 864e5).toISOString() }); },
     me: () => wait(MOCK.me),
     connections: () => wait(MOCK.connections),
     sheets: () => wait(MOCK.connections[1].sources),

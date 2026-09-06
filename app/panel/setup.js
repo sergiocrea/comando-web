@@ -26,6 +26,13 @@ export function whatsappStep(root, ctx, onVerified) {
       <h2>Vincula tu WhatsApp</h2>
       <p class="hint">Comando funciona desde tu propio WhatsApp. Escribe el número desde el que le vas a hablar.</p>
       <form id="wa-form" class="form" style="margin-top:16px">
+        <label for="wa-locale">Idioma de las respuestas
+          <select id="wa-locale" name="locale">
+            <option value="es">Español</option>
+            <option value="en">English</option>
+            <option value="pt">Português</option>
+          </select>
+        </label>
         <div id="wa-picker"></div>
         <div class="form-foot"><button type="submit" class="btn primary">Continuar</button><span class="form-msg bad" id="wa-error"></span></div>
       </form>
@@ -43,6 +50,19 @@ export function whatsappStep(root, ctx, onVerified) {
   const picker = window.ComandoPhonePicker ? window.ComandoPhonePicker.mount($('wa-picker')) : null;
   if (!picker) { $('wa-error').textContent = 'No se pudo cargar el selector de país. Recarga la página.'; return; }
   if (me.whatsapp && me.whatsapp.pending && me.whatsapp.pending.phone) picker.set(me.whatsapp.pending.phone);
+  // El idioma se guarda al elegirlo, no al enviar el formulario: si alguien
+  // abandona en el paso del teléfono, Comando ya sabe en qué idioma
+  // contestarle cuando vuelva.
+  const locale = $('wa-locale');
+  if (locale) {
+    locale.value = me.locale || 'es';
+    locale.addEventListener('change', () => {
+      ctx.api
+        .raw('/auth/language', { method: 'POST', body: JSON.stringify({ locale: locale.value }) })
+        .then(() => { ctx.me = { ...(ctx.me || {}), locale: locale.value }; })
+        .catch(() => { $('wa-error').textContent = 'No pude guardar el idioma. Inténtalo de nuevo.'; });
+    });
+  }
   let timer = null;
   const stop = () => { if (timer) clearInterval(timer); timer = null; };
   const poll = () => {
