@@ -23,7 +23,7 @@ globalThis.localStorage = { getItem: () => null, setItem() {}, removeItem() {} }
 globalThis.window = { COMANDO_CONFIG: {}, addEventListener() {}, location: globalThis.location, innerWidth: 1200 };
 globalThis.setInterval = () => 0;
 
-const { SECTIONS } = await import('../app/panel/sections.js?v=6');
+const { SECTIONS } = await import('../app/panel/sections.js?v=7');
 await import('../app/strings.js?v=1');
 const i18n = await import('../app/i18n.js?v=1');
 

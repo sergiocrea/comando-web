@@ -174,6 +174,21 @@ incluido en Pro/Enterprise o se contrata aparte (no está en `prompt-precios.md`
 **`GET /marketing/overview`** devuelve `{accounts:[{id,provider:'meta'|'tiktok'|'google-ads',name,status:'active'|'pending'|'soon',channels,lastSyncAt,adAccount}], period:{label,spend,currency,impressions,clicks,leads,cpl,contacted5min,qualified,won,revenue,prevSpend,prevLeads,prevCpl}, campaigns:[{id,name,channel,objective,status,dailyBudget,spend,leads,cpl,ctr,trend,crmQualified,crmWon,pausedReason?}], funnel:[{label,value}], automations:[{id,name,status,firedMonth,kind:'budget'|'speed'|'audience'|'report'}], reports:[{id,title,at,kind,highlights}], analyst:{name,title,avatar,nextReviewAt,lastDeliveryAt,responseSla,recommendations:[…],requests:[…]}}`.
 Mutaciones previstas: `POST /marketing/requests` (opcional: hoy el panel pregunta al analista por WhatsApp con la frase lista), `POST /marketing/recommendations/:id/{apply|dismiss}` (hoy «Aplicar» abre WhatsApp).
 
+### 5.1 Meta Ads: la conexión (plan 14 de `comando-pro`)
+
+Esto SÍ existe en el engine. Es la fontanería de la conexión, no los verbos de campaña.
+
+- **`GET /integrations/meta/status`** → `{status:'disconnected'|'pending'|'active'|'error'|'revoked', connectedAt, tokenExpiresAt, scopes:[], lastErrorCode, accounts:[{accountRef:'act_…',name,accountStatus,currency,timezoneName,businessId,businessName,selected}]}`.
+- **`POST /integrations/meta/connect`** → `{authorizationUrl}`. El panel navega ahí en la MISMA pestaña.
+- **`POST /integrations/meta/accounts`** con `{accountRefs:[…]}` — la lista completa de las elegidas, no altas y bajas.
+- **`POST /integrations/meta/accounts/refresh`** — vuelve a preguntarle a Graph; la elección no se toca.
+- **`DELETE /integrations/meta/connection`** — retira el permiso en Meta y borra el token.
+
+La vuelta del diálogo de Facebook la recibe el engine (`GET /integrations/meta/callback`) y redirige
+a `META_PANEL_RETURN_URL` con `?meta=connected` o `?meta=error&reason=…`. `panel.js` lo convierte en
+un aviso y limpia la URL. `tokenExpiresAt` es `null` cuando el permiso no caduca, que es el caso
+normal con el token de usuario de sistema: si trae fecha, la tarjeta avisa.
+
 ## 6. Lo que el panel deja explícitamente fuera
 
 - Editar campos del CRM registro por registro (eso es WhatsApp con vista previa).

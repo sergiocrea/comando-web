@@ -319,6 +319,20 @@ export const MOCK = {
     limits: { assignMax: 10, broadcastMaxCost: 50, discountMaxPct: 10, stepUpAbove: 20 },
   },
 
+  // La conexión con Meta Ads (plan 14): qué devuelve GET /integrations/meta/status.
+  meta: {
+    status: 'active',
+    connectedAt: ago(3),
+    tokenExpiresAt: null,
+    scopes: ['ads_management', 'ads_read', 'business_management'],
+    lastErrorCode: null,
+    accounts: [
+      { accountRef: 'act_4471002233', name: 'Inmobiliaria Rojas', accountStatus: 1, currency: 'PEN', timezoneName: 'America/Lima', businessId: '55501', businessName: 'Grupo Rojas', selected: true },
+      { accountRef: 'act_4471009988', name: 'Rojas · Proyectos nuevos', accountStatus: 1, currency: 'PEN', timezoneName: 'America/Lima', businessId: '55501', businessName: 'Grupo Rojas', selected: false },
+      { accountRef: 'act_8890114455', name: 'Pruebas internas', accountStatus: 2, currency: 'USD', timezoneName: 'America/Lima', businessId: null, businessName: null, selected: false },
+    ],
+  },
+
   marketing: {
     accounts: [
       { id: 'ma1', provider: 'meta', name: 'Meta Ads · Inmobiliaria Rojas', status: 'active', channels: ['Facebook', 'Instagram'], lastSyncAt: ago(0.7), adAccount: 'act_4471…' },

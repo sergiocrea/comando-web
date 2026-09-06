@@ -75,6 +75,12 @@ export function createApi(cfg, getToken) {
     team: () => optional(() => call('/team'), 'team'),
     marketing: () => optional(() => call('/marketing/overview'), 'marketing'),
     playbooks: () => optional(() => call('/automation-rules/playbooks'), 'playbooks'),
+    /* ---- Meta Ads: la conexión, no las campañas (plan 14) ---- */
+    metaStatus: () => optional(() => call('/integrations/meta/status'), 'meta'),
+    metaConnect: () => mutate('/integrations/meta/connect', 'POST'),
+    metaRefreshAccounts: () => mutate('/integrations/meta/accounts/refresh', 'POST'),
+    metaSelectAccounts: (accountRefs) => mutate('/integrations/meta/accounts', 'POST', { accountRefs }),
+    metaDisconnect: () => mutate('/integrations/meta/connection', 'DELETE'),
   };
 }
 
@@ -112,6 +118,11 @@ export function createMockApi() {
     team: () => wait(MOCK.team),
     marketing: () => wait(MOCK.marketing),
     playbooks: () => wait(MOCK.playbooks),
+    metaStatus: () => wait(MOCK.meta),
+    metaConnect: () => log('POST /integrations/meta/connect'),
+    metaRefreshAccounts: () => wait(MOCK.meta),
+    metaSelectAccounts: (refs) => log('POST /integrations/meta/accounts', refs),
+    metaDisconnect: () => log('DELETE /integrations/meta/connection'),
   };
 }
 
