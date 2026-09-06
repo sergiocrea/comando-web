@@ -59,7 +59,7 @@
     <!-- Webflow-generated layout stylesheet (fonts + layout), served from its public CDN -->
     <link href="assets/css/webflow.css" rel="stylesheet" type="text/css" />
     <!-- Custom styles (reconstructed inline utility + component styles) -->
-    <link href="css/custom.css?v=134" rel="stylesheet" type="text/css" />
+    <link href="css/custom.css?v=136" rel="stylesheet" type="text/css" />
     <script>/* La landing se monta desde arriba: sus animaciones por scroll se miden al cargar. Si el navegador restaura la posicion, ScrollTrigger calcula progresos con medidas a medio asentar y deja secciones en opacity 0 (la de Producto se veia negra). */if("scrollRestoration" in history)history.scrollRestoration="manual";</script>
 <script type="text/javascript">
       !(function (o, c) {
@@ -410,9 +410,9 @@
             <div class="container-large">
               <div class="b2b-hero-grid">
                 <div class="b2b-hero-copy">
-                  <h1 id="b2b-hero-title" class="b2b-hero-title">
-                    Actualiza tu CRM
-                    <span>con un mensaje.</span>
+                  <h1 id="b2b-hero-title" class="b2b-hero-title" aria-label="Conversa con tu CRM, tu tienda online, tus hojas de Google, Mercado Libre y tus campañas">
+                    Conversa con tu
+                    <span class="b2b-hero-type" aria-hidden="true" data-words="CRM.|tienda online.|Google Sheets.|Mercado Libre.|campañas."><span id="hero-typed">CRM.</span><i class="b2b-caret"></i></span>
                   </h1>
                   <p class="b2b-hero-lede">
                     Escríbele por WhatsApp y Comando actualiza el CRM, crea el
@@ -1588,7 +1588,7 @@
     <script src="js/usecases.js?v=19" defer></script>
     <script src="js/demo.js?v=3" defer></script>
     <script src="js/pricing.js?v=15" defer></script>
-    <script type="module" src="js/main.js?v=31"></script>
+    <script type="module" src="js/main.js?v=32"></script>
     <script src="js/hero2d.js?v=4"></script>
   </body>
 </html>

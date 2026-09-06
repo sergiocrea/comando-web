@@ -1335,3 +1335,11 @@ html { scroll-behavior: smooth; }
 
 /* La frase de cierre de cada caso heredaba el gris claro del tema oscuro y no se leía sobre el fondo crema. */
 .uc-result { color: #2b2e2b; border-left-color: #315fef; }
+
+/* ---------- Hero: la palabra azul se escribe sola ---------- */
+.b2b-hero-type { display: block; min-height: 1em; white-space: nowrap; }
+.b2b-hero-title .b2b-hero-type > span { display: inline; }
+.b2b-caret { display: inline-block; width: .07em; height: .82em; margin-left: .05em; background: var(--b2b-blue); vertical-align: -.05em; animation: b2b-caret 1s steps(1, end) infinite; }
+@keyframes b2b-caret { 0%, 50% { opacity: 1; } 51%, 100% { opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .b2b-caret { display: none; } }
+@media (max-width: 767px) { .b2b-hero-type { white-space: normal; } }

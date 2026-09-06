@@ -660,6 +660,31 @@ function initAnchorOffset() {
 }
 
 /* ============================================================
+   12. Titular del hero: «Conversa con tu» + palabra que se escribe sola
+   ============================================================ */
+function initHeroTyping() {
+  const wrap = document.querySelector('.b2b-hero-type');
+  const out = document.getElementById('hero-typed');
+  if (!wrap || !out) return;
+  const words = (wrap.dataset.words || '').split('|').map((w) => w.trim()).filter(Boolean);
+  if (words.length < 2 || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  let i = 0, len = words[0].length, deleting = false;
+  const tick = () => {
+    const word = words[i];
+    if (!deleting) {
+      len += 1; out.textContent = word.slice(0, len);
+      if (len >= word.length) { deleting = true; setTimeout(tick, 2200); return; }
+      setTimeout(tick, 70);
+    } else {
+      len -= 1; out.textContent = word.slice(0, len);
+      if (len <= 0) { deleting = false; i = (i + 1) % words.length; setTimeout(tick, 350); return; }
+      setTimeout(tick, 38);
+    }
+  };
+  setTimeout(tick, 2600);
+}
+
+/* ============================================================
    Boot
    ============================================================ */
 function boot() {
@@ -678,6 +703,7 @@ function boot() {
   initReveals();
   initDividers();
   initAnchorOffset();
+  initHeroTyping();
   ScrollTrigger.refresh();
   // Segundo refresco cuando el layout ya asentó. Al recargar con la página
   // desplazada, las posiciones se miden antes de las fuentes, el video y el
