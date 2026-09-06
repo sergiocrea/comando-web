@@ -30,6 +30,27 @@ Debe servirse por HTTP (no abrir el `index.html` con `file://`), porque usa mód
 - **Reglas locales (`docs/demo-data.json` → `intents`).** Cada intención tiene `kw` (palabras clave normalizadas: minúsculas, sin tildes), opcionalmente `re` (expresión regular) y `needs` (al menos una de estas palabras). Se evalúan en orden; la primera que coincide gana. Para enseñarle una frase nueva, añade la palabra clave a la intención correcta y comprueba con `node tooling/demo-coverage.mjs "la frase"`; sin argumentos mide la cobertura contra el banco real de comando-pro.
 - **Probar en local con la función:** crea `.dev.vars` (ignorado por git) con las dos claves y corre `npx wrangler pages dev . --port 8788`; `python3 -m http.server 8000` sirve la página sin función y la demo cae al modo local.
 
+## Interesados: el formulario de precios y `/empezar/`
+
+Quien deja su correo o su WhatsApp en el bloque de precios, o elige su CRM en `/empezar/`,
+queda guardado en `functions/api/lead.js` (`POST /api/lead`). Antes el dato dependía de
+que se abriera el cliente de correo del visitante: si no se abría, el interesado se perdía
+sin que nadie lo supiera.
+
+- **Para que guarde**: crear un KV y enlazarlo como `LEADS_KV` en Cloudflare Pages →
+  Settings → Functions → KV namespace bindings. Es lo único imprescindible; sin él la
+  función responde 503 y las dos páginas vuelven al `mailto:` de siempre, así que se puede
+  desplegar sin configurar nada.
+- **Para que avise** (opcional, cualquiera de los dos): `LEAD_WEBHOOK_URL` recibe un POST
+  con el lead (Slack, n8n, Zapier); o `RESEND_API_KEY` más `LEAD_EMAIL_TO` y
+  `LEAD_EMAIL_FROM` mandan el aviso por correo con Resend.
+- **Para leerlos**: `npx wrangler kv key list --binding LEADS_KV --prefix lead:` y
+  `npx wrangler kv key get "<clave>" --binding LEADS_KV`. Cada registro trae contacto, si
+  es correo o WhatsApp, CRM, plan, desde qué página llegó, país y ciudad.
+- **Protección**: campo trampa invisible (`website`) y límite de 8 envíos por IP y hora.
+- **Probar en local**: `npx wrangler pages dev . --port 8788 --kv LEADS_KV`. Con
+  `python3 -m http.server 8000` no hay función y se ve el camino de respaldo.
+
 ## Assets (`assets/`)
 
 - `videos/benefits-v2.mp4` (+ `img/benefits-poster-v1.jpg`) — video de fondo de la sección "Modo automático" (personas usando Comando: gimnasio, auto, etc.). **Pendiente de aportar**: mientras no exista, se ve un fondo degradado. Recomendado: 1920×1080, H.264, sin audio, 10–20 s en loop, < 6 MB.

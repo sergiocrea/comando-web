@@ -1351,3 +1351,7 @@ html { scroll-behavior: smooth; }
   .home_getupdate-component { padding-bottom: 1.5rem; }
   .pricing-more { padding-top: 1.5rem; }
 }
+
+/* Campo trampa del formulario de interesados: invisible para una persona,
+   irresistible para un robot. No se usa `display:none` porque algunos lo saltan. */
+.lead-hp { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; pointer-events: none; }

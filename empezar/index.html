@@ -80,12 +80,10 @@ h1{font-family:Inter,system-ui,sans-serif;font-weight:500;letter-spacing:-.02em;
       var key = listos[b.getAttribute('data-crm')];
       if (!key) return;
       b.addEventListener('click', function (ev) { ev.stopImmediatePropagation(); window.location.href = '/app/?crm=' + key; }, true);
-      var badge = document.createElement('span'); badge.textContent = 'Disponible'; badge.className = 'crm-badge';
-      b.appendChild(badge);
     });
   });
 </script>
-<style>.crm-badge{display:inline-block;margin-left:.5rem;font-size:.7rem;padding:.1rem .45rem;border-radius:999px;background:#2fd28f;color:#06261a;vertical-align:middle}</style>
+<style></style>
 </head>
 <body>
 <nav class="nav"><a class="brand" href="/" aria-label="Comando"><span class="cmd-wordmark"><span aria-hidden="true">comand</span><span class="cmd-o" aria-hidden="true"></span></span></a><a class="back" href="/">← Volver</a></nav>
@@ -99,9 +97,9 @@ h1{font-family:Inter,system-ui,sans-serif;font-weight:500;letter-spacing:-.02em;
   <section class="form" id="form">
     <h2>Avísame cuando esté listo</h2>
     <p>Déjanos tu correo o tu WhatsApp. Sin tarjeta, sin spam: un solo mensaje cuando tu CRM esté disponible.</p>
-    <div class="row"><input id="contact" type="text" inputmode="email" placeholder="tu@correo.com o +51 999 999 999" autocomplete="email"/><a class="btn" id="send" href="#" aria-disabled="true">Avísame <span aria-hidden="true">→</span></a></div>
+    <div class="row"><input id="hp" type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0"/><input id="contact" type="text" inputmode="email" placeholder="tu@correo.com o +51 999 999 999" autocomplete="email"/><a class="btn" id="send" href="#" aria-disabled="true">Avísame <span aria-hidden="true">→</span></a></div>
     <div class="hint" id="hint">Elige un CRM arriba para continuar.</div>
-    <div class="done" id="done">Se abrió tu app de correo con el mensaje listo para <b>hola@comando.pro</b>. Si no se abrió, escríbenos directamente a esa dirección con tu CRM y tu contacto.</div>
+    <div class="done" id="done"></div>
   </section>
 </main>
 <script>
@@ -110,10 +108,31 @@ h1{font-family:Inter,system-ui,sans-serif;font-weight:500;letter-spacing:-.02em;
   var plan=q.get('plan')||''; if(q.get('email')) contact.value=q.get('email');
   var crm=''; try{crm=localStorage.getItem('comando_crm')||''}catch(e){}
   function pick(name){ crm=name; grid.querySelectorAll('.crm').forEach(function(b){b.classList.toggle('is-on',b.dataset.crm===name)}); if(name&&grid.querySelector('.crm.is-on')) other.value=''; try{localStorage.setItem('comando_crm',name)}catch(e){} update(); }
-  function update(){ var ok=!!crm; send.setAttribute('aria-disabled',ok?'false':'true'); hint.textContent=ok?('Te avisamos cuando '+crm+' esté disponible'+(plan?' (plan '+plan+')':'')+'.'):'Elige un CRM arriba para continuar.'; }
+  function update(){ var ok=!!crm; send.setAttribute('aria-disabled',ok?'false':'true'); hint.textContent=ok?('Te avisamos cuando '+crm+' esté disponible'+(plan?' (plan '+plan+')':'')+'.'):(q.get('guardado')?'Ya tenemos tus datos. Elige tu CRM y te avisamos primero.':'Elige un CRM arriba para continuar.'); }
   grid.addEventListener('click',function(e){ var b=e.target.closest('.crm'); if(b) pick(b.dataset.crm); });
   other.addEventListener('input',function(){ if(other.value.trim()){ grid.querySelectorAll('.crm').forEach(function(b){b.classList.remove('is-on')}); crm=other.value.trim(); update(); } });
-  send.addEventListener('click',function(e){ e.preventDefault(); if(!crm) return; var c=contact.value.trim(); var body='Hola, quiero probar Comando.%0A%0ACRM / tienda: '+encodeURIComponent(crm)+(plan?'%0APlan: '+encodeURIComponent(plan):'')+(c?'%0AContacto: '+encodeURIComponent(c):'')+'%0A%0AAvísenme cuando esté disponible.'; location.href='mailto:hola@comando.pro?subject='+encodeURIComponent('Acceso anticipado: '+crm)+'&body='+body; done.classList.add('show'); });
+  function esc(t){ return String(t).replace(/[&<>"]/g,function(ch){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch]}); }
+  // Sin función que lo guarde, el camino de siempre: abrir el correo ya escrito.
+  function mailFallback(c){
+    var body='Hola, quiero probar Comando.%0A%0ACRM / tienda: '+encodeURIComponent(crm)+(plan?'%0APlan: '+encodeURIComponent(plan):'')+(c?'%0AContacto: '+encodeURIComponent(c):'')+'%0A%0AAvísenme cuando esté disponible.';
+    location.href='mailto:hola@comando.pro?subject='+encodeURIComponent('Acceso anticipado: '+crm)+'&body='+body;
+    done.innerHTML='Se abrió tu app de correo con el mensaje listo para <b>hola@comando.pro</b>. Si no se abrió, escríbenos directamente a esa dirección con tu CRM y tu contacto.';
+    done.classList.add('show');
+  }
+  send.addEventListener('click',function(e){
+    e.preventDefault(); if(!crm) return;
+    var c=contact.value.trim();
+    if(!c){ hint.textContent='Déjanos tu correo o tu WhatsApp para poder avisarte.'; contact.focus(); return; }
+    var label=send.textContent; send.setAttribute('aria-disabled','true'); send.textContent='Enviando…';
+    fetch('/api/lead',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({contact:c,crm:crm,plan:plan,source:'empezar',website:document.getElementById('hp').value})})
+      .then(function(r){ if(!r.ok) throw new Error(r.status); return r.json(); })
+      .then(function(){
+        done.innerHTML='Listo. Te avisamos a <b>'+esc(c)+'</b> en cuanto '+esc(crm)+' esté disponible. Sin spam: un solo mensaje.';
+        done.classList.add('show'); hint.textContent='';
+      })
+      .catch(function(){ mailFallback(c); })
+      .then(function(){ send.textContent=label; send.setAttribute('aria-disabled','false'); });
+  });
   if(crm) pick(crm); else update();
 })();
 </script>

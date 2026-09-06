@@ -114,13 +114,47 @@ const PRICING_CONFIG = {
     const grid = document.getElementById('pricing-cards'); if (grid) grid.scrollLeft = 0;
     if (typeof ScrollTrigger !== 'undefined') ScrollTrigger.refresh();
   }
-  // contact form: goes to /empezar/ (early access) (no Webflow backend)
+  /* Formulario de interesados. Antes solo redirigía a /empezar/, y de ahí el dato
+     dependía de que se abriera el cliente de correo: si no se abría, el interesado
+     se perdía sin que nadie lo supiera. Ahora se guarda primero en /api/lead y solo
+     después se le pregunta por su CRM. Si la función no está disponible, se
+     comporta como antes. */
   const form = document.getElementById('wf-form-Waitlist-form');
-  if (form) form.addEventListener('submit', (e) => {
-    e.preventDefault(); e.stopImmediatePropagation();
-    const v = (form.querySelector('input[name="name"]') || {}).value || '';
-    window.location.href = '/empezar/' + (v ? '?email=' + encodeURIComponent(v.trim()) : '');
-  }, true);
+  if (form) {
+    const wrap = form.closest('.w-form');
+    const okBox = wrap && wrap.querySelector('.w-form-done');
+    const failBox = wrap && wrap.querySelector('.w-form-fail');
+    const input = form.querySelector('input[name="name"]');
+    const trap = form.querySelector('input[name="website"]');
+    const submit = form.querySelector('input[type="submit"]');
+    const valid = (v) => /^[^\s@]+@[^\s@.]+\.[^\s@]{2,}$/.test(v) || (/^[+\d\s()-]+$/.test(v) && v.replace(/\D/g, '').length >= 8);
+    const say = (box, msg) => {
+      if (failBox) failBox.style.display = 'none';
+      if (okBox) okBox.style.display = 'none';
+      if (!box) return;
+      const slot = box.querySelector('.success_message, .text-block-2');
+      if (slot && msg) slot.textContent = msg;
+      box.style.display = 'block';
+    };
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault(); e.stopImmediatePropagation();
+      const v = ((input && input.value) || '').trim();
+      if (!valid(v)) { say(failBox, 'Escribe tu correo o tu WhatsApp para poder responderte.'); if (input) input.focus(); return; }
+      const next = '/empezar/?email=' + encodeURIComponent(v);
+      if (submit) { submit.disabled = true; submit.value = 'Enviando…'; }
+      try {
+        const res = await fetch('api/lead', {
+          method: 'POST', headers: { 'content-type': 'application/json' },
+          body: JSON.stringify({ contact: v, source: 'precios', website: trap ? trap.value : '' }),
+        });
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        say(okBox, 'Listo, ya tenemos tus datos. Dinos cuál es tu CRM y te avisamos primero.');
+        setTimeout(() => { window.location.href = next + '&guardado=1'; }, 1200);
+      } catch (err) {
+        window.location.href = next;   // sin función: el camino de siempre
+      }
+    }, true);
+  }
   const more = document.getElementById('pricing-more');
   if (more) more.innerHTML = renderMore();
   mount();
