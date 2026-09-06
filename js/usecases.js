@@ -50,6 +50,7 @@
     return `<div class="uc-feed" aria-hidden="true">
       <div class="uc-feed-label">${esc(T.feed)}</div>
       <div class="uc-feed-track"><ul class="uc-feed-col">${feedItems()}</ul><ul class="uc-feed-col">${feedItems()}</ul></div>
+      <div class="uc-wire"><i></i><i></i><i></i></div>
     </div>`;
   }
 

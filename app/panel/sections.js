@@ -7,7 +7,7 @@
    - una sola acción principal por fila; lo demás va dentro de «más»;
    - vocabulario del operador (plata en juego, parado, sin dueño, repetidos), nunca del sistema. */
 
-import { isPending } from './api.js?v=5';
+import { isPending } from './api.js?v=6';
 import { crmBlock, crmActions, whatsappStep } from './setup.js?v=5';
 import {
   esc, num, money, pct, fmtTime, fmtDate, fmtDateTime, monthName, dayLabel, sameDay, rel, isToday, isPast, isoDay,
@@ -337,7 +337,7 @@ const avisos = {
 /* ================================================================= MARKETING */
 const marketing = {
   id: 'marketing', get title() { return t('nav.marketing'); }, get sub() { return t('sub.marketing'); }, icon: 'mega',
-  load: (api) => ({ mk: api.marketing() }),
+  load: (api) => ({ mk: api.marketing(), meta: api.metaStatus() }),
   view(d) {
     const logo = (p) => `<img class="logo-sm" src="../../assets/img/logos/${p === 'google-ads' ? 'automation' : esc(p)}.svg" alt="">`;
     const body = part(d.mk, (m) => {
@@ -363,13 +363,89 @@ const marketing = {
       const reports = card(t('mk.reports'), list(m.reports, (r) => row({ ico: '📈', title: esc(r.title), sub: r.highlights.map(esc).join(' · '), primary: waBtn(t('wa.sendReport', { title: r.title }), t('mk.toWhatsApp'), 'btn sm primary') })), { sub: t('mk.reportsSub'), right: waBtn(t('wa.weeklyReport'), t('mk.askNow')) });
       return `${kpis}${camps}<div class="two">${analyst}${funnel}</div><div class="two">${autos}${reports}</div>`;
     }, { what: t('mk.what'), phrase: t('wa.connectAds'), extra: t('mk.extra') });
-    return `<div class="stack">${head(this.title, this.sub, waBtn(t('wa.leadsPerCampaign'), t('mk.askOnWhatsApp'), 'btn primary'))}${body}</div>`;
+    return `<div class="stack">${head(this.title, this.sub, waBtn(t('wa.leadsPerCampaign'), t('mk.askOnWhatsApp'), 'btn primary'))}${metaCard(d.meta)}${body}</div>`;
   },
   act: {
-    'mk:connect': () => toast(t('mk.connectSoon')),
+    /**
+     * El diálogo de Meta se abre en la MISMA pestaña: vuelve a este panel por
+     * el callback del engine, y una pestaña nueva dejaría al operador mirando
+     * la vieja sin enterarse de nada.
+     */
+    'mk:connect': async (el, ctx) => {
+      if (el) el.disabled = true;
+      try {
+        const r = await ctx.api.metaConnect();
+        if (r && r.authorizationUrl) { location.href = r.authorizationUrl; return; }
+        toast(t('mk.connectSoon'));
+      } catch (e) {
+        // 404/501: el engine todavía no trae el conector. No es culpa suya.
+        toast(e.status === 404 || e.status === 501 ? t('mk.connectSoon') : e.message, 'bad');
+      } finally { if (el) el.disabled = false; }
+    },
+    'meta:refresh': async (el, ctx, d, reload) => {
+      el.disabled = true;
+      try { await ctx.api.metaRefreshAccounts(); ctx.cache = {}; reload(); }
+      catch (e) { toast(e.message, 'bad'); el.disabled = false; }
+    },
+    'meta:save': async (el, ctx, d, reload) => {
+      const refs = [...document.querySelectorAll('input.meta-acc:checked')].map((i) => i.value);
+      el.disabled = true;
+      try { await ctx.api.metaSelectAccounts(refs); toast(t('mk.metaSaved'), 'ok'); ctx.cache = {}; reload(); }
+      catch (e) { toast(e.message, 'bad'); el.disabled = false; }
+    },
+    'meta:disconnect': async (el, ctx, d, reload) => {
+      if (!window.confirm(t('mk.metaConfirmOff'))) return;
+      el.disabled = true;
+      try { await ctx.api.metaDisconnect(); toast(t('mk.metaRemoved'), 'ok'); ctx.cache = {}; reload(); }
+      catch (e) { toast(e.message, 'bad'); el.disabled = false; }
+    },
     'mk:later': (el) => { el.closest('.row').style.opacity = '.5'; toast(t('mk.nextReview')); },
   },
 };
+
+/**
+ * Meta Ads: el estado de la conexión y la elección de cuentas.
+ *
+ * Es la única tarjeta del panel que ESCRIBE en un proveedor externo, y por eso
+ * enseña siempre las tres cosas que el cliente puede querer: en qué estado
+ * está, qué cuentas concedió, y cómo salirse.
+ */
+function metaCard(value) {
+  const logo = '<img class="logo-sm" src="../../assets/img/logos/meta.svg" alt="">';
+  return part(value, (s) => {
+    if (s.status !== 'active')
+      return card(t('mk.meta'), `<div class="empty"><b>${esc(t('mk.metaOff'))}</b>${esc(t('mk.metaOffSub'))}</div>
+        ${s.status === 'error' ? `<p class="note warn">${esc(t('mk.metaErrorNote', { code: s.lastErrorCode || '—' }))}</p>` : ''}
+        ${s.status === 'pending' ? `<p class="note warn">${esc(t('mk.metaPendingNote'))}</p>` : ''}
+        <div class="inline-list" style="margin-top:12px"><button class="btn primary" data-act="mk:connect">${esc(t(s.status === 'disconnected' ? 'mk.metaConnect' : 'mk.metaRetry'))}</button></div>`,
+        { sub: t('mk.metaSub'), right: logo });
+    // Agrupadas por portfolio: es como el cliente las tiene en su cabeza y en
+    // el Business Manager, no como se las devuelve Graph.
+    const groups = new Map();
+    (s.accounts || []).forEach((a) => {
+      const key = a.businessName || t('mk.metaNoPortfolio');
+      if (!groups.has(key)) groups.set(key, []);
+      groups.get(key).push(a);
+    });
+    const accounts = groups.size
+      ? [...groups].map(([name, items]) => `<h3 class="group-title">${esc(name)}</h3>${list(items, (a) => row({
+        ico: logo,
+        title: `<label><input type="checkbox" class="meta-acc" value="${esc(a.accountRef)}"${a.selected ? ' checked' : ''}> ${esc(a.name)}</label>`,
+        sub: `${esc(a.accountRef)}${a.currency ? ` · ${esc(a.currency)}` : ''}${a.timezoneName ? ` · ${esc(a.timezoneName)}` : ''}${a.accountStatus && a.accountStatus !== 1 ? ` · <span class="sev-warning">${esc(t('mk.metaDisabled'))}</span>` : ''}`,
+      }))}`).join('')
+      : `<div class="empty"><b>${esc(t('mk.metaNoAccounts'))}</b></div>`;
+    return card(t('mk.meta'), `
+      <h3 class="group-title">${esc(t('mk.metaAccounts'))}</h3>${accounts}
+      ${s.tokenExpiresAt ? `<p class="note warn" style="margin-top:12px">${esc(t('mk.metaExpires', { date: fmtDate(s.tokenExpiresAt) }))}</p>` : ''}
+      <div class="inline-list" style="margin-top:16px">
+        <button class="btn sm primary" data-act="meta:save">${esc(t('mk.metaSave'))}</button>
+        <button class="btn sm ghost" data-act="meta:refresh">${esc(t('mk.metaRefresh'))}</button>
+        <button class="btn sm danger" data-act="meta:disconnect">${esc(t('mk.metaDisconnect'))}</button>
+      </div>`,
+      { sub: s.connectedAt ? t('mk.metaSince', { date: fmtDate(s.connectedAt) }) : t('mk.metaSub'),
+        right: `${logo}${chip(t('mk.connected'), 'ok')}` });
+  }, { what: t('mk.meta'), phrase: t('wa.connectAds'), extra: t('mk.metaOffSub') });
+}
 
 /* ==================================================================== CUENTA */
 const cuenta = {

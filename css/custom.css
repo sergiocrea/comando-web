@@ -1644,13 +1644,17 @@ html { scroll-behavior: smooth; }
    la última —es apoyo, no el contenido— y aquí se coloca la primera. */
 @media (min-width: 992px) {
   .uc-layout {
-    grid-template-columns: minmax(0, 9.5rem) minmax(0, 21rem) minmax(0, 28rem);
+    grid-template-columns: minmax(0, 8rem) minmax(0, 21rem) minmax(0, 28rem);
     grid-template-areas: "feed phone outcome";
-    gap: 3rem 2.5rem;
+    gap: 3rem 5rem;
   }
-  .uc-phone { grid-area: phone; }
+  /* El teléfono se pinta por encima de la columna para que el pulso se meta
+     DEBAJO del marco en vez de morir a su lado: la oclusión es lo que hace
+     leer «entra ahí». En el DOM la columna va después, así que sin estos
+     z-index el orden de pintado sería justo el contrario. */
+  .uc-phone { grid-area: phone; z-index: 2; }
   .uc-outcome { grid-area: outcome; }
-  .uc-feed { grid-area: feed; display: block; align-self: center; }
+  .uc-feed { grid-area: feed; display: block; align-self: center; z-index: 1; }
   .uc-feed-track { height: 24rem; }
 }
 
@@ -1676,8 +1680,104 @@ html { scroll-behavior: smooth; }
 
 @media (max-width: 767px) {
   .uc-layout { grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: "phone timeline" "feed feed"; }
-  .uc-feed { margin-top: .9rem; }
+  /* El aire bajo el teléfono deja de ser margen y pasa a ser el trayecto que
+     recorre el pulso, así que hace falta más que los .9rem de antes. */
+  .uc-feed { margin-top: 2.5rem; }
 }
 
 /* Obligatorio: sin movimiento, la lista se queda quieta y se lee igual. */
 @media (prefers-reduced-motion: reduce) { .uc-feed-col { animation: none; } }
+
+/* ============================================================
+   La señal: lo que sale de los sistemas y entra en el teléfono
+   ------------------------------------------------------------
+   Sin esto la sección decía «estos sistemas existen, y aquí al lado hay un
+   teléfono»: dos vecinos, ninguna relación. Lo que faltaba era el trayecto.
+
+   Los rieles NO son paralelos: los tres nacen separados junto a la columna y
+   convergen en un punto del teléfono. Es la diferencia entre «hay cables» y
+   «esto entra AHÍ» —muchos orígenes, un destino—, y se consigue girando cada
+   riel sobre su extremo derecho, sin geometría a mano.
+   Terminan por DEBAJO del marco (de ahí los z-index de la maqueta): el pulso
+   no se apaga junto al aparato, desaparece dentro.
+   Los rieles se quedan sin movimiento: tres líneas que convergen en el
+   teléfono siguen diciendo lo que hay que decir. Lo que se apaga es el pulso.
+   Solo se animan `transform` y `opacity`; el resplandor es un `box-shadow`
+   fijo. Nada de esto toca el layout.
+   ============================================================ */
+.uc-feed { position: relative; }
+.uc-wire { position: absolute; pointer-events: none; display: none; }
+.uc-wire i {
+  position: absolute;
+  transform-origin: 100% 50%;           /* el punto de fuga es el teléfono */
+  background: linear-gradient(90deg, rgba(77, 124, 255, 0), rgba(77, 124, 255, .6));
+}
+/* El punto de luz. Nace en el arranque del riel y muere bajo el teléfono. */
+.uc-wire i::after {
+  content: ""; position: absolute; border-radius: 50%;
+  width: .45rem; height: .45rem;
+  background: #4d7cff; box-shadow: 0 0 .6rem .14rem rgba(77, 124, 255, .8);
+  opacity: 0;
+  animation: uc-signal 5.4s linear infinite;
+}
+/* Escalonados: cada pulso viaja poco más de un segundo de los 5,4 del ciclo, y
+   los retardos los reparten. Nunca hay más de uno en vuelo: catorce a la vez
+   serían un salvapantallas, no una landing. */
+.uc-wire i:nth-child(2)::after { animation-delay: 1.8s; }
+.uc-wire i:nth-child(3)::after { animation-delay: 3.6s; }
+
+/* Escritorio: el trayecto es horizontal, de la columna al teléfono. */
+@media (min-width: 992px) {
+  .uc-wire {
+    display: block;
+    left: 100%; top: 50%; width: 8.5rem; height: 0;
+    --uc-run: 8.5rem;   /* 5rem de hueco visible + 3,5rem ya bajo el marco */
+  }
+  .uc-wire i { top: 0; left: 0; right: 0; height: 1px; }
+  .uc-wire i:nth-child(1) { transform: rotate(-13deg); }
+  .uc-wire i:nth-child(3) { transform: rotate(13deg); }
+  .uc-wire i::after { top: 50%; left: 0; margin-top: -.225rem; }
+}
+
+/* Móvil: la tira está debajo y en horizontal, así que la señal sube. Converge
+   en el 38 % del ancho, que a esta anchura cae dentro del teléfono: la segunda
+   columna es la línea de tiempo, y subir por el centro sería apuntar al hueco
+   que queda entre los dos. */
+@media (max-width: 767px) {
+  /* El rótulo baja para dejar libre el corredor entre teléfono y tira. */
+  .uc-feed { display: flex; flex-direction: column-reverse; }
+  .uc-feed-label { margin: .7rem 0 0; }
+  .uc-wire {
+    display: block;
+    /* Alto = margen de la tira (2,5rem) + el row-gap de la maqueta (1rem) +
+       1,5rem de solape: el pulso tiene que morir DENTRO del marco, y quedarse
+       corto por dos píxeles es exactamente el fallo que esto viene a evitar. */
+    left: 38%; bottom: 100%; width: 0; height: 5rem;
+    --uc-run: -5rem;
+  }
+  .uc-wire i {
+    top: 0; bottom: 0; left: 0; width: 1px; height: auto;
+    transform-origin: 50% 0;
+    background: linear-gradient(0deg, rgba(77, 124, 255, 0), rgba(77, 124, 255, .6));
+  }
+  .uc-wire i:nth-child(1) { transform: rotate(16deg); }
+  .uc-wire i:nth-child(3) { transform: rotate(-16deg); }
+  .uc-wire i::after { bottom: 0; left: 50%; margin-left: -.225rem; animation-name: uc-signal-up; }
+}
+
+@keyframes uc-signal {
+  0% { transform: translateX(0); opacity: 0; }
+  4% { opacity: 1; }
+  26% { transform: translateX(var(--uc-run)); opacity: 1; }
+  27%, 100% { transform: translateX(var(--uc-run)); opacity: 0; }
+}
+@keyframes uc-signal-up {
+  0% { transform: translateY(0); opacity: 0; }
+  4% { opacity: 1; }
+  26% { transform: translateY(var(--uc-run)); opacity: 1; }
+  27%, 100% { transform: translateY(var(--uc-run)); opacity: 0; }
+}
+
+/* Sin movimiento no hay pulso. Los rieles se quedan: tres líneas que convergen
+   en el teléfono siguen diciendo que de la columna sale lo que él contesta. */
+@media (prefers-reduced-motion: reduce) { .uc-wire i::after { display: none; } }

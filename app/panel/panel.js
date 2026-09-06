@@ -4,8 +4,8 @@
    - Cada sección carga sus datos con Promise.allSettled: una parte que falle o que
      aún no exista en el engine no tumba la página. */
 
-import { createApi, createMockApi } from './api.js?v=5';
-import { SECTIONS } from './sections.js?v=6';
+import { createApi, createMockApi } from './api.js?v=6';
+import { SECTIONS } from './sections.js?v=7';
 import { whatsappStep, resumePendingConnection } from './setup.js?v=5';
 import { esc, setWaBase, wa, skeleton, toast, ICON, isToday, isPast } from './ui.js?v=5';
 import '../strings.js?v=1';
@@ -168,6 +168,17 @@ async function start() {
   } else if (!mock) {
     $('page').innerHTML = `<div class="state"><h2>${esc(t('boot.notReady'))}</h2><p>${esc(t('boot.reloadSoon'))}</p><button class="btn primary" data-reload>${esc(t('common.retry'))}</button></div>`;
     return;
+  }
+  // La vuelta del diálogo de Meta: el engine redirige aquí con ?meta=... El
+  // parámetro se limpia de la URL para que recargar no repita el aviso.
+  const metaOutcome = params.get('meta');
+  if (metaOutcome) {
+    toast(metaOutcome === 'connected' ? t('mk.metaOk') : t('mk.metaFailed', { reason: params.get('reason') || '—' }),
+      metaOutcome === 'connected' ? 'ok' : 'bad');
+    const clean = new URL(location.href);
+    clean.searchParams.delete('meta'); clean.searchParams.delete('reason');
+    history.replaceState(null, '', clean.toString());
+    if (!location.hash) location.hash = '#/marketing';
   }
   // Insignia de Hoy: cuántas cosas esperan al operador (sin bloquear la carga).
   Promise.allSettled([ctx.api.tasks(), ctx.api.approvals(), ctx.api.recommendations(), ctx.api.history()]).then(([t, a, r, h]) => {
