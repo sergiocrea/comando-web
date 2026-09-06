@@ -9,6 +9,12 @@
   const ACCENT = '#4d7cff', ACCENT_DIM = '#3563e9', BG = '#0a0a0a', FG = '#e8e8e8', MUTED = '#8a8a8a';
   const MONO = '"Jetbrainsmono Variable", "JetBrains Mono", monospace';
   const SANS = 'Inter, "Neuehaasunicaw 1 G", Arial, sans-serif';
+  // Los dos rótulos del canvas que son texto y no dato.
+  const SCREEN_WORDS = {
+    es: { command: 'COMANDO DEL OPERADOR', synced: 'CAMBIOS SINCRONIZADOS', example: 'si un lead no es contactado en 10 minutos, avisa por WhatsApp al vendedor' },
+    en: { command: 'OPERATOR COMMAND', synced: 'CHANGES SYNCED', example: 'if a lead is not contacted within 10 minutes, alert the rep on WhatsApp' },
+    pt: { command: 'COMANDO DO OPERADOR', synced: 'MUDANÇAS SINCRONIZADAS', example: 'se um lead não for contatado em 10 minutos, avisa o vendedor no WhatsApp' },
+  }[(document.documentElement.lang || 'es').slice(0, 2)] ?? { command: 'COMANDO DEL OPERADOR', synced: 'CAMBIOS SINCRONIZADOS', example: 'si un lead no es contactado en 10 minutos, avisa por WhatsApp al vendedor' };
   const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
   const ease = (t) => (t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t);
   const seg = (f, a, b) => clamp((f - a) / (b - a), 0, 1);
@@ -45,7 +51,7 @@
 
   const LOG = [
     ['$', 'comando watch'],
-    ['>', 'lead.created  formulario'],
+    ['>', 'lead.created  form'],
     ['>', 'dedupe        0 match'],
     ['>', 'assign        ana.r'],
     ['>', 'whatsapp      aviso ok'],
@@ -83,8 +89,8 @@
     const x0 = s.sx + s.sw * 0.07, w = s.sw * 0.86;
     // the operator's command, big, as a WhatsApp bubble
     ctx.fillStyle = MUTED; ctx.font = `500 ${s.sw * 0.04}px ${MONO}`; ctx.textAlign = 'left';
-    ctx.fillText('COMANDO DEL OPERADOR', x0, s.sy + s.sh * 0.05);
-    const cmd = 'si un lead no es contactado en 10 minutos, avisa por WhatsApp al vendedor';
+    ctx.fillText(SCREEN_WORDS.command, x0, s.sy + s.sh * 0.05);
+    const cmd = SCREEN_WORDS.example;
     ctx.font = `500 ${s.sw * 0.062}px ${SANS}`;
     const lines = []; let line = '';
     for (const wd of cmd.split(' ')) { const tst = line ? line + ' ' + wd : wd; if (ctx.measureText(tst).width > w - s.sw * 0.1 && line) { lines.push(line); line = wd; } else line = tst; }
@@ -135,7 +141,7 @@
     const n = Math.floor(ease(t) * 1284);
     ctx.fillStyle = FG; ctx.font = `600 ${s.sw * 0.1}px ${SANS}`; ctx.textAlign = 'center';
     ctx.fillText(n.toLocaleString('es-PE'), s.sx + s.sw / 2, s.sy + s.sh * 0.92);
-    ctx.fillStyle = MUTED; ctx.font = `500 ${s.sw * 0.04}px ${MONO}`; ctx.fillText('CAMBIOS SINCRONIZADOS', s.sx + s.sw / 2, s.sy + s.sh * 0.97);
+    ctx.fillStyle = MUTED; ctx.font = `500 ${s.sw * 0.04}px ${MONO}`; ctx.fillText(SCREEN_WORDS.synced, s.sx + s.sw / 2, s.sy + s.sh * 0.97);
     ctx.restore();
   }
 
@@ -172,7 +178,13 @@
   if (!cards.length) return;
   const sheet = document.createElement('div');
   sheet.className = 'connector-sheet'; sheet.setAttribute('role', 'dialog'); sheet.setAttribute('aria-modal', 'true'); sheet.hidden = true;
-  sheet.innerHTML = '<div class="connector-sheet-backdrop" data-close></div><div class="connector-sheet-panel"><button type="button" class="connector-sheet-close" aria-label="Cerrar" data-close>×</button><img class="connector-sheet-logo" alt=""/><div class="connector-sheet-name"></div><div class="connector-sheet-chip"></div><div class="connector-sheet-desc"></div><div class="connector-sheet-example"><div class="connector-sheet-example-label">Ejemplo de comando</div><div class="connector-sheet-bubble"></div></div></div>';
+  // La ficha del conector: dos palabras que también se leen.
+  const SHEET_WORDS = {
+    es: { close: 'Cerrar', example: 'Ejemplo de comando' },
+    en: { close: 'Close', example: 'Example command' },
+    pt: { close: 'Fechar', example: 'Exemplo de comando' },
+  }[(document.documentElement.lang || 'es').slice(0, 2)] ?? { close: 'Cerrar', example: 'Ejemplo de comando' };
+  sheet.innerHTML = `<div class="connector-sheet-backdrop" data-close></div><div class="connector-sheet-panel"><button type="button" class="connector-sheet-close" aria-label="${SHEET_WORDS.close}" data-close>×</button><img class="connector-sheet-logo" alt=""/><div class="connector-sheet-name"></div><div class="connector-sheet-chip"></div><div class="connector-sheet-desc"></div><div class="connector-sheet-example"><div class="connector-sheet-example-label">${SHEET_WORDS.example}</div><div class="connector-sheet-bubble"></div></div></div>`;
   document.body.appendChild(sheet);
   const logo = sheet.querySelector('.connector-sheet-logo'), name = sheet.querySelector('.connector-sheet-name'), desc = sheet.querySelector('.connector-sheet-desc'), chipBox = sheet.querySelector('.connector-sheet-chip'), ex = sheet.querySelector('.connector-sheet-example'), bubble = sheet.querySelector('.connector-sheet-bubble');
   let last = null;

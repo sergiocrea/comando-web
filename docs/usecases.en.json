@@ -1,0 +1,742 @@
+{
+ "seccion": {
+  "titulo": "This is how the day changes for every person on your team.",
+  "subtitulo": "Comando does not replace your team: it takes away the work that slows them down. Pick a role and watch the relief in action.",
+  "cierre": "Your team keeps the judgement. Comando removes the load.",
+  "cta": {
+   "texto": "Take work off the team",
+   "sufijo": " in 2 minutes",
+   "href": "/app/"
+  }
+ },
+ "roles": [
+  "Sales rep",
+  "Sales manager",
+  "Business owner",
+  "Support and after-sales"
+ ],
+ "verticales": [
+  "Real estate",
+  "Clinic / health",
+  "B2B distribution",
+  "Online store",
+  "Education",
+  "Automotive",
+  "Insurance and lending",
+  "Agencies"
+ ],
+ "evidencias": {
+  "speed": "Answering a lead in under 5 minutes multiplies the odds of qualifying it by 21 (Lead Response Management Study).",
+  "toques": "80 % of sales need 5 or more contacts; 44 % of reps give up after the first one (Brevet Group).",
+  "cotizacion": "Following up between day 3 and day 5 after a quote doubles the close rate.",
+  "noshow": "Confirming the appointment and reminding 24 h and 2 h before cuts no-shows by 40 % to 70 %.",
+  "carrito": "Cart recovery over WhatsApp reaches 18-23 % against roughly 8 % by email.",
+  "estancados": "A deal past 1.5 times the average cycle has less than half the chance of closing."
+ },
+ "casos": [
+  {
+   "rol": "Sales rep",
+   "vertical": "Real estate",
+   "titulo": "I close more without living in the CRM",
+   "comandos": [
+    {
+     "u": "Which leads came in last night from the portal and who has not touched them?",
+     "r": "6 new leads from the portals; 2 with no owner for 9 hours. Shall I take them for you or split them?"
+    },
+    {
+     "u": "For the ones who did not answer the quote, remind me on day 3, 5 and 7 with the message ready.",
+     "r": "Done. 4 are due today: here is the first, the Rojas family, unit 402 — “Hi Carla, I sent you the quote for 402 on Monday…”. Tap to send it."
+    },
+    {
+     "u": "Move the Rojas 402 to Negotiation and note that they asked for 30 days for the deposit.",
+     "r": "Done in HubSpot: stage Negotiation, note saved. Shall I create the task to call on the 15th to confirm the deposit?"
+    }
+   ],
+   "resultado": "No follow-up forgotten. Zero minutes typing into the CRM.",
+   "evidencia": "cotizacion",
+   "proactivo": "☀️ Good morning. 6 leads came in from the portals last night and 2 still have no owner. On top of that, 4 quotes hit 3 days with no reply. Answer SEE for the list."
+  },
+  {
+   "rol": "Sales rep",
+   "vertical": "Clinic / health",
+   "titulo": "Every quote gets a follow-up",
+   "comandos": [
+    {
+     "u": "Which patients got a quote this week and have not replied?",
+     "r": "7 quotes with no reply: 3 for braces, 4 for implants. The oldest is Marta Pérez (6 days)."
+    },
+    {
+     "u": "Prepare the message for Marta reminding her the quote expires on Friday.",
+     "r": "“Hi Marta, this is Diego from Clínica Sonríe. Your braces quote is valid until Friday; if you like we can go over it here in 10 minutes.” Tap to send it."
+    },
+    {
+     "u": "Mark Luis Ávila's quote as accepted and create me the task to book the first session.",
+     "r": "Quote accepted in the CRM and task created for today. Shall I offer Tuesday or Thursday?"
+    }
+   ],
+   "resultado": "Quotes close while they still matter.",
+   "evidencia": "toques",
+   "proactivo": "⏰ 7 quotes from this week still have no reply; Marta Pérez's (braces) expires on Friday. Answer SEE and I will hand you the messages ready."
+  },
+  {
+   "rol": "Sales rep",
+   "vertical": "B2B distribution",
+   "titulo": "My repeat customers do not go cold",
+   "comandos": [
+    {
+     "u": "Which customers in my book have not bought in more than 30 days?",
+     "r": "9 customers. The three biggest: Ferretería El Sol (42 days), Distribuidora Norte (38), Bodegas Centro (35)."
+    },
+    {
+     "u": "Prepare a message for each one offering the August promotion.",
+     "r": "You have 9 messages ready with their last order and the promo. Starting with El Sol: “Hi Jorge, I saw your last order was in July…”. Tap to send the first."
+    },
+    {
+     "u": "Move the Ferretería El Sol order to Quoted with 120 cases and tell dispatch.",
+     "r": "Deal in Quoted for 120 cases; dispatch notified on WhatsApp. Shall I schedule the payment reminder for 30 days?"
+    }
+   ],
+   "resultado": "A live book of business, repeat orders that do not slip.",
+   "evidencia": "toques",
+   "proactivo": "📉 9 customers in your book have gone more than 30 days without buying. Ferretería El Sol is already at 42. Answer SEE to see them with their last order."
+  },
+  {
+   "rol": "Sales rep",
+   "vertical": "Online store",
+   "titulo": "I sell while I serve",
+   "comandos": [
+    {
+     "u": "Which carts over $200 were abandoned today?",
+     "r": "5 carts: the largest is Andrea Gómez's ($480, sneakers and a jacket). None completed payment."
+    },
+    {
+     "u": "Prepare the message for Andrea with the payment link and 5 % off.",
+     "r": "Coupon ANDREA5 created in Shopify. “Hi Andrea, you left your sneakers and the jacket in the cart; here is the link with an extra 5 %…”. Tap to send it."
+    },
+    {
+     "u": "Mark order 1042 as delivered and note that the customer asked for an invoice.",
+     "r": "Order 1042 delivered and note saved. Tomorrow I will leave you the message ready to ask for the review."
+    }
+   ],
+   "resultado": "Every abandoned cart gets a second chance.",
+   "evidencia": "carrito",
+   "proactivo": "🛒 5 carts over $200 were abandoned today; the largest is Andrea Gómez's ($480). Answer SEE and I will leave the recovery messages ready."
+  },
+  {
+   "rol": "Sales manager",
+   "vertical": "Real estate",
+   "titulo": "I see the pipeline without asking for reports",
+   "comandos": [
+    {
+     "u": "Every Monday at 8 send me the pipeline by rep and the deals stalled more than 10 days.",
+     "r": "Scheduled. This Monday: 38 active deals, 6 stalled (4 of them Luis's). I will send it at 8:00."
+    },
+    {
+     "u": "If a lead goes 15 minutes with no contact, alert the supervisor on duty.",
+     "r": "Rule active from 9:00 to 20:00. The supervisor on duty is taken from the shift calendar."
+    },
+    {
+     "u": "Split the north-zone leads between Ana and Luis; if nobody takes them within 1 hour, tell me.",
+     "r": "11 leads assigned (6 Ana, 5 Luis). I will tell you in an hour about any still with no activity."
+    }
+   ],
+   "resultado": "Every lead has an owner in minutes, not days.",
+   "evidencia": "speed",
+   "proactivo": "📊 Monday 8:00 · 38 active deals, 6 stalled more than 10 days (4 of them Luis's). Answer SEE for the breakdown by rep."
+  },
+  {
+   "rol": "Sales manager",
+   "vertical": "Clinic / health",
+   "titulo": "A full calendar, with no no-shows",
+   "comandos": [
+    {
+     "u": "How many of tomorrow's appointments are unconfirmed?",
+     "r": "14 of 41 unconfirmed. 5 are first consultations."
+    },
+    {
+     "u": "For the ones that do not confirm by 18:00 today, hand each adviser the reminder with the message ready.",
+     "r": "Scheduled. At 18:00 each adviser gets their pending appointments with the reminder to send."
+    },
+    {
+     "u": "If a patient misses the appointment, create the rebooking task for their adviser the same day.",
+     "r": "Rule active. No-shows are marked from the calendar and the task is created instantly."
+    }
+   ],
+   "resultado": "Fewer empty chairs, more treatments started.",
+   "evidencia": "noshow",
+   "proactivo": "📅 There are 41 appointments tomorrow and 14 are still unconfirmed, 5 of them first consultations. Answer SEE to hand them out to the advisers."
+  },
+  {
+   "rol": "Sales manager",
+   "vertical": "B2B distribution",
+   "titulo": "Quotas under control every day",
+   "comandos": [
+    {
+     "u": "Every day at 7 send me quota progress by rep and the orders with no quote.",
+     "r": "Scheduled. Today: team at 62 % of the monthly quota; 8 orders have gone more than 24 h with no quote."
+    },
+    {
+     "u": "If a quote goes over $20,000, tell me before it goes out.",
+     "r": "Rule active: you get the summary with margin and terms to approve with an “OK”."
+    },
+    {
+     "u": "Which customers dropped their purchases more than 30 % this quarter against the previous one?",
+     "r": "12 customers. The five biggest add up to $84,000 less. Shall I assign them to a rep for win-back?"
+    }
+   ],
+   "resultado": "Decisions on today's data, not on the month-end close.",
+   "evidencia": "estancados",
+   "proactivo": "📊 7:00 · Team at 62 % of the monthly quota; 8 orders have gone more than 24 h with no quote. Answer SEE to see them by rep."
+  },
+  {
+   "rol": "Sales manager",
+   "vertical": "Online store",
+   "titulo": "Operations reports to me",
+   "comandos": [
+    {
+     "u": "Tell me if an order over $500 sits in “Payment pending” for more than 24 hours.",
+     "r": "Rule active. Right now there are 2: orders 1031 ($640) and 1037 ($512)."
+    },
+    {
+     "u": "Every morning tell me how many orders are waiting to ship and which ones are over 48 hours.",
+     "r": "Scheduled for 8:00. Today: 27 to ship, 4 over 48 h."
+    },
+    {
+     "u": "If a product runs out of stock and has pending orders, tell purchasing and me.",
+     "r": "Rule active on the Shopify inventory. Purchasing gets it on WhatsApp, and so do you."
+    }
+   ],
+   "resultado": "Zero forgotten orders, zero customers asking “where is my order?”.",
+   "evidencia": "carrito",
+   "proactivo": "⚠️ 2 orders over $500 have been in “Payment pending” for 24 h: 1031 ($640) and 1037 ($512). Answer SEE or LATER."
+  },
+  {
+   "rol": "Business owner",
+   "vertical": "Real estate",
+   "titulo": "I know what is going on without opening anything",
+   "comandos": [
+    {
+     "u": "Tell me if a deal over $80,000 is lost, with the reason.",
+     "r": "Rule active. Last loss: Torre Norte 1203, $95,000, reason “financing not approved”."
+    },
+    {
+     "u": "Every Friday: sales for the week, conversion by portal and the top 3 advisers.",
+     "r": "Scheduled. This week: 4 deposits, portal A converting 3.1 % against portal B at 1.8 %; top: Ana, Luis, Marco."
+    },
+    {
+     "u": "How many viewings did we close this month compared with last month?",
+     "r": "August: 31 % of viewings ended in a deposit against 24 % in July. Up 7 points."
+    }
+   ],
+   "resultado": "One WhatsApp at the end of the day beats three dashboards.",
+   "evidencia": "estancados",
+   "proactivo": "🔴 Torre Norte 1203 was lost ($95,000). Reason: financing not approved. That makes 4 deposits this week. Answer WHY for the detail."
+  },
+  {
+   "rol": "Business owner",
+   "vertical": "Clinic / health",
+   "titulo": "My clinic reports on its own",
+   "comandos": [
+    {
+     "u": "Every Monday send me new patients, accepted quotes and the week's no-show rate.",
+     "r": "Scheduled. Last week: 46 new patients, 19 accepted quotes ($38,000), no-shows 9 %."
+    },
+    {
+     "u": "Tell me if a day's no-show rate goes over 15 %.",
+     "r": "Rule active. It is worked out at the close of each day from the CRM calendar."
+    },
+    {
+     "u": "Which treatments brought in the most revenue this quarter?",
+     "r": "Implants $142,000 (41 %), braces $96,000 (28 %), aesthetics $58,000 (17 %)."
+    }
+   ],
+   "resultado": "Clear numbers, without waiting for the accountant.",
+   "evidencia": "noshow",
+   "proactivo": "📊 Last week: 46 new patients, 19 accepted quotes ($38,000), no-shows 9 %. Answer SEE for the breakdown by treatment."
+  },
+  {
+   "rol": "Business owner",
+   "vertical": "B2B distribution",
+   "titulo": "Margin and collections in plain sight",
+   "comandos": [
+    {
+     "u": "Tell me when a customer goes past 15 days late on payment and prepare the reminder for me.",
+     "r": "Rule active. Today: 3 customers; the biggest is Bodegas Centro, $12,400 at 18 days. Message ready to send."
+    },
+    {
+     "u": "Every Friday tell me sales by product line and average margin.",
+     "r": "Scheduled. This week: $210,000; margin 23 %; hardware up 12 %, paint down 6 %."
+    },
+    {
+     "u": "Who are the 10 customers who bought the most this year and how much did they grow?",
+     "r": "I will send it as a table: 7 of the 10 grew; El Sol +34 %, Distribuidora Norte −8 %."
+    }
+   ],
+   "resultado": "You collect on time and you know where the margin is.",
+   "evidencia": "toques",
+   "proactivo": "💸 3 customers are more than 15 days late; the biggest is Bodegas Centro, $12,400 at 18 days. The reminder is ready: answer SEE."
+  },
+  {
+   "rol": "Business owner",
+   "vertical": "Online store",
+   "titulo": "My store writes to me",
+   "comandos": [
+    {
+     "u": "Every morning send me yesterday's sales, the average ticket and the best-selling product.",
+     "r": "Scheduled for 8:00. Yesterday: $6,420 across 38 orders, ticket $169, best seller: the Runner sneaker."
+    },
+    {
+     "u": "Tell me if the day's sales drop more than 30 % against the last 7 days' average.",
+     "r": "Rule active. Current average: $5,900/day; I will tell you if a day closes below $4,130."
+    },
+    {
+     "u": "How much did we sell on the marketplace against our own store this month?",
+     "r": "Marketplace $48,000 (54 %), own store $41,000 (46 %). The margin is 9 points higher in your own store."
+    }
+   ],
+   "resultado": "You decide on today's number, from your phone.",
+   "evidencia": "carrito",
+   "proactivo": "☀️ Yesterday: $6,420 across 38 orders, ticket $169; best seller: the Runner sneaker. Answer SEE for the breakdown by channel."
+  },
+  {
+   "rol": "Support and after-sales",
+   "vertical": "Real estate",
+   "titulo": "Nobody is left without an answer",
+   "comandos": [
+    {
+     "u": "The day before each viewing, hand me the reminder for the customer and tell me if they do not confirm.",
+     "r": "Scheduled. There are 6 viewings tomorrow; at 17:00 I will leave you the 6 messages ready."
+    },
+    {
+     "u": "When the purchase agreement is signed, create me the task to send the documents to the notary.",
+     "r": "Rule active. It fires when the deal moves to “Agreement signed” in the CRM."
+    },
+    {
+     "u": "If a customer goes 3 days with no reply after the viewing, tell me with their record.",
+     "r": "Rule active. Right now there are 2: the Quispe family (Monday's viewing) and Mr. Paredes."
+    }
+   ],
+   "resultado": "Every customer looked after as if they were the only one.",
+   "evidencia": "noshow",
+   "proactivo": "📅 There are 6 viewings tomorrow; at 17:00 I will leave the 6 reminders ready. Today 2 customers have gone 3 days without replying after their viewing. Answer SEE."
+  },
+  {
+   "rol": "Support and after-sales",
+   "vertical": "Clinic / health",
+   "titulo": "The patient comes back because they are looked after",
+   "comandos": [
+    {
+     "u": "The day after each treatment, prepare the message to ask the patient how they feel.",
+     "r": "Scheduled. You have 12 follow-up messages ready today; starting with Rosa Díaz (yesterday's extraction)."
+    },
+    {
+     "u": "If a patient has not come back in 6 months since their last cleaning, tell me and prepare the invitation.",
+     "r": "Rule active. 58 patients come due this month; I will hand them to you in batches of 10 each morning."
+    },
+    {
+     "u": "Note on Rosa Díaz's record that she prefers afternoon appointments and create her check-up task in 15 days.",
+     "r": "Note saved and check-up scheduled for the 11th. Shall I send her the proposed time now?"
+    }
+   ],
+   "resultado": "Patients who come back, with no reminder calls.",
+   "evidencia": "noshow",
+   "proactivo": "🩺 You have 12 post-treatment follow-ups ready today; first, Rosa Díaz (yesterday's extraction). Answer SEE to start."
+  },
+  {
+   "rol": "Support and after-sales",
+   "vertical": "B2B distribution",
+   "titulo": "Every order arrives and gets confirmed",
+   "comandos": [
+    {
+     "u": "When an order leaves for dispatch, prepare the notice for the customer with the estimated date.",
+     "r": "Rule active. 14 went out today; the messages are ready with tracking and date."
+    },
+    {
+     "u": "If a customer files a complaint, create the task for the rep and tell me if it is not handled within 24 h.",
+     "r": "Rule active. Complaints come in as CRM tickets and the alert reaches you at 24 h."
+    },
+    {
+     "u": "Which customers had more than 2 complaints this quarter?",
+     "r": "4 customers: Bodegas Centro (4), Minimarket Sur (3), El Sol (3), Norte (3). Shall I flag them for a visit?"
+    }
+   ],
+   "resultado": "Fewer repeat complaints, customers who buy again.",
+   "evidencia": "toques",
+   "proactivo": "🚚 14 orders left for dispatch today; the notices with tracking and date are ready. There is 1 complaint unhandled since yesterday. Answer SEE."
+  },
+  {
+   "rol": "Support and after-sales",
+   "vertical": "Online store",
+   "titulo": "From the order to the review, with no friction",
+   "comandos": [
+    {
+     "u": "When an order moves to “Delivered”, leave me the message ready the next day to ask for the review.",
+     "r": "Rule active. Tomorrow you will have 22 messages ready with each product's review link."
+    },
+    {
+     "u": "If a customer asks about their order on the marketplace and we do not reply within 2 hours, tell me.",
+     "r": "Rule active on the marketplace questions and messages."
+    },
+    {
+     "u": "Mark order 1058 as return accepted and create me the refund task for finance.",
+     "r": "Order 1058 in “Return accepted”; task created for finance with the amount $210."
+    }
+   ],
+   "resultado": "Customers who come back and tell others.",
+   "evidencia": "carrito",
+   "proactivo": "⭐ 22 orders were delivered yesterday: your review messages are ready. 1 marketplace question has gone 2 h with no reply. Answer SEE."
+  },
+  {
+   "rol": "Sales rep",
+   "vertical": "Education",
+   "titulo": "Every applicant gets an answer today",
+   "comandos": [
+    {
+     "u": "Which applicants came in last night from Meta and who has not contacted them?",
+     "r": "14 new applicants from the “Enrolment 2027” campaign; 5 with no contact for 10 hours, 3 of them for Business. Shall I take them for you?"
+    },
+    {
+     "u": "For the ones who asked for information and did not reply within 2 days, prepare the message with the programme link.",
+     "r": "Done. 9 are due today; here is the first, Camila Ruiz (Digital Marketing): “Hi Camila, here is the syllabus and the dates…”. Tap to send it."
+    },
+    {
+     "u": "Mark Camila Ruiz as “Pre-enrolled” and note that she pays the enrolment on Monday.",
+     "r": "Done in HubSpot: stage Pre-enrolled, note saved. Shall I create the task to confirm payment on Monday at 10?"
+    }
+   ],
+   "resultado": "No applicant goes cold before enrolling.",
+   "evidencia": "speed",
+   "proactivo": "☀️ 14 applicants came in last night from “Enrolment 2027”; 5 still have no contact, 3 of them for Business. Answer SEE for the list with phone numbers."
+  },
+  {
+   "rol": "Sales rep",
+   "vertical": "Automotive",
+   "titulo": "From the test drive to the signature without losing anyone",
+   "comandos": [
+    {
+     "u": "Who took a test drive this week and still has no quote?",
+     "r": "6 prospects. The oldest is Jorge Salas (Kicks SUV, Tuesday). None has a quote in the CRM."
+    },
+    {
+     "u": "Prepare the message for Jorge with the quote and the financing options.",
+     "r": "“Hi Jorge, thanks for the Kicks test drive. Here is the quote and two financing plans over 36 and 48 months…”. I attached the PDF. Tap to send it."
+    },
+    {
+     "u": "Move Jorge to “Financing” and create me the task to ask him for the documents on Thursday.",
+     "r": "Stage Financing and task created for Thursday at 9:00. Shall I tell finance to pre-assess?"
+    }
+   ],
+   "resultado": "Every test drive ends in a quote with a follow-up.",
+   "evidencia": "cotizacion",
+   "proactivo": "🚗 6 people took a test drive this week and none has a quote. The oldest: Jorge Salas (Kicks, Tuesday). Answer SEE."
+  },
+  {
+   "rol": "Sales rep",
+   "vertical": "Insurance and lending",
+   "titulo": "I renew and place without chasing anyone",
+   "comandos": [
+    {
+     "u": "Which policies in my book expire in the next 30 days?",
+     "r": "23 policies: 14 motor, 6 health, 3 life. The three biggest: Transportes Andes ($4,200), the Cárdenas family ($1,850), Grupo Mesa ($1,600)."
+    },
+    {
+     "u": "Prepare the renewal reminder for each one with the current premium.",
+     "r": "23 messages ready with premium, term and an upgrade option. Starting with Transportes Andes: “Hi Raúl, your fleet policy expires on the 15th…”. Tap to send the first."
+    },
+    {
+     "u": "Mark Ana Torres's loan application as “Documents complete” and create me the task to send it to underwriting.",
+     "r": "Stage updated and task created for today. I will tell you when underwriting answers in the CRM."
+    }
+   ],
+   "resultado": "Renewals on time and applications that do not sit in a drawer.",
+   "evidencia": "toques",
+   "proactivo": "📆 23 policies in your book expire within 30 days; the 3 biggest add up to $9,800. Answer SEE and I will hand you the reminders ready."
+  },
+  {
+   "rol": "Sales rep",
+   "vertical": "Agencies",
+   "titulo": "My proposals do not go unanswered",
+   "comandos": [
+    {
+     "u": "Which proposals did I send more than 5 days ago with no reply?",
+     "r": "4 proposals: Clínica Norte ($3,500/mo), Ferretería Sol ($1,200), Studio Kai ($900) and Dulce Hogar ($800)."
+    },
+    {
+     "u": "Prepare a follow-up for Clínica Norte offering a 15-minute call.",
+     "r": "“Hi Patricia, did you get a chance to look at the content and media proposal? If it helps, I can do 15 minutes on Thursday…”. Tap to send it."
+    },
+    {
+     "u": "Move Clínica Norte to “Negotiation” and note that they want to start with Instagram.",
+     "r": "Done in HubSpot: stage Negotiation, note saved. Shall I create the task to adjust the proposal for Wednesday?"
+    }
+   ],
+   "resultado": "Every proposal has its next step booked.",
+   "evidencia": "toques",
+   "proactivo": "📨 4 proposals have gone more than 5 days with no reply; Clínica Norte ($3,500/mo) is the biggest. Answer SEE for the follow-ups ready."
+  },
+  {
+   "rol": "Sales manager",
+   "vertical": "Education",
+   "titulo": "The enrolment campaign under control",
+   "comandos": [
+    {
+     "u": "Every morning at 7 send me the new applicants by programme and the ones over 1 hour with no contact.",
+     "r": "Scheduled. Today: 62 new applicants (Business 21, Marketing 18, Systems 23); 9 over 1 hour with no contact."
+    },
+    {
+     "u": "If an applicant goes 15 minutes with no contact during campaign hours, alert the adviser on duty.",
+     "r": "Rule active from 8:00 to 21:00 using the shift calendar in the CRM."
+    },
+    {
+     "u": "Split the Systems applicants between Rosa and Diego; if nobody takes them within 30 minutes, tell me.",
+     "r": "23 assigned (12 Rosa, 11 Diego). I will tell you in 30 minutes about any still with no activity."
+    }
+   ],
+   "resultado": "Every applicant has an adviser in minutes, not days.",
+   "evidencia": "speed",
+   "proactivo": "📊 7:00 · 62 new applicants (Business 21, Marketing 18, Systems 23); 9 have gone more than 1 hour with no contact. Answer SEE."
+  },
+  {
+   "rol": "Sales manager",
+   "vertical": "Automotive",
+   "titulo": "I see the dealership funnel without asking for reports",
+   "comandos": [
+    {
+     "u": "Every Monday send me quotes by rep and the prospects stalled more than 7 days.",
+     "r": "Scheduled. This week: 48 quotes (Marco 14, Lucía 12, Pedro 11, Ana 11); 9 stalled prospects, 5 in Financing."
+    },
+    {
+     "u": "If a lead from the portal or from Meta goes 10 minutes with no contact, tell me and the rep on duty.",
+     "r": "Rule active. Double alert: the rep on duty and you, with the model they are interested in."
+    },
+    {
+     "u": "How many test drives turned into a sale this month, by rep?",
+     "r": "Marco 6 of 15 (40 %), Lucía 5 of 14 (36 %), Pedro 3 of 13 (23 %), Ana 4 of 10 (40 %). Month average: 35 %."
+    }
+   ],
+   "resultado": "Decisions on today's data, not on the month-end close.",
+   "evidencia": "estancados",
+   "proactivo": "📊 Monday · 48 quotes this week (Marco 14, Lucía 12); 9 prospects stalled more than 7 days. Answer SEE by rep."
+  },
+  {
+   "rol": "Sales manager",
+   "vertical": "Insurance and lending",
+   "titulo": "Book and placements up to date",
+   "comandos": [
+    {
+     "u": "Every Friday send me renewals won against lapsed, by adviser.",
+     "r": "Scheduled. This week: 41 renewed, 7 lapsed with no renewal (4 of them Luis's). Retention rate: 85 %."
+    },
+    {
+     "u": "If a loan application sits more than 48 hours in “Underwriting”, tell me with the amount.",
+     "r": "Rule active. Right now there are 3: Ferretería Sol ($15,000), Ana Torres ($8,000), Taller Ruiz ($6,500)."
+    },
+    {
+     "u": "Split the policies expiring in 15 days with no action between Luis and Carla.",
+     "r": "18 policies assigned (9 and 9), with the contact task for tomorrow. I will tell you on Thursday about any still untouched."
+    }
+   ],
+   "resultado": "No policy expires without somebody having worked it.",
+   "evidencia": "toques",
+   "proactivo": "⚠️ 3 loan applications have been more than 48 h in “Underwriting”; Ferretería Sol ($15,000) is the biggest. Answer SEE or LATER."
+  },
+  {
+   "rol": "Sales manager",
+   "vertical": "Agencies",
+   "titulo": "A proposal pipeline with no surprises",
+   "comandos": [
+    {
+     "u": "Every Monday send me the open proposals by account executive and the ones over 10 days with no reply.",
+     "r": "Scheduled. Today: 17 open proposals ($42,000); 6 over 10 days, 4 of them Sofía's."
+    },
+    {
+     "u": "If a lead comes in from the web form with a budget over $2,000, tell me and assign it to Sofía.",
+     "r": "Rule active. Last one: Clínica Norte, $3,500/mo, already assigned to Sofía."
+    },
+    {
+     "u": "How many referral leads did we close this quarter against paid ones?",
+     "r": "Referrals: 9 of 21 (43 %). Paid: 7 of 58 (12 %). The average referral ticket is 1.8 times bigger."
+    }
+   ],
+   "resultado": "You know which channel closes and who needs help, every week.",
+   "evidencia": "estancados",
+   "proactivo": "📊 Monday · 17 open proposals ($42,000); 6 over 10 days with no reply, 4 of them Sofía's. Answer SEE by account executive."
+  },
+  {
+   "rol": "Business owner",
+   "vertical": "Education",
+   "titulo": "Enrolment reports on its own",
+   "comandos": [
+    {
+     "u": "Every Friday send me applicants, pre-enrolled and enrolled for the week by programme.",
+     "r": "Scheduled. This week: 310 applicants, 84 pre-enrolled, 37 enrolled. Systems leads with 14 enrolments."
+    },
+    {
+     "u": "Tell me if a campaign's applicant-to-enrolled conversion drops below 8 %.",
+     "r": "Rule active. It is worked out each night by campaign. Today: “Enrolment 2027” at 11.9 %."
+    },
+    {
+     "u": "How much did each enrolment cost by channel this month?",
+     "r": "Meta $38, Google $52, referrals $9, fairs $71. Referrals brought 22 % of the enrolments."
+    }
+   ],
+   "resultado": "One WhatsApp at the end of the day beats three dashboards.",
+   "evidencia": "speed",
+   "proactivo": "📊 Friday · 310 applicants, 84 pre-enrolled, 37 enrolled this week. “Enrolment 2027” converts at 11.9 %. Answer SEE by programme."
+  },
+  {
+   "rol": "Business owner",
+   "vertical": "Automotive",
+   "titulo": "I know how many cars go out without visiting the showroom",
+   "comandos": [
+    {
+     "u": "Every Saturday send me units sold, average margin and the top 3 reps.",
+     "r": "Scheduled. This week: 11 units, margin 7.4 %; top: Marco, Ana, Lucía."
+    },
+    {
+     "u": "Tell me if a prospect with a quote over $30,000 is lost, and the reason.",
+     "r": "Rule active. Last loss: a Hilux pickup, $38,000, reason “financing not approved”."
+    },
+    {
+     "u": "Which model got the most quotes this month and how many closed?",
+     "r": "Kicks: 42 quotes, 9 sales (21 %). Then Versa (31, 8) and Frontier (18, 5)."
+    }
+   ],
+   "resultado": "You decide on today's number, from your phone.",
+   "evidencia": "estancados",
+   "proactivo": "🔴 A Hilux quoted at $38,000 was lost. Reason: financing not approved. That makes 11 units this week. Answer WHY."
+  },
+  {
+   "rol": "Business owner",
+   "vertical": "Insurance and lending",
+   "titulo": "Retention and arrears in plain sight",
+   "comandos": [
+    {
+     "u": "Every Monday send me renewed premiums, lost policies and loans placed for the week.",
+     "r": "Scheduled. Last week: $61,000 renewed, 5 policies lost ($4,300), 12 loans placed ($96,000)."
+    },
+    {
+     "u": "Tell me when a customer goes past 15 days late and prepare the payment reminder for me.",
+     "r": "Rule active. Today: 4 customers; the biggest is Taller Ruiz, $2,100 at 19 days. Message ready to send."
+    },
+    {
+     "u": "Which insurer leaves us the most margin this quarter?",
+     "r": "The first leaves 14.2 %, the second 12.8 % and the third 11.5 %; the first holds 46 % of the premiums."
+    }
+   ],
+   "resultado": "You collect on time and you know where the margin is.",
+   "evidencia": "toques",
+   "proactivo": "💸 4 customers are more than 15 days late; the biggest is Taller Ruiz, $2,100 at 19 days. Reminder ready: answer SEE."
+  },
+  {
+   "rol": "Business owner",
+   "vertical": "Agencies",
+   "titulo": "The agency writes to me",
+   "comandos": [
+    {
+     "u": "Every Friday send me new contracts, recurring revenue and clients at risk.",
+     "r": "Scheduled. This week: 2 new contracts ($4,300/mo), MRR $58,000, 3 clients at risk from low activity."
+    },
+    {
+     "u": "Tell me if a client goes 30 days with no meetings or deliverables logged.",
+     "r": "Rule active. Right now there are 2: Dulce Hogar (34 days) and Studio Kai (31)."
+    },
+    {
+     "u": "How much did we bill per service this quarter compared with the previous one?",
+     "r": "Media $96,000 (+12 %), content $54,000 (+4 %), web $31,000 (−9 %). Total +6 %."
+    }
+   ],
+   "resultado": "You see the health of the agency without opening a single tool.",
+   "evidencia": "estancados",
+   "proactivo": "⚠️ 2 clients have gone more than 30 days with no meetings or deliverables: Dulce Hogar (34) and Studio Kai (31). Answer SEE or LATER."
+  },
+  {
+   "rol": "Support and after-sales",
+   "vertical": "Education",
+   "titulo": "The student turns up to class and stays",
+   "comandos": [
+    {
+     "u": "The day before each course starts, hand me the reminder for the enrolled students with room and schedule.",
+     "r": "Scheduled. Digital Marketing starts tomorrow: 18 messages ready at 17:00 with room 204 and the schedule."
+    },
+    {
+     "u": "If a student misses the first two classes, create the contact task for their adviser and tell me.",
+     "r": "Rule active on the attendance recorded in the CRM. Today: 3 students, already with a task assigned."
+    },
+    {
+     "u": "Note on Camila Ruiz's record that she asked to move to the evening group and create me the task to confirm a place.",
+     "r": "Note saved and task created for tomorrow. Shall I prepare her confirmation message once there is a place?"
+    }
+   ],
+   "resultado": "Less drop-out in the first weeks.",
+   "evidencia": "noshow",
+   "proactivo": "🎓 Digital Marketing starts tomorrow: 18 reminders ready with room 204 and the schedule. 3 students missed their first two classes. Answer SEE."
+  },
+  {
+   "rol": "Support and after-sales",
+   "vertical": "Automotive",
+   "titulo": "From the workshop back to the showroom",
+   "comandos": [
+    {
+     "u": "The day before each service appointment, hand me the reminder for the customer and tell me if they do not confirm.",
+     "r": "Scheduled. There are 9 appointments tomorrow; at 17:00 I will leave you the 9 messages ready and flag the ones that do not confirm."
+    },
+    {
+     "u": "5 days after each handover, prepare the message to ask how the car is doing and request the review.",
+     "r": "Rule active. You have 4 messages ready today; starting with Jorge Salas (Kicks, handed over on Monday)."
+    },
+    {
+     "u": "If a customer hits 3 years with their car, tell me and prepare the invitation to quote the new model.",
+     "r": "Rule active. 27 customers come due this month; I will hand them to you in batches of 5 each morning."
+    }
+   ],
+   "resultado": "Customers who come back to the workshop and to the showroom.",
+   "evidencia": "noshow",
+   "proactivo": "🔧 There are 9 service appointments tomorrow; at 17:00 I will leave the reminders. Today 4 handovers hit 5 days: review messages ready. Answer SEE."
+  },
+  {
+   "rol": "Support and after-sales",
+   "vertical": "Insurance and lending",
+   "titulo": "Claims and instalments with no missed calls",
+   "comandos": [
+    {
+     "u": "When a claim is filed, create me the follow-up task and prepare the message with the steps for the customer.",
+     "r": "Rule active. Last one: the Cárdenas family, minor collision; task created and the message with the 4 steps and documents ready to send."
+    },
+    {
+     "u": "If a claim goes 5 days with no update, tell me with the adviser responsible.",
+     "r": "Rule active. Right now there are 2: Transportes Andes (Luis, 6 days) and Mr. Paredes (Carla, 5 days)."
+    },
+    {
+     "u": "Three days before each instalment, hand me the reminder for the customer with the amount and the payment link.",
+     "r": "Scheduled. 31 instalments fall due on Thursday; I will leave you the 31 messages ready on Monday at 9:00."
+    }
+   ],
+   "resultado": "Every customer knows where their case stands without calling.",
+   "evidencia": "toques",
+   "proactivo": "🚨 The Cárdenas family filed a claim (minor collision): task created and the message with the 4 steps ready. 2 claims have gone 5 days with no update. Answer SEE."
+  },
+  {
+   "rol": "Support and after-sales",
+   "vertical": "Agencies",
+   "titulo": "Clients who renew because they feel looked after",
+   "comandos": [
+    {
+     "u": "Every Monday, prepare the weekly results summary for each client with their CRM metrics.",
+     "r": "Done. 12 summaries prepared with reach, leads and spend for the week; starting with Clínica Norte. Tap to send the first."
+    },
+    {
+     "u": "If a client opens a ticket and it is not answered within 4 hours, tell me and the account executive.",
+     "r": "Rule active on the CRM tickets. Double alert at 4 hours."
+    },
+    {
+     "u": "45 days before each contract expires, create me the renewal task and prepare the continuity proposal.",
+     "r": "Rule active. 3 contracts expire this month; you already have the task and the base proposal for Ferretería Sol ready to review."
+    }
+   ],
+   "resultado": "Renewals that arrive on their own, with no last-minute rush.",
+   "evidencia": "toques",
+   "proactivo": "📈 Monday · 12 weekly summaries ready for your clients, starting with Clínica Norte. 1 ticket has gone 4 h with no reply. Answer SEE."
+  }
+ ]
+}

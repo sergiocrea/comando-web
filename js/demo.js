@@ -254,11 +254,31 @@
       return Boolean(j && j.ok);
     } catch (e) { return false; }
   }
+  /** El idioma de la página: la demo contesta en el idioma en que se lee. */
+  const LANG = (document.documentElement.lang || 'es').slice(0, 2);
+  /**
+   * Las respuestas locales están escritas en castellano y su emparejamiento
+   * también. En inglés y portugués contesta el modelo, que sí habla los tres;
+   * si no hay modelo, la demo prefiere decir que no puede a contestar en un
+   * idioma que el visitante no eligió.
+   */
+  const LOCAL_OK = LANG === 'es';
+  /** El chrome del teléfono del demo: dos palabras que también se leen. */
+  const CHROME = {
+    es: { online: 'en línea', typing: 'escribiendo…', enough: 'Hasta aquí llega la demo 🙂\nPara seguir, crea tu cuenta gratis en comando.pro/app y conecta tu CRM.' },
+    en: { online: 'online', typing: 'typing…', enough: 'That is as far as the demo goes 🙂\nTo carry on, create your free account at comando.pro/app and connect your CRM.' },
+    pt: { online: 'on-line', typing: 'digitando…', enough: 'A demo vai até aqui 🙂\nPara continuar, crie sua conta grátis em comando.pro/app e conecte seu CRM.' },
+  }[LANG] ?? { online: 'en línea', typing: 'escribiendo…', enough: 'Hasta aquí llega la demo 🙂' };
+  const NO_MODEL = {
+    en: 'The demo needs its model and it is not answering right now. Try again in a minute, or create your free account and connect your CRM.',
+    pt: 'A demo precisa do modelo dela e ele não está respondendo agora. Tente em um minuto, ou crie sua conta grátis e conecte seu CRM.',
+  };
+
   async function apiReply(raw, localMatched) {
     const ctrl = new AbortController();
     const timer = setTimeout(() => ctrl.abort(), 16000);
     try {
-      const r = await fetch(API, { method: 'POST', signal: ctrl.signal, headers: { 'content-type': 'application/json' }, body: JSON.stringify({ messages: history.slice(-12), localMatched }) });
+      const r = await fetch(API, { method: 'POST', signal: ctrl.signal, headers: { 'content-type': 'application/json' }, body: JSON.stringify({ messages: history.slice(-12), localMatched, lang: LANG }) });
       if (r.status === 429) { const j = await r.json().catch(() => ({})); return { limit: true, reply: j.error || 'Demasiados mensajes por ahora.' }; }
       if (!r.ok) throw new Error('HTTP ' + r.status);
       const j = await r.json();
@@ -281,7 +301,7 @@
         <div class="radar-device demo-device">
           <div class="radar-screen">
             <div class="radar-status"><span id="demo-clock">${now()}</span><span>●●● ▲ ▮</span></div>
-            <div class="radar-wa-head"><span class="radar-avatar">&gt;_</span><span class="radar-wa-name">Comando<small id="demo-presence">en línea</small></span></div>
+            <div class="radar-wa-head"><span class="radar-avatar">&gt;_</span><span class="radar-wa-name">Comando<small id="demo-presence">${CHROME.online}</small></span></div>
             <div class="radar-chat demo-chat" id="demo-chat" aria-live="polite"></div>
             <form class="radar-input demo-input" id="demo-form" autocomplete="off">
               <input id="demo-text" type="text" placeholder="Escribe un comando…" maxlength="300" aria-label="Escribe un comando">
@@ -310,10 +330,10 @@
   }
   async function showParts(parts) {
     for (const [i, p] of parts.entries()) {
-      presence.textContent = 'escribiendo…';
+      presence.textContent = CHROME.typing;
       const t = typing();
       await wait(Math.min(1400, 450 + p.length * 6));
-      t.remove(); presence.textContent = 'en línea';
+      t.remove(); presence.textContent = CHROME.online;
       bubble(p, false);
       if (i < parts.length - 1) await wait(500);
     }
@@ -321,28 +341,28 @@
   async function send(raw) {
     if (busy || !raw.trim()) return;
     sent += 1;
-    if (sent > SESSION_MAX) { bubble(raw, true); await showParts(['Hasta aquí llega la demo 🙂\nPara seguir, crea tu cuenta gratis en comando.pro/app y conecta tu CRM.']); return; }
+    if (sent > SESSION_MAX) { bubble(raw, true); await showParts([CHROME.enough]); return; }
     busy = true; input.value = '';
     bubble(raw, true);
     const t = norm(raw);
-    const localMatched = isControl(t) || intentOf(t) !== 'unknown';
+    const localMatched = LOCAL_OK && (isControl(t) || intentOf(t) !== 'unknown');
     let parts = null;
     if (useApi) {
-      presence.textContent = 'escribiendo…';
+      presence.textContent = CHROME.typing;
       const ty = typing();
       try {
         const r = await apiReply(raw, localMatched);
-        ty.remove(); presence.textContent = 'en línea';
+        ty.remove(); presence.textContent = CHROME.online;
         apiFailures = 0;
         bubble(r.reply, false);
         if (r.limit) useApi = false;
         busy = false; input.focus({ preventScroll: true }); return;
       } catch (e) {
-        ty.remove(); presence.textContent = 'en línea';
+        ty.remove(); presence.textContent = CHROME.online;
         apiFailures += 1; if (apiFailures >= 2) useApi = false;
       }
     }
-    const out = localReply(raw);
+    const out = LOCAL_OK ? localReply(raw) : NO_MODEL[LANG];
     parts = Array.isArray(out) ? out : [out];
     await showParts(parts);
     busy = false; input.focus({ preventScroll: true });

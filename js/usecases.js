@@ -9,6 +9,24 @@
   const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
   const TIMES = ['8:05', '11:30', '18:40'];
   const PRO_TIME = '7:30'; // el aviso con el que Comando abre el día, antes de que nadie pregunte
+  // Las etiquetas de la sección: los datos vienen del fichero del idioma, pero
+  // estas cuatro palabras viven en el markup y también se leen.
+  const W = {
+    es: { rol: 'Rol', sector: 'Sector', proTag: 'Comando te avisa', proStep: 'Comando te avisa.',
+          proAria: (t) => `Aviso de Comando a las ${t}`, sendAria: (t) => `Enviar el mensaje de las ${t}`,
+          chat: 'Conversación de WhatsApp con Comando', moments: 'Momentos del día' },
+    en: { rol: 'Role', sector: 'Sector', proTag: 'Comando tells you', proStep: 'Comando tells you.',
+          proAria: (t) => `Comando alert at ${t}`, sendAria: (t) => `Send the ${t} message`,
+          chat: 'WhatsApp conversation with Comando', moments: 'Moments of the day' },
+    pt: { rol: 'Papel', sector: 'Setor', proTag: 'O Comando te avisa', proStep: 'O Comando te avisa.',
+          proAria: (t) => `Aviso do Comando às ${t}`, sendAria: (t) => `Enviar a mensagem das ${t}`,
+          chat: 'Conversa de WhatsApp com o Comando', moments: 'Momentos do dia' },
+  }[(document.documentElement.lang || 'es').slice(0, 2)] ?? undefined;
+  const T = W ?? {
+    rol: 'Rol', sector: 'Sector', proTag: 'Comando te avisa', proStep: 'Comando te avisa.',
+    proAria: (t) => `Aviso de Comando a las ${t}`, sendAria: (t) => `Enviar el mensaje de las ${t}`,
+    chat: 'Conversación de WhatsApp con Comando', moments: 'Momentos del día',
+  };
   const state = { rol: 0, vertical: 0 };
   let D = null;
 
@@ -23,15 +41,15 @@
   }
   function proHtml(c) {
     if (!c.proactivo) return '';
-    return `<div class="uc-msg is-bot is-in is-proactive"><div class="uc-bubble"><b class="uc-pro-tag">Comando te avisa</b>${esc(c.proactivo)}<span class="uc-time">${PRO_TIME}</span></div></div>`;
+    return `<div class="uc-msg is-bot is-in is-proactive"><div class="uc-bubble"><b class="uc-pro-tag">${esc(T.proTag)}</b>${esc(c.proactivo)}<span class="uc-time">${PRO_TIME}</span></div></div>`;
   }
   function chatHtml(c) { return proHtml(c) + c.comandos.map((m, i) => msgHtml(m, i, step + 1)).join(''); }
   function timelineHtml(c) {
-    return (c.proactivo ? `<li class="is-pro"><span class="uc-dot is-pro" aria-label="Aviso de Comando a las ${PRO_TIME}"><i></i><span>${PRO_TIME}</span></span></li>` : '') + c.comandos.map((m, i) => `<li><button type="button" class="uc-dot${i === step ? ' is-on' : ''}${i < step ? ' is-past' : ''}" data-step="${i}" aria-label="Enviar el mensaje de las ${TIMES[i] || ''}"><i></i><span>${TIMES[i] || ''}</span></button></li>`).join('');
+    return (c.proactivo ? `<li class="is-pro"><span class="uc-dot is-pro" aria-label="${esc(T.proAria(PRO_TIME))}"><i></i><span>${PRO_TIME}</span></span></li>` : '') + c.comandos.map((m, i) => `<li><button type="button" class="uc-dot${i === step ? ' is-on' : ''}${i < step ? ' is-past' : ''}" data-step="${i}" aria-label="${esc(T.sendAria(TIMES[i] || ''))}"><i></i><span>${TIMES[i] || ''}</span></button></li>`).join('');
   }
   function outcomeHtml(c) {
     return `<div class="uc-card-meta">${esc(c.rol)} · ${esc(c.vertical)}</div><h3 class="uc-card-title">${esc(c.titulo)}</h3>
-      <ol class="uc-steps">${c.proactivo ? `<li><div class="uc-step uc-step-pro"><span class="uc-step-time">${PRO_TIME}</span><span class="uc-step-text"><b>Comando te avisa.</b> ${esc(c.proactivo)}</span></div></li>` : ''}${c.comandos.map((m, i) => `<li><button type="button" class="uc-step${i === step ? ' is-on' : ''}" data-step="${i}"><span class="uc-step-time">${TIMES[i] || ''}</span><span class="uc-step-text">${esc(m.u)}</span></button></li>`).join('')}</ol>
+      <ol class="uc-steps">${c.proactivo ? `<li><div class="uc-step uc-step-pro"><span class="uc-step-time">${PRO_TIME}</span><span class="uc-step-text"><b>${esc(T.proStep)}</b> ${esc(c.proactivo)}</span></div></li>` : ''}${c.comandos.map((m, i) => `<li><button type="button" class="uc-step${i === step ? ' is-on' : ''}" data-step="${i}"><span class="uc-step-time">${TIMES[i] || ''}</span><span class="uc-step-text">${esc(m.u)}</span></button></li>`).join('')}</ol>
       <div class="uc-result">${esc(c.resultado)}</div>
 `;
   }
@@ -65,10 +83,10 @@
         <h2 class="section_features-heading">${esc(D.seccion.titulo)}</h2>
         <p class="uc-subtitle">${esc(D.seccion.subtitulo)}</p></div>
       <span id="como-funciona" class="uc-anchor" aria-hidden="true"></span>
-      <div class="uc-tabs" role="tablist" aria-label="Rol">${D.roles.map((r, i) => `<button type="button" role="tab" class="uc-tab${i === state.rol ? ' is-on' : ''}" aria-selected="${i === state.rol}" data-rol="${i}">${esc(r)}</button>`).join('')}</div>
-      <div class="uc-chips" role="group" aria-label="Sector">${D.verticales.map((v, i) => `<button type="button" class="uc-chip${i === state.vertical ? ' is-on' : ''}" aria-pressed="${i === state.vertical}" data-vertical="${i}">${esc(v)}</button>`).join('')}</div>
+      <div class="uc-tabs" role="tablist" aria-label="${esc(T.rol)}">${D.roles.map((r, i) => `<button type="button" role="tab" class="uc-tab${i === state.rol ? ' is-on' : ''}" aria-selected="${i === state.rol}" data-rol="${i}">${esc(r)}</button>`).join('')}</div>
+      <div class="uc-chips" role="group" aria-label="${esc(T.sector)}">${D.verticales.map((v, i) => `<button type="button" class="uc-chip${i === state.vertical ? ' is-on' : ''}" aria-pressed="${i === state.vertical}" data-vertical="${i}">${esc(v)}</button>`).join('')}</div>
       <div class="uc-layout">
-        <div class="uc-phone" role="img" aria-label="Conversación de WhatsApp con Comando">
+        <div class="uc-phone" role="img" aria-label="${esc(T.chat)}">
           <div class="uc-phone-screen">
             <div class="uc-status"><span>9:41</span><span class="uc-status-icons">●●● ▲ ▮</span></div>
             <div class="uc-wa-head"><span class="uc-wa-back">‹</span><img src="assets/img/comando-mark.svg" alt="" class="uc-wa-avatar"/><div class="uc-wa-name">Comando<small>en línea</small></div><span class="uc-wa-more">⋮</span></div>
@@ -76,7 +94,7 @@
             <div class="uc-wa-input"><span>Escribe un comando…</span><i>🎤</i></div>
           </div>
         </div>
-        <ol class="uc-timeline" aria-label="Momentos del día">${timelineHtml(c)}</ol>
+        <ol class="uc-timeline" aria-label="${esc(T.moments)}">${timelineHtml(c)}</ol>
         <div class="uc-outcome">${outcomeHtml(c)}</div>
       </div>
       <div class="uc-foot"><p class="uc-close">${esc(D.seccion.cierre)}</p><a href="${esc(D.seccion.cta.href)}" class="btn-primary uc-cta">${esc(D.seccion.cta.texto)}<span class="uc-cta-sufijo">${esc(D.seccion.cta.sufijo || '')}</span><span class="btn-arrow" aria-hidden="true">→</span></a></div>`;

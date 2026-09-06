@@ -43,7 +43,11 @@ export async function onRequestPost({ request, env, waitUntil }) {
     if (n > LIMIT_PER_HOUR) return json({ error: 'Demasiados mensajes por ahora. Crea tu cuenta para seguir.' }, 429);
   }
 
-  const system = buildSystemPrompt(data.crm);
+  // El landing existe en tres idiomas y la demo tiene que contestar en el que
+  // el visitante está leyendo. Los DATOS de ejemplo no se traducen: son el CRM
+  // de una inmobiliaria y sus nombres son datos, no texto.
+  const lang = body && typeof body.lang === 'string' ? body.lang.slice(0, 2).toLowerCase() : 'es';
+  const system = buildSystemPrompt(data.crm, lang);
   const chat = [{ role: 'system', content: system }, ...messages];
   const attempts = [];
   if (env.DEEPSEEK_API_KEY) attempts.push({ name: 'deepseek', url: 'https://api.deepseek.com/chat/completions', key: env.DEEPSEEK_API_KEY, model: env.DEEPSEEK_MODEL || 'deepseek-v4-flash' });
@@ -93,7 +97,13 @@ async function complete(p, chat) {
 
 /* El prompt: quién es Comando, el CRM de ejemplo y las reglas de formato del producto
    (docs/research/capabilities/catalogo-respuestas.md de comando-pro), resumidas. */
-function buildSystemPrompt(c) {
+const LANGUAGE_RULE = {
+  es: '',
+  en: '\n\nIDIOMA: responde SIEMPRE en inglés, con las mismas reglas de formato. Los nombres propios, las etapas y los distritos del CRM de ejemplo van tal cual están abajo, sin traducir: son datos, no texto. Las palabras clave que el operador escribe de vuelta son CONFIRM, CANCEL, MORE y STOP, y así se imprimen.',
+  pt: '\n\nIDIOMA: responde SEMPRE em português do Brasil, com as mesmas regras de formato. Os nomes próprios, as etapas e os bairros do CRM de exemplo vão como estão abaixo, sem traduzir: são dados, não texto. As palavras-chave que o operador escreve de volta são CONFIRMAR, CANCELAR, MAIS e CHEGA, e assim se imprimem.',
+};
+
+function buildSystemPrompt(c, lang = 'es') {
   const etapas = c.etapas.map((e) => `• ${e.nombre}: ${e.n} · ${e.monto}`).join('\n');
   const fuentes = c.fuentes.map((f) => `${f.nombre} ${f.n}`).join(', ');
   const distritos = Object.entries(c.distritos).map(([k, v]) => `${cap(k)} ${v}`).join(', ');
@@ -136,7 +146,7 @@ Top 5 por monto: ${c.top5.join('; ')}.
 Mis negocios (del operador): ${c.mis_negocios.n} · ${c.mis_negocios.monto}; los otros 8 abiertos no tienen responsable.
 Personas del equipo: ${Object.values(c.personas).join(', ')}. Contactos de ejemplo con teléfono: ${c.contactos_ejemplo.join('; ')}.
 Umbral de negocio grande: ${c.umbral_grande}. Etiquetas existentes: VIP, Frío, Reactivar. Etapas válidas: ${c.etapas.map((e) => e.nombre).join(', ')}, Cerrado ganado, Cerrado perdido. Distritos válidos: ${Object.keys(c.distritos).map(cap).join(', ')}. Fuentes válidas: ${c.fuentes.map((f) => f.nombre).join(', ')}.
-Para segmentos que no están aquí (otro distrito, otra etiqueta), usa un número plausible pequeño (entre 2 y 12) y márcalo como aproximado en la demo solo si te lo preguntan.`;
+Para segmentos que no están aquí (otro distrito, otra etiqueta), usa un número plausible pequeño (entre 2 y 12) y márcalo como aproximado en la demo solo si te lo preguntan.${LANGUAGE_RULE[lang] ?? ''}`;
 }
 
 const cap = (s) => s.charAt(0).toUpperCase() + s.slice(1);

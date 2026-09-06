@@ -269,7 +269,11 @@ function startAllAnimations() {
       drawMark(PAD + 92, hy - 26, 52, ACCENT);
       ctx.fillStyle = '#e9edef'; ctx.font = `600 34px ${SANS}`; ctx.textAlign = 'left'; ctx.fillText('Comando', PAD + 180, hy - 2);
       ctx.fillStyle = '#8696a0'; ctx.font = `400 24px ${SANS}`;
-      ctx.fillText(pendingBot ? 'escribiendo…' : 'en línea', PAD + 180, hy + 32);
+      // El héroe se dibuja en canvas: las dos palabras del estado también se leen.
+      const chrome = { es: ['escribiendo…', 'en línea'], en: ['typing…', 'online'], pt: ['digitando…', 'on-line'] }[
+        (document.documentElement.lang || 'es').slice(0, 2)
+      ] ?? ['escribiendo…', 'en línea'];
+      ctx.fillText(pendingBot ? chrome[0] : chrome[1], PAD + 180, hy + 32);
       ctx.fillStyle = '#8696a0'; ctx.font = `400 30px ${SANS}`; ctx.textAlign = 'right'; ctx.fillText('⋮', W - PAD - 34, hy + 12);
       ctx.fillStyle = '#000'; roundRect(ctx, W / 2 - 92, PAD + 16, 184, 52, 26); ctx.fill(); // dynamic island
       // input bar

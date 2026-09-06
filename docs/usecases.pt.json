@@ -1,0 +1,742 @@
+{
+ "seccion": {
+  "titulo": "É assim que muda o dia de cada pessoa do seu time.",
+  "subtitulo": "O Comando não substitui seu time: tira dele o trabalho que o trava. Escolha um papel e veja o alívio na prática.",
+  "cierre": "Seu time mantém o critério. O Comando tira a carga.",
+  "cta": {
+   "texto": "Tirar trabalho do time",
+   "sufijo": " em 2 minutos",
+   "href": "/app/"
+  }
+ },
+ "roles": [
+  "Vendedor",
+  "Gerente de vendas",
+  "Dono do negócio",
+  "Atendimento e pós-venda"
+ ],
+ "verticales": [
+  "Imobiliária",
+  "Clínica / saúde",
+  "Distribuidora B2B",
+  "Loja online",
+  "Educação",
+  "Automotivo",
+  "Seguros e crédito",
+  "Agências"
+ ],
+ "evidencias": {
+  "speed": "Responder a um lead em menos de 5 minutos multiplica por 21 a chance de qualificá-lo (Lead Response Management Study).",
+  "toques": "80 % das vendas exigem 5 ou mais contatos; 44 % dos vendedores desistem no primeiro (Brevet Group).",
+  "cotizacion": "Fazer o acompanhamento entre o dia 3 e o 5 depois de uma proposta dobra a taxa de fechamento.",
+  "noshow": "Confirmar o agendamento e lembrar 24 h e 2 h antes reduz as faltas entre 40 % e 70 %.",
+  "carrito": "A recuperação de carrinhos pelo WhatsApp chega a 18-23 % contra cerca de 8 % por e-mail.",
+  "estancados": "Um negócio que passa de 1,5 vez o ciclo médio tem menos da metade da chance de fechar."
+ },
+ "casos": [
+  {
+   "rol": "Vendedor",
+   "vertical": "Imobiliária",
+   "titulo": "Fecho mais sem viver dentro do CRM",
+   "comandos": [
+    {
+     "u": "Quais leads entraram ontem à noite pelo portal e quem não tocou neles?",
+     "r": "6 leads novos dos portais; 2 sem dono há 9 horas. Pego para você ou distribuo?"
+    },
+    {
+     "u": "Para quem não respondeu a proposta, me lembra no dia 3, 5 e 7 com a mensagem pronta.",
+     "r": "Pronto. Hoje são 4: te passo o primeiro, família Rojas, apto. 402 — «Oi Carla, te mandei a proposta do 402 na segunda…». Toque para enviar."
+    },
+    {
+     "u": "Move o 402 do Rojas para Negociação e anota que pediram 30 dias para o sinal.",
+     "r": "Feito no HubSpot: etapa Negociação, nota salva. Crio a tarefa de ligar no dia 15 para confirmar o sinal?"
+    }
+   ],
+   "resultado": "Nenhum acompanhamento esquecido. Zero minutos digitando no CRM.",
+   "evidencia": "cotizacion",
+   "proactivo": "☀️ Bom dia. Ontem à noite entraram 6 leads dos portais e 2 seguem sem dono. Além disso, 4 propostas chegaram a 3 dias sem resposta. Responda VER para a lista."
+  },
+  {
+   "rol": "Vendedor",
+   "vertical": "Clínica / saúde",
+   "titulo": "Todo orçamento tem acompanhamento",
+   "comandos": [
+    {
+     "u": "Quais pacientes receberam orçamento esta semana e não responderam?",
+     "r": "7 orçamentos sem resposta: 3 de ortodontia, 4 de implantes. O mais antigo é o da Marta Pérez (6 dias)."
+    },
+    {
+     "u": "Prepara a mensagem para a Marta lembrando que o orçamento vence na sexta.",
+     "r": "«Oi Marta, aqui é o Diego da Clínica Sorriso. Seu orçamento de ortodontia vale até sexta; se quiser, a gente vê em 10 minutos por aqui.» Toque para enviar."
+    },
+    {
+     "u": "Marca o orçamento do Luis Ávila como aceito e cria a tarefa de agendar a primeira sessão.",
+     "r": "Orçamento aceito no CRM e tarefa criada para hoje. Proponho terça ou quinta?"
+    }
+   ],
+   "resultado": "Os orçamentos fecham enquanto ainda importam.",
+   "evidencia": "toques",
+   "proactivo": "⏰ 7 orçamentos desta semana seguem sem resposta; o da Marta Pérez (ortodontia) vence na sexta. Responda VER e eu te passo as mensagens prontas."
+  },
+  {
+   "rol": "Vendedor",
+   "vertical": "Distribuidora B2B",
+   "titulo": "Meus clientes recorrentes não esfriam",
+   "comandos": [
+    {
+     "u": "Quais clientes da minha carteira não compram há mais de 30 dias?",
+     "r": "9 clientes. Os três maiores: Ferragens El Sol (42 dias), Distribuidora Norte (38), Mercados Centro (35)."
+    },
+    {
+     "u": "Prepara uma mensagem para cada um oferecendo a promoção de agosto.",
+     "r": "Você tem 9 mensagens prontas com o último pedido e a promo. Começo pelo El Sol: «Oi Jorge, vi que seu último pedido foi em julho…». Toque para enviar a primeira."
+    },
+    {
+     "u": "Sobe o pedido da Ferragens El Sol para Orçado com 120 caixas e avisa a expedição.",
+     "r": "Negócio em Orçado por 120 caixas; expedição avisada pelo WhatsApp. Programo o lembrete de cobrança em 30 dias?"
+    }
+   ],
+   "resultado": "Carteira viva, pedidos recorrentes que não se perdem.",
+   "evidencia": "toques",
+   "proactivo": "📉 9 clientes da sua carteira estão há mais de 30 dias sem comprar. A Ferragens El Sol já está em 42. Responda VER para vê-los com o último pedido."
+  },
+  {
+   "rol": "Vendedor",
+   "vertical": "Loja online",
+   "titulo": "Vendo enquanto atendo",
+   "comandos": [
+    {
+     "u": "Quais carrinhos acima de $200 foram abandonados hoje?",
+     "r": "5 carrinhos: o maior é o da Andrea Gómez ($480, tênis e jaqueta). Nenhum concluiu o pagamento."
+    },
+    {
+     "u": "Prepara a mensagem para a Andrea com o link de pagamento e 5 % de desconto.",
+     "r": "Cupom ANDREA5 criado na Shopify. «Oi Andrea, você deixou o tênis e a jaqueta no carrinho; aqui está o link com 5 % extra…». Toque para enviar."
+    },
+    {
+     "u": "Marca o pedido 1042 como entregue e anota que o cliente pediu nota fiscal.",
+     "r": "Pedido 1042 entregue e nota salva. Amanhã deixo pronta a mensagem pedindo a avaliação."
+    }
+   ],
+   "resultado": "Cada carrinho abandonado ganha uma segunda chance.",
+   "evidencia": "carrito",
+   "proactivo": "🛒 Hoje foram abandonados 5 carrinhos acima de $200; o maior é o da Andrea Gómez ($480). Responda VER e eu deixo as mensagens de recuperação prontas."
+  },
+  {
+   "rol": "Gerente de vendas",
+   "vertical": "Imobiliária",
+   "titulo": "Vejo o funil sem pedir relatório",
+   "comandos": [
+    {
+     "u": "Toda segunda às 8 me manda o funil por vendedor e os negócios parados há mais de 10 dias.",
+     "r": "Programado. Nesta segunda: 38 negócios ativos, 6 parados (4 do Luis). Mando às 8:00."
+    },
+    {
+     "u": "Se um lead ficar 15 minutos sem contato, avisa o supervisor de plantão.",
+     "r": "Regra ativa das 9:00 às 20:00. O supervisor de plantão vem da escala."
+    },
+    {
+     "u": "Divide os leads da zona norte entre a Ana e o Luis; se ninguém pegar em 1 hora, me avisa.",
+     "r": "11 leads atribuídos (6 Ana, 5 Luis). Em uma hora te aviso dos que seguirem sem atividade."
+    }
+   ],
+   "resultado": "Cada lead tem dono em minutos, não em dias.",
+   "evidencia": "speed",
+   "proactivo": "📊 Segunda 8:00 · 38 negócios ativos, 6 parados há mais de 10 dias (4 do Luis). Responda VER para o detalhe por vendedor."
+  },
+  {
+   "rol": "Gerente de vendas",
+   "vertical": "Clínica / saúde",
+   "titulo": "Agenda cheia, sem faltas",
+   "comandos": [
+    {
+     "u": "Quantas consultas de amanhã não estão confirmadas?",
+     "r": "14 de 41 sem confirmar. 5 são de primeira consulta."
+    },
+    {
+     "u": "Para as que não confirmarem hoje até as 18:00, passa o lembrete para cada consultora com a mensagem pronta.",
+     "r": "Programado. Às 18:00 cada consultora recebe suas consultas pendentes com o lembrete para enviar."
+    },
+    {
+     "u": "Se um paciente faltar, cria a tarefa de reagendar para a consultora dele no mesmo dia.",
+     "r": "Regra ativa. As faltas são marcadas pela agenda e a tarefa é criada na hora."
+    }
+   ],
+   "resultado": "Menos cadeiras vazias, mais tratamentos iniciados.",
+   "evidencia": "noshow",
+   "proactivo": "📅 Amanhã há 41 consultas e 14 seguem sem confirmar, 5 de primeira consulta. Responda VER para distribuir às consultoras."
+  },
+  {
+   "rol": "Gerente de vendas",
+   "vertical": "Distribuidora B2B",
+   "titulo": "Metas sob controle todo dia",
+   "comandos": [
+    {
+     "u": "Todo dia às 7 me manda o avanço da meta por vendedor e os pedidos sem orçar.",
+     "r": "Programado. Hoje: time em 62 % da meta mensal; 8 pedidos estão há mais de 24 h sem orçamento."
+    },
+    {
+     "u": "Se um orçamento passar de $20.000, me avisa antes de sair.",
+     "r": "Regra ativa: você recebe o resumo com margem e condições para aprovar com um «OK»."
+    },
+    {
+     "u": "Quais clientes reduziram mais de 30 % as compras neste trimestre em relação ao anterior?",
+     "r": "12 clientes. Os cinco maiores somam $84.000 a menos. Atribuo a um vendedor para recuperação?"
+    }
+   ],
+   "resultado": "Decisões com o dado do dia, não com o fechamento do mês.",
+   "evidencia": "estancados",
+   "proactivo": "📊 7:00 · Time em 62 % da meta mensal; 8 pedidos estão há mais de 24 h sem orçamento. Responda VER para vê-los por vendedor."
+  },
+  {
+   "rol": "Gerente de vendas",
+   "vertical": "Loja online",
+   "titulo": "A operação avisa a mim",
+   "comandos": [
+    {
+     "u": "Me avisa se um pedido acima de $500 ficar em «Pagamento pendente» por mais de 24 horas.",
+     "r": "Regra ativa. Agora há 2: pedidos 1031 ($640) e 1037 ($512)."
+    },
+    {
+     "u": "Toda manhã me diz quantos pedidos há para despachar e quais estão há mais de 48 horas.",
+     "r": "Programado para as 8:00. Hoje: 27 para despachar, 4 com mais de 48 h."
+    },
+    {
+     "u": "Se um produto ficar sem estoque e tiver pedidos pendentes, avisa a compras e a mim.",
+     "r": "Regra ativa sobre o estoque da Shopify. Aviso compras pelo WhatsApp e você também."
+    }
+   ],
+   "resultado": "Zero pedidos esquecidos, zero clientes perguntando «e o meu pedido?».",
+   "evidencia": "carrito",
+   "proactivo": "⚠️ 2 pedidos acima de $500 estão há 24 h em «Pagamento pendente»: 1031 ($640) e 1037 ($512). Responda VER ou DEPOIS."
+  },
+  {
+   "rol": "Dono do negócio",
+   "vertical": "Imobiliária",
+   "titulo": "Sei o que acontece sem abrir nada",
+   "comandos": [
+    {
+     "u": "Me avisa se um negócio acima de $80.000 for perdido, com o motivo.",
+     "r": "Regra ativa. Última perda: Torre Norte 1203, $95.000, motivo «financiamento não aprovado»."
+    },
+    {
+     "u": "Toda sexta: vendas da semana, conversão por portal e os 3 melhores corretores.",
+     "r": "Programado. Esta semana: 4 sinais, conversão portal A 3,1 % contra portal B 1,8 %; top: Ana, Luis, Marco."
+    },
+    {
+     "u": "Quantas visitas fecharam este mês em comparação com o mês passado?",
+     "r": "Agosto: 31 % das visitas viraram sinal contra 24 % em julho. Subiu 7 pontos."
+    }
+   ],
+   "resultado": "Um WhatsApp no fim do dia vale mais que três painéis.",
+   "evidencia": "estancados",
+   "proactivo": "🔴 Perdemos a Torre Norte 1203 ($95.000). Motivo: financiamento não aprovado. Esta semana já são 4 sinais. Responda POR QUÊ para o detalhe."
+  },
+  {
+   "rol": "Dono do negócio",
+   "vertical": "Clínica / saúde",
+   "titulo": "Minha clínica se reporta sozinha",
+   "comandos": [
+    {
+     "u": "Toda segunda me manda pacientes novos, orçamentos aceitos e taxa de faltas da semana.",
+     "r": "Programado. Semana passada: 46 pacientes novos, 19 orçamentos aceitos ($38.000), faltas 9 %."
+    },
+    {
+     "u": "Me avisa se a taxa de faltas de um dia passar de 15 %.",
+     "r": "Regra ativa. É calculada no fechamento de cada dia com a agenda do CRM."
+    },
+    {
+     "u": "Quais tratamentos geraram mais receita neste trimestre?",
+     "r": "Implantes $142.000 (41 %), ortodontia $96.000 (28 %), estética $58.000 (17 %)."
+    }
+   ],
+   "resultado": "Números claros, sem esperar o contador.",
+   "evidencia": "noshow",
+   "proactivo": "📊 Semana passada: 46 pacientes novos, 19 orçamentos aceitos ($38.000), faltas 9 %. Responda VER para o detalhe por tratamento."
+  },
+  {
+   "rol": "Dono do negócio",
+   "vertical": "Distribuidora B2B",
+   "titulo": "Margem e cobrança à vista",
+   "comandos": [
+    {
+     "u": "Me avisa quando um cliente passar de 15 dias de atraso no pagamento e prepara o lembrete.",
+     "r": "Regra ativa. Hoje: 3 clientes; o maior é Mercados Centro, $12.400 com 18 dias. Mensagem pronta para enviar."
+    },
+    {
+     "u": "Toda sexta me diz vendas por linha de produto e margem média.",
+     "r": "Programado. Esta semana: $210.000; margem 23 %; ferragens cresceu 12 %, tintas caiu 6 %."
+    },
+    {
+     "u": "Quem são os 10 clientes que mais compraram este ano e quanto cresceram?",
+     "r": "Te mando em uma tabela: 7 dos 10 cresceram; El Sol +34 %, Distribuidora Norte −8 %."
+    }
+   ],
+   "resultado": "Você cobra em dia e sabe onde está a margem.",
+   "evidencia": "toques",
+   "proactivo": "💸 3 clientes passam de 15 dias de atraso; o maior é Mercados Centro, $12.400 com 18 dias. O lembrete está pronto: responda VER."
+  },
+  {
+   "rol": "Dono do negócio",
+   "vertical": "Loja online",
+   "titulo": "Minha loja escreve para mim",
+   "comandos": [
+    {
+     "u": "Toda manhã me manda as vendas de ontem, o ticket médio e o produto mais vendido.",
+     "r": "Programado para as 8:00. Ontem: $6.420 em 38 pedidos, ticket $169, mais vendido: tênis Runner."
+    },
+    {
+     "u": "Me avisa se as vendas do dia caírem mais de 30 % em relação à média dos últimos 7 dias.",
+     "r": "Regra ativa. Média atual: $5.900/dia; te aviso se um dia fechar abaixo de $4.130."
+    },
+    {
+     "u": "Quanto vendemos no marketplace contra a loja própria neste mês?",
+     "r": "Marketplace $48.000 (54 %), loja própria $41.000 (46 %). A margem é 9 pontos maior na loja própria."
+    }
+   ],
+   "resultado": "Você decide com o dado do dia, pelo celular.",
+   "evidencia": "carrito",
+   "proactivo": "☀️ Ontem: $6.420 em 38 pedidos, ticket $169; mais vendido: tênis Runner. Responda VER para o detalhe por canal."
+  },
+  {
+   "rol": "Atendimento e pós-venda",
+   "vertical": "Imobiliária",
+   "titulo": "Ninguém fica sem resposta",
+   "comandos": [
+    {
+     "u": "Um dia antes de cada visita, me passa o lembrete para o cliente e me avisa se ele não confirmar.",
+     "r": "Programado. Amanhã há 6 visitas; às 17:00 deixo as 6 mensagens prontas."
+    },
+    {
+     "u": "Quando o contrato de compra for assinado, cria a tarefa de enviar os documentos ao cartório.",
+     "r": "Regra ativa. Dispara quando o negócio passa para «Contrato assinado» no CRM."
+    },
+    {
+     "u": "Se um cliente ficar 3 dias sem responder depois da visita, me avisa com a ficha dele.",
+     "r": "Regra ativa. Agora há 2: família Quispe (visita de segunda) e Sr. Paredes."
+    }
+   ],
+   "resultado": "Cada cliente atendido como se fosse o único.",
+   "evidencia": "noshow",
+   "proactivo": "📅 Amanhã há 6 visitas; às 17:00 deixo os 6 lembretes prontos. Hoje 2 clientes estão há 3 dias sem responder depois da visita. Responda VER."
+  },
+  {
+   "rol": "Atendimento e pós-venda",
+   "vertical": "Clínica / saúde",
+   "titulo": "O paciente volta porque é bem cuidado",
+   "comandos": [
+    {
+     "u": "No dia seguinte a cada tratamento, prepara a mensagem para perguntar como o paciente está.",
+     "r": "Programado. Hoje você tem 12 mensagens de acompanhamento prontas; começo pela Rosa Díaz (extração de ontem)."
+    },
+    {
+     "u": "Se um paciente não voltar em 6 meses desde a última limpeza, me avisa e prepara o convite.",
+     "r": "Regra ativa. Este mês vencem 58 pacientes; te passo em lotes de 10 toda manhã."
+    },
+    {
+     "u": "Anota na ficha da Rosa Díaz que ela prefere consultas à tarde e cria a tarefa de retorno em 15 dias.",
+     "r": "Nota salva e retorno programado para o dia 11. Mando a proposta de horário agora?"
+    }
+   ],
+   "resultado": "Pacientes que voltam, sem ligações de lembrete.",
+   "evidencia": "noshow",
+   "proactivo": "🩺 Hoje você tem 12 acompanhamentos pós-tratamento prontos; o primeiro, Rosa Díaz (extração de ontem). Responda VER para começar."
+  },
+  {
+   "rol": "Atendimento e pós-venda",
+   "vertical": "Distribuidora B2B",
+   "titulo": "Todo pedido chega e é confirmado",
+   "comandos": [
+    {
+     "u": "Quando um pedido sair para despacho, prepara o aviso para o cliente com a data estimada.",
+     "r": "Regra ativa. Hoje saíram 14; as mensagens estão prontas com rastreio e data."
+    },
+    {
+     "u": "Se um cliente abrir uma reclamação, cria a tarefa para o vendedor e me avisa se não for atendida em 24 h.",
+     "r": "Regra ativa. As reclamações entram como tickets do CRM e o aviso chega em 24 h."
+    },
+    {
+     "u": "Quais clientes tiveram mais de 2 reclamações neste trimestre?",
+     "r": "4 clientes: Mercados Centro (4), Minimercado Sul (3), El Sol (3), Norte (3). Marco para visita?"
+    }
+   ],
+   "resultado": "Menos reclamações repetidas, clientes que voltam a comprar.",
+   "evidencia": "toques",
+   "proactivo": "🚚 Hoje saíram 14 pedidos para despacho; os avisos com rastreio e data estão prontos. Há 1 reclamação sem atendimento desde ontem. Responda VER."
+  },
+  {
+   "rol": "Atendimento e pós-venda",
+   "vertical": "Loja online",
+   "titulo": "Do pedido à avaliação, sem atrito",
+   "comandos": [
+    {
+     "u": "Quando um pedido passar para «Entregue», no dia seguinte deixa pronta a mensagem pedindo a avaliação.",
+     "r": "Regra ativa. Amanhã você terá 22 mensagens prontas com o link de avaliação de cada produto."
+    },
+    {
+     "u": "Se um cliente perguntar sobre o pedido no marketplace e a gente não responder em 2 horas, me avisa.",
+     "r": "Regra ativa sobre as perguntas e mensagens do marketplace."
+    },
+    {
+     "u": "Marca o pedido 1058 como devolução aceita e cria a tarefa de reembolso para o financeiro.",
+     "r": "Pedido 1058 em «Devolução aceita»; tarefa criada para o financeiro com o valor $210."
+    }
+   ],
+   "resultado": "Clientes que voltam e contam para os outros.",
+   "evidencia": "carrito",
+   "proactivo": "⭐ 22 pedidos foram entregues ontem: as mensagens de avaliação estão prontas. 1 pergunta do marketplace está há 2 h sem resposta. Responda VER."
+  },
+  {
+   "rol": "Vendedor",
+   "vertical": "Educação",
+   "titulo": "Todo candidato tem resposta hoje",
+   "comandos": [
+    {
+     "u": "Quais candidatos entraram ontem à noite pela Meta e quem não entrou em contato?",
+     "r": "14 candidatos novos da campanha «Matrícula 2027»; 5 sem contato há 10 horas, 3 de Administração. Pego para você?"
+    },
+    {
+     "u": "Para quem pediu informação e não respondeu em 2 dias, prepara a mensagem com o link do curso.",
+     "r": "Pronto. Hoje são 9; te passo a primeira, Camila Ruiz (Marketing Digital): «Oi Camila, te mando a grade e as datas…». Toque para enviar."
+    },
+    {
+     "u": "Marca a Camila Ruiz como «Pré-inscrita» e anota que ela paga a matrícula na segunda.",
+     "r": "Feito no HubSpot: etapa Pré-inscrita, nota salva. Crio a tarefa de confirmar o pagamento na segunda às 10?"
+    }
+   ],
+   "resultado": "Nenhum candidato esfria antes de se matricular.",
+   "evidencia": "speed",
+   "proactivo": "☀️ Ontem à noite entraram 14 candidatos da «Matrícula 2027»; 5 seguem sem contato, 3 de Administração. Responda VER para a lista com celular."
+  },
+  {
+   "rol": "Vendedor",
+   "vertical": "Automotivo",
+   "titulo": "Do test drive à assinatura sem perder ninguém",
+   "comandos": [
+    {
+     "u": "Quem fez test drive esta semana e ainda não tem proposta?",
+     "r": "6 prospects. O mais antigo é o Jorge Salas (SUV Kicks, terça). Nenhum tem proposta no CRM."
+    },
+    {
+     "u": "Prepara a mensagem para o Jorge com a proposta e as opções de financiamento.",
+     "r": "«Oi Jorge, obrigado pelo test drive do Kicks. Te mando a proposta e dois planos de financiamento em 36 e 48 meses…». Anexei o PDF. Toque para enviar."
+    },
+    {
+     "u": "Move o Jorge para «Financiamento» e cria a tarefa de pedir os documentos na quinta.",
+     "r": "Etapa Financiamento e tarefa criada para quinta às 9:00. Aviso o financeiro para pré-avaliar?"
+    }
+   ],
+   "resultado": "Todo test drive termina em proposta com acompanhamento.",
+   "evidencia": "cotizacion",
+   "proactivo": "🚗 6 pessoas fizeram test drive esta semana e nenhuma tem proposta. A mais antiga: Jorge Salas (Kicks, terça). Responda VER."
+  },
+  {
+   "rol": "Vendedor",
+   "vertical": "Seguros e crédito",
+   "titulo": "Renovo e coloco sem correr atrás de ninguém",
+   "comandos": [
+    {
+     "u": "Quais apólices da minha carteira vencem nos próximos 30 dias?",
+     "r": "23 apólices: 14 de veículo, 6 de saúde, 3 de vida. As três maiores: Transportes Andes ($4.200), família Cárdenas ($1.850), Grupo Mesa ($1.600)."
+    },
+    {
+     "u": "Prepara o lembrete de renovação de cada uma com o prêmio atual.",
+     "r": "23 mensagens prontas com prêmio, vigência e opção de melhoria. Começo por Transportes Andes: «Oi Raúl, sua apólice de frota vence no dia 15…». Toque para enviar a primeira."
+    },
+    {
+     "u": "Marca a proposta de crédito da Ana Torres como «Documentos completos» e cria a tarefa de mandar para análise.",
+     "r": "Etapa atualizada e tarefa criada para hoje. Te aviso quando a análise responder no CRM."
+    }
+   ],
+   "resultado": "Renovações em dia e propostas que não ficam na gaveta.",
+   "evidencia": "toques",
+   "proactivo": "📆 23 apólices da sua carteira vencem em 30 dias; as 3 maiores somam $9.800. Responda VER e eu te passo os lembretes prontos."
+  },
+  {
+   "rol": "Vendedor",
+   "vertical": "Agências",
+   "titulo": "Minhas propostas não ficam sem resposta",
+   "comandos": [
+    {
+     "u": "Quais propostas eu enviei há mais de 5 dias sem resposta?",
+     "r": "4 propostas: Clínica Norte ($3.500/mês), Ferragens Sol ($1.200), Studio Kai ($900) e Doce Lar ($800)."
+    },
+    {
+     "u": "Prepara um acompanhamento para a Clínica Norte oferecendo uma call de 15 minutos.",
+     "r": "«Oi Patricia, conseguiu ver a proposta de conteúdo e mídia? Se ajudar, proponho 15 minutos na quinta…». Toque para enviar."
+    },
+    {
+     "u": "Move a Clínica Norte para «Negociação» e anota que querem começar pelo Instagram.",
+     "r": "Feito no HubSpot: etapa Negociação, nota salva. Crio a tarefa de ajustar a proposta para quarta?"
+    }
+   ],
+   "resultado": "Cada proposta tem o próximo passo agendado.",
+   "evidencia": "toques",
+   "proactivo": "📨 4 propostas estão há mais de 5 dias sem resposta; a Clínica Norte ($3.500/mês) é a maior. Responda VER para os acompanhamentos prontos."
+  },
+  {
+   "rol": "Gerente de vendas",
+   "vertical": "Educação",
+   "titulo": "A campanha de matrícula sob controle",
+   "comandos": [
+    {
+     "u": "Toda manhã às 7 me manda os candidatos novos por curso e os que estão há mais de 1 hora sem contato.",
+     "r": "Programado. Hoje: 62 candidatos novos (Administração 21, Marketing 18, Sistemas 23); 9 com mais de 1 hora sem contato."
+    },
+    {
+     "u": "Se um candidato ficar 15 minutos sem contato no horário da campanha, avisa o consultor de plantão.",
+     "r": "Regra ativa das 8:00 às 21:00 com a escala do CRM."
+    },
+    {
+     "u": "Divide os candidatos de Sistemas entre a Rosa e o Diego; se ninguém pegar em 30 minutos, me avisa.",
+     "r": "23 atribuídos (12 Rosa, 11 Diego). Em 30 minutos te aviso dos que seguirem sem atividade."
+    }
+   ],
+   "resultado": "Cada candidato tem consultor em minutos, não em dias.",
+   "evidencia": "speed",
+   "proactivo": "📊 7:00 · 62 candidatos novos (Administração 21, Marketing 18, Sistemas 23); 9 estão há mais de 1 hora sem contato. Responda VER."
+  },
+  {
+   "rol": "Gerente de vendas",
+   "vertical": "Automotivo",
+   "titulo": "Vejo o funil da concessionária sem pedir relatório",
+   "comandos": [
+    {
+     "u": "Toda segunda me manda propostas por vendedor e os prospects parados há mais de 7 dias.",
+     "r": "Programado. Esta semana: 48 propostas (Marco 14, Lucía 12, Pedro 11, Ana 11); 9 prospects parados, 5 em Financiamento."
+    },
+    {
+     "u": "Se um lead do portal ou da Meta ficar 10 minutos sem contato, avisa a mim e ao vendedor de plantão.",
+     "r": "Regra ativa. Aviso duplo: vendedor de plantão e você, com o modelo de interesse."
+    },
+    {
+     "u": "Quantos test drives viraram venda neste mês por vendedor?",
+     "r": "Marco 6 de 15 (40 %), Lucía 5 de 14 (36 %), Pedro 3 de 13 (23 %), Ana 4 de 10 (40 %). Média do mês: 35 %."
+    }
+   ],
+   "resultado": "Decisões com o dado do dia, não com o fechamento do mês.",
+   "evidencia": "estancados",
+   "proactivo": "📊 Segunda · 48 propostas esta semana (Marco 14, Lucía 12); 9 prospects parados há mais de 7 dias. Responda VER por vendedor."
+  },
+  {
+   "rol": "Gerente de vendas",
+   "vertical": "Seguros e crédito",
+   "titulo": "Carteira e colocações em dia",
+   "comandos": [
+    {
+     "u": "Toda sexta me manda renovações feitas contra vencidas por consultor.",
+     "r": "Programado. Esta semana: 41 renovadas, 7 vencidas sem renovar (4 do Luis). Taxa de retenção: 85 %."
+    },
+    {
+     "u": "Se uma proposta de crédito ficar mais de 48 horas em «Análise», me avisa com o valor.",
+     "r": "Regra ativa. Agora há 3: Ferragens Sol ($15.000), Ana Torres ($8.000), Oficina Ruiz ($6.500)."
+    },
+    {
+     "u": "Divide as apólices que vencem em 15 dias sem tratativa entre o Luis e a Carla.",
+     "r": "18 apólices atribuídas (9 e 9), com a tarefa de contato para amanhã. Na quinta te aviso das que seguirem sem tratativa."
+    }
+   ],
+   "resultado": "Nenhuma apólice vence sem alguém ter cuidado dela.",
+   "evidencia": "toques",
+   "proactivo": "⚠️ 3 propostas de crédito estão há mais de 48 h em «Análise»; Ferragens Sol ($15.000) é a maior. Responda VER ou DEPOIS."
+  },
+  {
+   "rol": "Gerente de vendas",
+   "vertical": "Agências",
+   "titulo": "Funil de propostas sem surpresas",
+   "comandos": [
+    {
+     "u": "Toda segunda me manda as propostas abertas por executivo e as que estão há mais de 10 dias sem resposta.",
+     "r": "Programado. Hoje: 17 propostas abertas ($42.000); 6 com mais de 10 dias, 4 da Sofía."
+    },
+    {
+     "u": "Se entrar um lead do formulário do site com orçamento acima de $2.000, me avisa e atribui à Sofía.",
+     "r": "Regra ativa. Último: Clínica Norte, $3.500/mês, já atribuído à Sofía."
+    },
+    {
+     "u": "Quantos leads de indicação fechamos neste trimestre contra os de mídia paga?",
+     "r": "Indicação: 9 de 21 (43 %). Mídia paga: 7 de 58 (12 %). O ticket médio de indicação é 1,8 vez maior."
+    }
+   ],
+   "resultado": "Você sabe qual canal fecha e quem precisa de ajuda, toda semana.",
+   "evidencia": "estancados",
+   "proactivo": "📊 Segunda · 17 propostas abertas ($42.000); 6 com mais de 10 dias sem resposta, 4 da Sofía. Responda VER por executivo."
+  },
+  {
+   "rol": "Dono do negócio",
+   "vertical": "Educação",
+   "titulo": "A matrícula se reporta sozinha",
+   "comandos": [
+    {
+     "u": "Toda sexta me manda candidatos, pré-inscritos e matriculados da semana por curso.",
+     "r": "Programado. Esta semana: 310 candidatos, 84 pré-inscritos, 37 matriculados. Sistemas lidera com 14 matrículas."
+    },
+    {
+     "u": "Me avisa se a conversão de candidato para matriculado de uma campanha cair abaixo de 8 %.",
+     "r": "Regra ativa. É calculada toda noite por campanha. Hoje: «Matrícula 2027» em 11,9 %."
+    },
+    {
+     "u": "Quanto custou cada matrícula por canal neste mês?",
+     "r": "Meta $38, Google $52, indicações $9, feiras $71. Indicações trouxeram 22 % das matrículas."
+    }
+   ],
+   "resultado": "Um WhatsApp no fim do dia vale mais que três painéis.",
+   "evidencia": "speed",
+   "proactivo": "📊 Sexta · 310 candidatos, 84 pré-inscritos, 37 matriculados esta semana. «Matrícula 2027» converte a 11,9 %. Responda VER por curso."
+  },
+  {
+   "rol": "Dono do negócio",
+   "vertical": "Automotivo",
+   "titulo": "Sei quantos carros saem sem ir ao showroom",
+   "comandos": [
+    {
+     "u": "Todo sábado me manda unidades vendidas, margem média e os 3 melhores vendedores.",
+     "r": "Programado. Esta semana: 11 unidades, margem 7,4 %; top: Marco, Ana, Lucía."
+    },
+    {
+     "u": "Me avisa se um prospect com proposta acima de $30.000 for perdido, e o motivo.",
+     "r": "Regra ativa. Última perda: picape Hilux, $38.000, motivo «financiamento não aprovado»."
+    },
+    {
+     "u": "Qual modelo teve mais propostas neste mês e quantas fecharam?",
+     "r": "Kicks: 42 propostas, 9 vendas (21 %). Depois Versa (31, 8) e Frontier (18, 5)."
+    }
+   ],
+   "resultado": "Você decide com o dado do dia, pelo celular.",
+   "evidencia": "estancados",
+   "proactivo": "🔴 Perdemos uma Hilux com proposta de $38.000. Motivo: financiamento não aprovado. Esta semana já são 11 unidades. Responda POR QUÊ."
+  },
+  {
+   "rol": "Dono do negócio",
+   "vertical": "Seguros e crédito",
+   "titulo": "Retenção e inadimplência à vista",
+   "comandos": [
+    {
+     "u": "Toda segunda me manda prêmios renovados, apólices perdidas e crédito colocado na semana.",
+     "r": "Programado. Semana passada: $61.000 renovados, 5 apólices perdidas ($4.300), 12 créditos colocados ($96.000)."
+    },
+    {
+     "u": "Me avisa quando um cliente passar de 15 dias de atraso e prepara o lembrete de pagamento.",
+     "r": "Regra ativa. Hoje: 4 clientes; o maior é Oficina Ruiz, $2.100 com 19 dias. Mensagem pronta para enviar."
+    },
+    {
+     "u": "Qual seguradora deixa mais margem neste trimestre?",
+     "r": "A primeira deixa 14,2 %, a segunda 12,8 % e a terceira 11,5 %; a primeira concentra 46 % dos prêmios."
+    }
+   ],
+   "resultado": "Você cobra em dia e sabe onde está a margem.",
+   "evidencia": "toques",
+   "proactivo": "💸 4 clientes passam de 15 dias de atraso; o maior é Oficina Ruiz, $2.100 com 19 dias. Lembrete pronto: responda VER."
+  },
+  {
+   "rol": "Dono do negócio",
+   "vertical": "Agências",
+   "titulo": "A agência escreve para mim",
+   "comandos": [
+    {
+     "u": "Toda sexta me manda novos contratos, receita recorrente e clientes em risco.",
+     "r": "Programado. Esta semana: 2 contratos novos ($4.300/mês), MRR $58.000, 3 clientes em risco por baixa atividade."
+    },
+    {
+     "u": "Me avisa se um cliente ficar 30 dias sem reuniões nem entregas registradas.",
+     "r": "Regra ativa. Agora há 2: Doce Lar (34 dias) e Studio Kai (31)."
+    },
+    {
+     "u": "Quanto faturamos por serviço neste trimestre em comparação com o anterior?",
+     "r": "Mídia $96.000 (+12 %), conteúdo $54.000 (+4 %), site $31.000 (−9 %). Total +6 %."
+    }
+   ],
+   "resultado": "Você vê a saúde da agência sem abrir nenhuma ferramenta.",
+   "evidencia": "estancados",
+   "proactivo": "⚠️ 2 clientes estão há mais de 30 dias sem reuniões nem entregas: Doce Lar (34) e Studio Kai (31). Responda VER ou DEPOIS."
+  },
+  {
+   "rol": "Atendimento e pós-venda",
+   "vertical": "Educação",
+   "titulo": "O aluno chega à aula e fica",
+   "comandos": [
+    {
+     "u": "Um dia antes do início de cada curso, me passa o lembrete para os matriculados com sala e horário.",
+     "r": "Programado. Amanhã começa Marketing Digital: 18 mensagens prontas às 17:00 com a sala 204 e o horário."
+    },
+    {
+     "u": "Se um aluno faltar às duas primeiras aulas, cria a tarefa de contato para o consultor dele e me avisa.",
+     "r": "Regra ativa sobre a presença registrada no CRM. Hoje: 3 alunos, já com tarefa atribuída."
+    },
+    {
+     "u": "Anota na ficha da Camila Ruiz que ela pediu mudança para a turma da noite e cria a tarefa de confirmar vaga.",
+     "r": "Nota salva e tarefa criada para amanhã. Preparo a mensagem de confirmação quando houver vaga?"
+    }
+   ],
+   "resultado": "Menos evasão nas primeiras semanas.",
+   "evidencia": "noshow",
+   "proactivo": "🎓 Amanhã começa Marketing Digital: 18 lembretes prontos com a sala 204 e o horário. 3 alunos faltaram às duas primeiras aulas. Responda VER."
+  },
+  {
+   "rol": "Atendimento e pós-venda",
+   "vertical": "Automotivo",
+   "titulo": "Da oficina de volta à loja",
+   "comandos": [
+    {
+     "u": "Um dia antes de cada revisão, me passa o lembrete para o cliente e me avisa se ele não confirmar.",
+     "r": "Programado. Amanhã há 9 agendamentos; às 17:00 deixo as 9 mensagens prontas e aviso quem não confirmar."
+    },
+    {
+     "u": "5 dias depois de cada entrega, prepara a mensagem para perguntar como está o carro e pedir a avaliação.",
+     "r": "Regra ativa. Hoje você tem 4 mensagens prontas; começo pelo Jorge Salas (Kicks, entregue na segunda)."
+    },
+    {
+     "u": "Se um cliente completar 3 anos com o carro, me avisa e prepara o convite para orçar o modelo novo.",
+     "r": "Regra ativa. Este mês completam 27 clientes; te passo em lotes de 5 toda manhã."
+    }
+   ],
+   "resultado": "Clientes que voltam à oficina e à loja.",
+   "evidencia": "noshow",
+   "proactivo": "🔧 Amanhã há 9 revisões agendadas; às 17:00 deixo os lembretes. Hoje 4 entregas completam 5 dias: mensagens de avaliação prontas. Responda VER."
+  },
+  {
+   "rol": "Atendimento e pós-venda",
+   "vertical": "Seguros e crédito",
+   "titulo": "Sinistros e parcelas sem ligação perdida",
+   "comandos": [
+    {
+     "u": "Quando um sinistro for registrado, cria a tarefa de acompanhamento e prepara a mensagem com os passos para o cliente.",
+     "r": "Regra ativa. Último: família Cárdenas, colisão leve; tarefa criada e mensagem com os 4 passos e documentos pronta para enviar."
+    },
+    {
+     "u": "Se um sinistro ficar 5 dias sem atualização, me avisa com o consultor responsável.",
+     "r": "Regra ativa. Agora há 2: Transportes Andes (Luis, 6 dias) e Sr. Paredes (Carla, 5 dias)."
+    },
+    {
+     "u": "Três dias antes de cada parcela, me passa o lembrete para o cliente com o valor e o link de pagamento.",
+     "r": "Programado. Na quinta vencem 31 parcelas; deixo as 31 mensagens prontas na segunda às 9:00."
+    }
+   ],
+   "resultado": "Cada cliente sabe em que pé está o processo sem ligar.",
+   "evidencia": "toques",
+   "proactivo": "🚨 A família Cárdenas registrou um sinistro (colisão leve): tarefa criada e mensagem com os 4 passos pronta. 2 sinistros estão há 5 dias sem atualização. Responda VER."
+  },
+  {
+   "rol": "Atendimento e pós-venda",
+   "vertical": "Agências",
+   "titulo": "Clientes que renovam porque se sentem atendidos",
+   "comandos": [
+    {
+     "u": "Toda segunda, prepara o resumo semanal de resultados de cada cliente com as métricas do CRM.",
+     "r": "Pronto. 12 resumos preparados com alcance, leads e investimento da semana; começo pela Clínica Norte. Toque para enviar o primeiro."
+    },
+    {
+     "u": "Se um cliente abrir um ticket e não for respondido em 4 horas, me avisa e ao executivo de conta.",
+     "r": "Regra ativa sobre os tickets do CRM. Aviso duplo em 4 horas."
+    },
+    {
+     "u": "45 dias antes de cada contrato vencer, cria a tarefa de renovação e prepara a proposta de continuidade.",
+     "r": "Regra ativa. Este mês vencem 3 contratos; você já tem a tarefa e a proposta base da Ferragens Sol pronta para revisar."
+    }
+   ],
+   "resultado": "Renovações que chegam sozinhas, sem correria no fim do contrato.",
+   "evidencia": "toques",
+   "proactivo": "📈 Segunda · 12 resumos semanais prontos para seus clientes, começando pela Clínica Norte. 1 ticket está há 4 h sem resposta. Responda VER."
+  }
+ ]
+}
