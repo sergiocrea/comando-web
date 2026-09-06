@@ -1631,10 +1631,23 @@ html { scroll-behavior: smooth; }
   animation: uc-feed-rise 26s linear infinite;
 }
 .uc-feed-col li { display: flex; align-items: center; gap: .55rem; padding: 0 .85rem; white-space: nowrap; }
-.uc-feed-col img { width: 1.25rem; height: 1.25rem; object-fit: contain; flex: 0 0 auto; }
+/* El SVG entra como MÁSCARA, no como imagen: el fichero sigue siendo el blanco
+   plano que comparte con la franja del héroe, y el color de marca lo pone aquí
+   `background-color`. Así un mismo juego de logotipos sirve a los dos sitios
+   —arriba en blanco, escaparate; aquí en color, tubería— sin duplicar assets.
+   El hex viaja desde js/usecases.js en `--uc-marca`. */
+.uc-feed-logo {
+  width: 1.25rem; height: 1.25rem; flex: 0 0 auto;
+  background-color: var(--uc-marca, #f2f4f8);
+  -webkit-mask: var(--uc-logo) center / contain no-repeat;
+  mask: var(--uc-logo) center / contain no-repeat;
+}
+/* Con los logos en color, el rótulo deja de competir: baja de #f2f4f8 a un gris
+   claro para que la marca sea lo primero que se reconoce y el nombre lo que lo
+   confirma. */
 .uc-feed-col span {
   font-family: "Jetbrainsmono Variable", ui-monospace, monospace;
-  font-size: .68rem; font-weight: 500; letter-spacing: .05em; text-transform: uppercase; color: #f2f4f8;
+  font-size: .68rem; font-weight: 500; letter-spacing: .05em; text-transform: uppercase; color: #d5d9e2;
 }
 @keyframes uc-feed-rise { to { transform: translateY(-100%); } }
 .uc-feed:hover .uc-feed-col { animation-play-state: paused; }
@@ -1648,7 +1661,7 @@ html { scroll-behavior: smooth; }
     grid-template-areas: "feed phone outcome";
     gap: 3rem 5rem;
   }
-  /* El teléfono se pinta por encima de la columna para que el pulso se meta
+  /* El teléfono se pinta por encima de la columna para que los rieles se metan
      DEBAJO del marco en vez de morir a su lado: la oclusión es lo que hace
      leer «entra ahí». En el DOM la columna va después, así que sin estos
      z-index el orden de pintado sería justo el contrario. */
@@ -1681,7 +1694,7 @@ html { scroll-behavior: smooth; }
 @media (max-width: 767px) {
   .uc-layout { grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: "phone timeline" "feed feed"; }
   /* El aire bajo el teléfono deja de ser margen y pasa a ser el trayecto que
-     recorre el pulso, así que hace falta más que los .9rem de antes. */
+     recorren los rieles, así que hace falta más que los .9rem de antes. */
   .uc-feed { margin-top: 2.5rem; }
 }
 
@@ -1698,45 +1711,54 @@ html { scroll-behavior: smooth; }
    convergen en un punto del teléfono. Es la diferencia entre «hay cables» y
    «esto entra AHÍ» —muchos orígenes, un destino—, y se consigue girando cada
    riel sobre su extremo derecho, sin geometría a mano.
-   Terminan por DEBAJO del marco (de ahí los z-index de la maqueta): el pulso
+   Terminan por DEBAJO del marco (de ahí los z-index de la maqueta): el trayecto
    no se apaga junto al aparato, desaparece dentro.
-   Los rieles se quedan sin movimiento: tres líneas que convergen en el
-   teléfono siguen diciendo lo que hay que decir. Lo que se apaga es el pulso.
-   Solo se animan `transform` y `opacity`; el resplandor es un `box-shadow`
-   fijo. Nada de esto toca el layout.
+   El riel va GUIONADO y los guiones corren hacia el teléfono. Antes era una
+   línea lisa con un punto de luz que la recorría de vez en cuando, y no contaba
+   nada: la línea sola sólo decía «hay cable», y el punto pasaba tan de tarde en
+   tarde que había que estar mirando en el segundo justo. El guionado en marcha
+   dice el sentido todo el rato y sin gritar.
+   Sólo se anima `background-position`. Nada de esto toca el layout.
    ============================================================ */
 .uc-feed { position: relative; }
 .uc-wire { position: absolute; pointer-events: none; display: none; }
 .uc-wire i {
   position: absolute;
   transform-origin: 100% 50%;           /* el punto de fuga es el teléfono */
-  background: linear-gradient(90deg, rgba(77, 124, 255, 0), rgba(77, 124, 255, .6));
+  /* Guiones en marcha en vez de una línea lisa con un punto encima.
+     Una línea continua sólo dice «hay cable»; el punto decía «algo pasó», pero
+     una vez cada 5,4 s y desde parado no llega a leerse como trayecto. El
+     guionado en movimiento dice lo que faltaba: hacia DÓNDE va. Es continuo, así
+     que no hay que pillarlo en el momento justo, y es más callado que el punto
+     porque nunca hay un objeto brillante cruzando la pantalla.
+     Los guiones se meten bajo el marco del teléfono igual que hacía el punto
+     —de ahí los z-index de la maqueta—: la oclusión es lo que convierte «hay
+     cables» en «esto entra AHÍ». */
+  background-image: repeating-linear-gradient(90deg,
+    rgba(77, 124, 255, .85) 0 6px, rgba(77, 124, 255, 0) 6px 16px);
+  background-size: 16px 100%;
+  /* El desvanecido hacia el origen ya no puede vivir en el degradado del fondo
+     —ahora lo ocupan los guiones—, así que pasa a máscara: el riel nace de la
+     nada junto a la columna y llega entero al teléfono. */
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 55%);
+  mask-image: linear-gradient(90deg, transparent, #000 55%);
+  animation: uc-flow .9s linear infinite;
 }
-/* El punto de luz. Nace en el arranque del riel y muere bajo el teléfono. */
-.uc-wire i::after {
-  content: ""; position: absolute; border-radius: 50%;
-  width: .45rem; height: .45rem;
-  background: #4d7cff; box-shadow: 0 0 .6rem .14rem rgba(77, 124, 255, .8);
-  opacity: 0;
-  animation: uc-signal 5.4s linear infinite;
-}
-/* Escalonados: cada pulso viaja poco más de un segundo de los 5,4 del ciclo, y
-   los retardos los reparten. Nunca hay más de uno en vuelo: catorce a la vez
-   serían un salvapantallas, no una landing. */
-.uc-wire i:nth-child(2)::after { animation-delay: 1.8s; }
-.uc-wire i:nth-child(3)::after { animation-delay: 3.6s; }
+/* Desfasados: tres rieles marcando el paso a la vez se leerían como una sola
+   barra de progreso. Con el desfase se leen como tres orígenes distintos. */
+.uc-wire i:nth-child(2) { animation-delay: -.3s; }
+.uc-wire i:nth-child(3) { animation-delay: -.6s; }
 
 /* Escritorio: el trayecto es horizontal, de la columna al teléfono. */
 @media (min-width: 992px) {
   .uc-wire {
     display: block;
+    /* 5rem de hueco visible + 3,5rem que ya corren bajo el marco del teléfono */
     left: 100%; top: 50%; width: 8.5rem; height: 0;
-    --uc-run: 8.5rem;   /* 5rem de hueco visible + 3,5rem ya bajo el marco */
   }
   .uc-wire i { top: 0; left: 0; right: 0; height: 1px; }
   .uc-wire i:nth-child(1) { transform: rotate(-13deg); }
   .uc-wire i:nth-child(3) { transform: rotate(13deg); }
-  .uc-wire i::after { top: 50%; left: 0; margin-top: -.225rem; }
 }
 
 /* Móvil: la tira está debajo y en horizontal, así que la señal sube. Converge
@@ -1750,34 +1772,33 @@ html { scroll-behavior: smooth; }
   .uc-wire {
     display: block;
     /* Alto = margen de la tira (2,5rem) + el row-gap de la maqueta (1rem) +
-       1,5rem de solape: el pulso tiene que morir DENTRO del marco, y quedarse
-       corto por dos píxeles es exactamente el fallo que esto viene a evitar. */
+       1,5rem de solape: los guiones tienen que morir DENTRO del marco, y
+       quedarse cortos por dos píxeles es justo el fallo que esto viene a evitar. */
     left: 38%; bottom: 100%; width: 0; height: 5rem;
-    --uc-run: -5rem;
   }
   .uc-wire i {
     top: 0; bottom: 0; left: 0; width: 1px; height: auto;
     transform-origin: 50% 0;
-    background: linear-gradient(0deg, rgba(77, 124, 255, 0), rgba(77, 124, 255, .6));
+    /* Aquí el origen es la tira (abajo) y el destino el teléfono (arriba): el
+       patrón y su desvanecido giran con el riel, y los guiones suben. */
+    background-image: repeating-linear-gradient(0deg,
+      rgba(77, 124, 255, .85) 0 6px, rgba(77, 124, 255, 0) 6px 16px);
+    background-size: 100% 16px;
+    -webkit-mask-image: linear-gradient(0deg, transparent, #000 55%);
+    mask-image: linear-gradient(0deg, transparent, #000 55%);
+    animation-name: uc-flow-up;
   }
   .uc-wire i:nth-child(1) { transform: rotate(16deg); }
   .uc-wire i:nth-child(3) { transform: rotate(-16deg); }
-  .uc-wire i::after { bottom: 0; left: 50%; margin-left: -.225rem; animation-name: uc-signal-up; }
 }
 
-@keyframes uc-signal {
-  0% { transform: translateX(0); opacity: 0; }
-  4% { opacity: 1; }
-  26% { transform: translateX(var(--uc-run)); opacity: 1; }
-  27%, 100% { transform: translateX(var(--uc-run)); opacity: 0; }
-}
-@keyframes uc-signal-up {
-  0% { transform: translateY(0); opacity: 0; }
-  4% { opacity: 1; }
-  26% { transform: translateY(var(--uc-run)); opacity: 1; }
-  27%, 100% { transform: translateY(var(--uc-run)); opacity: 0; }
-}
+/* Un solo periodo del patrón. Se anima `background-position`, que no toca la
+   maqueta ni obliga a recalcular nada del resto de la página. */
+@keyframes uc-flow { to { background-position: 16px 0; } }
+@keyframes uc-flow-up { to { background-position: 0 -16px; } }
 
-/* Sin movimiento no hay pulso. Los rieles se quedan: tres líneas que convergen
-   en el teléfono siguen diciendo que de la columna sale lo que él contesta. */
-@media (prefers-reduced-motion: reduce) { .uc-wire i::after { display: none; } }
+/* Sin movimiento, los guiones se paran pero NO desaparecen: tres líneas
+   discontinuas que convergen en el teléfono siguen contando el trayecto, y
+   siguen diciéndolo mejor que las líneas lisas de antes. Lo que se pierde es
+   sólo el sentido de la marcha. */
+@media (prefers-reduced-motion: reduce) { .uc-wire i { animation: none; } }
