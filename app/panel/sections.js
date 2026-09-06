@@ -8,11 +8,12 @@
    - vocabulario del operador (plata en juego, parado, sin dueño, repetidos), nunca del sistema. */
 
 import { isPending } from './api.js?v=6';
-import { crmBlock, crmActions, whatsappStep } from './setup.js?v=5';
+import { crmBlock, crmActions, whatsappStep } from './setup.js?v=6';
 import {
   esc, num, money, pct, fmtTime, fmtDate, fmtDateTime, monthName, dayLabel, sameDay, rel, isToday, isPast, isoDay,
   wa, waBtn, askLine, chip, statusChip, bar, spark, kpi, card, row, moreBox, empty, soon, toast, ICON, SIGNAL_PHRASE,
-} from './ui.js?v=5';
+  personName, personEmail, highValueAmount,
+} from './ui.js?v=6';
 import { t, tn } from '../i18n.js?v=1';
 
 /** Renderiza una parte según el estado de su dato. */
@@ -108,7 +109,7 @@ const approvalActions = () => ({
 const hoy = {
   id: 'hoy', get title() { return t('nav.hoy'); }, get sub() { return t('sub.hoy'); }, icon: 'home',
   load: (api) => ({ me: api.me(), recs: api.recommendations(), tasks: api.tasks(), health: api.health(), pipeline: api.pipeline(), history: api.history(), approvals: api.approvals() }),
-  view(d) {
+  view(d, ctx) {
     const me = val(d.me, {});
     const recs = val(d.recs, []).filter((r) => r.status === 'pending').sort((a, b) => b.priority - a.priority);
     const tasks = val(d.tasks, []).filter((t) => t.status === 'open');
@@ -148,7 +149,7 @@ const hoy = {
       <rect x="20" y="60" width="130" height="44" rx="14" fill="#fff"/><rect x="34" y="74" width="70" height="8" rx="4" fill="#C4CDD5"/><rect x="34" y="88" width="46" height="8" rx="4" fill="#DFE3E8"/>
       <rect x="215" y="150" width="125" height="44" rx="14" fill="#5BE49B"/><rect x="229" y="164" width="60" height="8" rx="4" fill="#0B2E24"/><rect x="229" y="178" width="84" height="8" rx="4" fill="#118D57"/>
       <circle cx="300" cy="70" r="26" fill="#00A76F"/><path d="M288 70l8 8 16-16" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
-    const welcome = `<div class="welcome"><div class="welcome-body"><h2>${esc(t('hoy.hello', { greet, name: me.name || t('hoy.operator') }))}</h2>
+    const welcome = `<div class="welcome"><div class="welcome-body"><h2>${esc(t('hoy.hello', { greet, name: personName(me, ctx) }))}</h2>
       <p>${count ? tn('hoy.youHave', count) : esc(t('hoy.nothingUrgentNow'))} ${esc(t('hoy.askByPhrase'))}</p>
       ${waBtn(t('wa.whatMattersToday'), t('common.writeToComando'), 'btn primary')}</div><div class="welcome-art">${art}</div></div>`;
 
@@ -247,6 +248,9 @@ const crm = {
   id: 'crm', get title() { return t('nav.crm'); }, get sub() { return t('sub.crm'); }, icon: 'funnel',
   load: (api) => ({ pipeline: api.pipeline(), health: api.health() }),
   view(d) {
+    // La moneda sale del resumen de cartera, que es quien la sabe: las métricas
+    // de salud traen importes sin decir de qué moneda son.
+    const currency = (val(d.pipeline, null) || {}).currency;
     const plata = part(d.pipeline, (p) => {
       const stages = [...p.stages].sort((a, b) => a.order - b.order); const maxStage = Math.max(...stages.map((s) => s.amount));
       return `<div class="grid c3">${kpi(t('hoy.moneyInPlay'), money(p.open.amount, p.currency), t('hoy.openDeals', { n: num(p.open.count) }))}${kpi(t('crm.wonMonth'), money(p.wonMonth.amount, p.currency), t('crm.deals', { n: num(p.wonMonth.count) }), { subCls: 'up' })}${kpi(t('crm.lostMonth'), money(p.lostMonth.amount, p.currency), t('crm.deals', { n: num(p.lostMonth.count) }), { subCls: 'down' })}</div>
@@ -260,7 +264,7 @@ const crm = {
       const rows = [...h.metrics].sort((a, b) => sevOrder[a.severity] - sevOrder[b.severity]).map((m) => row({
         ico: { opportunity: '💼', contact: '👤', company: '🏢', task: '⏰' }[m.entity] || '•', cls: m.severity,
         title: esc(m.label.replace(/^Registros/, t('crm.contacts'))),
-        sub: `<b>${num(m.value)}</b>${m.unit ? ' ' + esc(m.unit) : ''}${m.of ? ` ${esc(t('crm.of', { of: num(m.of), pct: Math.round((m.value / m.of) * 100) }))}` : ''}${m.amount ? ` · ${money(m.amount)}` : ''}`,
+        sub: `<b>${num(m.value)}</b>${m.unit ? ' ' + esc(m.unit) : ''}${m.of ? ` ${esc(t('crm.of', { of: num(m.of), pct: Math.round((m.value / m.of) * 100) }))}` : ''}${m.amount ? ` · ${money(m.amount, currency)}` : ''}`,
         primary: waBtn(m.ask, t('crm.seeList'), 'btn sm primary'),
         more: `${waBtn(m.weekly, t('crm.alertWeekly'))}${m.reproduce ? `<p class="hint" style="margin-top:8px"><b>${esc(t('crm.howInCrm'))}</b> ${esc(m.reproduce)}</p>` : ''}`,
       })).join('');
@@ -281,7 +285,7 @@ const avisos = {
 
     /* Una sola lista «Comando te avisa cuando…», en tres bloques con palabras del operador. */
     const siempre = []; const cuandoPase = []; const cadaTanto = [];
-    if (pol) pol.enabledSignals.forEach((s) => { const f = SIGNAL_PHRASE[s]; if (!f) return; const text = f(pol.thresholds, money(pol.thresholds.highValue.PEN)); siempre.push(row({ ico: '🔔', title: esc(text), primary: waBtn(t('wa.stopAlert', { what: text }), t('avisos.turnOff')) })); });
+    if (pol) pol.enabledSignals.forEach((s) => { const f = SIGNAL_PHRASE[s]; if (!f) return; const text = f(pol.thresholds, highValueAmount(pol.thresholds, pipe && pipe.currency)); siempre.push(row({ ico: '🔔', title: esc(text), primary: waBtn(t('wa.stopAlert', { what: text }), t('avisos.turnOff')) })); });
     ev.forEach((r) => cuandoPase.push(row({ ico: '⚡', cls: r.status === 'active' ? 'warning' : '', title: esc(r.name) + (r.status !== 'active' ? ' ' + statusChip('paused') : ''), sub: `${esc(r.condition)} → ${esc(r.action)}${r.firedWeek ? ` · ${esc(tn('avisos.times', r.firedWeek, { n: num(r.firedWeek) }))}` : ''}`,
       primary: r.status === 'active' ? waBtn(t('wa.pauseRule', { name: r.name }), t('avisos.pause')) : waBtn(t('wa.resumeRule', { name: r.name }), t('avisos.resume'), 'btn sm primary'), more: waBtn(t('wa.changeRule', { name: r.name }), t('avisos.change')) })));
     ((ag && ag.rules) || []).forEach((r) => cadaTanto.push(row({ ico: r.critical ? '🚨' : '🔁', title: esc(r.name) + (r.status !== 'active' ? ' ' + statusChip('paused') : ''), sub: `${esc(r.every || '')}${r.lastValue != null && !r.critical ? ` · ${t('avisos.lastValue', { value: num(r.lastValue) })}` : ''}${r.lastFiredAt ? ` · ${esc(t('avisos.alertedYou', { when: rel(r.lastFiredAt) }))}` : ''}`,
@@ -314,9 +318,25 @@ const avisos = {
     'rule:toggle': async (el, ctx, d, reload) => { el.disabled = true; try { await ctx.api.ruleStatus(el.dataset.id, el.dataset.status); toast(t(el.dataset.status === 'paused' ? 'toast.paused' : 'toast.resumed'), 'ok'); reload(); } catch (e) { toast(e.message, 'bad'); el.disabled = false; } },
   },
   forms: {
+    /**
+     * El engine reescribe TODAS las preferencias en cada guardado, así que las
+     * que este formulario no toca hay que devolvérselas tal cual vinieron.
+     *
+     * Antes, cuando la cuenta todavía no tenía preferencias guardadas, este
+     * formulario escribía `America/Lima` a mano: un cliente en Bogotá abría los
+     * horarios, pulsaba Guardar y se llevaba una hora de silencio corrida. Si no
+     * se sabe la zona, se usa la del propio dispositivo del operador, que es la
+     * suya de verdad; y la prioridad mínima, si no se sabe, no se manda: el
+     * engine tiene su propio valor y no hay por qué duplicarlo aquí.
+     */
     prefs: async (form, ctx, d) => {
       const f = new FormData(form); const prev = (val(d.agent, {}).preferences) || {};
-      await ctx.api.savePreferences({ timezone: prev.timezone || 'America/Lima', quietStart: f.get('quietStart'), quietEnd: f.get('quietEnd'), dailyMessageLimit: Number(f.get('dailyMessageLimit')), minimumPriority: prev.minimumPriority ?? 50, proactiveEnabled: f.get('proactiveEnabled') === 'on' });
+      let timezone = prev.timezone;
+      if (!timezone) { try { timezone = Intl.DateTimeFormat().resolvedOptions().timeZone; } catch (e) { timezone = undefined; } }
+      const prefs = { quietStart: f.get('quietStart'), quietEnd: f.get('quietEnd'), dailyMessageLimit: Number(f.get('dailyMessageLimit')), proactiveEnabled: f.get('proactiveEnabled') === 'on' };
+      if (timezone) prefs.timezone = timezone;
+      if (prev.minimumPriority != null) prefs.minimumPriority = prev.minimumPriority;
+      await ctx.api.savePreferences(prefs);
       return t('avisos.prefsSaved');
     },
     briefing: async (form, ctx) => {
@@ -455,15 +475,14 @@ const cuenta = {
     const me = val(d.me, {});
     const PLAN = { gratis: 'plan.gratis', free: 'plan.gratis', basico: 'plan.basico', starter: 'plan.starter', pro: 'plan.pro', enterprise: 'plan.enterprise' };
     const planName = (raw) => { const key = PLAN[String(raw || '').toLowerCase()]; return key ? t(key) : raw || t('common.dash'); };
-    const NAMES = { hubspot: 'HubSpot', salesforce: 'Salesforce', 'google-sheets': 'Google Sheets', pipedrive: 'Pipedrive', zoho: 'Zoho CRM', kommo: 'Kommo', meta: 'Meta Ads', tiktok: 'TikTok Ads', 'google-ads': 'Google Ads' };
     const logo = (p) => `<img class="logo-sm" src="../../assets/img/logos/${p === 'google-ads' ? 'automation' : esc(p)}.svg" alt="">`;
 
     const plan = part(d.quota, (q) => { const total = q.commands.allowance + q.commands.addons + q.commands.adjustments; const share = total ? q.commands.used / total : 0; const cls = share >= 1 ? 'bad' : share >= 0.8 ? 'warn' : '';
       return `<div class="kpi"><div class="kpi-label">${esc(t('cuenta.plan', { name: q.plan.name, price: q.plan.priceUsd, interval: t(q.plan.interval === 'month' ? 'cuenta.month' : 'cuenta.year') }))}</div><div class="kpi-value">${num(q.commands.used)}<small>${esc(t('cuenta.ofCommands', { n: num(total) }))}</small></div><div class="progress ${cls}"><i style="width:${Math.min(100, Math.round(share * 100))}%"></i></div><div class="kpi-sub">${share >= 0.8 ? `<span class="sev-warning">${esc(t('cuenta.over80'))}</span> ` : ''}${esc(t('cuenta.renews', { date: fmtDate(q.period.resetAt) }))}${q.blockedReason ? ` · <span class="sev-warning">${esc(q.blockedReason)}</span>` : ''}</div></div>`; },
       { what: t('cuenta.usageWhat'), phrase: t('wa.commandsLeft'), extra: t('cuenta.yourPlan', { plan: planName(me.plan) }) });
     const cuentaCard = card(t('cuenta.yourAccount'), `<div class="list">
-      ${row({ ico: '👤', title: esc(ctx.user?.fullName || me.name || t('common.dash')), sub: esc(ctx.user?.primaryEmailAddress?.emailAddress || me.email || ''), primary: `<button class="btn sm" data-act="acc:profile">${esc(t('cuenta.edit'))}</button>` })}
-      ${row({ ico: ICON.wa, title: `WhatsApp ${me.whatsapp ? statusChip(me.whatsapp.status) : ''}`, sub: `${esc(me.whatsapp?.phone || t('cuenta.notLinked'))} · ${esc(t('cuenta.youWriteTo', { number: me.comandoNumber || '' }))}`, primary: `<button class="btn sm ghost" data-act="wa:change">${esc(t('cuenta.changeNumber'))}</button>` })}
+      ${row({ ico: '👤', title: esc(personName(me, ctx)), sub: esc(personEmail(me, ctx)), primary: `<button class="btn sm" data-act="acc:profile">${esc(t('cuenta.edit'))}</button>` })}
+      ${row({ ico: ICON.wa, title: `WhatsApp ${me.whatsapp ? statusChip(me.whatsapp.status) : ''}`, sub: `${esc(me.whatsapp?.phone || t('cuenta.notLinked'))}${me.comandoNumber ? ` · ${esc(t('cuenta.youWriteTo', { number: me.comandoNumber }))}` : ''}`, primary: `<button class="btn sm ghost" data-act="wa:change">${esc(t('cuenta.changeNumber'))}</button>` })}
       <div id="wa-change-box"></div>
       <div class="row"><div class="row-ico">💳</div><div class="row-body">${plan}</div><div class="row-actions"><a class="btn sm" href="../../#precios">${esc(t('cuenta.changePlan'))}</a></div></div>
     </div>`);

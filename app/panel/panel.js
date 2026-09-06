@@ -5,10 +5,10 @@
      aún no exista en el engine no tumba la página. */
 
 import { createApi, createMockApi } from './api.js?v=6';
-import { SECTIONS } from './sections.js?v=8';
-import { whatsappStep, resumePendingConnection } from './setup.js?v=5';
-import { esc, setWaBase, wa, skeleton, toast, ICON, isToday, isPast } from './ui.js?v=5';
-import '../strings.js?v=2';
+import { SECTIONS } from './sections.js?v=9';
+import { whatsappStep, resumePendingConnection } from './setup.js?v=6';
+import { esc, setWaBase, wa, skeleton, toast, ICON, isToday, isPast, personName } from './ui.js?v=6';
+import '../strings.js?v=3';
 import { initLocale, adoptAccountLocale, mountLanguagePicker, onLocaleChange, locale, t } from '../i18n.js?v=1';
 
 // El idioma se resuelve ANTES del primer pintado: si se resolviera después, la
@@ -45,7 +45,7 @@ async function buildApi() {
 function currentId() { const m = location.hash.match(/^#\/([a-z]+)/); return m && SECTIONS.some((s) => s.id === m[1]) ? m[1] : 'hoy'; }
 
 function renderNav(badges = {}) {
-  const item = (s, cls) => `<a href="#/${s.id}" data-nav="${s.id}" class="${cls}"><span class="nav-ico">${ICON[s.icon] || ''}</span><span class="nav-label">${esc(s.title)}</span>${badges[s.id] ? `<span class="nav-badge">${esc(badges[s.id])}</span>` : ''}</a>`;
+  const item = (s, cls) => `<a href="#/${s.id}" data-nav="${s.id}" class="${cls}"><span class="nav-ico">${ICON[s.icon] || ''}</span><span class="nav-label">${esc(s.title)}</span>${badges[s.id] ? `<span class="nav-badge" title="${esc(t('nav.badgeTitle', { section: s.title }))}" aria-label="${esc(t('nav.badgeTitle', { section: s.title }))}">${esc(badges[s.id])}</span>` : ''}</a>`;
   $('nav').innerHTML = SECTIONS.map((s) => item(s, '')).join('');
   $('tabbar').innerHTML = SECTIONS.map((s) => item(s, 'tab')).join('');
   markNav();
@@ -144,7 +144,7 @@ async function start() {
     adoptAccountLocale(me.locale);
     if (me.waLink || me.comandoNumber) setWaBase(me.waLink || 'https://wa.me/' + String(me.comandoNumber).replace(/\D/g, ''));
     $('wa-top').href = wa(t('wa.whatMattersToday'));
-    const name = me.name || ctx.user?.firstName || t('boot.yourAccount');
+    const name = personName(me, ctx);
     $('user-button').innerHTML = `<span class="avatar" title="${esc(name)}">${esc(name.slice(0, 1).toUpperCase())}</span>`;
     $('side-foot').innerHTML = `<b>${esc(name)}</b>${esc(me.whatsapp?.phone || '')}`;
     // Sin WhatsApp verificado no hay nada que mostrar: el paso 2 vive aquí mismo.

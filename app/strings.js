@@ -460,6 +460,7 @@ register({
 /* ======================================================= las seis secciones */
 register({
   es: {
+    'nav.badgeTitle': 'Lo que te espera en {section}. No es tu cupo de comandos.',
     'nav.hoy': 'Hoy', 'nav.agenda': 'Agenda', 'nav.crm': 'Mi CRM', 'nav.avisos': 'Avisos',
     'nav.marketing': 'Marketing', 'nav.cuenta': 'Cuenta',
     'sub.hoy': 'Qué hago ahora.',
@@ -470,7 +471,6 @@ register({
     'sub.cuenta': 'Tu plan, tu CRM, tu equipo y lo que Comando sabe de ti.',
     /* Hoy */
     'hoy.greet.morning': 'Buenos días', 'hoy.greet.afternoon': 'Buenas tardes', 'hoy.greet.evening': 'Buenas noches',
-    'hoy.operator': 'operador',
     'hoy.planWaiting': 'Un plan espera tu <b>CONFIRMAR</b>',
     'hoy.planExpires': '{plan} · vence {when}',
     'hoy.waitingOwner': 'Esperando que el dueño lo apruebe · {when}',
@@ -645,6 +645,7 @@ register({
 
 register({
   en: {
+    'nav.badgeTitle': 'What is waiting for you in {section}. This is not your command quota.',
     'nav.hoy': 'Today', 'nav.agenda': 'Calendar', 'nav.crm': 'My CRM', 'nav.avisos': 'Alerts',
     'nav.marketing': 'Marketing', 'nav.cuenta': 'Account',
     'sub.hoy': 'What I do now.',
@@ -654,7 +655,6 @@ register({
     'sub.marketing': 'What your Facebook, Instagram and TikTok ads bring you, and what your analyst says.',
     'sub.cuenta': 'Your plan, your CRM, your team and what Comando knows about you.',
     'hoy.greet.morning': 'Good morning', 'hoy.greet.afternoon': 'Good afternoon', 'hoy.greet.evening': 'Good evening',
-    'hoy.operator': 'there',
     'hoy.planWaiting': 'A plan is waiting for your <b>CONFIRM</b>',
     'hoy.planExpires': '{plan} · expires {when}',
     'hoy.waitingOwner': 'Waiting for the owner to approve · {when}',
@@ -823,6 +823,7 @@ register({
 
 register({
   pt: {
+    'nav.badgeTitle': 'O que espera por você em {section}. Não é a sua cota de comandos.',
     'nav.hoy': 'Hoje', 'nav.agenda': 'Agenda', 'nav.crm': 'Meu CRM', 'nav.avisos': 'Avisos',
     'nav.marketing': 'Marketing', 'nav.cuenta': 'Conta',
     'sub.hoy': 'O que eu faço agora.',
@@ -832,7 +833,6 @@ register({
     'sub.marketing': 'O que seus anúncios do Facebook, Instagram e TikTok trazem, e o que o seu analista diz.',
     'sub.cuenta': 'Seu plano, seu CRM, seu time e o que o Comando sabe de você.',
     'hoy.greet.morning': 'Bom dia', 'hoy.greet.afternoon': 'Boa tarde', 'hoy.greet.evening': 'Boa noite',
-    'hoy.operator': 'operador',
     'hoy.planWaiting': 'Um plano espera seu <b>CONFIRMAR</b>',
     'hoy.planExpires': '{plan} · vence {when}',
     'hoy.waitingOwner': 'Esperando o dono aprovar · {when}',
@@ -1035,6 +1035,11 @@ register({
     'crm.purgeBlocked': 'No se completó: hay una retención legal activa.',
     'crm.sheetConnected': 'Hoja conectada. Comando la está leyendo.',
     'crm.sheetsConnected': '{n} hojas conectadas.',
+    'crm.theCrm': 'el CRM',
+    'crm.disconnectedToast': '{name} desconectado. La copia se elimina el {date}.',
+    'crm.googlePicker': 'el selector de Google',
+    'crm.pickSheets': 'Elige las hojas que quieres conectar…',
+    'crm.noSheetPicked': 'No elegiste ninguna hoja. Puedes intentarlo cuando quieras.',
   },
   en: {
     'setup.step1': '1 Account', 'setup.step2': '2 WhatsApp', 'setup.step3': '3 CRM',
@@ -1070,6 +1075,11 @@ register({
     'crm.purgeBlocked': 'It did not complete: there is a legal hold in place.',
     'crm.sheetConnected': 'Sheet connected. Comando is reading it.',
     'crm.sheetsConnected': '{n} sheets connected.',
+    'crm.theCrm': 'the CRM',
+    'crm.disconnectedToast': '{name} disconnected. The copy is deleted on {date}.',
+    'crm.googlePicker': 'the Google picker',
+    'crm.pickSheets': 'Pick the sheets you want to connect…',
+    'crm.noSheetPicked': 'You did not pick a sheet. You can try whenever you want.',
   },
   pt: {
     'setup.step1': '1 Conta', 'setup.step2': '2 WhatsApp', 'setup.step3': '3 CRM',
@@ -1105,6 +1115,11 @@ register({
     'crm.purgeBlocked': 'Não foi concluído: há uma retenção legal ativa.',
     'crm.sheetConnected': 'Planilha conectada. O Comando está lendo.',
     'crm.sheetsConnected': '{n} planilhas conectadas.',
+    'crm.theCrm': 'o CRM',
+    'crm.disconnectedToast': '{name} desconectado. A cópia é apagada em {date}.',
+    'crm.googlePicker': 'o seletor do Google',
+    'crm.pickSheets': 'Escolha as planilhas que quer conectar…',
+    'crm.noSheetPicked': 'Você não escolheu nenhuma planilha. Pode tentar quando quiser.',
   },
 });
 
@@ -1169,7 +1184,8 @@ register({
     'clerk.email': 'Correo electrónico', 'clerk.emailShort': 'Correo', 'clerk.emailPlaceholder': 'tu@correo.com',
     'clerk.firstName': 'Nombre', 'clerk.lastName': 'Apellido', 'clerk.optional': 'Opcional', 'clerk.back': 'Volver',
     'clerk.signUpTitle': 'Crea tu cuenta gratis',
-    'clerk.signUpSub': '30 comandos de prueba, sin tarjeta. Tu CRM se conecta después, si quieres.',
+    'clerk.signUpSub': '{n} comandos de prueba, sin tarjeta. Tu CRM se conecta después, si quieres.',
+    'clerk.signUpSubNoLimit': 'Comandos de prueba, sin tarjeta. Tu CRM se conecta después, si quieres.',
     'clerk.haveAccount': '¿Ya tienes cuenta?', 'clerk.signInLink': 'Inicia sesión',
     'clerk.checkEmail': 'Revisa tu correo', 'clerk.codeSent': 'Escribe el código que te enviamos',
     'clerk.codeTitle': 'Código de verificación', 'clerk.codeSub': 'Escribe el código enviado a tu correo',
@@ -1203,7 +1219,8 @@ register({
     'clerk.email': 'Email address', 'clerk.emailShort': 'Email', 'clerk.emailPlaceholder': 'you@email.com',
     'clerk.firstName': 'First name', 'clerk.lastName': 'Last name', 'clerk.optional': 'Optional', 'clerk.back': 'Back',
     'clerk.signUpTitle': 'Create your free account',
-    'clerk.signUpSub': '30 trial commands, no card. Your CRM connects later, if you want.',
+    'clerk.signUpSub': '{n} trial commands, no card. Your CRM connects later, if you want.',
+    'clerk.signUpSubNoLimit': 'Trial commands, no card. Your CRM connects later, if you want.',
     'clerk.haveAccount': 'Already have an account?', 'clerk.signInLink': 'Sign in',
     'clerk.checkEmail': 'Check your email', 'clerk.codeSent': 'Type the code we sent you',
     'clerk.codeTitle': 'Verification code', 'clerk.codeSub': 'Type the code sent to your email',
@@ -1237,7 +1254,8 @@ register({
     'clerk.email': 'E-mail', 'clerk.emailShort': 'E-mail', 'clerk.emailPlaceholder': 'voce@email.com',
     'clerk.firstName': 'Nome', 'clerk.lastName': 'Sobrenome', 'clerk.optional': 'Opcional', 'clerk.back': 'Voltar',
     'clerk.signUpTitle': 'Crie sua conta grátis',
-    'clerk.signUpSub': '30 comandos de teste, sem cartão. Seu CRM conecta depois, se você quiser.',
+    'clerk.signUpSub': '{n} comandos de teste, sem cartão. Seu CRM conecta depois, se você quiser.',
+    'clerk.signUpSubNoLimit': 'Comandos de teste, sem cartão. Seu CRM conecta depois, se você quiser.',
     'clerk.haveAccount': 'Já tem conta?', 'clerk.signInLink': 'Entrar',
     'clerk.checkEmail': 'Veja seu e-mail', 'clerk.codeSent': 'Escreva o código que enviamos',
     'clerk.codeTitle': 'Código de verificação', 'clerk.codeSub': 'Escreva o código enviado para seu e-mail',

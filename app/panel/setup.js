@@ -8,7 +8,7 @@
    - `crmActions`: los manejadores de esos botones (OAuth por Nango en ventana emergente,
      confirmación por sondeo, selector de hojas de Google). */
 
-import { esc, toast, ICON, fmtDate } from './ui.js?v=5';
+import { esc, toast, ICON, fmtDate } from './ui.js?v=6';
 import { t } from '../i18n.js?v=1';
 
 const cfg = () => window.COMANDO_CONFIG || {};
@@ -185,8 +185,8 @@ async function googleAccessToken() {
 }
 async function loadPicker() {
   if (window.google && window.google.picker) return;
-  await waitForGoogle(() => Boolean(window.gapi), 'el selector de Google');
-  await new Promise((resolve, reject) => window.gapi.load('picker', { callback: resolve, onerror: () => reject(new Error('No se pudo cargar el selector de Google')) }));
+  await waitForGoogle(() => Boolean(window.gapi), t('crm.googlePicker'));
+  await new Promise((resolve, reject) => window.gapi.load('picker', { callback: resolve, onerror: () => reject(new Error(t('crm.googleLoadFailed', { what: t('crm.googlePicker') }))) }));
 }
 function pickSpreadsheets(accessToken) {
   return new Promise((resolve) => {
@@ -234,16 +234,16 @@ export const crmActions = {
     } catch (e) { status(e.message); el.disabled = false; }
   },
   'crm:disconnect': async (el, ctx, d, reload) => {
-    const name = NAMES[el.dataset.provider] || 'el CRM';
+    const name = NAMES[el.dataset.provider] || t('crm.theCrm');
     if (!window.confirm(t('crm.confirmDisconnect', { name }))) return;
     el.disabled = true;
     try {
       const result = await ctx.api.raw('/integrations/connections/' + el.dataset.id, { method: 'DELETE', headers: rid(), body: JSON.stringify({ purgeMode: 'after-grace', reason: 'onboarding_crm_switch' }) });
-      toast(name + ' desconectado. La copia se elimina el ' + fmtDate(result.purgeAfter, true) + '.', 'ok'); reload();
+      toast(t('crm.disconnectedToast', { name, date: fmtDate(result.purgeAfter, true) }), 'ok'); reload();
     } catch (e) { toast(e.message, 'bad'); el.disabled = false; }
   },
   'crm:purge': async (el, ctx, d, reload) => {
-    const name = NAMES[el.dataset.provider] || 'el CRM';
+    const name = NAMES[el.dataset.provider] || t('crm.theCrm');
     if (!window.confirm(t('crm.confirmPurge', { name }))) return;
     el.disabled = true;
     try {
@@ -262,16 +262,16 @@ export const crmActions = {
         const url = String(cfg().nangoUrl || '').replace(/\/$/, '') + '/oauth/connect/google-sheets?connect_session_token=' + encodeURIComponent(r.token);
         const popup = window.open(url, 'comando-oauth', 'width=720,height=800');
         if (!popup) window.location.href = url;
-        status('Autoriza el acceso en la ventana de Google…');
+        status(t('crm.authorizeIn', { name: 'Google' }));
         await waitForConnection(ctx, r.connectionId, popup);
         connectionId = r.connectionId;
         try { localStorage.setItem('comando.sheetsConnection', connectionId); } catch (e) { /* sin storage */ }
       }
-      status('Elige las hojas que quieres conectar…');
+      status(t('crm.pickSheets'));
       const token = await googleAccessToken();
       await loadPicker();
       const docs = await pickSpreadsheets(token);
-      if (!docs.length) { status('No elegiste ninguna hoja. Puedes intentarlo cuando quieras.'); el.disabled = false; return; }
+      if (!docs.length) { status(t('crm.noSheetPicked')); el.disabled = false; return; }
       const sheets = [];
       for (const doc of docs) { const tabs = await sheetTabs(token, doc.id); sheets.push({ spreadsheetId: doc.id, sheetTitle: tabs[0] || 'Hoja 1', displayName: doc.name || undefined }); }
       await ctx.api.raw('/integrations/google-sheets/sources', { method: 'POST', headers: rid(), body: JSON.stringify({ connectionId, sheets }) });
