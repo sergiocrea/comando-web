@@ -270,5 +270,7 @@
   "Cuando revocas por esa vía, la plataforma nos avisa y aplicamos lo mismo que en el punto 1: token borrado de inmediato y copia sincronizada eliminada en un máximo de 30 días. Si quieres además cerrar tu cuenta de Comando, escríbenos como se indica en el punto 2.": "When you revoke that way, the platform tells us and we apply the same as in point 1: token deleted immediately and synced copy removed within 30 days. If you also want to close your Comando account, write to us as described in point 2.",
   "4. Si tienes dudas": "4. If you have questions",
   "Escribe a": "Write to",
-  ". Respondemos en un plazo máximo de 30 días y te decimos exactamente qué se borró y cuándo. El detalle completo de qué datos tratamos y con qué base legal está en la": ". We reply within 30 days and tell you exactly what was deleted and when. The full detail of what data we process and on what legal basis is in the"
+  ". Respondemos en un plazo máximo de 30 días y te decimos exactamente qué se borró y cuándo. El detalle completo de qué datos tratamos y con qué base legal está en la": ". We reply within 30 days and tell you exactly what was deleted and when. The full detail of what data we process and on what legal basis is in the",
+  "Conectores — Comando": "Integrations — Comando",
+  "Los CRM, tiendas y canales con los que Comando se conecta hoy.": "The CRMs, stores and channels Comando connects to today."
 }

@@ -26,7 +26,7 @@ const LOCALES = ['en', 'pt'];
  * conservan en los tres idiomas —`/en/privacidad.html`— porque son la
  * identidad de la página y cambiarlos rompería enlaces ya publicados.
  */
-const PAGES = ['index.html', 'privacidad.html', 'terminos.html', 'eliminar-datos.html'];
+const PAGES = ['index.html', 'conectores.html', 'privacidad.html', 'terminos.html', 'eliminar-datos.html'];
 /** Un enlace a una de estas se queda dentro del idioma; el resto va a la raíz. */
 const LOCAL_PAGES = new Set(PAGES);
 
@@ -153,16 +153,21 @@ function translate(rawHtml, dictionary, missing) {
 // porque el CSS estiliza el botón con `:last-child`.
 // Lo que se lee aquí no pasa por los catálogos —son códigos de idioma— así que
 // el nombre largo y la etiqueta del grupo se traducen a mano, en este mapa.
-const SWITCHER = (current) => {
+const SWITCHER = (current, page) => {
   const label = { es: 'ES', en: 'EN', pt: 'PT' };
-  const href = { es: '/', en: '/en/', pt: '/pt/' };
   const name = { es: 'Español', en: 'English', pt: 'Português' };
   const group = { es: 'Idioma', en: 'Language', pt: 'Idioma' };
+  // Cambiar de idioma deja al visitante en LA MISMA página, no en el home:
+  // devolverlo al inicio le hace perder lo que estaba leyendo y parece un fallo.
+  const href = (locale) => {
+    const root = locale === 'es' ? '/' : `/${locale}/`;
+    return page === 'index.html' ? root : `${root}${page}`;
+  };
   const links = ['es', 'en', 'pt']
     .map((locale) =>
       locale === current
         ? `<span class="lang-switch-current" aria-current="true" lang="${locale}" title="${name[locale]}">${label[locale]}</span>`
-        : `<a href="${href[locale]}" hreflang="${locale}" lang="${locale}" title="${name[locale]}">${label[locale]}</a>`,
+        : `<a href="${href(locale)}" hreflang="${locale}" lang="${locale}" title="${name[locale]}">${label[locale]}</a>`,
     )
     .join('');
   return `<div class="lang-switch" role="group" aria-label="${group[current]}">${links}</div>`;
@@ -187,6 +192,8 @@ function absolutePaths(html, locale) {
     .replace(/(\b(?:href|src)=")([^"]*)(")/g, (whole, before, target, after) => {
       if (/^(?:https?:|#|mailto:|tel:|data:)/.test(target)) return whole;
       if (target === '/') return `${before}/${locale}/${after}`;
+      // `/#casos` es el home con un ancla: también vive dentro del idioma.
+      if (target.startsWith('/#')) return `${before}/${locale}/${target.slice(1)}${after}`;
       if (target.startsWith('/')) return whole;
       const file = target.split(/[#?]/)[0];
       const prefix = LOCAL_PAGES.has(file) ? `/${locale}/` : '/';
@@ -195,14 +202,24 @@ function absolutePaths(html, locale) {
     .replace(/(\bcontent=")(assets\/)/g, '$1/$2');
 }
 
-/** Los `replace` que no encuentran su etiqueta no hacen nada: las legales no llevan og. */
+/**
+ * Los `replace` que no encuentran su etiqueta no hacen nada: las legales no
+ * llevan og. La canónica y og:url se reescriben por su RUTA, no por su valor
+ * literal, para que una página nueva no obligue a tocar este archivo.
+ */
 function head(html, locale) {
   const ogLocale = { en: 'en_US', pt: 'pt_BR' }[locale];
   return html
     .replace(/<html lang="es"/, `<html lang="${locale}"`)
-    .replace(/<link rel="canonical" href="https:\/\/comando\.pro\/"\s*\/>/, `<link rel="canonical" href="https://comando.pro/${locale}/" />`)
+    .replace(
+      /(<link rel="canonical" href="https:\/\/comando\.pro\/)([^"]*)("\s*\/>)/,
+      (whole, before, path, after) => `<link rel="canonical" href="https://comando.pro/${locale}/${path}${after}`,
+    )
     .replace(/<meta property="og:locale" content="es_LA" \/>/, `<meta property="og:locale" content="${ogLocale}" />`)
-    .replace(/<meta property="og:url" content="https:\/\/comando\.pro\/" \/>/, `<meta property="og:url" content="https://comando.pro/${locale}/" />`);
+    .replace(
+      /(<meta property="og:url" content="https:\/\/comando\.pro\/)([^"]*)(" \/>)/,
+      (whole, before, path, after) => `<meta property="og:url" content="https://comando.pro/${locale}/${path}${after}`,
+    );
 }
 
 const command = process.argv[2] ?? 'build';
@@ -241,7 +258,7 @@ for (const locale of LOCALES) {
     const body = html.replace(/<div class="lang-switch"[\s\S]*?<\/div>/, '@@LANG_SWITCH@@');
     const translated = head(absolutePaths(translate(body, dictionary, found), locale), locale).replace(
       '@@LANG_SWITCH@@',
-      SWITCHER(locale),
+      SWITCHER(locale, page),
     );
     if (found.size) missing.set(page, found);
     else pages.push([page, translated]);
