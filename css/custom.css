@@ -1332,3 +1332,6 @@ html { scroll-behavior: smooth; }
 .uc-subtitle { display: none; }
 .uc-tabs { margin-top: 1.25rem; }
 .uc-anchor { display: block; height: 0; scroll-margin-top: calc(var(--nav-height, 5rem) + 1rem); }
+
+/* La frase de cierre de cada caso heredaba el gris claro del tema oscuro y no se leía sobre el fondo crema. */
+.uc-result { color: #2b2e2b; border-left-color: #315fef; }
