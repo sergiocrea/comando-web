@@ -1354,3 +1354,7 @@ html { scroll-behavior: smooth; }
 /* Campo trampa del formulario de interesados: invisible para una persona,
    irresistible para un robot. No se usa `display:none` porque algunos lo saltan. */
 .lead-hp { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
+
+/* Precio de lista tachado y el ahorro, para el plan con descuento de lanzamiento. */
+.price-amount s { margin-left: .5rem; font-family: "Jetbrainsmono Variable", monospace; font-size: .95rem; font-weight: 400; color: #7d7d7d; text-decoration-thickness: 1px; }
+.price-off { display: inline-block; align-self: flex-start; width: fit-content; margin-top: .45rem; padding: .18rem .5rem; border-radius: .3rem; background: rgba(77, 124, 255, .16); color: #8fb0ff; font-family: "Jetbrainsmono Variable", monospace; font-size: .68rem; letter-spacing: .06em; text-transform: uppercase; }

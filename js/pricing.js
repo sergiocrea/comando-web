@@ -12,7 +12,7 @@ const PRICING_CONFIG = {
   // Cada plan muestra solo 4 líneas: contactos, comandos, usuario y un diferencial.
   plans: [
     { id: 'gratis',  name: 'Gratis',  price: 0,  contacts: 20000, commands: 30,   highlight: '1 conexión', note: 'Prueba individual, sin tarjeta. Sin sincronización continua ni automatizaciones; expira a los 30 días sin uso.' },
-    { id: 'basico',  name: 'Básico',  price: 3,  contacts: 20000, commands: 200,  highlight: '2 conexiones' },
+    { id: 'basico',  name: 'Básico',  price: 3,  listPrice: 6, contacts: 20000, commands: 200,  highlight: '2 conexiones' },
     { id: 'starter', name: 'Starter', price: 8,  contacts: 70000, commands: 700,  highlight: '5 conexiones' },
     { id: 'pro',     name: 'Pro',     price: 20, contacts: 200000, commands: 2000, highlight: 'Conexiones ilimitadas' },
   ],
@@ -79,8 +79,11 @@ const PRICING_CONFIG = {
     const featured = p.id === C.featuredPlan;
     const free = p.price === 0;
     const m = monthly(p.price);
+    // Con `listPrice` la tarjeta muestra el precio de lista tachado y cuánto se ahorra.
+    const list = !free && p.listPrice ? monthly(p.listPrice) : null;
+    const off = list ? Math.round((1 - p.price / p.listPrice) * 100) : 0;
     const priceHtml = free ? `<div class="price-amount">US$ 0</div>`
-      : `<div class="price-amount">${money(m)}<span>/mes</span></div>${state.annual ? `<div class="price-annual">${money(m * 12)} al año</div>` : ''}`;
+      : `<div class="price-amount">${money(m)}<span>/mes</span>${list ? `<s>${money(list)}</s>` : ''}</div>${off ? `<div class="price-off">${off} % de descuento</div>` : ''}${state.annual ? `<div class="price-annual">${money(m * 12)} al año</div>` : ''}`;
     const lines = [p.contacts == null ? 'Contactos según tu plan' : `<b>${fmtN(p.contacts)}</b> contactos a tu alcance`, free ? `<b>${fmtN(p.commands)}</b> comandos para probar` : `<b>${fmtN(p.commands)}</b> comandos al mes`, '<b>Plan individual</b>', esc(p.highlight)];
     const cta = free ? `<a href="${C.cta.trialBase}?plan=${p.id}" class="price-cta">${esc(C.cta.freeLabel)}</a>`
       : `<a href="${C.cta.trialBase}?plan=${p.id}" class="price-cta">${esc(C.cta.trialLabel)}</a>`;
