@@ -947,11 +947,13 @@ html { scroll-behavior: smooth; }
   margin: 0; padding: 0 1.125rem 0 0; list-style: none;
   animation: band-scroll 34s linear infinite;
 }
-.band-row li { display: flex; align-items: center; gap: .5rem; white-space: nowrap; }
-.band-row img { width: 1.35rem; height: 1.35rem; object-fit: contain; opacity: .85; }
+.band-row li { display: flex; align-items: center; gap: .6rem; white-space: nowrap; }
+.band-row img { width: 1.5rem; height: 1.5rem; object-fit: contain; opacity: 1; }
+/* El nombre del conector es lo que el visitante busca en esta franja: se lee
+   antes que el logo, así que va casi en blanco y no en gris. */
 .band-row span {
   font-family: "Jetbrainsmono Variable", ui-monospace, monospace;
-  font-size: .62rem; letter-spacing: .08em; text-transform: uppercase; color: #b6bdc9;
+  font-size: .82rem; font-weight: 500; letter-spacing: .06em; text-transform: uppercase; color: #f2f4f8;
 }
 @keyframes band-scroll { to { transform: translateX(-100%); } }
 .b2b-hero-band:hover .band-row { animation-play-state: paused; }
@@ -1013,6 +1015,8 @@ html { scroll-behavior: smooth; }
   .b2b-hero-visual { display: none; }
   .b2b-hero-band { gap: .9rem; padding: .85rem 1.25rem; }
   .band-label { font-size: .55rem; }
+  .band-row span { font-size: .74rem; }
+  .band-row img { width: 1.35rem; height: 1.35rem; }
   .band-track {
     -webkit-mask-image: linear-gradient(90deg, transparent, #000 12%, #000 92%, transparent);
     mask-image: linear-gradient(90deg, transparent, #000 12%, #000 92%, transparent);
