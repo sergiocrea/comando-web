@@ -310,7 +310,6 @@ input[type='file']:focus-visible {
 .pt-badge { font-size: .65rem; background: #4d7cff; color: #0a0a0a; padding: .1rem .4rem; border-radius: .3rem; }
 .pt-note { font-family: "Jetbrainsmono Variable", monospace; font-size: .72rem; color: #0a0a0a; opacity: .75; }
 .price-card { position: relative; }
-.price-flag { position: absolute; top: -.7rem; left: 1.25rem; background: #4d7cff; color: #0a0a0a; font-family: "Jetbrainsmono Variable", monospace; font-size: .65rem; letter-spacing: .08em; text-transform: uppercase; padding: .2rem .55rem; border-radius: .3rem; }
 .price-annual { font-family: "Jetbrainsmono Variable", monospace; font-size: .75rem; color: #8a8a8a; margin-top: .35rem; }
 .pricing-addons { position: relative; z-index: 2; color: #0a0a0a; font-family: "Jetbrainsmono Variable", monospace; font-size: .82rem; margin-top: .25rem; }
 .pricing-addons b { font-weight: 600; }
