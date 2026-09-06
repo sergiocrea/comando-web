@@ -1,7 +1,8 @@
 /**
- * El landing en castellano, inglés y portugués desde UNA sola fuente.
+ * El sitio en castellano, inglés y portugués desde UNA sola fuente.
  *
- * `index.html` se escribe en castellano y sigue siendo la página que se edita.
+ * Las páginas de PAGES se escriben en castellano y siguen siendo las que se
+ * editan.
  * Este script saca de ahí cada texto que un visitante lee —el contenido entre
  * etiquetas y los atributos que se leen: title, description, alt, placeholder—
  * y escribe `/en/index.html` y `/pt/index.html` sustituyéndolos.
@@ -19,8 +20,15 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
-const SOURCE = join(root, 'index.html');
 const LOCALES = ['en', 'pt'];
+/**
+ * Las páginas que se traducen. El orden no importa; los nombres de archivo se
+ * conservan en los tres idiomas —`/en/privacidad.html`— porque son la
+ * identidad de la página y cambiarlos rompería enlaces ya publicados.
+ */
+const PAGES = ['index.html', 'privacidad.html', 'terminos.html', 'eliminar-datos.html'];
+/** Un enlace a una de estas se queda dentro del idioma; el resto va a la raíz. */
+const LOCAL_PAGES = new Set(PAGES);
 
 /** Atributos que un visitante lee (o le lee su lector de pantalla). */
 const TEXT_ATTRIBUTES = new Set(['alt', 'placeholder', 'aria-label', 'title', 'data-label']);
@@ -166,13 +174,28 @@ const HREFLANG = `    <link rel="alternate" hreflang="es" href="https://comando.
     <link rel="alternate" hreflang="x-default" href="https://comando.pro/" />
 `;
 
-/** La copia vive en /en/ o /pt/: lo relativo dejaría de resolver. */
-function absolutePaths(html) {
+/**
+ * La copia vive en /en/ o /pt/: lo relativo dejaría de resolver.
+ *
+ * Un asset (`css/legal.css`) va a la raíz, porque hay una sola copia. Una
+ * página traducida (`privacidad.html`) va al idioma, porque hay tres: si no,
+ * el pie inglés mandaba a la política en castellano, que es como decirle al
+ * visitante que la traducción era decorativa.
+ */
+function absolutePaths(html, locale) {
   return html
-    .replace(/(\b(?:href|src)=")(?!https?:|\/|#|mailto:|tel:|data:)/g, '$1/')
+    .replace(/(\b(?:href|src)=")([^"]*)(")/g, (whole, before, target, after) => {
+      if (/^(?:https?:|#|mailto:|tel:|data:)/.test(target)) return whole;
+      if (target === '/') return `${before}/${locale}/${after}`;
+      if (target.startsWith('/')) return whole;
+      const file = target.split(/[#?]/)[0];
+      const prefix = LOCAL_PAGES.has(file) ? `/${locale}/` : '/';
+      return `${before}${prefix}${target}${after}`;
+    })
     .replace(/(\bcontent=")(assets\/)/g, '$1/$2');
 }
 
+/** Los `replace` que no encuentran su etiqueta no hacen nada: las legales no llevan og. */
 function head(html, locale) {
   const ogLocale = { en: 'en_US', pt: 'pt_BR' }[locale];
   return html
@@ -183,12 +206,19 @@ function head(html, locale) {
 }
 
 const command = process.argv[2] ?? 'build';
-const html = readFileSync(SOURCE, 'utf8');
+const sources = new Map(PAGES.map((page) => [page, readFileSync(join(root, page), 'utf8')]));
 
 if (command === 'extract') {
-  const strings = catalog(html);
+  const strings = [];
+  const seen = new Set();
+  for (const html of sources.values())
+    for (const text of catalog(html))
+      if (!seen.has(text)) {
+        seen.add(text);
+        strings.push(text);
+      }
   writeFileSync(join(root, 'i18n/es.json'), `${JSON.stringify(strings, null, 2)}\n`);
-  console.log(`i18n/es.json: ${strings.length} textos`);
+  console.log(`i18n/es.json: ${strings.length} textos de ${PAGES.length} páginas`);
   process.exit(0);
 }
 
@@ -201,25 +231,35 @@ for (const locale of LOCALES) {
     continue;
   }
   const dictionary = JSON.parse(readFileSync(path, 'utf8'));
-  const missing = new Set();
-  // El conmutador vive en la fuente para que la página en castellano también
-  // lo tenga. Se quita ANTES de traducir —«ES», «EN», «Idioma» no son textos
-  // del catálogo— y se pone el del idioma generado.
-  const body = html.replace(/<div class="lang-switch"[\s\S]*?<\/div>/, '@@LANG_SWITCH@@');
-  const translated = head(absolutePaths(translate(body, dictionary, missing)), locale).replace(
-    '@@LANG_SWITCH@@',
-    SWITCHER(locale),
-  );
+  const missing = new Map();
+  const pages = [];
+  for (const [page, html] of sources) {
+    const found = new Set();
+    // El conmutador vive en la fuente para que la página en castellano también
+    // lo tenga. Se quita ANTES de traducir —«ES», «EN», «Idioma» no son textos
+    // del catálogo— y se pone el del idioma generado. Solo el landing lo lleva.
+    const body = html.replace(/<div class="lang-switch"[\s\S]*?<\/div>/, '@@LANG_SWITCH@@');
+    const translated = head(absolutePaths(translate(body, dictionary, found), locale), locale).replace(
+      '@@LANG_SWITCH@@',
+      SWITCHER(locale),
+    );
+    if (found.size) missing.set(page, found);
+    else pages.push([page, translated]);
+  }
   if (missing.size) {
-    console.error(`\n${locale}: faltan ${missing.size} textos`);
-    for (const item of [...missing].slice(0, 40)) console.error(`  - ${item.slice(0, 100)}`);
+    const total = [...missing.values()].reduce((sum, set) => sum + set.size, 0);
+    console.error(`\n${locale}: faltan ${total} textos`);
+    for (const [page, found] of missing) {
+      console.error(`  ${page}:`);
+      for (const item of [...found].slice(0, 20)) console.error(`    - ${item.slice(0, 100)}`);
+    }
     failed = true;
     continue;
   }
   if (command === 'build') {
     mkdirSync(join(root, locale), { recursive: true });
-    writeFileSync(join(root, locale, 'index.html'), translated);
-    console.log(`${locale}/index.html escrito`);
-  } else console.log(`${locale}: completo`);
+    for (const [page, translated] of pages) writeFileSync(join(root, locale, page), translated);
+    console.log(`${locale}/: ${pages.map(([page]) => page).join(', ')}`);
+  } else console.log(`${locale}: completo (${pages.length} páginas)`);
 }
 if (failed) process.exit(1);
