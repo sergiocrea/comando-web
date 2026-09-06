@@ -7,7 +7,7 @@ natural o por audio, en su español local: "avísame si un deal de más de S/50 
 queda quieto dos semanas", "etiqueta a Juan Pérez como VIP", "mándame cada lunes el
 resumen del embudo". Comando interpreta el pedido, pide confirmación, ejecuta en el CRM
 y responde por WhatsApp. Comando NO reemplaza al CRM: se conecta al que el cliente ya
-tiene con un login OAuth de 2 minutos (sin copiar claves). Diferenciadores: un espejo
+tiene con un login OAuth de 2 minutos (sin copiar claves). Diferenciadores: un alcance de contactos
 y un cupo independiente por usuario, alertas en tiempo real por eventos del CRM,
 credenciales del CRM custodiadas en infraestructura de Comando (nunca en terceros),
 automatizaciones basadas en playbooks probados (speed-to-lead, deals estancados,
@@ -21,11 +21,12 @@ sección debe sentirse parte de la misma página.
 
 ## 3. Modelo de precios vigente desde 2026-08-30
 - Cada plan corresponde a **una persona** y se cobra por usuario.
-- Cada usuario tiene su propio **espejo del CRM**, con el límite de contactos del plan.
+- Cada usuario tiene su propio **alcance de contactos del CRM**, con el límite del plan.
+- **Nunca se describe públicamente como «espejo» ni como una copia del CRM.**
 - Uso justo en **comandos** (texto o audio; paquete incluido por plan + add-on).
 - Alertas en **tiempo real** por eventos del CRM en todos los planes.
 - Plan **Gratis como prueba individual con cupo**: 30 comandos en total, 1 usuario,
-  1 CRM y un espejo de hasta 20,000 contactos, sin tarjeta. Al agotar el cupo deja de
+  1 CRM y hasta 20,000 contactos a su alcance, sin tarjeta. Al agotar el cupo deja de
   ejecutar hasta que el usuario elija un plan.
 - Moneda: USD. Anual = 2 meses gratis.
 
@@ -58,8 +59,8 @@ de HubSpot 2026 como referencia; citar "precios de lista HubSpot, facturación a
 
 | Contactos | HubSpot Marketing Hub (referencia) | Comando |
 |---|---|---|
-| Hasta 20,000 | Starter: $20/asiento/mes (1,000 contactos; +$50 por cada 1,000) | Básico: $3/usuario/mes, espejo de 20,000 contactos |
-| 20,000-70,000 | Professional: desde $890/mes (2,000 contactos; +$250 por 5,000) | Starter: $8/usuario/mes, espejo de 70,000 contactos |
+| Hasta 20,000 | Starter: $20/asiento/mes (1,000 contactos; +$50 por cada 1,000) | Básico: $3/usuario/mes, 20,000 contactos a tu alcance |
+| 20,000-70,000 | Professional: desde $890/mes (2,000 contactos; +$250 por 5,000) | Starter: $8/usuario/mes, 70,000 contactos a tu alcance |
 | 70,000-200,000 | Enterprise: desde $3,600/mes (10,000 contactos) | Pro: $20/mes, 200,000 contactos |
 | Usuario | Sales Hub Professional: $90/asiento/mes | Plan individual desde $3/mes |
 
@@ -76,11 +77,11 @@ sujetos a cambio. Comando complementa al CRM; no lo reemplaza.
 4. Bloque "Todos los planes incluyen": conexión al CRM en 2 minutos con login OAuth
    (sin copiar claves), confirmación antes de ejecutar cualquier cambio, historial
    auditable de cada acción, español adaptado al país del equipo, alertas en tiempo
-   real, comandos por texto o audio y un espejo independiente por usuario.
+   real, comandos por texto o audio y un cupo de contactos independiente por usuario.
 5. Bloque comparativo con HubSpot (sección 4).
 6. FAQ (acordeón):
    - ¿Cómo se calcula el precio? Cada persona elige un plan según los contactos que
-     necesita en su espejo. Dos personas con 8,000 contactos cada una usan dos planes
+     necesita a su alcance. Dos personas con 8,000 contactos cada una usan dos planes
      Básico de $3/mes.
    - ¿Qué cuenta como "contacto"? Los contactos de tu CRM que Comando vigila. Se mide
      una vez al día; no se cobra por leads que entran y salen el mismo día.
@@ -134,7 +135,7 @@ Escalera de valor (comandos por dólar): Básico 50 → Starter 71 → Pro 79; e
 
 Uso real esperado (60% de los comandos consumidos, 30% audio): márgenes 75-85%.
 Regla del plan Gratis: la sincronización del CRM se pausa al agotar los 30 comandos o
-tras 30 días sin uso; su espejo nunca supera 20,000 contactos.
+tras 30 días sin uso; su alcance nunca supera 20,000 contactos.
 Plataforma fija ~$175/mes (Temporal Cloud piso $100, VM ~$65, Redis $5, Neon ~$5).
 Recalcular el punto de equilibrio con la mezcla real de planes y usuarios. Reglas para el agente: no bajar precios ni subir
 comandos incluidos sin recalcular esta tabla; el add-on de comandos ($8/500) no debe

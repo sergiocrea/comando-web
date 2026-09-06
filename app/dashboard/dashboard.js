@@ -2,7 +2,7 @@
    Modos de revisión sin backend:  ?mock=1  ?mock=error  ?mock=nocrm  */
 import { createApi, isNoCrmError } from './fields-api.js?v=2';
 import { createMockApi } from './mock-fields.js?v=2';
-import { mountFields } from './fields-ui.js?v=2';
+import { mountFields } from './fields-ui.js?v=3';
 
 const cfg = window.COMANDO_CONFIG || {};
 const $ = (id) => document.getElementById(id);

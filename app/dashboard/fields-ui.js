@@ -195,7 +195,7 @@ export function mountFields(opts) {
     if (field.sensitive) {
       const tag = document.createElement('span');
       tag.className = 'fld-tag is-sensitive';
-      tag.textContent = 'sensible — se consulta en vivo, no se copia';
+      tag.textContent = 'sensible — se consulta en vivo';
       title.appendChild(tag);
     }
 
@@ -324,7 +324,7 @@ export function mountFields(opts) {
     const patch = {};
     if (what === 'queryable') {
       patch.queryable = value;
-      // El espejo sigue a "Consultar", salvo en campos sensibles: esos se leen en vivo.
+      // La copia local sigue a "Consultar", salvo en campos sensibles: esos se leen en vivo.
       patch.mirrored = value && !f.sensitive;
       if (!value) patch.editable = false;
     } else {
@@ -344,7 +344,7 @@ export function mountFields(opts) {
       syncField(objectType, prop);
       if (what === 'queryable' && value) {
         setNote(objectType, prop, f.sensitive
-          ? 'Comando lo consultará en vivo en tu CRM cuando lo necesite; no guardamos una copia.'
+          ? 'Comando lo consultará en vivo en tu CRM cada vez que lo necesite.'
           : 'Comando ya puede consultarlo; los datos históricos se completan en unos minutos.');
         say(labelOf(f) + ': activado.');
         window.setTimeout(() => setNote(objectType, prop, ''), 15000);

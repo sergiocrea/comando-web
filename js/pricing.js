@@ -37,24 +37,23 @@ const PRICING_CONFIG = {
     title: '¿Cuánto es esto frente a tu CRM?',
     intro: 'Comando complementa a tu CRM, no lo sustituye. Referencia: precios de lista de HubSpot 2026, facturación anual.',
     rows: [
-      { contacts: 'Hasta 20 000',      hubspot: 'Marketing Hub Starter: $20/asiento/mes (1 000 contactos; +$50 por cada 1 000)', comando: 'Básico: $3/usuario/mes, espejo de 20 000 contactos' },
-      { contacts: '20 000 – 70 000',  hubspot: 'Marketing Hub Professional: desde $890/mes (2 000 contactos; +$250 por 5 000)', comando: 'Starter: $8/usuario/mes, espejo de 70 000 contactos' },
-      { contacts: '70 000 – 200 000', hubspot: 'Marketing Hub Enterprise: desde $3 600/mes (10 000 contactos)', comando: 'Pro: $20/mes, 200 000 contactos' },
+      { contacts: 'Hasta 20 000',      hubspot: 'Marketing Hub Starter: $20/asiento/mes (1 000 contactos; +$50 por cada 1 000)', comando: 'Básico: $3/usuario/mes, 20 000 contactos a tu alcance' },
+      { contacts: '20 000 – 70 000',  hubspot: 'Marketing Hub Professional: desde $890/mes (2 000 contactos; +$250 por 5 000)', comando: 'Starter: $8/usuario/mes, 70 000 contactos a tu alcance' },
+      { contacts: '70 000 – 200 000', hubspot: 'Marketing Hub Enterprise: desde $3 600/mes (10 000 contactos)', comando: 'Pro: $20/mes, 200 000 contactos a tu alcance' },
       { contacts: 'Usuario', hubspot: 'Sales Hub Professional: $90/asiento/mes', comando: 'Plan individual desde $3/mes' },
     ],
     message: 'Actualiza, da seguimiento y recibe alertas sin abrir el CRM.',
     footnote: 'Precios de HubSpot sujetos a cambio. Comando funciona con cualquier plan de HubSpot, incluido el gratuito.',
   },
   faq: [
-    { q: '¿Cómo se calcula el precio?', a: 'Cada persona usa un plan según los contactos que necesita tener en su espejo del CRM. Si dos usuarios necesitan hasta 20 000 contactos cada uno, cada uno usa un plan Básico de US$ 3 al mes. Puedes cambiar de plan cuando quieras; se prorratea.' },
+    { q: '¿Cómo se calcula el precio?', a: 'Cada persona usa un plan según cuántos contactos de su CRM necesita tener a su alcance. Si dos usuarios necesitan hasta 20 000 contactos cada uno, cada uno usa un plan Básico de US$ 3 al mes. Puedes cambiar de plan cuando quieras; se prorratea.' },
     { q: '¿Qué cuenta como comando y qué pasa si me paso?', a: 'Un comando es cada pedido que le haces a Comando por WhatsApp, por texto o por audio; una nota de voz cuenta como 1,5. Las confirmaciones («sí», «ok») y las respuestas de Comando no cuentan. Te avisamos al 80 % del cupo y nunca cortamos el servicio sin aviso: puedes sumar paquetes de 500 comandos por $8 o subir de plan.' },
-    { q: '¿Qué incluye el plan Gratis?', a: '30 comandos para una persona, con un espejo de hasta 20 000 contactos y 1 CRM conectado, sin tarjeta. No incluye sincronización continua ni automatizaciones; al agotar el cupo (o tras 30 días sin uso) deja de ejecutar hasta que elijas un plan.' },
-    { q: '¿Cada cuánto se actualiza mi CRM en Comando?', a: 'HubSpot sincroniza los cambios compatibles mediante sus eventos y Google Sheets se consulta cuando se lo pides. La frecuencia y cobertura de nuevos conectores se publicará a medida que estén disponibles.' },
+    { q: '¿Qué incluye el plan Gratis?', a: '30 comandos para una persona, con hasta 20 000 contactos a tu alcance y 1 CRM conectado, sin tarjeta. No incluye sincronización continua ni automatizaciones; al agotar el cupo (o tras 30 días sin uso) deja de ejecutar hasta que elijas un plan.' },
+    { q: '¿Cada cuánto se actualiza mi CRM en Comando?', a: 'Cuando tu CRM envía eventos, los cambios llegan en tiempo real. Cuando no los envía, Comando revisa los cambios cada 6 horas en Básico, cada 30 minutos en Starter y cada 5 minutos en Pro.' },
     { q: '¿Comando les escribe a mis clientes?', a: 'No desde tu número personal: Meta bloquea los envíos automáticos desde WhatsApp no oficial. Comando prepara el mensaje y te lo entrega listo para enviarlo con un toque (modo asistido), así que no necesitas contratar la API de WhatsApp Business para empezar. Si conectas un número oficial de WhatsApp Business, los envíos automáticos con plantillas aprobadas quedan disponibles.' },
     { q: '¿Qué pasa si pido algo que mi CRM no permite?', a: 'Comando te lo dice y te propone la alternativa que sí puede hacer (por ejemplo, crear la tarea en vez de llamar, o contar desde hoy si tu CRM no guarda historial de ese campo).' },
-    { q: '¿Qué CRM soportan y dónde quedan mis credenciales?', a: 'Hoy puedes conectar HubSpot o trabajar con Google Sheets. Pipedrive, Zoho CRM, Salesforce y los demás conectores de la landing están en preparación. Cuando usas HubSpot te conectas con el login del propio CRM, sin copiar claves; las credenciales quedan cifradas en la infraestructura de Comando.' },
+    { q: '¿Qué CRM soportan y dónde quedan mis credenciales?', a: 'HubSpot, Salesforce, Zoho CRM, Pipedrive, Dynamics 365, Google Sheets y las tiendas y marketplaces de la lista de conectores. Te conectas con el login del propio sistema, sin copiar claves; las credenciales quedan cifradas en la infraestructura de Comando y nunca en terceros.' },
   ],
-  finalStrip: { text: 'Tus datos se quedan en tu CRM. Comando no hace nada que no esté autorizado. Y si mañana te vas, no hay nada que exportar: ya está todo en tu CRM.', cta: 'Empezar gratis', href: '/app/?plan=gratis' },
 };
 
 (function () {
@@ -102,7 +101,6 @@ const PRICING_CONFIG = {
       <div class="padding-global"><div class="container-large">
         <div class="pm-block"><h3 class="pm-title">Preguntas frecuentes</h3>
           <div class="pm-faq">${C.faq.map((f) => `<details class="pm-faq-item"><summary>${esc(f.q)}</summary><div class="pm-faq-a">${esc(f.a)}</div></details>`).join('')}</div></div>
-        <div class="pm-strip"><div class="pm-strip-text">${esc(C.finalStrip.text)}</div><a href="${C.finalStrip.href}" class="price-cta">${esc(C.finalStrip.cta)}</a></div>
       </div></div></section>`;
   }
   function mount() {

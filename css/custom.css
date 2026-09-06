@@ -1343,3 +1343,12 @@ html { scroll-behavior: smooth; }
 @keyframes b2b-caret { 0%, 50% { opacity: 1; } 51%, 100% { opacity: 0; } }
 @media (prefers-reduced-motion: reduce) { .b2b-caret { display: none; } }
 @media (max-width: 767px) { .b2b-hero-type { white-space: normal; } }
+
+/* El bloque azul de precios cerraba con 7,5 rem de Webflow y el FAQ abría con 4 rem:
+   184 px de negro vacío entre los dos. */
+.home_getupdate-component { padding-bottom: 2.5rem; }
+.pricing-more { padding-top: 2.5rem; }
+@media (max-width: 767px) {
+  .home_getupdate-component { padding-bottom: 1.5rem; }
+  .pricing-more { padding-top: 1.5rem; }
+}
