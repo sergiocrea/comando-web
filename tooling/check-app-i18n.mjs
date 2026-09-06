@@ -1,9 +1,12 @@
 /* Comprueba que ninguna clave falte en un idioma y que ninguna clave usada en
    el código esté sin definir. Un hueco visible se arregla; uno escondido, no. */
 import { readFileSync, readdirSync } from 'node:fs';
-import { join } from 'node:path';
+import { dirname, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
 
-const root = '/Users/sergiomini/Documents/comando/comando-web/app';
+// Relativa al script: con una ruta absoluta, ejecutarlo desde otro árbol de
+// trabajo leía el diccionario de OTRA copia y decía «OK» sin mirar el archivo.
+const root = join(dirname(fileURLToPath(import.meta.url)), '..', 'app');
 const src = readFileSync(join(root, 'strings.js'), 'utf8');
 
 // Se extraen las claves de cada bloque register({ es: {...}, en: {...}, pt: {...} })
