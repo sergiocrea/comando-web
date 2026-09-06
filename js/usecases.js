@@ -14,19 +14,45 @@
   const W = {
     es: { rol: 'Rol', sector: 'Sector', proTag: 'Comando te avisa', proStep: 'Comando te avisa.',
           proAria: (t) => `Aviso de Comando a las ${t}`, sendAria: (t) => `Enviar el mensaje de las ${t}`,
-          chat: 'Conversación de WhatsApp con Comando', moments: 'Momentos del día' },
+          chat: 'Conversación de WhatsApp con Comando', moments: 'Momentos del día', feed: 'De tus sistemas' },
     en: { rol: 'Role', sector: 'Sector', proTag: 'Comando tells you', proStep: 'Comando tells you.',
           proAria: (t) => `Comando alert at ${t}`, sendAria: (t) => `Send the ${t} message`,
-          chat: 'WhatsApp conversation with Comando', moments: 'Moments of the day' },
+          chat: 'WhatsApp conversation with Comando', moments: 'Moments of the day', feed: 'From your systems' },
     pt: { rol: 'Papel', sector: 'Setor', proTag: 'O Comando te avisa', proStep: 'O Comando te avisa.',
           proAria: (t) => `Aviso do Comando às ${t}`, sendAria: (t) => `Enviar a mensagem das ${t}`,
-          chat: 'Conversa de WhatsApp com o Comando', moments: 'Momentos do dia' },
+          chat: 'Conversa de WhatsApp com o Comando', moments: 'Momentos do dia', feed: 'Dos seus sistemas' },
   }[(document.documentElement.lang || 'es').slice(0, 2)] ?? undefined;
   const T = W ?? {
     rol: 'Rol', sector: 'Sector', proTag: 'Comando te avisa', proStep: 'Comando te avisa.',
     proAria: (t) => `Aviso de Comando a las ${t}`, sendAria: (t) => `Enviar el mensaje de las ${t}`,
-    chat: 'Conversación de WhatsApp con Comando', moments: 'Momentos del día',
+    chat: 'Conversación de WhatsApp con Comando', moments: 'Momentos del día', feed: 'De tus sistemas',
   };
+
+  // ---- El caudal que alimenta la conversación ----
+  // La franja del héroe dice «trabajamos con estos sistemas». Aquí la misma
+  // lista dice otra cosa: que de ahí sale lo que el teléfono contesta. Por eso
+  // no se repite la tira horizontal —sería la misma frase dos veces— sino que
+  // sube en columna pegada al teléfono.
+  // La lista se repite en el markup del héroe (index.html, .b2b-hero-band). Se
+  // deja explícita en vez de clonar aquel nodo: si el héroe cambia de forma, la
+  // sección no se queda muda.
+  const CONECTORES = [
+    ['hubspot', 'HubSpot'], ['salesforce', 'Salesforce'], ['zoho', 'Zoho CRM'],
+    ['pipedrive', 'Pipedrive'], ['kommo', 'Kommo'], ['dynamics', 'Dynamics 365'],
+    ['meta', 'Meta Ads'], ['tiktok', 'TikTok Ads'], ['shopify', 'Shopify'],
+    ['woocommerce', 'WooCommerce'], ['tiendanube', 'Tiendanube'],
+    ['mercadolibre', 'Mercado Libre'], ['vtex', 'VTEX'], ['googlesheets', 'Google Sheets'],
+  ];
+  const feedItems = () => CONECTORES.map(([f, n]) => `<li><img src="/assets/img/logos/${f}.svg" alt="" width="22" height="22" decoding="async"/><span>${esc(n)}</span></li>`).join('');
+  // `aria-hidden`: los mismos catorce nombres ya los anuncia la franja del
+  // héroe, en esta misma página. Repetirlos es ruido para quien escucha.
+  function feedHtml() {
+    return `<div class="uc-feed" aria-hidden="true">
+      <div class="uc-feed-label">${esc(T.feed)}</div>
+      <div class="uc-feed-track"><ul class="uc-feed-col">${feedItems()}</ul><ul class="uc-feed-col">${feedItems()}</ul></div>
+    </div>`;
+  }
+
   const state = { rol: 0, vertical: 0 };
   let D = null;
 
@@ -89,13 +115,14 @@
         <div class="uc-phone" role="img" aria-label="${esc(T.chat)}">
           <div class="uc-phone-screen">
             <div class="uc-status"><span>9:41</span><span class="uc-status-icons">●●● ▲ ▮</span></div>
-            <div class="uc-wa-head"><span class="uc-wa-back">‹</span><img src="assets/img/comando-mark.svg" alt="" class="uc-wa-avatar"/><div class="uc-wa-name">Comando<small>en línea</small></div><span class="uc-wa-more">⋮</span></div>
+            <div class="uc-wa-head"><span class="uc-wa-back">‹</span><img src="/assets/img/comando-mark.svg" alt="" class="uc-wa-avatar"/><div class="uc-wa-name">Comando<small>en línea</small></div><span class="uc-wa-more">⋮</span></div>
             <div class="uc-chat" aria-live="polite">${chatHtml(c)}</div>
             <div class="uc-wa-input"><span>Escribe un comando…</span><i>🎤</i></div>
           </div>
         </div>
         <ol class="uc-timeline" aria-label="${esc(T.moments)}">${timelineHtml(c)}</ol>
         <div class="uc-outcome">${outcomeHtml(c)}</div>
+        ${feedHtml()}
       </div>
       <div class="uc-foot"><p class="uc-close">${esc(D.seccion.cierre)}</p><a href="${esc(D.seccion.cta.href)}" class="btn-primary uc-cta">${esc(D.seccion.cta.texto)}<span class="uc-cta-sufijo">${esc(D.seccion.cta.sufijo || '')}</span><span class="btn-arrow" aria-hidden="true">→</span></a></div>`;
     root.querySelectorAll('[data-rol]').forEach((b) => b.addEventListener('click', () => { state.rol = +b.dataset.rol; update(); }));

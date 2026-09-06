@@ -1596,3 +1596,88 @@ html { scroll-behavior: smooth; }
   .lang-switch a,
   .lang-switch .lang-switch-current { transition: none; }
 }
+
+/* ============================================================
+   «Así cambia el día»: de dónde entra lo que el teléfono contesta
+   ------------------------------------------------------------
+   La franja del héroe y esta columna muestran los mismos logos, pero no dicen
+   lo mismo. Arriba es un escaparate («trabajamos con estos sistemas»); aquí es
+   una tubería: el caudal que alimenta la conversación de al lado. Se separan
+   por la FORMA, que es lo que evita que se lea como el mismo bloque repetido:
+   allí una tira ancha que cruza la página, aquí una columna estrecha que sube
+   pegada al teléfono.
+   La piel oscura es deliberada: sobre el crema de la sección, el par
+   columna + teléfono queda como el único bloque «de máquina» de la pantalla, y
+   se leen como una sola pieza en vez de como dos elementos sueltos.
+   ============================================================ */
+.uc-feed { display: none; }             /* solo existe donde hay sitio: ver breakpoints */
+.uc-feed-label {
+  font-family: "Jetbrainsmono Variable", ui-monospace, monospace;
+  font-size: .62rem; letter-spacing: .1em; text-transform: uppercase;
+  color: #8a8d89; text-align: center; margin-bottom: .7rem;
+}
+.uc-feed-track {
+  overflow: hidden; border-radius: 1.1rem; background: #151515;
+  padding: .9rem 0;
+  box-shadow: 0 0 0 1px rgba(21, 21, 21, .06), 0 26px 55px -32px rgba(24, 37, 80, .5);
+  /* El corte seco arriba y abajo delataría el truco de las dos listas. */
+  -webkit-mask-image: linear-gradient(180deg, transparent, #000 14%, #000 86%, transparent);
+  mask-image: linear-gradient(180deg, transparent, #000 14%, #000 86%, transparent);
+}
+/* Dos columnas idénticas subiendo -100%: el bucle no tiene costura. */
+.uc-feed-col {
+  display: flex; flex-direction: column; gap: 1.15rem;
+  margin: 0; padding: 0 0 1.15rem; list-style: none;
+  animation: uc-feed-rise 26s linear infinite;
+}
+.uc-feed-col li { display: flex; align-items: center; gap: .55rem; padding: 0 .85rem; white-space: nowrap; }
+.uc-feed-col img { width: 1.25rem; height: 1.25rem; object-fit: contain; flex: 0 0 auto; }
+.uc-feed-col span {
+  font-family: "Jetbrainsmono Variable", ui-monospace, monospace;
+  font-size: .68rem; font-weight: 500; letter-spacing: .05em; text-transform: uppercase; color: #f2f4f8;
+}
+@keyframes uc-feed-rise { to { transform: translateY(-100%); } }
+.uc-feed:hover .uc-feed-col { animation-play-state: paused; }
+
+/* Escritorio: la columna ocupa el hueco vacío a la izquierda del teléfono.
+   `grid-template-areas` en vez de reordenar el DOM: en el markup la columna va
+   la última —es apoyo, no el contenido— y aquí se coloca la primera. */
+@media (min-width: 992px) {
+  .uc-layout {
+    grid-template-columns: minmax(0, 9.5rem) minmax(0, 21rem) minmax(0, 28rem);
+    grid-template-areas: "feed phone outcome";
+    gap: 3rem 2.5rem;
+  }
+  .uc-phone { grid-area: phone; }
+  .uc-outcome { grid-area: outcome; }
+  .uc-feed { grid-area: feed; display: block; align-self: center; }
+  .uc-feed-track { height: 24rem; }
+}
+
+/* Tableta y móvil: no hay hueco lateral, así que la columna se tumba y pasa a
+   ser una tira bajo el teléfono. Va DEBAJO y no encima porque arriba ya se
+   apilan el rótulo y las dos filas de pestañas, y a 390 px el teléfono todavía
+   no cabe entero en la primera pantalla: meter algo más antes lo hundiría y
+   separaría las pestañas de lo único que gobiernan. */
+@media (max-width: 991px) {
+  .uc-feed { display: block; grid-area: feed; margin-top: .5rem; }
+  .uc-feed-track {
+    height: auto; display: flex; padding: .75rem 0;
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+    mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+  }
+  .uc-feed-col {
+    flex: 0 0 auto; flex-direction: row; align-items: center; gap: 1.9rem;
+    padding: 0 .95rem 0 0; animation-name: uc-feed-slide; animation-duration: 30s;
+  }
+  .uc-layout { grid-template-columns: minmax(0, 24rem); grid-template-areas: "phone" "outcome" "feed"; }
+}
+@keyframes uc-feed-slide { to { transform: translateX(-100%); } }
+
+@media (max-width: 767px) {
+  .uc-layout { grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: "phone timeline" "feed feed"; }
+  .uc-feed { margin-top: .9rem; }
+}
+
+/* Obligatorio: sin movimiento, la lista se queda quieta y se lee igual. */
+@media (prefers-reduced-motion: reduce) { .uc-feed-col { animation: none; } }
