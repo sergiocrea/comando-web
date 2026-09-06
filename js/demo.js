@@ -350,7 +350,13 @@
 
   async function boot() {
     try {
-      D = await fetch('docs/demo-data.json?v=1').then((r) => r.json());
+      // Igual que en los casos de uso: el guion del demo va por idioma y cae
+      // al castellano mientras el idioma no tenga el suyo.
+      const lang = (document.documentElement.lang || 'es').slice(0, 2);
+      const url = lang === 'es' ? '/docs/demo-data.json?v=1' : `/docs/demo-data.${lang}.json?v=1`;
+      D = await fetch(url)
+        .then((r) => (r.ok ? r.json() : Promise.reject(new Error(String(r.status)))))
+        .catch(() => fetch('/docs/demo-data.json?v=1').then((r) => r.json()));
     } catch (e) { return; }
     render();
     chat = document.getElementById('demo-chat'); input = document.getElementById('demo-text'); presence = document.getElementById('demo-presence');

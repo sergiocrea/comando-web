@@ -96,5 +96,14 @@
     restartTimer(6000);
     if (typeof ScrollTrigger !== 'undefined') ScrollTrigger.refresh();
   }
-  fetch('docs/usecases.json?v=9').then((r) => r.json()).then((d) => { D = d; render(); showStep(0, 'init'); requestAnimationFrame(() => root.querySelector('.uc-layout').classList.add('is-in')); if (typeof ScrollTrigger !== 'undefined') ScrollTrigger.refresh(); }).catch(() => {});
+  // Los datos van por idioma: /docs/usecases.en.json y .pt.json. Si el idioma
+  // todavía no tiene su fichero, se usa el castellano en vez de dejar la
+  // sección vacía.
+  const LANG = (document.documentElement.lang || 'es').slice(0, 2);
+  const DATA = LANG === 'es' ? '/docs/usecases.json?v=9' : `/docs/usecases.${LANG}.json?v=9`;
+  const loadData = () =>
+    fetch(DATA)
+      .then((r) => (r.ok ? r.json() : Promise.reject(new Error(String(r.status)))))
+      .catch(() => fetch('/docs/usecases.json?v=9').then((r) => r.json()));
+  loadData().then((d) => { D = d; render(); showStep(0, 'init'); requestAnimationFrame(() => root.querySelector('.uc-layout').classList.add('is-in')); if (typeof ScrollTrigger !== 'undefined') ScrollTrigger.refresh(); }).catch(() => {});
 })();

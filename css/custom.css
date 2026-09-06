@@ -1358,3 +1358,22 @@ html { scroll-behavior: smooth; }
 /* Precio de lista tachado y el ahorro, para el plan con descuento de lanzamiento. */
 .price-amount s { margin-left: .5rem; font-family: "Jetbrainsmono Variable", monospace; font-size: .95rem; font-weight: 400; color: #7d7d7d; text-decoration-thickness: 1px; }
 .price-off { display: inline-block; align-self: flex-start; width: fit-content; margin-top: .45rem; padding: .18rem .5rem; border-radius: .3rem; background: rgba(77, 124, 255, .16); color: #8fb0ff; font-family: "Jetbrainsmono Variable", monospace; font-size: .68rem; letter-spacing: .06em; text-transform: uppercase; }
+
+/* Selector de idioma de las páginas generadas (/en/, /pt/).
+   Flota sobre la barra en vez de vivir dentro del menú de Webflow: el markup de
+   la barra lo genera Webflow y meterle un elemento a mano se pierde en la
+   siguiente exportación. Arriba a la derecha, discreto: quien lo necesita lo
+   busca ahí, y quien ya está en su idioma no tiene por qué verlo. */
+.lang-switch {
+  position: fixed; top: .85rem; right: .9rem; z-index: 1200;
+  display: flex; align-items: center; gap: .1rem;
+  padding: .18rem .3rem; border-radius: .45rem;
+  background: rgba(10, 10, 10, .55);
+  backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+  font-family: "Jetbrainsmono Variable", monospace; font-size: .68rem; letter-spacing: .06em;
+}
+.lang-switch a, .lang-switch .lang-switch-current { padding: .2rem .35rem; border-radius: .3rem; text-decoration: none; }
+.lang-switch a { color: rgba(255, 255, 255, .62); }
+.lang-switch a:hover, .lang-switch a:focus-visible { color: #fff; background: rgba(255, 255, 255, .12); }
+.lang-switch .lang-switch-current { color: #0a0a0a; background: #d7ff3e; font-weight: 600; }
+@media (max-width: 767px) { .lang-switch { top: .6rem; right: .6rem; font-size: .62rem; } }
