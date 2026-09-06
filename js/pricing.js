@@ -17,7 +17,6 @@ const PRICING_CONFIG = {
     { id: 'pro',     name: 'Pro',     price: 20, contacts: 200000, commands: 2000, highlight: 'Conexiones ilimitadas' },
   ],
   enterpriseLine: '¿Más de 200 000 contactos, integraciones avanzadas o soporte dedicado?',
-  syncNote: 'HubSpot y Google Sheets están disponibles hoy. Los demás conectores mostrados en la landing están en preparación.',
   commandNote: 'Un comando es cada pedido que le haces a Comando por WhatsApp, por texto o por audio. Las confirmaciones y las respuestas no cuentan.',
   addons: [
     { label: '+20 000 contactos', price: 1 },
@@ -96,7 +95,6 @@ const PRICING_CONFIG = {
         <p class="pricing-note"><b>¿Qué es un comando?</b> ${esc(C.commandNote)}</p>
         <p class="pricing-note"><b>${esc(C.addonsIntro)}</b> ${C.addons.map((a) => `${esc(a.label)} = ${money(a.price)}/mes`).join(' · ')}. ${esc(C.overageNote)}</p>
         <p class="pricing-note">${esc(C.enterpriseLine)} <a href="${C.cta.enterpriseHref}">${esc(C.cta.enterpriseLabel)}</a>.</p>
-        <p class="pricing-note ob-muted">${esc(C.syncNote)}</p>
       </div>`;
   }
   function renderMore() {
