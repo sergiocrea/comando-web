@@ -7,12 +7,12 @@
    - una sola acción principal por fila; lo demás va dentro de «más»;
    - vocabulario del operador (plata en juego, parado, sin dueño, repetidos), nunca del sistema. */
 
-import { isPending } from './api.js?v=4';
-import { crmBlock, crmActions, whatsappStep } from './setup.js?v=4';
+import { isPending } from './api.js?v=5';
+import { crmBlock, crmActions, whatsappStep } from './setup.js?v=5';
 import {
   esc, num, money, pct, fmtTime, fmtDate, fmtDateTime, monthName, dayLabel, sameDay, rel, isToday, isPast, isoDay,
   wa, waBtn, askLine, chip, statusChip, bar, spark, kpi, card, row, moreBox, empty, soon, toast, ICON, SIGNAL_PHRASE,
-} from './ui.js?v=4';
+} from './ui.js?v=5';
 import { t, tn } from '../i18n.js?v=1';
 
 /** Renderiza una parte según el estado de su dato. */
@@ -249,25 +249,25 @@ const crm = {
   view(d) {
     const plata = part(d.pipeline, (p) => {
       const stages = [...p.stages].sort((a, b) => a.order - b.order); const maxStage = Math.max(...stages.map((s) => s.amount));
-      return `<div class="grid c3">${kpi('Plata en juego', money(p.open.amount, p.currency), `${num(p.open.count)} negocios abiertos`)}${kpi('Ganado este mes', money(p.wonMonth.amount, p.currency), `${num(p.wonMonth.count)} negocios`, { subCls: 'up' })}${kpi('Perdido este mes', money(p.lostMonth.amount, p.currency), `${num(p.lostMonth.count)} negocios`, { subCls: 'down' })}</div>
-        <div class="two">${card('Por etapa', `<div class="bars">${stages.map((s) => bar(s.name, s.amount, maxStage, { text: `<b>${num(s.count)}</b> · ${money(s.amount, p.currency)}` })).join('')}</div>`, { sub: `Al día ${esc(rel(p.computedAt))}`, right: waBtn('dame los negocios por etapa con monto', 'Pedir la lista') })}
-        ${card('Por ' + p.byField.label, `<div class="bars">${p.byField.rows.map((r) => bar(r.value, r.count, Math.max(...p.byField.rows.map((x) => x.count)), { cls: 'blue', text: `<b>${num(r.count)}</b> · ${money(r.amount, p.currency)}` })).join('')}</div>`, { sub: 'Pide cualquier otro corte: «por distrito», «por tipo de inmueble».', right: waBtn('dame los negocios por etapa pero partido por ' + p.byField.label, 'Pedir el cruce') })}</div>`;
-    }, { what: 'La plata en juego', phrase: 'cuánta plata hay en juego ahorita' });
+      return `<div class="grid c3">${kpi(t('hoy.moneyInPlay'), money(p.open.amount, p.currency), t('hoy.openDeals', { n: num(p.open.count) }))}${kpi(t('crm.wonMonth'), money(p.wonMonth.amount, p.currency), t('crm.deals', { n: num(p.wonMonth.count) }), { subCls: 'up' })}${kpi(t('crm.lostMonth'), money(p.lostMonth.amount, p.currency), t('crm.deals', { n: num(p.lostMonth.count) }), { subCls: 'down' })}</div>
+        <div class="two">${card(t('crm.byStage'), `<div class="bars">${stages.map((s) => bar(s.name, s.amount, maxStage, { text: `<b>${num(s.count)}</b> · ${money(s.amount, p.currency)}` })).join('')}</div>`, { sub: esc(t('crm.upToDate', { when: rel(p.computedAt) })), right: waBtn(t('wa.dealsByStage'), t('crm.askList')) })}
+        ${card(t('crm.by', { field: p.byField.label }), `<div class="bars">${p.byField.rows.map((r) => bar(r.value, r.count, Math.max(...p.byField.rows.map((x) => x.count)), { cls: 'blue', text: `<b>${num(r.count)}</b> · ${money(r.amount, p.currency)}` })).join('')}</div>`, { sub: t('crm.anyCut'), right: waBtn(t('wa.dealsByStageAnd', { field: p.byField.label }), t('crm.askCross')) })}</div>`;
+    }, { what: t('crm.whatMoney'), phrase: t('wa.moneyInPlay') });
 
     const revisar = part(d.health, (h) => {
-      const ownersNote = h.owners.crmOwners <= 1 && h.owners.comandoPeople > 1 ? `<p class="note warn">Tu CRM tiene <b>${h.owners.crmOwners} dueño</b> cargado y en Comando son <b>${h.owners.comandoPeople} personas</b>: mientras no pongan el dueño en cada registro, nada va a distinguir quién lleva qué.</p>` : '';
+      const ownersNote = h.owners.crmOwners <= 1 && h.owners.comandoPeople > 1 ? `<p class="note warn">${t('crm.ownersNote', { crmOwners: h.owners.crmOwners, people: h.owners.comandoPeople })}</p>` : '';
       const sevOrder = { high: 0, warning: 1, info: 2 };
       const rows = [...h.metrics].sort((a, b) => sevOrder[a.severity] - sevOrder[b.severity]).map((m) => row({
         ico: { opportunity: '💼', contact: '👤', company: '🏢', task: '⏰' }[m.entity] || '•', cls: m.severity,
-        title: esc(m.label.replace(/^Registros/, 'Contactos')),
-        sub: `<b>${num(m.value)}</b>${m.unit ? ' ' + esc(m.unit) : ''}${m.of ? ` de ${num(m.of)} (${Math.round((m.value / m.of) * 100)} %)` : ''}${m.amount ? ` · ${money(m.amount)}` : ''}`,
-        primary: waBtn(m.ask, 'Ver la lista', 'btn sm primary'),
-        more: `${waBtn(m.weekly, 'Avisarme cada semana')}${m.reproduce ? `<p class="hint" style="margin-top:8px"><b>Cómo lo sacas en tu CRM:</b> ${esc(m.reproduce)}</p>` : ''}`,
+        title: esc(m.label.replace(/^Registros/, t('crm.contacts'))),
+        sub: `<b>${num(m.value)}</b>${m.unit ? ' ' + esc(m.unit) : ''}${m.of ? ` ${esc(t('crm.of', { of: num(m.of), pct: Math.round((m.value / m.of) * 100) }))}` : ''}${m.amount ? ` · ${money(m.amount)}` : ''}`,
+        primary: waBtn(m.ask, t('crm.seeList'), 'btn sm primary'),
+        more: `${waBtn(m.weekly, t('crm.alertWeekly'))}${m.reproduce ? `<p class="hint" style="margin-top:8px"><b>${esc(t('crm.howInCrm'))}</b> ${esc(m.reproduce)}</p>` : ''}`,
       })).join('');
-      return `${ownersNote}<div class="card"><div class="card-head"><div><h2>Qué revisar</h2><p>Comando detecta; nunca borra ni fusiona por su cuenta.</p></div>${syncLine(h.sync)}</div><div class="list">${rows}</div></div>`;
-    }, { what: 'Qué revisar en tu CRM', phrase: 'qué negocios abiertos llevan más de 15 días sin que nadie los toque' });
+      return `${ownersNote}<div class="card"><div class="card-head"><div><h2>${esc(t('crm.whatToReview'))}</h2><p>${esc(t('crm.neverDeletes'))}</p></div>${syncLine(h.sync)}</div><div class="list">${rows}</div></div>`;
+    }, { what: t('hoy.review'), phrase: t('wa.stalledDeals') });
 
-    return `<div class="stack">${head(this.title, this.sub, waBtn('cuánta plata hay en juego ahorita', 'Pedir por WhatsApp', 'btn primary'))}${plata}${revisar}</div>`;
+    return `<div class="stack">${head(this.title, this.sub, waBtn(t('wa.moneyInPlay'), t('common.askOnWhatsApp'), 'btn primary'))}${plata}${revisar}</div>`;
   },
 };
 
@@ -281,48 +281,55 @@ const avisos = {
 
     /* Una sola lista «Comando te avisa cuando…», en tres bloques con palabras del operador. */
     const siempre = []; const cuandoPase = []; const cadaTanto = [];
-    if (pol) pol.enabledSignals.forEach((s) => { const f = SIGNAL_PHRASE[s]; if (!f) return; const text = f(pol.thresholds, money(pol.thresholds.highValue.PEN)); siempre.push(row({ ico: '🔔', title: esc(text), primary: waBtn('no me avises más cuando ' + text, 'Apagar') })); });
-    ev.forEach((r) => cuandoPase.push(row({ ico: '⚡', cls: r.status === 'active' ? 'warning' : '', title: esc(r.name) + (r.status !== 'active' ? ' ' + statusChip('paused') : ''), sub: `${esc(r.condition)} → ${esc(r.action)}${r.firedWeek ? ` · ${r.firedWeek === 1 ? '1 vez' : num(r.firedWeek) + ' veces'} esta semana` : ''}`,
-      primary: r.status === 'active' ? waBtn('pausa la regla «' + r.name + '»', 'Pausar') : waBtn('reanuda la regla «' + r.name + '»', 'Reanudar', 'btn sm primary'), more: waBtn('cámbiame la regla «' + r.name + '»: ', 'Cambiar') })));
-    ((ag && ag.rules) || []).forEach((r) => cadaTanto.push(row({ ico: r.critical ? '🚨' : '🔁', title: esc(r.name) + (r.status !== 'active' ? ' ' + statusChip('paused') : ''), sub: `${esc(r.every || '')}${r.lastValue != null && !r.critical ? ` · la última vez: <b>${num(r.lastValue)}</b>` : ''}${r.lastFiredAt ? ` · te avisó ${esc(rel(r.lastFiredAt))}` : ''}`,
-      primary: `<button class="btn sm ${r.status === 'active' ? '' : 'primary'}" data-act="rule:toggle" data-id="${esc(r.id)}" data-status="${r.status === 'active' ? 'paused' : 'active'}">${r.status === 'active' ? 'Pausar' : 'Reanudar'}</button>`, more: waBtn('cámbiame el aviso «' + r.name + '» a ', 'Cambiar día u hora') })));
-    ((pipe && pipe.scheduledReports) || []).forEach((r) => cadaTanto.push(row({ ico: '📊', title: `Te manda «${esc(r.title)}»`, sub: `${esc(r.cadence)} · por WhatsApp`, primary: waBtn('pausa el reporte «' + r.title + '»', 'Pausar') })));
-    const blocks = [['Siempre', siempre], ['Cuando pasa algo', cuandoPase], ['Cada cierto tiempo', cadaTanto]].filter(([, xs]) => xs.length);
+    if (pol) pol.enabledSignals.forEach((s) => { const f = SIGNAL_PHRASE[s]; if (!f) return; const text = f(pol.thresholds, money(pol.thresholds.highValue.PEN)); siempre.push(row({ ico: '🔔', title: esc(text), primary: waBtn(t('wa.stopAlert', { what: text }), t('avisos.turnOff')) })); });
+    ev.forEach((r) => cuandoPase.push(row({ ico: '⚡', cls: r.status === 'active' ? 'warning' : '', title: esc(r.name) + (r.status !== 'active' ? ' ' + statusChip('paused') : ''), sub: `${esc(r.condition)} → ${esc(r.action)}${r.firedWeek ? ` · ${esc(tn('avisos.times', r.firedWeek, { n: num(r.firedWeek) }))}` : ''}`,
+      primary: r.status === 'active' ? waBtn(t('wa.pauseRule', { name: r.name }), t('avisos.pause')) : waBtn(t('wa.resumeRule', { name: r.name }), t('avisos.resume'), 'btn sm primary'), more: waBtn(t('wa.changeRule', { name: r.name }), t('avisos.change')) })));
+    ((ag && ag.rules) || []).forEach((r) => cadaTanto.push(row({ ico: r.critical ? '🚨' : '🔁', title: esc(r.name) + (r.status !== 'active' ? ' ' + statusChip('paused') : ''), sub: `${esc(r.every || '')}${r.lastValue != null && !r.critical ? ` · ${t('avisos.lastValue', { value: num(r.lastValue) })}` : ''}${r.lastFiredAt ? ` · ${esc(t('avisos.alertedYou', { when: rel(r.lastFiredAt) }))}` : ''}`,
+      primary: `<button class="btn sm ${r.status === 'active' ? '' : 'primary'}" data-act="rule:toggle" data-id="${esc(r.id)}" data-status="${r.status === 'active' ? 'paused' : 'active'}">${esc(t(r.status === 'active' ? 'avisos.pause' : 'avisos.resume'))}</button>`, more: waBtn(t('wa.changeAlert', { name: r.name }), t('avisos.changeDayHour')) })));
+    ((pipe && pipe.scheduledReports) || []).forEach((r) => cadaTanto.push(row({ ico: '📊', title: esc(t('avisos.sendsYou', { title: r.title })), sub: `${esc(r.cadence)} · ${esc(t('avisos.byWhatsApp'))}`, primary: waBtn(t('wa.pauseReport', { title: r.title }), t('avisos.pause')) })));
+    const blocks = [[t('avisos.always'), siempre], [t('avisos.whenSomething'), cuandoPase], [t('avisos.everySoOften'), cadaTanto]].filter(([, xs]) => xs.length);
     const missing = [d.policy, d.eventRules, d.pipeline].some(isPending);
-    const lista = card('Comando te avisa cuando…', `${blocks.length ? blocks.map(([t, xs]) => `<h3 class="group-title">${t} <span>${xs.length}</span></h3><div class="list">${xs.join('')}</div>`).join('') : empty('Todavía no vigila nada', 'Dile «avísame cuando…» o «cada lunes…».')}${missing ? `<p class="hint" style="margin-top:12px">Algunos avisos todavía no se listan aquí. ${askLine('qué avisos tengo activos', 'Pregúntale:')}</p>` : ''}`,
-      { sub: 'Cada aviso acepta respuesta por WhatsApp: VER, OK, LUEGO, BASTA, POR QUÉ.', right: waBtn('avísame cuando ', 'Nuevo aviso', 'btn sm primary') });
+    const lista = card(t('avisos.title'), `${blocks.length ? blocks.map(([label, xs]) => `<h3 class="group-title">${esc(label)} <span>${xs.length}</span></h3><div class="list">${xs.join('')}</div>`).join('') : empty(t('avisos.watchesNothing'), t('avisos.watchesNothingSub'))}${missing ? `<p class="hint" style="margin-top:12px">${esc(t('avisos.notListed'))} ${askLine(t('wa.myAlerts'), t('avisos.askHim'))}</p>` : ''}`,
+      { sub: t('avisos.replyWords'), right: waBtn(t('wa.newAlert'), t('avisos.newAlert'), 'btn sm primary') });
 
     const horario = part(d.agent, (a) => { const pr = a.preferences || {}; return `<div class="two">
-      <form class="form" data-form="prefs"><h3>Horario</h3>
-        <div class="inline"><label>No me escribas desde<input name="quietStart" type="time" value="${esc(pr.quietStart || '21:00')}"></label><label>hasta<input name="quietEnd" type="time" value="${esc(pr.quietEnd || '08:00')}"></label></div>
-        <label>Máximo de avisos por día<input name="dailyMessageLimit" type="number" min="0" max="100" value="${esc(pr.dailyMessageLimit ?? 5)}"></label>
-        <label class="sw"><input type="checkbox" name="proactiveEnabled" ${pr.proactiveEnabled !== false ? 'checked' : ''}><span class="sw-track"></span><span>Comando puede escribirme sin que le pregunte</span></label>
-        <div class="form-foot"><button class="btn primary" type="submit">Guardar</button><span class="form-msg"></span></div></form>
-      <form class="form" data-form="briefing"><h3>Resumen de la mañana</h3>
-        <label>Cada<select name="briefingCadence"><option value="daily" ${pr.briefingCadence === 'daily' ? 'selected' : ''}>día (lunes a sábado)</option><option value="weekly" ${pr.briefingCadence === 'weekly' ? 'selected' : ''}>lunes</option><option value="monthly" ${pr.briefingCadence === 'monthly' ? 'selected' : ''}>mes, el primer día hábil</option></select></label>
-        <label>A las<input name="briefingAt" type="time" value="${esc(pr.briefingAt || '07:30')}"></label>
-        <div class="form-foot"><button class="btn primary" type="submit">Guardar</button><span class="form-msg"></span></div>
-        <p class="hint">Nunca llega vacío: si no hay nada, no te escribe.</p></form></div>
-      <p class="hint" style="margin-top:12px">${askLine('no me escribas hoy', '¿Un día sin avisos?')}</p>`; }, { what: 'El horario', phrase: 'no me escribas después de las 9 de la noche' });
+      <form class="form" data-form="prefs"><h3>${esc(t('avisos.schedule'))}</h3>
+        <div class="inline"><label>${esc(t('avisos.dontWriteFrom'))}<input name="quietStart" type="time" value="${esc(pr.quietStart || '21:00')}"></label><label>${esc(t('avisos.until'))}<input name="quietEnd" type="time" value="${esc(pr.quietEnd || '08:00')}"></label></div>
+        <label>${esc(t('avisos.dailyLimit'))}<input name="dailyMessageLimit" type="number" min="0" max="100" value="${esc(pr.dailyMessageLimit ?? 5)}"></label>
+        <label class="sw"><input type="checkbox" name="proactiveEnabled" ${pr.proactiveEnabled !== false ? 'checked' : ''}><span class="sw-track"></span><span>${esc(t('avisos.proactive'))}</span></label>
+        <div class="form-foot"><button class="btn primary" type="submit">${esc(t('common.save'))}</button><span class="form-msg"></span></div></form>
+      <form class="form" data-form="briefing"><h3>${esc(t('avisos.briefing'))}</h3>
+        <label>${esc(t('avisos.every'))}<select name="briefingCadence"><option value="daily" ${pr.briefingCadence === 'daily' ? 'selected' : ''}>${esc(t('avisos.daily'))}</option><option value="weekly" ${pr.briefingCadence === 'weekly' ? 'selected' : ''}>${esc(t('avisos.weekly'))}</option><option value="monthly" ${pr.briefingCadence === 'monthly' ? 'selected' : ''}>${esc(t('avisos.monthly'))}</option></select></label>
+        <label>${esc(t('avisos.at'))}<input name="briefingAt" type="time" value="${esc(pr.briefingAt || '07:30')}"></label>
+        <div class="form-foot"><button class="btn primary" type="submit">${esc(t('common.save'))}</button><span class="form-msg"></span></div>
+        <p class="hint">${esc(t('avisos.neverEmpty'))}</p></form></div>
+      <p class="hint" style="margin-top:12px">${askLine(t('wa.noMessagesToday'), t('avisos.dayOff'))}</p>`; }, { what: t('avisos.scheduleWhat'), phrase: t('wa.quietHours') });
 
-    const ideas = part(d.playbooks, (pb) => list(pb.filter((x) => !x.active).slice(0, 8), (x) => row({ ico: '💡', title: esc(x.name) + (x.needs ? ' ' + chip(x.needs, 'soon') : ''), sub: `<q>${esc(x.ask)}</q>${x.evidence ? ` · ${esc(x.evidence)}` : ''}`, primary: waBtn(x.ask, 'Activar', 'btn sm primary') }), 'Ya activaste todas las ideas.'),
-      { what: 'Las ideas', phrase: 'qué automatizaciones me recomiendas' });
+    const ideas = part(d.playbooks, (pb) => list(pb.filter((x) => !x.active).slice(0, 8), (x) => row({ ico: '💡', title: esc(x.name) + (x.needs ? ' ' + chip(x.needs, 'soon') : ''), sub: `<q>${esc(x.ask)}</q>${x.evidence ? ` · ${esc(x.evidence)}` : ''}`, primary: waBtn(x.ask, t('avisos.activate'), 'btn sm primary') }), t('avisos.allActivated')),
+      { what: t('avisos.ideasWhat'), phrase: t('wa.whichAutomations') });
 
-    return `<div class="stack">${head(this.title, this.sub)}${lista}${card('Cuándo te escribe', horario, { sub: `Lo que cae fuera del horario llega a primera hora, marcado como «de anoche».` })}${card('Ideas para activar con una frase', ideas, { sub: 'Comando la convierte en aviso, te muestra la vista previa y espera tu CONFIRMAR.' })}</div>`;
+    return `<div class="stack">${head(this.title, this.sub)}${lista}${card(t('avisos.whenWrites'), horario, { sub: t('avisos.outsideHours') })}${card(t('avisos.ideas'), ideas, { sub: t('avisos.ideasSub') })}</div>`;
   },
   act: {
-    'rule:toggle': async (el, ctx, d, reload) => { el.disabled = true; try { await ctx.api.ruleStatus(el.dataset.id, el.dataset.status); toast(el.dataset.status === 'paused' ? 'Pausado.' : 'Reanudado.', 'ok'); reload(); } catch (e) { toast(e.message, 'bad'); el.disabled = false; } },
+    'rule:toggle': async (el, ctx, d, reload) => { el.disabled = true; try { await ctx.api.ruleStatus(el.dataset.id, el.dataset.status); toast(t(el.dataset.status === 'paused' ? 'toast.paused' : 'toast.resumed'), 'ok'); reload(); } catch (e) { toast(e.message, 'bad'); el.disabled = false; } },
   },
   forms: {
     prefs: async (form, ctx, d) => {
       const f = new FormData(form); const prev = (val(d.agent, {}).preferences) || {};
       await ctx.api.savePreferences({ timezone: prev.timezone || 'America/Lima', quietStart: f.get('quietStart'), quietEnd: f.get('quietEnd'), dailyMessageLimit: Number(f.get('dailyMessageLimit')), minimumPriority: prev.minimumPriority ?? 50, proactiveEnabled: f.get('proactiveEnabled') === 'on' });
-      return 'Listo. Aplica desde el próximo aviso.';
+      return t('avisos.prefsSaved');
     },
     briefing: async (form, ctx) => {
       const f = new FormData(form);
-      await ctx.api.savePreferences({ briefingCadence: f.get('briefingCadence'), briefingAt: f.get('briefingAt') }).catch((e) => { if (e.status === 400) { window.open(wa('mándame el resumen ' + { daily: 'cada mañana', weekly: 'cada lunes', monthly: 'cada mes' }[f.get('briefingCadence')] + ' a las ' + f.get('briefingAt')), '_blank'); return; } throw e; });
-      return 'Listo.';
+      await ctx.api.savePreferences({ briefingCadence: f.get('briefingCadence'), briefingAt: f.get('briefingAt') }).catch((e) => {
+        if (e.status === 400) {
+          const cadence = t({ daily: 'wa.briefingDaily', weekly: 'wa.briefingWeekly', monthly: 'wa.briefingMonthly' }[f.get('briefingCadence')]);
+          window.open(wa(t('wa.briefing', { cadence, time: f.get('briefingAt') })), '_blank');
+          return;
+        }
+        throw e;
+      });
+      return t('avisos.done');
     },
   },
 };
@@ -335,32 +342,32 @@ const marketing = {
     const logo = (p) => `<img class="logo-sm" src="../../assets/img/logos/${p === 'google-ads' ? 'automation' : esc(p)}.svg" alt="">`;
     const body = part(d.mk, (m) => {
       const cur = m.period.currency;
-      const delta = (a, b, inverse) => { if (!b) return ''; const x = (a - b) / b; const good = inverse ? x < 0 : x > 0; return `<span class="${good ? 'sev-ok' : 'sev-warning'}">${x > 0 ? '+' : ''}${Math.round(x * 100)} % vs. el periodo anterior</span>`; };
-      const accounts = `<div class="inline-list" style="margin-bottom:16px">${m.accounts.map((a) => `<span class="chip ${a.status === 'active' ? 'ok' : a.status === 'pending' ? 'warn' : 'soon'}">${logo(a.provider)} ${esc(a.name)} · ${a.status === 'active' ? 'conectada' : a.status === 'pending' ? 'falta autorizar' : 'pronto'}</span>`).join('')}<button class="btn sm ghost" data-act="mk:connect">Conectar otra</button></div>`;
-      const kpis = `<div class="grid c4">${kpi('Inversión · ' + m.period.label, money(m.period.spend, cur), delta(m.period.spend, m.period.prevSpend, true))}${kpi('Leads que entraron', num(m.period.leads), delta(m.period.leads, m.period.prevLeads))}${kpi('Costo por lead', money(m.period.cpl, cur), delta(m.period.cpl, m.period.prevCpl, true))}${kpi('Costo por venta', money(m.period.won ? m.period.spend / m.period.won : 0, cur), `${num(m.period.won)} venta${m.period.won === 1 ? '' : 's'} · ${money(m.period.revenue, cur)}`)}</div>`;
-      const camps = card('Campañas', accounts + list(m.campaigns, (c) => row({
+      const delta = (a, b, inverse) => { if (!b) return ''; const x = (a - b) / b; const good = inverse ? x < 0 : x > 0; return `<span class="${good ? 'sev-ok' : 'sev-warning'}">${esc(t('mk.vsPrev', { sign: x > 0 ? '+' : '', pct: Math.round(x * 100) }))}</span>`; };
+      const accounts = `<div class="inline-list" style="margin-bottom:16px">${m.accounts.map((a) => `<span class="chip ${a.status === 'active' ? 'ok' : a.status === 'pending' ? 'warn' : 'soon'}">${logo(a.provider)} ${esc(a.name)} · ${esc(t(a.status === 'active' ? 'mk.connected' : a.status === 'pending' ? 'mk.needsAuth' : 'mk.soon'))}</span>`).join('')}<button class="btn sm ghost" data-act="mk:connect">${esc(t('mk.connectAnother'))}</button></div>`;
+      const kpis = `<div class="grid c4">${kpi(t('mk.spend', { period: m.period.label }), money(m.period.spend, cur), delta(m.period.spend, m.period.prevSpend, true))}${kpi(t('mk.leadsIn'), num(m.period.leads), delta(m.period.leads, m.period.prevLeads))}${kpi(t('mk.cpl'), money(m.period.cpl, cur), delta(m.period.cpl, m.period.prevCpl, true))}${kpi(t('mk.cpa'), money(m.period.won ? m.period.spend / m.period.won : 0, cur), `${esc(tn('mk.sale', m.period.won, { n: num(m.period.won) }))} · ${money(m.period.revenue, cur)}`)}</div>`;
+      const camps = card(t('mk.campaigns'), accounts + list(m.campaigns, (c) => row({
         ico: logo(/tiktok/i.test(c.channel) ? 'tiktok' : 'meta'), title: esc(c.name) + (c.status !== 'active' ? ' ' + statusChip('paused') : ''),
-        sub: `${esc(c.channel)} · gastó <b>${money(c.spend, cur)}</b> · <b>${num(c.leads)}</b> leads a ${money(c.cpl, cur)} · ${num(c.crmWon)} ganado${c.crmWon === 1 ? '' : 's'}${c.pausedReason ? `<br><span class="sev-warning">${esc(c.pausedReason)}</span>` : ''}`,
-        primary: c.status === 'active' ? waBtn('pausa la campaña «' + c.name + '»', 'Pausar') : waBtn('reanuda la campaña «' + c.name + '»', 'Reanudar', 'btn sm primary'),
-        more: `${waBtn('súbele 20 % al presupuesto de «' + c.name + '»', 'Subir presupuesto')}${waBtn('cuántos leads de «' + c.name + '» ya son negocios', 'Ver sus leads')}`,
-      })), { sub: 'Pausar o cambiar presupuesto pasa por vista previa y CONFIRMAR, como todo.' });
+        sub: `${esc(c.channel)} · ${t('mk.spent', { spend: money(c.spend, cur) })} · ${t('mk.leadsAt', { leads: num(c.leads), cpl: money(c.cpl, cur) })} · ${esc(tn('mk.won', c.crmWon, { n: num(c.crmWon) }))}${c.pausedReason ? `<br><span class="sev-warning">${esc(c.pausedReason)}</span>` : ''}`,
+        primary: c.status === 'active' ? waBtn(t('wa.pauseCampaign', { name: c.name }), t('avisos.pause')) : waBtn(t('wa.resumeCampaign', { name: c.name }), t('avisos.resume'), 'btn sm primary'),
+        more: `${waBtn(t('wa.raiseBudget', { name: c.name }), t('mk.raiseBudget'))}${waBtn(t('wa.campaignLeads', { name: c.name }), t('mk.seeLeads'))}`,
+      })), { sub: t('mk.campaignsSub') });
       const an = m.analyst;
-      const analyst = card('Tu analista', `<div class="person"><div class="avatar">${esc(an.avatar)}</div><div><b>${esc(an.name)}</b><div class="hint">Revisa tus campañas cada semana · próxima: ${esc(fmtDateTime(an.nextReviewAt))}</div></div></div>
-        <h3 class="group-title" style="margin-top:16px">Te recomienda</h3>
-        ${list(an.recommendations.filter((r) => r.status === 'pending'), (r) => row({ ico: '💡', cls: 'warning', title: esc(r.text), sub: `${esc(fmtDate(r.at))} · impacto ${esc(r.impact)}`, primary: waBtn('aplica la recomendación de mi analista: ' + r.text, 'Aplicar', 'btn sm primary'), more: `<button class="btn sm ghost" data-act="mk:later" data-id="${esc(r.id)}">Luego</button>` }), 'Nada pendiente. Lo anterior ya está aplicado.')}
-        ${an.requests.length ? moreBox(list(an.requests, (q) => row({ ico: '❓', title: esc(q.topic), sub: esc(q.answer || 'En revisión') })), 'Lo que ya le preguntaste') : ''}`,
-        { right: waBtn('pregúntale a mi analista de marketing: ', 'Preguntarle', 'btn sm primary') });
-      const funnel = card('Del anuncio a la venta', `<div class="funnel">${m.funnel.map((s, i) => `<div class="funnel-step"><span>${esc(s.label)}</span><div class="bar-track"><div class="bar-fill ${i < 2 ? 'blue' : i < 5 ? '' : 'warn'}" style="width:${Math.max(2, Math.round((Math.log10(s.value + 1) / Math.log10(m.funnel[0].value + 1)) * 100))}%"></div></div><span class="bar-val"><b>${num(s.value)}</b>${i ? ` · ${Math.round((s.value / m.funnel[i - 1].value) * 100)} %` : ''}</span></div>`).join('')}</div>`, { sub: m.period.label });
-      const autos = card('Lo que se hace solo', list(m.automations, (a) => row({ ico: { budget: '💸', speed: '⚡', audience: '🎯', report: '📊' }[a.kind] || '🔁', title: esc(a.name) + (a.status !== 'active' ? ' ' + statusChip('paused') : ''), sub: a.firedMonth === 1 ? '1 vez este mes' : `${num(a.firedMonth)} veces este mes`, primary: a.status === 'active' ? waBtn('pausa la automatización «' + a.name + '»', 'Pausar') : waBtn('reanuda la automatización «' + a.name + '»', 'Reanudar', 'btn sm primary') })),
-        { right: waBtn('si el costo por lead de una campaña pasa de 60 soles tres días seguidos, pausala y avísame', 'Nueva', 'btn sm primary') });
-      const reports = card('Reportes', list(m.reports, (r) => row({ ico: '📈', title: esc(r.title), sub: r.highlights.map(esc).join(' · '), primary: waBtn('mándame el reporte «' + r.title + '»', 'Al WhatsApp', 'btn sm primary') })), { sub: 'Semanal los lunes, mensual el primer día hábil.', right: waBtn('mándame el reporte de campañas de esta semana', 'Pedir ahora') });
+      const analyst = card(t('mk.analyst'), `<div class="person"><div class="avatar">${esc(an.avatar)}</div><div><b>${esc(an.name)}</b><div class="hint">${esc(t('mk.reviewsWeekly', { when: fmtDateTime(an.nextReviewAt) }))}</div></div></div>
+        <h3 class="group-title" style="margin-top:16px">${esc(t('mk.recommends'))}</h3>
+        ${list(an.recommendations.filter((r) => r.status === 'pending'), (r) => row({ ico: '💡', cls: 'warning', title: esc(r.text), sub: esc(t('mk.impact', { date: fmtDate(r.at), impact: r.impact })), primary: waBtn(t('wa.applyRecommendation', { text: r.text }), t('mk.apply'), 'btn sm primary'), more: `<button class="btn sm ghost" data-act="mk:later" data-id="${esc(r.id)}">${esc(t('row.later'))}</button>` }), t('mk.nothingPending'))}
+        ${an.requests.length ? moreBox(list(an.requests, (q) => row({ ico: '❓', title: esc(q.topic), sub: esc(q.answer || t('mk.underReview')) })), t('mk.alreadyAsked')) : ''}`,
+        { right: waBtn(t('wa.askAnalyst'), t('mk.askHim'), 'btn sm primary') });
+      const funnel = card(t('mk.funnel'), `<div class="funnel">${m.funnel.map((s, i) => `<div class="funnel-step"><span>${esc(s.label)}</span><div class="bar-track"><div class="bar-fill ${i < 2 ? 'blue' : i < 5 ? '' : 'warn'}" style="width:${Math.max(2, Math.round((Math.log10(s.value + 1) / Math.log10(m.funnel[0].value + 1)) * 100))}%"></div></div><span class="bar-val"><b>${num(s.value)}</b>${i ? ` · ${Math.round((s.value / m.funnel[i - 1].value) * 100)} %` : ''}</span></div>`).join('')}</div>`, { sub: m.period.label });
+      const autos = card(t('mk.automations'), list(m.automations, (a) => row({ ico: { budget: '💸', speed: '⚡', audience: '🎯', report: '📊' }[a.kind] || '🔁', title: esc(a.name) + (a.status !== 'active' ? ' ' + statusChip('paused') : ''), sub: esc(tn('mk.timesMonth', a.firedMonth, { n: num(a.firedMonth) })), primary: a.status === 'active' ? waBtn(t('wa.pauseAutomation', { name: a.name }), t('avisos.pause')) : waBtn(t('wa.resumeAutomation', { name: a.name }), t('avisos.resume'), 'btn sm primary') })),
+        { right: waBtn(t('wa.newBudgetRule'), t('mk.new'), 'btn sm primary') });
+      const reports = card(t('mk.reports'), list(m.reports, (r) => row({ ico: '📈', title: esc(r.title), sub: r.highlights.map(esc).join(' · '), primary: waBtn(t('wa.sendReport', { title: r.title }), t('mk.toWhatsApp'), 'btn sm primary') })), { sub: t('mk.reportsSub'), right: waBtn(t('wa.weeklyReport'), t('mk.askNow')) });
       return `${kpis}${camps}<div class="two">${analyst}${funnel}</div><div class="two">${autos}${reports}</div>`;
-    }, { what: 'Marketing', phrase: 'quiero conectar mis campañas de Facebook e Instagram', extra: 'Conecta tu cuenta de anuncios y Comando empieza a seguir cada lead hasta la venta.' });
-    return `<div class="stack">${head(this.title, this.sub, waBtn('cuántos leads trajo cada campaña esta semana', 'Preguntar por WhatsApp', 'btn primary'))}${body}</div>`;
+    }, { what: t('mk.what'), phrase: t('wa.connectAds'), extra: t('mk.extra') });
+    return `<div class="stack">${head(this.title, this.sub, waBtn(t('wa.leadsPerCampaign'), t('mk.askOnWhatsApp'), 'btn primary'))}${body}</div>`;
   },
   act: {
-    'mk:connect': () => toast('La conexión de cuentas de anuncios se activa pronto. Escríbenos: hola@comando.pro'),
-    'mk:later': (el) => { el.closest('.row').style.opacity = '.5'; toast('Lo verás en la próxima revisión.'); },
+    'mk:connect': () => toast(t('mk.connectSoon')),
+    'mk:later': (el) => { el.closest('.row').style.opacity = '.5'; toast(t('mk.nextReview')); },
   },
 };
 
@@ -370,49 +377,51 @@ const cuenta = {
   load: (api) => ({ me: api.me(), quota: api.quota(), connections: api.connections(), sheets: api.sheets(), mk: api.marketing(), team: api.team(), agent: api.agent(), health: api.health() }),
   view(d, ctx) {
     const me = val(d.me, {});
-    const PLAN = { gratis: 'Gratis', free: 'Gratis', basico: 'Básico', starter: 'Starter', pro: 'Pro', enterprise: 'Enterprise' };
+    const PLAN = { gratis: 'plan.gratis', free: 'plan.gratis', basico: 'plan.basico', starter: 'plan.starter', pro: 'plan.pro', enterprise: 'plan.enterprise' };
+    const planName = (raw) => { const key = PLAN[String(raw || '').toLowerCase()]; return key ? t(key) : raw || t('common.dash'); };
     const NAMES = { hubspot: 'HubSpot', salesforce: 'Salesforce', 'google-sheets': 'Google Sheets', pipedrive: 'Pipedrive', zoho: 'Zoho CRM', kommo: 'Kommo', meta: 'Meta Ads', tiktok: 'TikTok Ads', 'google-ads': 'Google Ads' };
     const logo = (p) => `<img class="logo-sm" src="../../assets/img/logos/${p === 'google-ads' ? 'automation' : esc(p)}.svg" alt="">`;
 
     const plan = part(d.quota, (q) => { const total = q.commands.allowance + q.commands.addons + q.commands.adjustments; const share = total ? q.commands.used / total : 0; const cls = share >= 1 ? 'bad' : share >= 0.8 ? 'warn' : '';
-      return `<div class="kpi"><div class="kpi-label">Plan ${esc(q.plan.name)} · US$ ${q.plan.priceUsd}/${q.plan.interval === 'month' ? 'mes' : 'año'}</div><div class="kpi-value">${num(q.commands.used)}<small>de ${num(total)} comandos este mes</small></div><div class="progress ${cls}"><i style="width:${Math.min(100, Math.round(share * 100))}%"></i></div><div class="kpi-sub">${share >= 0.8 ? '<span class="sev-warning">Pasaste el 80 %.</span> ' : ''}Se renueva el ${esc(fmtDate(q.period.resetAt))}${q.blockedReason ? ` · <span class="sev-warning">${esc(q.blockedReason)}</span>` : ''}</div></div>`; },
-      { what: 'El consumo', phrase: 'cuántos comandos me quedan', extra: `Tu plan: ${PLAN[String(me.plan || '').toLowerCase()] || me.plan || '—'}.` });
-    const cuentaCard = card('Tu cuenta', `<div class="list">
-      ${row({ ico: '👤', title: esc(ctx.user?.fullName || me.name || '—'), sub: esc(ctx.user?.primaryEmailAddress?.emailAddress || me.email || ''), primary: `<button class="btn sm" data-act="acc:profile">Editar</button>` })}
-      ${row({ ico: ICON.wa, title: `WhatsApp ${me.whatsapp ? statusChip(me.whatsapp.status) : ''}`, sub: `${esc(me.whatsapp?.phone || 'Sin vincular')} · le escribes a Comando al ${esc(me.comandoNumber || '')}`, primary: `<button class="btn sm ghost" data-act="wa:change">Cambiar número</button>` })}
+      return `<div class="kpi"><div class="kpi-label">${esc(t('cuenta.plan', { name: q.plan.name, price: q.plan.priceUsd, interval: t(q.plan.interval === 'month' ? 'cuenta.month' : 'cuenta.year') }))}</div><div class="kpi-value">${num(q.commands.used)}<small>${esc(t('cuenta.ofCommands', { n: num(total) }))}</small></div><div class="progress ${cls}"><i style="width:${Math.min(100, Math.round(share * 100))}%"></i></div><div class="kpi-sub">${share >= 0.8 ? `<span class="sev-warning">${esc(t('cuenta.over80'))}</span> ` : ''}${esc(t('cuenta.renews', { date: fmtDate(q.period.resetAt) }))}${q.blockedReason ? ` · <span class="sev-warning">${esc(q.blockedReason)}</span>` : ''}</div></div>`; },
+      { what: t('cuenta.usageWhat'), phrase: t('wa.commandsLeft'), extra: t('cuenta.yourPlan', { plan: planName(me.plan) }) });
+    const cuentaCard = card(t('cuenta.yourAccount'), `<div class="list">
+      ${row({ ico: '👤', title: esc(ctx.user?.fullName || me.name || t('common.dash')), sub: esc(ctx.user?.primaryEmailAddress?.emailAddress || me.email || ''), primary: `<button class="btn sm" data-act="acc:profile">${esc(t('cuenta.edit'))}</button>` })}
+      ${row({ ico: ICON.wa, title: `WhatsApp ${me.whatsapp ? statusChip(me.whatsapp.status) : ''}`, sub: `${esc(me.whatsapp?.phone || t('cuenta.notLinked'))} · ${esc(t('cuenta.youWriteTo', { number: me.comandoNumber || '' }))}`, primary: `<button class="btn sm ghost" data-act="wa:change">${esc(t('cuenta.changeNumber'))}</button>` })}
       <div id="wa-change-box"></div>
-      <div class="row"><div class="row-ico">💳</div><div class="row-body">${plan}</div><div class="row-actions"><a class="btn sm" href="../../#precios">Cambiar de plan</a></div></div>
+      <div class="row"><div class="row-ico">💳</div><div class="row-body">${plan}</div><div class="row-actions"><a class="btn sm" href="../../#precios">${esc(t('cuenta.changePlan'))}</a></div></div>
     </div>`);
 
     const conns = val(d.connections, []); const active = conns.find((c) => c.bound && c.status === 'active'); const recoverable = conns.find((c) => c.recoverable);
     const h = val(d.health, null); const mk = val(d.mk, null);
-    const adRows = mk ? mk.accounts.filter((a) => a.status !== 'soon').map((a) => row({ ico: logo(a.provider), title: `${esc(a.name)} ${a.status === 'active' ? chip('conectada', 'ok') : chip('falta autorizar', 'warn')}`, sub: esc(a.channels.join(' · ')), primary: a.status === 'pending' ? '<button class="btn sm primary" data-act="mk:connect">Autorizar</button>' : '<a class="btn sm ghost" href="#/marketing">Ver campañas</a>' })).join('') : '';
-    const conexiones = card('Tu CRM', `${active && h ? `<p class="status-line" style="margin-bottom:12px">${syncLine(h.sync)}${active.mirror ? `<span class="hint">${num(active.mirror.contacts)} contactos · ${num(active.mirror.deals)} negocios a tu alcance</span>` : ''}</p>` : ''}${crmBlock(ctx, conns, val(d.sheets, []))}`,
-      { sub: 'Se conecta con el login del propio CRM, sin copiar claves. Solo el CRM activo se consulta cuando hablas con Comando.' });
-    const anuncios = card('Tus cuentas de anuncios', adRows ? `<div class="list">${adRows}</div>` : `<div class="empty"><b>Sin cuentas conectadas</b>Meta (Facebook e Instagram) y TikTok Ads, con el mismo login seguro.</div>`, { sub: 'Para la sección Marketing.', right: '<button class="btn sm" data-act="mk:connect">Conectar</button>' });
+    const adRows = mk ? mk.accounts.filter((a) => a.status !== 'soon').map((a) => row({ ico: logo(a.provider), title: `${esc(a.name)} ${a.status === 'active' ? chip(t('mk.connected'), 'ok') : chip(t('mk.needsAuth'), 'warn')}`, sub: esc(a.channels.join(' · ')), primary: a.status === 'pending' ? `<button class="btn sm primary" data-act="mk:connect">${esc(t('cuenta.authorize'))}</button>` : `<a class="btn sm ghost" href="#/marketing">${esc(t('cuenta.seeCampaigns'))}</a>` })).join('') : '';
+    const conexiones = card(t('cuenta.yourCrm'), `${active && h ? `<p class="status-line" style="margin-bottom:12px">${syncLine(h.sync)}${active.mirror ? `<span class="hint">${esc(t('cuenta.mirror', { contacts: num(active.mirror.contacts), deals: num(active.mirror.deals) }))}</span>` : ''}</p>` : ''}${crmBlock(ctx, conns, val(d.sheets, []))}`,
+      { sub: t('cuenta.crmSub') });
+    const anuncios = card(t('cuenta.adAccounts'), adRows ? `<div class="list">${adRows}</div>` : `<div class="empty"><b>${esc(t('cuenta.noAdAccounts'))}</b>${esc(t('cuenta.noAdAccountsSub'))}</div>`, { sub: t('cuenta.forMarketing'), right: `<button class="btn sm" data-act="mk:connect">${esc(t('cuenta.connect'))}</button>` });
 
-    const equipo = card('Tu equipo', part(d.team, (t) => { const ROLE = { owner: ['Dueño', 'ok'], admin: ['Admin', 'ok'], supervisor: ['Supervisor', 'info'], agent: ['Vendedor', ''], analyst: ['Analista', 'info'] };
-      const owners = (h && h.owners) || { crmOwners: t.crmOwners, comandoPeople: t.people.length };
-      return `<div class="list">${t.people.map((p) => { const [rl, rc] = ROLE[p.role] || [p.role, '']; return row({ ico: `<span class="avatar">${esc(p.name.split(' ').map((x) => x[0]).join('').slice(0, 2))}</span>`, title: `${esc(p.name)} ${chip(rl, rc)}`, sub: `${esc(p.team || '')}${p.whatsapp !== 'verified' ? ' · <span class="sev-warning">WhatsApp sin verificar</span>' : ''}`, primary: waBtn('cambia el rol de ' + p.name + ' a ', 'Cambiar rol', 'btn sm ghost') }); }).join('')}</div>
-        ${owners.crmOwners <= 1 && owners.comandoPeople > 1 ? `<p class="note warn" style="margin-top:12px">Tu CRM tiene <b>${num(owners.crmOwners)} dueño</b> cargado y aquí son <b>${num(owners.comandoPeople)}</b>. Hasta que pongan el dueño en cada registro, «mis negocios» no distingue personas.</p>` : ''}`; },
-      { what: 'Tu equipo', phrase: 'quiénes usan Comando en mi cuenta', extra: 'Cada persona se registra con su propio WhatsApp en comando.pro/app.' }),
-      { sub: 'Cada persona tiene su propio WhatsApp y su propio cupo.', right: '<button class="btn sm" data-act="team:invite">Invitar</button>' });
+    const ROLE_KIND = { owner: 'ok', admin: 'ok', supervisor: 'info', agent: '', analyst: 'info' };
+    const equipo = card(t('cuenta.team'), part(d.team, (team) => {
+      const owners = (h && h.owners) || { crmOwners: team.crmOwners, comandoPeople: team.people.length };
+      return `<div class="list">${team.people.map((p) => row({ ico: `<span class="avatar">${esc(p.name.split(' ').map((x) => x[0]).join('').slice(0, 2))}</span>`, title: `${esc(p.name)} ${chip(p.role in ROLE_KIND ? t('role.' + p.role) : p.role, ROLE_KIND[p.role] || '')}`, sub: `${esc(p.team || '')}${p.whatsapp !== 'verified' ? ` · <span class="sev-warning">${esc(t('cuenta.waUnverified'))}</span>` : ''}`, primary: waBtn(t('wa.changeRole', { name: p.name }), t('cuenta.changeRole'), 'btn sm ghost') })).join('')}</div>
+        ${owners.crmOwners <= 1 && owners.comandoPeople > 1 ? `<p class="note warn" style="margin-top:12px">${t('cuenta.ownersNote', { crmOwners: num(owners.crmOwners), people: num(owners.comandoPeople) })}</p>` : ''}`; },
+      { what: t('cuenta.teamWhat'), phrase: t('wa.whoUses'), extra: t('cuenta.teamExtra') }),
+      { sub: t('cuenta.teamSub'), right: `<button class="btn sm" data-act="team:invite">${esc(t('cuenta.invite'))}</button>` });
 
-    const sabe = card('Lo que Comando sabe de ti', part(d.agent, (a) => list(a.memories || [], (m) => row({ ico: '🧠', title: esc(m.content), sub: esc(fmtDate(m.createdAt, true)), primary: waBtn('olvida que ' + m.content, 'Olvidar', 'btn sm ghost') }), 'Todavía nada. Dile «para mí un negocio grande es desde 300 mil».'),
-      { what: 'Lo que Comando sabe de ti', phrase: 'para mí un negocio grande es desde 300 mil' }),
-      { sub: 'Solo aprende lo que le dices explícitamente; nunca en silencio.', right: waBtn('para mí ', 'Enseñarle algo', 'btn sm primary') });
+    const sabe = card(t('cuenta.knows'), part(d.agent, (a) => list(a.memories || [], (m) => row({ ico: '🧠', title: esc(m.content), sub: esc(fmtDate(m.createdAt, true)), primary: waBtn(t('wa.forget', { what: m.content }), t('cuenta.forget'), 'btn sm ghost') }), t('cuenta.knowsNothing')),
+      { what: t('cuenta.knows'), phrase: t('wa.teachExample') }),
+      { sub: t('cuenta.knowsSub'), right: waBtn(t('wa.teach'), t('cuenta.teachHim'), 'btn sm primary') });
 
-    const privacidad = card('Privacidad y salida', `<ul class="plain"><li>Tus datos se quedan en tu CRM; Comando guarda solo los campos que activaste.</li><li>Lo que le escribes se conserva 90 días para poder diagnosticar fallos; nadie lo lee sin tu pedido.</li><li>Nunca le escribe a tus clientes desde tu número: prepara el mensaje y lo mandas tú.</li></ul>
-      <div class="inline-list" style="margin-top:12px"><a class="btn sm ghost" href="../../privacidad.html">Política de privacidad</a><a class="btn sm ghost" href="mailto:hola@comando.pro">Pedir el borrado de mi cuenta</a><button class="btn sm danger" data-act="acc:signout">Cerrar sesión</button></div>`);
+    const privacidad = card(t('cuenta.privacy'), `<ul class="plain"><li>${esc(t('cuenta.privacy1'))}</li><li>${esc(t('cuenta.privacy2'))}</li><li>${esc(t('cuenta.privacy3'))}</li></ul>
+      <div class="inline-list" style="margin-top:12px"><a class="btn sm ghost" href="../../privacidad.html">${esc(t('cuenta.privacyPolicy'))}</a><a class="btn sm ghost" href="mailto:hola@comando.pro">${esc(t('cuenta.deleteAccount'))}</a><button class="btn sm danger" data-act="acc:signout">${esc(t('cuenta.signOut'))}</button></div>`);
 
     return `<div class="stack">${head(this.title, this.sub)}${cuentaCard}${conexiones}${anuncios}<div class="two">${equipo}${sabe}</div>${privacidad}</div>`;
   },
   act: {
-    'acc:profile': (el, ctx) => (ctx.clerk ? ctx.clerk.openUserProfile() : toast('En modo de prueba no hay sesión.')),
-    'acc:signout': async (el, ctx) => { if (!ctx.clerk) return toast('En modo de prueba no hay sesión.'); await ctx.clerk.signOut(); location.href = '../'; },
-    'team:invite': () => { toast('Cada persona se registra con su propio WhatsApp en comando.pro/app. Te copiamos el enlace.'); navigator.clipboard?.writeText(location.origin + '/app/'); },
+    'acc:profile': (el, ctx) => (ctx.clerk ? ctx.clerk.openUserProfile() : toast(t('cuenta.noSessionInMock'))),
+    'acc:signout': async (el, ctx) => { if (!ctx.clerk) return toast(t('cuenta.noSessionInMock')); await ctx.clerk.signOut(); location.href = '../'; },
+    'team:invite': () => { toast(t('cuenta.inviteToast')); navigator.clipboard?.writeText(location.origin + '/app/'); },
     'mk:connect': marketing.act['mk:connect'],
-    'wa:change': (el, ctx, d, reload) => { const box = document.getElementById('wa-change-box'); if (!box) return; el.disabled = true; whatsappStep(box, ctx, (s) => { toast('WhatsApp vinculado.', 'ok'); ctx.cache = {}; reload(); }); box.scrollIntoView({ behavior: 'smooth', block: 'start' }); },
+    'wa:change': (el, ctx, d, reload) => { const box = document.getElementById('wa-change-box'); if (!box) return; el.disabled = true; whatsappStep(box, ctx, () => { toast(t('cuenta.waLinked'), 'ok'); ctx.cache = {}; reload(); }); box.scrollIntoView({ behavior: 'smooth', block: 'start' }); },
     ...crmActions,
   },
 };

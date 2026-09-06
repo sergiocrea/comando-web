@@ -368,3 +368,19 @@ ul.plain { margin: 0; padding-left: 18px; color: var(--g600); line-height: 1.7; 
 .crm-card.is-connected { border-color: var(--primary); background: var(--primary-soft); opacity: 1; filter: none; } .crm-card.is-connected small { color: var(--primary-dark); font-weight: 700; }
 .sheet-list { list-style: none; margin: 12px 0 0; padding: 0; display: grid; gap: 6px; }
 .sheet-list li { display: flex; align-items: center; gap: 10px; background: var(--g100); border-radius: 8px; padding: 8px 12px; font-size: 13px; } .sheet-list img { height: 18px; } .sheet-list span { color: var(--g600); }
+
+/* El selector de idioma de la barra: discreto, del tamaño de un chip, al lado
+   del botón de WhatsApp. En móvil se queda solo con el código (ES/EN/PT). */
+.lang-picker { display: inline-flex; align-items: center; gap: .35rem; }
+.lang-picker .lang-picker-label { display: none; }
+.lang-picker select {
+  appearance: none; -webkit-appearance: none;
+  border: 1px solid rgba(145, 158, 171, .32); border-radius: 8px;
+  background: #fff; color: var(--g800, #1C252E);
+  font: inherit; font-size: 13px; font-weight: 600;
+  padding: 7px 26px 7px 10px; line-height: 1; cursor: pointer;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23637381' stroke-width='2' stroke-linecap='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 6px center; background-size: 14px;
+}
+.lang-picker select:hover { border-color: var(--g800, #1C252E); }
+.lang-picker select:focus-visible { outline: 2px solid var(--g800, #1C252E); outline-offset: 1px; }

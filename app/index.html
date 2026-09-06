@@ -3,13 +3,13 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Comando — Entrar</title>
+<title data-i18n="auth.title">Comando — Entrar</title>
 <meta name="robots" content="noindex">
 <meta name="theme-color" content="#ffffff">
 <link rel="icon" href="../assets/img/favicon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@700&display=swap" rel="stylesheet">
-<link href="auth.css?v=2" rel="stylesheet">
+<link href="auth.css?v=3" rel="stylesheet">
 <!-- Config publica: la clave publishable de Clerk NO es secreta -->
 <script>
   window.COMANDO_CONFIG = {
@@ -20,43 +20,43 @@
 </head>
 <body>
 <div class="auth">
-  <aside class="auth-side" aria-label="Lo que puedes pedirle a Comando">
+  <aside class="auth-side" aria-label="Lo que puedes pedirle a Comando" data-i18n-attr="aria-label:auth.sideLabel">
     <div class="auth-side-inner">
       <a class="cmd-wordmark" href="../" aria-label="Comando"><span aria-hidden="true">comand</span><span class="cmd-o" aria-hidden="true"></span></a>
-      <div class="eyebrow">LO QUE PUEDES PEDIRLE</div>
+      <div class="eyebrow" data-i18n="auth.eyebrow">LO QUE PUEDES PEDIRLE</div>
       <div class="auth-phone" aria-hidden="true"><canvas class="screen-loop" width="360" height="684"></canvas></div>
-      <h1>Actualiza, avisa y da seguimiento desde WhatsApp.</h1>
-      <p class="lead">Le escribes a Comando como a una persona. Él interpreta, te muestra qué va a hacer, espera tu CONFIRMAR y lo ejecuta en tu CRM.</p>
+      <h1 data-i18n="auth.h1">Actualiza, avisa y da seguimiento desde WhatsApp.</h1>
+      <p class="lead" data-i18n="auth.lead">Le escribes a Comando como a una persona. Él interpreta, te muestra qué va a hacer, espera tu CONFIRMAR y lo ejecuta en tu CRM.</p>
       <ol class="cmd-list">
-        <li><span class="n">01</span><div><h3>El CRM queda al día</h3><p class="cmd">Cuando entre un lead nuevo, avísame por aquí.</p></div></li>
-        <li><span class="n">02</span><div><h3>Ningún lead espera</h3><p class="cmd">Si un lead lleva 15 minutos sin contacto, avisa al supervisor.</p></div></li>
-        <li><span class="n">03</span><div><h3>Una sola versión de la verdad</h3><p class="cmd">Cada mañana a las 7 dime qué leads entraron ayer y quién no los ha tocado.</p></div></li>
-        <li><span class="n">04</span><div><h3>Ningún seguimiento se pierde</h3><p class="cmd">A quien no responda la cotización, recuérdamelo a los 3, 5 y 7 días con el mensaje listo.</p></div></li>
-        <li><span class="n">05</span><div><h3>Cada lead entra listo para trabajar</h3><p class="cmd">Apenas llegue un lead de Meta, avísame y déjame la bienvenida lista para enviar.</p></div></li>
-        <li><span class="n">06</span><div><h3>Entérate antes de que se enfríe</h3><p class="cmd">Si se pierde un deal de más de 20 000, avísame con el motivo.</p></div></li>
-        <li><span class="n">07</span><div><h3>Cada oportunidad tiene responsable</h3><p class="cmd">Reparte los leads de la zona norte entre Ana y Luis; si nadie los toma, dímelo.</p></div></li>
-        <li><span class="n">08</span><div><h3>La próxima acción siempre clara</h3><p class="cmd">Un día antes de cada cita, pásame el recordatorio para el cliente y avísame si no confirma.</p></div></li>
-        <li><span class="n">09</span><div><h3>Recupera oportunidades a tiempo</h3><p class="cmd">Si alguien abandona el carrito, en una hora pásame el mensaje con el enlace para recuperarlo.</p></div></li>
-        <li><span class="n">10</span><div><h3>Decide sin perseguir reportes</h3><p class="cmd">Cada viernes envíame los KPIs de la semana por vendedor.</p></div></li>
+        <li><span class="n">01</span><div><h3 data-i18n="auth.i1t">El CRM queda al día</h3><p class="cmd" data-i18n="auth.i1c">Cuando entre un lead nuevo, avísame por aquí.</p></div></li>
+        <li><span class="n">02</span><div><h3 data-i18n="auth.i2t">Ningún lead espera</h3><p class="cmd" data-i18n="auth.i2c">Si un lead lleva 15 minutos sin contacto, avisa al supervisor.</p></div></li>
+        <li><span class="n">03</span><div><h3 data-i18n="auth.i3t">Una sola versión de la verdad</h3><p class="cmd" data-i18n="auth.i3c">Cada mañana a las 7 dime qué leads entraron ayer y quién no los ha tocado.</p></div></li>
+        <li><span class="n">04</span><div><h3 data-i18n="auth.i4t">Ningún seguimiento se pierde</h3><p class="cmd" data-i18n="auth.i4c">A quien no responda la cotización, recuérdamelo a los 3, 5 y 7 días con el mensaje listo.</p></div></li>
+        <li><span class="n">05</span><div><h3 data-i18n="auth.i5t">Cada lead entra listo para trabajar</h3><p class="cmd" data-i18n="auth.i5c">Apenas llegue un lead de Meta, avísame y déjame la bienvenida lista para enviar.</p></div></li>
+        <li><span class="n">06</span><div><h3 data-i18n="auth.i6t">Entérate antes de que se enfríe</h3><p class="cmd" data-i18n="auth.i6c">Si se pierde un deal de más de 20 000, avísame con el motivo.</p></div></li>
+        <li><span class="n">07</span><div><h3 data-i18n="auth.i7t">Cada oportunidad tiene responsable</h3><p class="cmd" data-i18n="auth.i7c">Reparte los leads de la zona norte entre Ana y Luis; si nadie los toma, dímelo.</p></div></li>
+        <li><span class="n">08</span><div><h3 data-i18n="auth.i8t">La próxima acción siempre clara</h3><p class="cmd" data-i18n="auth.i8c">Un día antes de cada cita, pásame el recordatorio para el cliente y avísame si no confirma.</p></div></li>
+        <li><span class="n">09</span><div><h3 data-i18n="auth.i9t">Recupera oportunidades a tiempo</h3><p class="cmd" data-i18n="auth.i9c">Si alguien abandona el carrito, en una hora pásame el mensaje con el enlace para recuperarlo.</p></div></li>
+        <li><span class="n">10</span><div><h3 data-i18n="auth.i10t">Decide sin perseguir reportes</h3><p class="cmd" data-i18n="auth.i10c">Cada viernes envíame los KPIs de la semana por vendedor.</p></div></li>
       </ol>
-      <p class="auth-side-foot">Funciona con el CRM que ya usas. Nada cambia en tu CRM sin que confirmes. <a href="../#precios">Ver planes</a></p>
+      <p class="auth-side-foot"><span data-i18n="auth.sideFoot">Funciona con el CRM que ya usas. Nada cambia en tu CRM sin que confirmes.</span> <a href="../#precios" data-i18n="auth.seePlans">Ver planes</a></p>
     </div>
   </aside>
 
   <main class="auth-main">
     <div class="auth-brand">
       <a class="cmd-wordmark" href="../" aria-label="Comando"><span aria-hidden="true">comand</span><span class="cmd-o" aria-hidden="true"></span></a>
-      <a class="back" href="../">← comando.pro</a>
+      <div class="auth-brand-right"><div id="lang-host"></div><a class="back" href="../">← comando.pro</a></div>
     </div>
     <div class="auth-box">
-      <p class="auth-loading" id="auth-loading"><span class="spinner"></span> Cargando…</p>
+      <p class="auth-loading" id="auth-loading"><span class="spinner"></span> <span data-i18n="common.loading">Cargando…</span></p>
       <div id="clerk-root"></div>
       <p id="auth-error" class="auth-error" role="alert" hidden></p>
-      <p class="auth-foot">Al continuar aceptas los <a href="../terminos.html">términos</a> y la <a href="../privacidad.html">política de privacidad</a>. Después vinculas tu WhatsApp y, si quieres, tu CRM.</p>
+      <p class="auth-foot" id="auth-terms">Al continuar aceptas los <a href="../terminos.html">términos</a> y la <a href="../privacidad.html">política de privacidad</a>. Después vinculas tu WhatsApp y, si quieres, tu CRM.</p>
     </div>
   </main>
 </div>
 <script src="../js/screens.js"></script>
-<script src="auth.js?v=1" defer></script>
+<script type="module" src="auth.js?v=2"></script>
 </body>
 </html>

@@ -4,10 +4,16 @@
    - Cada sección carga sus datos con Promise.allSettled: una parte que falle o que
      aún no exista en el engine no tumba la página. */
 
-import { createApi, createMockApi } from './api.js?v=4';
-import { SECTIONS } from './sections.js?v=5';
-import { whatsappStep, resumePendingConnection } from './setup.js?v=4';
-import { esc, setWaBase, wa, skeleton, toast, ICON, isToday, isPast } from './ui.js?v=4';
+import { createApi, createMockApi } from './api.js?v=5';
+import { SECTIONS } from './sections.js?v=6';
+import { whatsappStep, resumePendingConnection } from './setup.js?v=5';
+import { esc, setWaBase, wa, skeleton, toast, ICON, isToday, isPast } from './ui.js?v=5';
+import '../strings.js?v=1';
+import { initLocale, adoptAccountLocale, mountLanguagePicker, onLocaleChange, locale, t } from '../i18n.js?v=1';
+
+// El idioma se resuelve ANTES del primer pintado: si se resolviera después, la
+// primera pantalla saldría en castellano y cambiaría delante del operador.
+initLocale();
 
 const cfg = window.COMANDO_CONFIG || {};
 const $ = (id) => document.getElementById(id);
@@ -21,8 +27,8 @@ async function loadClerk() {
   s.src = 'https://' + cfg.clerkFrontendApi + '/npm/@clerk/clerk-js@5/dist/clerk.browser.js';
   s.setAttribute('data-clerk-publishable-key', cfg.clerkPublishableKey);
   s.async = true; s.crossOrigin = 'anonymous';
-  await new Promise((res, rej) => { s.onload = res; s.onerror = () => rej(new Error('No se pudo cargar la sesión.')); document.head.appendChild(s); });
-  await window.Clerk.load({ localization: { locale: 'es-ES' } });
+  await new Promise((res, rej) => { s.onload = res; s.onerror = () => rej(new Error(t('boot.sessionLoadFailed'))); document.head.appendChild(s); });
+  await window.Clerk.load({ localization: { locale: { es: 'es-ES', en: 'en-US', pt: 'pt-BR' }[locale()] || 'es-ES' } });
   return window.Clerk;
 }
 
@@ -64,7 +70,7 @@ async function route(force) {
   const page = $('page');
   const token = ++renderToken;
   $('top-title').textContent = section.title;
-  document.title = 'Comando — ' + section.title;
+  document.title = t('boot.title', { section: section.title });
   markNav();
   if (!ctx.cache[section.id] || force) page.innerHTML = `<div class="stack"><div class="page-head"><div><h1>${esc(section.title)}</h1><p>${esc(section.sub)}</p></div></div>${skeleton(4)}</div>`;
   try {
@@ -75,7 +81,7 @@ async function route(force) {
     window.scrollTo({ top: 0 });
   } catch (e) {
     if (token !== renderToken) return;
-    page.innerHTML = `<div class="state"><h2>No pudimos cargar esta parte</h2><p>${esc(e.message)}</p><button class="btn primary" data-reload>Reintentar</button></div>`;
+    page.innerHTML = `<div class="state"><h2>${esc(t('common.loadFailed'))}</h2><p>${esc(e.message)}</p><button class="btn primary" data-reload>${esc(t('common.retry'))}</button></div>`;
   }
 }
 const rerender = () => { const section = SECTIONS.find((s) => s.id === currentId()); $('page').innerHTML = section.view(ctx.cache[section.id], ctx); };
@@ -83,16 +89,17 @@ const reload = () => route(true);
 
 /* ---------- interacción: delegación en la página ---------- */
 $('page').addEventListener('click', async (ev) => {
-  const t = ev.target.closest('[data-tab],[data-cal],[data-act],[data-reload]');
-  if (!t) return;
+  // `el`, no `t`: `t` es la función de traducción y aquí conviven las dos.
+  const el = ev.target.closest('[data-tab],[data-cal],[data-act],[data-reload]');
+  if (!el) return;
   const section = SECTIONS.find((s) => s.id === currentId());
-  if (t.dataset.reload !== undefined) return reload();
-  if (t.dataset.tab) { ctx.tabs[section.id] = t.dataset.tab; rerender(); return; }
-  if (t.dataset.cal) { section.act.cal(t, ctx, ctx.cache[section.id], reload, rerender); return; }
-  const fn = section.act && section.act[t.dataset.act];
+  if (el.dataset.reload !== undefined) return reload();
+  if (el.dataset.tab) { ctx.tabs[section.id] = el.dataset.tab; rerender(); return; }
+  if (el.dataset.cal) { section.act.cal(el, ctx, ctx.cache[section.id], reload, rerender); return; }
+  const fn = section.act && section.act[el.dataset.act];
   if (!fn) return;
-  if (t.type === 'checkbox') ev.preventDefault();
-  try { await fn(t, ctx, ctx.cache[section.id], reload, rerender); } catch (e) { toast(e.message || 'No se pudo', 'bad'); }
+  if (el.type === 'checkbox') ev.preventDefault();
+  try { await fn(el, ctx, ctx.cache[section.id], reload, rerender); } catch (e) { toast(e.message || t('common.failed'), 'bad'); }
 });
 $('page').addEventListener('submit', async (ev) => {
   const form = ev.target.closest('form[data-form]');
@@ -102,9 +109,9 @@ $('page').addEventListener('submit', async (ev) => {
   const fn = section.forms && section.forms[form.dataset.form];
   if (!fn) return;
   const msg = form.querySelector('.form-msg'); const btn = form.querySelector('button[type=submit]');
-  btn.disabled = true; msg.className = 'form-msg'; msg.textContent = 'Guardando…';
-  try { const ok = await fn(form, ctx, ctx.cache[section.id], reload); msg.className = 'form-msg ok'; msg.textContent = ok || 'Guardado.'; }
-  catch (e) { msg.className = 'form-msg bad'; msg.textContent = e.message || 'No se pudo guardar.'; }
+  btn.disabled = true; msg.className = 'form-msg'; msg.textContent = t('common.saving');
+  try { const ok = await fn(form, ctx, ctx.cache[section.id], reload); msg.className = 'form-msg ok'; msg.textContent = ok || t('common.saved'); }
+  catch (e) { msg.className = 'form-msg bad'; msg.textContent = e.message || t('common.saveFailed'); }
   finally { btn.disabled = false; }
 });
 window.addEventListener('hashchange', () => route(false));
@@ -115,11 +122,11 @@ async function start() {
   try {
     ctx.api = await buildApi();
   } catch (e) {
-    $('page').innerHTML = `<div class="state"><h2>No pudimos cargar tu sesión</h2><p>${esc(e.message)}</p><a class="btn primary" href="../">Ir a mi cuenta</a></div>`;
+    $('page').innerHTML = `<div class="state"><h2>${esc(t('boot.noSession'))}</h2><p>${esc(e.message)}</p><a class="btn primary" href="../">${esc(t('boot.goToAccount'))}</a></div>`;
     return;
   }
   if (!ctx.api) {
-    $('page').innerHTML = `<div class="state"><h2>Inicia sesión para ver tu panel</h2><p>Usa la misma cuenta con la que registraste tu WhatsApp.</p><a class="btn primary" href="../">Ir a mi cuenta</a></div>`;
+    $('page').innerHTML = `<div class="state"><h2>${esc(t('boot.signIn'))}</h2><p>${esc(t('boot.signInSub'))}</p><a class="btn primary" href="../">${esc(t('boot.goToAccount'))}</a></div>`;
     return;
   }
   // Datos de cabecera: número de Comando (para los enlaces a WhatsApp) y nombre.
@@ -132,21 +139,24 @@ async function start() {
   }
   if (me) {
     ctx.me = me;
+    // El idioma que eligió al registrarse manda sobre el del navegador, pero no
+    // sobre lo que haya tocado en el selector en esta sesión.
+    adoptAccountLocale(me.locale);
     if (me.waLink || me.comandoNumber) setWaBase(me.waLink || 'https://wa.me/' + String(me.comandoNumber).replace(/\D/g, ''));
-    $('wa-top').href = wa('qué merece mi atención hoy');
-    const name = me.name || ctx.user?.firstName || 'Tu cuenta';
+    $('wa-top').href = wa(t('wa.whatMattersToday'));
+    const name = me.name || ctx.user?.firstName || t('boot.yourAccount');
     $('user-button').innerHTML = `<span class="avatar" title="${esc(name)}">${esc(name.slice(0, 1).toUpperCase())}</span>`;
     $('side-foot').innerHTML = `<b>${esc(name)}</b>${esc(me.whatsapp?.phone || '')}`;
     // Sin WhatsApp verificado no hay nada que mostrar: el paso 2 vive aquí mismo.
     const needsWa = !me.whatsapp || me.whatsapp.status !== 'verified' || params.get('wa') === 'pending';
     if (needsWa) {
       document.body.classList.add('is-setup');
-      $('top-title').textContent = 'Vincula tu WhatsApp';
+      $('top-title').textContent = t('boot.linkWa');
       whatsappStep($('page'), ctx, (s) => {
         document.body.classList.remove('is-setup');
         if (s.waLink || s.comandoNumber) setWaBase(s.waLink || 'https://wa.me/' + String(s.comandoNumber).replace(/\D/g, ''));
         $('side-foot').innerHTML = `<b>${esc(name)}</b>${esc(s.whatsapp?.phone || '')}`;
-        toast('Listo: tu WhatsApp está vinculado.', 'ok');
+        toast(t('boot.waLinked'), 'ok');
         ctx.cache = {};
         location.hash = s.crmConnected ? '#/hoy' : '#/cuenta';
         route(true);
@@ -156,7 +166,7 @@ async function start() {
     // Una conexión de CRM a medio autorizar (OAuth en otra pestaña) se retoma sola.
     resumePendingConnection(ctx, () => { ctx.cache = {}; route(true); });
   } else if (!mock) {
-    $('page').innerHTML = `<div class="state"><h2>No pudimos preparar tu cuenta</h2><p>Recarga la página en unos segundos.</p><button class="btn primary" data-reload>Reintentar</button></div>`;
+    $('page').innerHTML = `<div class="state"><h2>${esc(t('boot.notReady'))}</h2><p>${esc(t('boot.reloadSoon'))}</p><button class="btn primary" data-reload>${esc(t('common.retry'))}</button></div>`;
     return;
   }
   // Insignia de Hoy: cuántas cosas esperan al operador (sin bloquear la carga).
@@ -171,4 +181,56 @@ async function start() {
   route(false);
 }
 
+/**
+ * El selector de idioma, arriba a la derecha.
+ *
+ * Cambia la pantalla al instante y guarda la elección en la cuenta, para que
+ * la próxima respuesta de Comando por WhatsApp llegue en el mismo idioma: sería
+ * raro leer el panel en portugués y recibir el aviso en castellano.
+ */
+function mountLanguage() {
+  const host = document.getElementById('lang-host');
+  if (!host) return;
+  mountLanguagePicker(host, {
+    compact: true,
+    onChange: (next) => {
+      if (!ctx.api || ctx.api.mode === 'mock') return;
+      ctx.api
+        .raw('/auth/language', { method: 'POST', body: JSON.stringify({ locale: next }) })
+        .then(() => { if (ctx.me) ctx.me.locale = next; })
+        .catch(() => toast(t('setup.wa.localeFailed'), 'bad'));
+    },
+  });
+}
+
+// Un cambio de idioma repinta lo que se ve: la navegación, el título y la
+// sección. Los datos ya están en memoria, así que no se vuelve a pedir nada.
+onLocaleChange(() => {
+  renderNav();
+  const section = SECTIONS.find((x) => x.id === currentId());
+  if (section) {
+    $('top-title').textContent = section.title;
+    document.title = t('boot.title', { section: section.title });
+  }
+  const waTop = $('wa-top');
+  if (waTop) waTop.href = wa(t('wa.whatMattersToday'));
+  paintChrome();
+  mountLanguage();
+  if (ctx.cache[currentId()]) rerender();
+});
+
+/** El texto que vive en el HTML de la barra, en el idioma resuelto. */
+function paintChrome() {
+  const waTop = $('wa-top');
+  const label = waTop && waTop.querySelector('span');
+  if (label) label.textContent = t('common.writeToComando');
+  const userBtn = $('user-button');
+  if (userBtn) userBtn.setAttribute('aria-label', t('common.myAccount'));
+  const banner = $('mock-banner');
+  if (banner) banner.innerHTML = `${esc(t('common.mockBanner'))} <a href="./">${esc(t('common.exit'))}</a>`;
+  document.querySelectorAll('[aria-label="Secciones"]').forEach((el) => el.setAttribute('aria-label', t('common.sections')));
+}
+
+mountLanguage();
+paintChrome();
 start();

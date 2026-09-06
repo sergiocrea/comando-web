@@ -1,6 +1,27 @@
 /* Acceso a Comando (/app/): iniciar sesión o crear cuenta con Clerk y pasar al panel.
    Los pasos siguientes (vincular WhatsApp, conectar el CRM) viven dentro de /app/panel/.
    Sin build: ClerkJS se carga desde el Frontend API de la instancia. */
+import './strings.js?v=1';
+import { initLocale, mountLanguagePicker, onLocaleChange, locale, t } from './i18n.js?v=1';
+
+initLocale();
+
+/** El texto de la página, en el idioma resuelto. Se llama al cargar y al cambiarlo. */
+function paint() {
+  document.querySelectorAll('[data-i18n]').forEach((el) => { el.textContent = t(el.dataset.i18n); });
+  document.querySelectorAll('[data-i18n-attr]').forEach((el) => {
+    const [attr, key] = el.dataset.i18nAttr.split(':');
+    el.setAttribute(attr, t(key));
+  });
+  const terms = document.getElementById('auth-terms');
+  if (terms) {
+    terms.innerHTML = t('auth.foot', {
+      terms: `<a href="../terminos.html">${t('auth.terms')}</a>`,
+      privacy: `<a href="../privacidad.html">${t('auth.privacy')}</a>`,
+    });
+  }
+}
+
 (function () {
   const cfg = window.COMANDO_CONFIG;
   const $ = (id) => document.getElementById(id);
@@ -19,31 +40,35 @@
       s.src = 'https://' + cfg.clerkFrontendApi + '/npm/@clerk/clerk-js@5/dist/clerk.browser.js';
       s.setAttribute('data-clerk-publishable-key', cfg.clerkPublishableKey);
       s.async = true; s.crossOrigin = 'anonymous';
-      await new Promise((res, rej) => { s.onload = res; s.onerror = () => rej(new Error('No se pudo cargar el inicio de sesión. Revisa tu conexión.')); document.head.appendChild(s); });
+      await new Promise((res, rej) => { s.onload = res; s.onerror = () => rej(new Error(t('auth.loadFailed'))); document.head.appendChild(s); });
       const clerk = window.Clerk;
+      const emailCode = () => ({
+        title: t('clerk.checkEmail'), subtitle: t('clerk.codeSent'),
+        formTitle: t('clerk.codeTitle'), formSubtitle: t('clerk.codeSub'), resendButton: t('clerk.resend'),
+      });
       await clerk.load({
         localization: {
-          locale: 'es-ES',
-          socialButtonsBlockButton: 'Continuar con {{provider|titleize}}',
-          dividerText: 'o',
-          formButtonPrimary: 'Continuar',
-          formFieldLabel__emailAddress: 'Correo electrónico',
-          formFieldInputPlaceholder__emailAddress: 'tu@correo.com',
-          formFieldLabel__firstName: 'Nombre',
-          formFieldLabel__lastName: 'Apellido',
-          formFieldInputPlaceholder__firstName: 'Nombre',
-          formFieldInputPlaceholder__lastName: 'Apellido',
-          formFieldHintText__optional: 'Opcional',
-          formFieldLabel__emailAddress_username: 'Correo',
-          backButton: 'Volver',
+          locale: { es: 'es-ES', en: 'en-US', pt: 'pt-BR' }[locale()] || 'es-ES',
+          socialButtonsBlockButton: t('clerk.social'),
+          dividerText: t('clerk.or'),
+          formButtonPrimary: t('clerk.continue'),
+          formFieldLabel__emailAddress: t('clerk.email'),
+          formFieldInputPlaceholder__emailAddress: t('clerk.emailPlaceholder'),
+          formFieldLabel__firstName: t('clerk.firstName'),
+          formFieldLabel__lastName: t('clerk.lastName'),
+          formFieldInputPlaceholder__firstName: t('clerk.firstName'),
+          formFieldInputPlaceholder__lastName: t('clerk.lastName'),
+          formFieldHintText__optional: t('clerk.optional'),
+          formFieldLabel__emailAddress_username: t('clerk.emailShort'),
+          backButton: t('clerk.back'),
           signUp: {
-            start: { title: 'Crea tu cuenta gratis', subtitle: '30 comandos de prueba, sin tarjeta. Tu CRM se conecta después, si quieres.', actionText: '¿Ya tienes cuenta?', actionLink: 'Inicia sesión' },
-            emailCode: { title: 'Revisa tu correo', subtitle: 'Escribe el código que te enviamos', formTitle: 'Código de verificación', formSubtitle: 'Escribe el código enviado a tu correo', resendButton: '¿No llegó? Reenviar' },
-            continue: { title: 'Completa tus datos', subtitle: 'Un último paso para crear tu cuenta' },
+            start: { title: t('clerk.signUpTitle'), subtitle: t('clerk.signUpSub'), actionText: t('clerk.haveAccount'), actionLink: t('clerk.signInLink') },
+            emailCode: emailCode(),
+            continue: { title: t('clerk.completeData'), subtitle: t('clerk.completeSub') },
           },
           signIn: {
-            start: { title: 'Inicia sesión', subtitle: 'Bienvenido de vuelta a Comando', actionText: '¿Aún no tienes cuenta?', actionLink: 'Crear cuenta' },
-            emailCode: { title: 'Revisa tu correo', subtitle: 'Escribe el código que te enviamos', formTitle: 'Código de verificación', formSubtitle: 'Escribe el código enviado a tu correo', resendButton: '¿No llegó? Reenviar' },
+            start: { title: t('clerk.signInTitle'), subtitle: t('clerk.signInSub'), actionText: t('clerk.noAccount'), actionLink: t('clerk.signUpLink') },
+            emailCode: emailCode(),
           },
         },
       });
@@ -66,5 +91,10 @@
       clerk.addListener(({ user }) => { if (user) location.replace(dest.href); });
     } catch (e) { fatal(e.message); }
   }
+  // El formulario de Clerk se monta con su idioma dentro: cambiarlo recarga la
+  // página, que es lo único que garantiza que su copia también cambie.
+  mountLanguagePicker(document.getElementById('lang-host'), { compact: true, onChange: () => location.reload() });
+  paint();
+  onLocaleChange(paint);
   boot();
 })();
