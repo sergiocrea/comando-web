@@ -11,10 +11,10 @@ const PRICING_CONFIG = {
   subtitle: 'Actualiza el CRM, crea seguimientos y recibe alertas desde WhatsApp. Prueba gratis.',
   // Cada plan muestra solo 4 líneas: contactos, comandos, usuario y un diferencial.
   plans: [
-    { id: 'gratis',  name: 'Gratis',  price: 0,  contacts: 20000, commands: 30,   highlight: '1 conexión', note: 'Prueba individual, sin tarjeta. Sin sincronización continua ni automatizaciones; expira a los 30 días sin uso.' },
-    { id: 'basico',  name: 'Básico',  price: 3,  listPrice: 6, contacts: 20000, commands: 200,  highlight: '2 conexiones' },
-    { id: 'starter', name: 'Starter', price: 8,  contacts: 70000, commands: 700,  highlight: '5 conexiones' },
-    { id: 'pro',     name: 'Pro',     price: 20, contacts: 200000, commands: 2000, highlight: 'Conexiones ilimitadas' },
+    { id: 'gratis',  name: 'Gratis',  price: 0,  contacts: 20000, commands: 30,   crms: '<b>1</b> CRM conectado', note: 'Prueba individual, sin tarjeta.' },
+    { id: 'basico',  name: 'Básico',  price: 3,  listPrice: 6, contacts: 20000, commands: 200,  crms: '<b>2</b> CRM conectados', ads: '<b>1</b> cuenta de Meta Ads' },
+    { id: 'starter', name: 'Starter', price: 8,  contacts: 70000, commands: 700,  crms: '<b>5</b> CRM conectados', ads: '<b>3</b> cuentas de anuncios' },
+    { id: 'pro',     name: 'Pro',     price: 20, contacts: 200000, commands: 2000, crms: '<b>CRM ilimitados</b>', ads: '<b>Anuncios ilimitados</b>' },
   ],
   enterpriseLine: '¿Más de 200 000 contactos, integraciones avanzadas o soporte dedicado?',
   commandNote: 'Un comando es cada pedido que le haces a Comando por WhatsApp, por texto o por audio. Las confirmaciones y las respuestas no cuentan.',
@@ -48,7 +48,7 @@ const PRICING_CONFIG = {
   faq: [
     { q: '¿Cómo se calcula el precio?', a: 'Cada persona usa un plan según cuántos contactos de su CRM necesita tener a su alcance. Si dos usuarios necesitan hasta 20 000 contactos cada uno, cada uno usa un plan Básico de US$ 3 al mes. Puedes cambiar de plan cuando quieras; se prorratea.' },
     { q: '¿Qué cuenta como comando y qué pasa si me paso?', a: 'Un comando es cada pedido que le haces a Comando por WhatsApp, por texto o por audio; una nota de voz cuenta como 1,5. Las confirmaciones («sí», «ok») y las respuestas de Comando no cuentan. Te avisamos al 80 % del cupo y nunca cortamos el servicio sin aviso: puedes sumar paquetes de 500 comandos por $8 o subir de plan.' },
-    { q: '¿Qué incluye el plan Gratis?', a: '30 comandos para una persona, con hasta 20 000 contactos a tu alcance y 1 CRM conectado, sin tarjeta. No incluye sincronización continua ni automatizaciones; al agotar el cupo (o tras 30 días sin uso) deja de ejecutar hasta que elijas un plan.' },
+    { q: '¿Qué incluye el plan Gratis?', a: '30 comandos para una persona, con hasta 20 000 contactos a tu alcance y 1 CRM conectado, sin tarjeta. Cuando se te acaben, eliges un plan y sigues donde ibas.' },
     { q: '¿Cada cuánto se actualiza mi CRM en Comando?', a: 'Cuando tu CRM envía eventos, los cambios llegan en tiempo real. Cuando no los envía, Comando revisa los cambios cada 6 horas en Básico, cada 30 minutos en Starter y cada 5 minutos en Pro.' },
     { q: '¿Comando les escribe a mis clientes?', a: 'No desde tu número personal: Meta bloquea los envíos automáticos desde WhatsApp no oficial. Comando prepara el mensaje y te lo entrega listo para enviarlo con un toque (modo asistido), así que no necesitas contratar la API de WhatsApp Business para empezar. Si conectas un número oficial de WhatsApp Business, los envíos automáticos con plantillas aprobadas quedan disponibles.' },
     { q: '¿Qué pasa si pido algo que mi CRM no permite?', a: 'Comando te lo dice y te propone la alternativa que sí puede hacer (por ejemplo, crear la tarea en vez de llamar, o contar desde hoy si tu CRM no guarda historial de ese campo).' },
@@ -84,7 +84,7 @@ const PRICING_CONFIG = {
     const off = list ? Math.round((1 - p.price / p.listPrice) * 100) : 0;
     const priceHtml = free ? `<div class="price-amount">US$ 0</div>`
       : `<div class="price-amount">${money(m)}<span>/mes</span>${list ? `<s>${money(list)}</s>` : ''}</div>${off ? `<div class="price-off">${off} % de descuento</div>` : ''}${state.annual ? `<div class="price-annual">${money(m * 12)} al año</div>` : ''}`;
-    const lines = [p.contacts == null ? 'Contactos según tu plan' : `<b>${fmtN(p.contacts)}</b> contactos a tu alcance`, free ? `<b>${fmtN(p.commands)}</b> comandos para probar` : `<b>${fmtN(p.commands)}</b> comandos al mes`, '<b>Plan individual</b>', esc(p.highlight)];
+    const lines = [p.contacts == null ? 'Contactos según tu plan' : `<b>${fmtN(p.contacts)}</b> contactos a tu alcance`, free ? `<b>${fmtN(p.commands)}</b> comandos para probar` : `<b>${fmtN(p.commands)}</b> comandos al mes`, '<b>Plan individual</b>', p.crms, p.ads].filter(Boolean);
     const cta = free ? `<a href="${C.cta.trialBase}?plan=${p.id}" class="price-cta">${esc(C.cta.freeLabel)}</a>`
       : `<a href="${C.cta.trialBase}?plan=${p.id}" class="price-cta">${esc(C.cta.trialLabel)}</a>`;
     return `<div class="price-card${featured ? ' is-featured' : ''}${free ? ' is-free' : ''}" data-plan="${p.id}">
