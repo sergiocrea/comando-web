@@ -75,6 +75,7 @@ const PRICING_I18N = {
       commandsPerMonth: (n) => `<b>${n}</b> commands a month`,
       individualPlan: '<b>Individual plan</b>',
       whatIsACommand: 'What is a command?',
+      moreInfo: 'More about commands, packs and enterprise',
       pricingDetails: 'Pricing details', faqTitle: 'Frequently asked questions',
       formInvalid: 'Write your email or your WhatsApp so we can reply.',
       formSending: 'Sending…',
@@ -119,6 +120,7 @@ const PRICING_I18N = {
       commandsPerMonth: (n) => `<b>${n}</b> comandos por mês`,
       individualPlan: '<b>Plano individual</b>',
       whatIsACommand: 'O que é um comando?',
+      moreInfo: 'Mais sobre comandos, pacotes e enterprise',
       pricingDetails: 'Detalhes de preços', faqTitle: 'Perguntas frequentes',
       formInvalid: 'Escreva seu e-mail ou seu WhatsApp para a gente responder.',
       formSending: 'Enviando…',
@@ -170,6 +172,7 @@ const PRICING_I18N = {
     commandsPerMonth: (n) => `<b>${n}</b> comandos al mes`,
     individualPlan: '<b>Plan individual</b>',
     whatIsACommand: '¿Qué es un comando?',
+    moreInfo: 'Más sobre comandos, paquetes y enterprise',
     pricingDetails: 'Detalles de precios', faqTitle: 'Preguntas frecuentes',
     formInvalid: 'Escribe tu correo o tu WhatsApp para poder responderte.',
     formSending: 'Enviando…',
@@ -234,11 +237,14 @@ const PRICING_I18N = {
   }
   function renderCards() {
     return `<div class="pricing-grid is-four" id="pricing-cards">${C.plans.map(renderCard).join('')}</div>
-      <div class="pricing-notes">
-        <p class="pricing-note"><b>${esc(W.whatIsACommand)}</b> ${esc(C.commandNote)}</p>
-        <p class="pricing-note"><b>${esc(C.addonsIntro)}</b> ${C.addons.map((a) => `${esc(a.label)} = ${money(a.price)}/mes`).join(' · ')}. ${esc(C.overageNote)}</p>
-        <p class="pricing-note">${esc(C.enterpriseLine)} <a href="${C.cta.enterpriseHref}">${esc(C.cta.enterpriseLabel)}</a>.</p>
-      </div>`;
+      <details class="pricing-notes">
+        <summary class="pricing-notes-toggle">${esc(W.moreInfo)}</summary>
+        <div class="pricing-notes-body">
+          <p class="pricing-note"><b>${esc(W.whatIsACommand)}</b> ${esc(C.commandNote)}</p>
+          <p class="pricing-note"><b>${esc(C.addonsIntro)}</b> ${C.addons.map((a) => `${esc(a.label)} = ${money(a.price)}${esc(W.perMonth)}`).join(' · ')}. ${esc(C.overageNote)}</p>
+          <p class="pricing-note">${esc(C.enterpriseLine)} <a href="${C.cta.enterpriseHref}">${esc(C.cta.enterpriseLabel)}</a>.</p>
+        </div>
+      </details>`;
   }
   function renderMore() {
     return `<section class="pricing-more" aria-label="${esc(W.pricingDetails)}">

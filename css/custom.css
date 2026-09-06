@@ -368,7 +368,33 @@ input[type='file']:focus-visible {
 /* pricing v4: simpler cards + notes */
 .pricing-grid.is-four .price-list { font-size: .95rem; gap: .55rem; margin-bottom: 1.5rem; }
 .pricing-grid.is-four .price-list b { color: #fff; font-weight: 600; }
-.pricing-notes { position: relative; z-index: 2; margin-top: 1.25rem; max-width: 60rem; display: flex; flex-direction: column; gap: .5rem; }
+/* La letra pequeña de los precios, plegada.
+   Son tres párrafos que solo hacen falta cuando alguien se pregunta qué cuenta
+   como comando o qué pasa si se queda corto; abiertos siempre, empujaban las
+   tarjetas hacia arriba y se leían tres veces sin quererlo. `<details>` nativo:
+   funciona sin JS, se abre con teclado y el buscador ve el texto igual. */
+.pricing-notes { position: relative; z-index: 2; margin-top: 1.25rem; max-width: 60rem; }
+.pricing-notes-toggle {
+  display: inline-flex; align-items: center; gap: .45rem;
+  padding: .5rem 0; cursor: pointer; list-style: none;
+  color: #0a0a0a; font-family: "Neuehaasunicaw 1 G", Inter, sans-serif;
+  font-size: .95rem; font-weight: 600; line-height: 1.4;
+  text-decoration: underline; text-underline-offset: .22em; text-decoration-thickness: 1px;
+}
+/* El triángulo que ponen los navegadores por su cuenta: se cambia por uno propio. */
+.pricing-notes-toggle::-webkit-details-marker { display: none; }
+.pricing-notes-toggle::marker { content: ""; }
+.pricing-notes-toggle::after {
+  content: ""; width: .5rem; height: .5rem; margin-bottom: .12rem;
+  border-right: 2px solid currentColor; border-bottom: 2px solid currentColor;
+  transform: rotate(45deg); transform-origin: center;
+  transition: transform .2s ease;
+}
+.pricing-notes[open] .pricing-notes-toggle::after { transform: rotate(-135deg); margin-bottom: -.12rem; }
+.pricing-notes-toggle:hover { opacity: .75; }
+.pricing-notes-toggle:focus-visible { outline: 2px solid #0a0a0a; outline-offset: 3px; border-radius: .2rem; }
+.pricing-notes-body { display: flex; flex-direction: column; gap: .5rem; padding-top: .35rem; }
+@media (prefers-reduced-motion: reduce) { .pricing-notes-toggle::after { transition: none; } }
 .pricing-note { margin: 0; color: #0a0a0a; font-family: "Neuehaasunicaw 1 G", Inter, sans-serif; font-size: .95rem; line-height: 1.5; }
 .pricing-note b { font-weight: 600; }
 .pricing-note a { color: #0a0a0a; text-decoration: underline; font-weight: 600; }
