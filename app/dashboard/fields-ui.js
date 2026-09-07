@@ -1,29 +1,42 @@
 /* Interfaz de "Qué puede consultar Comando".
    Muestra SOLO metadatos de campos: etiqueta, nombre interno, tipo, cuántas veces
    lo pediste y qué porcentaje de tus registros lo tiene lleno. Nunca valores reales:
-   ni nombres, ni teléfonos, ni correos, ni ejemplos de contenido. */
+   ni nombres, ni teléfonos, ni correos, ni ejemplos de contenido.
 
-const OBJECT_LABELS = { contact: 'Contactos', opportunity: 'Negocios', deal: 'Negocios', company: 'Empresas' };
+   Todo el texto sale del diccionario (`strings.js` de esta carpeta): lo único
+   que se pinta tal cual es lo que viene del CRM del cliente —la etiqueta del
+   campo y su nombre interno—, que ya está en su idioma y no es nuestro. */
+
+import { t, tn, locale } from '../i18n.js?v=1';
+
+/* «Contactos», «Negocios» y «Empresas» son nombres NUESTROS, no del CRM del
+   cliente, así que se traducen aunque la API mande el suyo: el engine responde
+   `label: 'Negocios'` en castellano y un cliente con el panel en inglés vería
+   una pestaña en otro idioma que el resto de la pantalla. Para un objeto a
+   medida —que sí es del cliente— manda su etiqueta, que es su único nombre. */
+const OBJECT_KEYS = { contact: 'db.obj.contact', contacts: 'db.obj.contact', opportunity: 'db.obj.deal', deal: 'db.obj.deal', deals: 'db.obj.deal', company: 'db.obj.company', companies: 'db.obj.company', order: 'db.obj.order' };
+export const objectLabel = (objectType, fromApi) => (OBJECT_KEYS[objectType] ? t(OBJECT_KEYS[objectType]) : (fromApi || objectType));
 const OBJECT_ORDER = ['contact', 'opportunity', 'deal', 'company'];
 
-const TYPE_LABELS = {
-  string: 'texto', text: 'texto', textarea: 'texto largo', richtext: 'texto largo', html: 'texto largo',
-  enumeration: 'lista desplegable', enum: 'lista desplegable', select: 'lista desplegable',
-  picklist: 'lista desplegable', radio: 'lista desplegable', multiselect: 'lista de opciones',
-  checkbox: 'lista de opciones', multienum: 'lista de opciones',
-  number: 'número', numeric: 'número', int: 'número', integer: 'número', float: 'número',
-  double: 'número', currency: 'número', percent: 'número',
-  date: 'fecha', datetime: 'fecha y hora', timestamp: 'fecha y hora',
-  bool: 'sí / no', boolean: 'sí / no', booleancheckbox: 'sí / no',
-  phone: 'teléfono', phone_number: 'teléfono', tel: 'teléfono',
-  email: 'correo', url: 'enlace', file: 'archivo', json: 'datos',
+/* Decenas de tipos del CRM se reducen a catorce palabras del operador. */
+const TYPE_KEYS = {
+  string: 'text', text: 'text', textarea: 'textLong', richtext: 'textLong', html: 'textLong',
+  enumeration: 'list', enum: 'list', select: 'list',
+  picklist: 'list', radio: 'list', multiselect: 'multi',
+  checkbox: 'multi', multienum: 'multi',
+  number: 'number', numeric: 'number', int: 'number', integer: 'number', float: 'number',
+  double: 'number', currency: 'number', percent: 'number',
+  date: 'date', datetime: 'datetime', timestamp: 'datetime',
+  bool: 'bool', boolean: 'bool', booleancheckbox: 'bool',
+  phone: 'phone', phone_number: 'phone', tel: 'phone',
+  email: 'email', url: 'url', file: 'file', json: 'json',
 };
 
 const MAX_SUGGESTED = 8;
 const PAGE = 40;
 
 /* ---------- helpers de lectura tolerante (la API puede omitir campos) ---------- */
-const labelOf = (f) => (f.label && String(f.label).trim()) || f.propertyName || 'Campo sin nombre';
+const labelOf = (f) => (f.label && String(f.label).trim()) || f.propertyName || t('db.noName');
 const mentionsOf = (f) => {
   const n = f.usage && Number(f.usage.mentions);
   return Number.isFinite(n) && n > 0 ? Math.round(n) : 0;
@@ -38,37 +51,39 @@ const optionsOf = (f) => {
   const n = Number(f.optionCount);
   return Number.isFinite(n) && n > 0 ? Math.round(n) : 0;
 };
-const typeLabel = (f) => TYPE_LABELS[String(f.fieldType || '').toLowerCase()] || (f.fieldType ? String(f.fieldType) : 'otro');
+const typeLabel = (f) => { const key = TYPE_KEYS[String(f.fieldType || '').toLowerCase()]; return key ? t('db.type.' + key) : (f.fieldType ? String(f.fieldType) : t('db.type.other')); };
 const isActive = (f) => Boolean(f.core || f.queryable);
 const pct = (v) => Math.round(v * 100);
 
 const strip = (s) => String(s || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
 
+// `date` y no `t`: aquí `t` es la función de traducción.
 function relative(iso) {
   if (!iso) return '';
-  const t = Date.parse(iso);
-  if (!Number.isFinite(t)) return '';
-  const days = Math.floor((Date.now() - t) / 86400000);
-  if (days <= 0) return 'hoy';
-  if (days === 1) return 'ayer';
-  if (days < 30) return 'hace ' + days + ' días';
+  const date = Date.parse(iso);
+  if (!Number.isFinite(date)) return '';
+  const days = Math.floor((Date.now() - date) / 86400000);
+  if (days <= 0) return t('db.when.today');
+  if (days === 1) return t('db.when.yesterday');
+  if (days < 30) return t('db.when.days', { n: days });
   const months = Math.round(days / 30);
-  return months <= 1 ? 'hace un mes' : 'hace ' + months + ' meses';
+  return months <= 1 ? t('db.when.month') : t('db.when.months', { n: months });
 }
 
 /** Una línea que explica por qué sugerimos el campo. */
 export function reasonFor(f) {
   const m = mentionsOf(f);
   if (m > 0) {
+    const asked = tn('db.why.asked', m);
     const when = relative(f.usage && f.usage.lastMentionedAt);
-    return 'lo pediste ' + m + (m === 1 ? ' vez' : ' veces') + (when ? ', la última ' + when : '');
+    return when ? t('db.why.askedWhen', { asked, when }) : asked;
   }
   const fill = fillOf(f);
-  if (fill !== null && fill >= 0.5) return 'está lleno en el ' + pct(fill) + '% de tus registros';
+  if (fill !== null && fill >= 0.5) return t('db.why.fill', { pct: pct(fill) });
   const opts = optionsOf(f);
-  if (opts) return 'lista con ' + opts + ' opciones en tu CRM';
-  if (fill !== null) return 'está lleno en el ' + pct(fill) + '% de tus registros';
-  return 'campo estándar de tu CRM';
+  if (opts) return t('db.why.options', { n: opts });
+  if (fill !== null) return t('db.why.fill', { pct: pct(fill) });
+  return t('db.why.standard');
 }
 
 /** Sugeridos: lo que aún no está activo, por menciones y luego por qué tan lleno está. */
@@ -77,7 +92,7 @@ export function rankSuggested(fields) {
     .filter((f) => !isActive(f))
     .sort((a, b) => (mentionsOf(b) - mentionsOf(a))
       || ((fillOf(b) || 0) - (fillOf(a) || 0))
-      || labelOf(a).localeCompare(labelOf(b), 'es'))
+      || labelOf(a).localeCompare(labelOf(b), locale()))
     .slice(0, MAX_SUGGESTED);
 }
 
@@ -86,10 +101,10 @@ export function sortActive(fields) {
     .filter(isActive)
     .sort((a, b) => (Number(Boolean(b.core)) - Number(Boolean(a.core)))
       || (mentionsOf(b) - mentionsOf(a))
-      || labelOf(a).localeCompare(labelOf(b), 'es'));
+      || labelOf(a).localeCompare(labelOf(b), locale()));
 }
 
-const byLabel = (a, b) => labelOf(a).localeCompare(labelOf(b), 'es');
+const byLabel = (a, b) => labelOf(a).localeCompare(labelOf(b), locale());
 
 export function filterFields(fields, query) {
   const q = strip(query).trim();
@@ -129,7 +144,7 @@ export function mountFields(opts) {
     btn.setAttribute('aria-controls', 'panel-' + obj.objectType);
     const name = document.createElement('span');
     name.className = 'db-tab-name';
-    name.textContent = obj.label || OBJECT_LABELS[obj.objectType] || obj.objectType;
+    name.textContent = objectLabel(obj.objectType, obj.label);
     const count = document.createElement('span');
     count.className = 'db-tab-count';
     btn.append(name, count);
@@ -157,7 +172,7 @@ export function mountFields(opts) {
       // `total` viene del engine cuando la lista está paginada; si no, es lo recibido.
       const total = Number(obj.total) || obj.fields.length;
       const on = obj.fields.filter(isActive).length;
-      count.textContent = on + ' activos de ' + total;
+      count.textContent = t('db.tabCount', { on, total });
     });
   }
 
@@ -189,13 +204,13 @@ export function mountFields(opts) {
     if (field.core) {
       const tag = document.createElement('span');
       tag.className = 'fld-tag is-core';
-      tag.textContent = 'siempre disponible';
+      tag.textContent = t('db.tagCore');
       title.appendChild(tag);
     }
     if (field.sensitive) {
       const tag = document.createElement('span');
       tag.className = 'fld-tag is-sensitive';
-      tag.textContent = 'sensible — se consulta en vivo';
+      tag.textContent = t('db.tagSensitive');
       title.appendChild(tag);
     }
 
@@ -206,7 +221,7 @@ export function mountFields(opts) {
     meta.appendChild(code);
     const bits = [typeLabel(field)];
     const opts3 = optionsOf(field);
-    if (opts3) bits.push(opts3 + ' opciones');
+    if (opts3) bits.push(t('db.opts', { n: opts3 }));
     bits.forEach((b) => {
       const s = document.createElement('span');
       s.textContent = b;
@@ -233,8 +248,8 @@ export function mountFields(opts) {
 
     const switches = document.createElement('div');
     switches.className = 'fld-switches';
-    const q = makeSwitch('Consultar', 'queryable', field);
-    const e = makeSwitch('Editar', 'editable', field);
+    const q = makeSwitch(t('db.query'), 'queryable', field);
+    const e = makeSwitch(t('db.edit'), 'editable', field);
     switches.append(q.wrap, e.wrap);
 
     row.append(info, switches);
@@ -343,22 +358,20 @@ export function mountFields(opts) {
       setSaving(objectType, prop, false);
       syncField(objectType, prop);
       if (what === 'queryable' && value) {
-        setNote(objectType, prop, f.sensitive
-          ? 'Comando lo consultará en vivo en tu CRM cada vez que lo necesite.'
-          : 'Comando ya puede consultarlo; los datos históricos se completan en unos minutos.');
-        say(labelOf(f) + ': activado.');
+        setNote(objectType, prop, t(f.sensitive ? 'db.noteLive' : 'db.noteMirror'));
+        say(t('db.sayOn', { field: labelOf(f) }));
         window.setTimeout(() => setNote(objectType, prop, ''), 15000);
       } else {
-        say(labelOf(f) + ': ' + (value ? 'activado' : 'desactivado') + '.');
+        say(t(value ? 'db.sayOn' : 'db.sayOff', { field: labelOf(f) }));
       }
     } catch (e) {
       Object.assign(f, before);
       saving.delete(k);
       setSaving(objectType, prop, false);
       syncField(objectType, prop);
-      const msg = (e && e.message) || 'No se pudo guardar.';
-      setError(objectType, prop, 'No se guardó: ' + msg + ' Inténtalo de nuevo.');
-      say('No se pudo guardar ' + labelOf(f) + '.');
+      const msg = (e && e.message) || t('db.saveFailed');
+      setError(objectType, prop, t('db.saveError', { msg }));
+      say(t('db.sayFailed', { field: labelOf(f) }));
     }
   }
 
@@ -398,7 +411,7 @@ export function mountFields(opts) {
     if (!obj.fields.length) {
       const empty = document.createElement('div');
       empty.className = 'ob-card db-empty';
-      empty.textContent = 'Todavía no leímos campos de este tipo en tu CRM.';
+      empty.textContent = t('db.noFields');
       panel.appendChild(empty);
       panelsEl.replaceChildren(panel);
       return;
@@ -406,20 +419,20 @@ export function mountFields(opts) {
 
     /* Activos */
     const active = sortActive(obj.fields);
-    const secA = section('Activos', 'Lo que Comando puede consultar hoy. Los marcados como "siempre disponible" no se pueden apagar: sin ellos no podría identificar un registro.');
+    const secA = section(t('db.active'), t('db.activeHint'));
     const listA = document.createElement('div');
     listA.className = 'db-list';
     if (active.length) active.forEach((f) => listA.appendChild(makeRow(obj, f)));
-    else listA.appendChild(emptyLine('Todavía no activaste ningún campo.'));
+    else listA.appendChild(emptyLine(t('db.noneActive')));
     secA.appendChild(listA);
 
     /* Sugeridos */
     const suggested = rankSuggested(obj.fields);
-    const secS = section('Sugeridos', 'Los que más te harían falta, según lo que ya le pediste y qué tan llenos están.');
+    const secS = section(t('db.suggested'), t('db.suggestedHint'));
     const listS = document.createElement('div');
     listS.className = 'db-list';
     if (suggested.length) suggested.forEach((f) => listS.appendChild(makeRow(obj, f, { reason: true })));
-    else listS.appendChild(emptyLine('Ya activaste todo lo que teníamos para sugerirte.'));
+    else listS.appendChild(emptyLine(t('db.nothingToSuggest')));
     secS.appendChild(listS);
 
     /* Todos los campos */
@@ -428,7 +441,9 @@ export function mountFields(opts) {
     details.open = st.open;
     details.addEventListener('toggle', () => { st.open = details.open; });
     const summary = document.createElement('summary');
-    summary.innerHTML = '<span>Todos los campos</span>';
+    const summaryText = document.createElement('span');
+    summaryText.textContent = t('db.all');
+    summary.appendChild(summaryText);
     const badge = document.createElement('span');
     badge.className = 'db-all-count';
     badge.textContent = obj.fields.length;
@@ -440,8 +455,8 @@ export function mountFields(opts) {
     const input = document.createElement('input');
     input.type = 'search';
     input.className = 'db-search-input';
-    input.placeholder = 'Buscar por nombre o nombre interno…';
-    input.setAttribute('aria-label', 'Buscar campos');
+    input.placeholder = t('db.search');
+    input.setAttribute('aria-label', t('db.searchAria'));
     input.value = st.query;
     search.appendChild(input);
     details.appendChild(search);
@@ -468,11 +483,11 @@ export function mountFields(opts) {
         const none = document.createElement('div');
         none.className = 'db-none';
         const p = document.createElement('p');
-        p.textContent = 'No encontramos ningún campo que coincida con “' + st.query + '”.';
+        p.textContent = t('db.noMatch', { q: st.query });
         const clear = document.createElement('button');
         clear.type = 'button';
         clear.className = 'ob-link';
-        clear.textContent = 'Borrar la búsqueda';
+        clear.textContent = t('db.clearSearch');
         clear.addEventListener('click', () => { st.query = ''; input.value = ''; st.limit = PAGE; paintAll(); input.focus(); });
         none.append(p, clear);
         listAll.appendChild(none);
@@ -482,7 +497,7 @@ export function mountFields(opts) {
       found.slice(0, st.limit).forEach((f) => listAll.appendChild(makeRow(obj, f)));
       const rest = found.length - st.limit;
       more.hidden = rest <= 0;
-      more.textContent = rest > 0 ? 'Mostrar ' + Math.min(rest, PAGE) + ' más (quedan ' + rest + ')' : '';
+      more.textContent = rest > 0 ? t('db.showMore', { n: Math.min(rest, PAGE), rest }) : '';
     }
 
     let timer = 0;

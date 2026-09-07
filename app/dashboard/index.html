@@ -26,36 +26,36 @@
   <a class="ob-logo" href="../../"><span class="cmd-wordmark" aria-label="Comando"><span aria-hidden="true">comand</span><span class="cmd-o" aria-hidden="true"></span></span></a>
 
   <header class="db-head">
-    <a class="db-back" href="../panel/#/cuenta">&larr; Mi cuenta</a>
-    <h1>Qué puede consultar Comando</h1>
-    <p class="ob-muted">Elige qué campos de tu CRM puede leer y cuáles puede modificar cuando le escribes por WhatsApp. Lo que dejes apagado, Comando no lo consulta ni lo copia.</p>
+    <a class="db-back" href="../panel/#/cuenta">&larr; <span data-i18n="db.back">Mi cuenta</span></a>
+    <h1 data-i18n="db.h1">Qué puede consultar Comando</h1>
+    <p class="ob-muted" data-i18n="db.intro">Elige qué campos de tu CRM puede leer y cuáles puede modificar cuando le escribes por WhatsApp. Lo que dejes apagado, Comando no lo consulta ni lo copia.</p>
   </header>
 
   <!-- Cargando -->
   <section id="state-loading" class="ob-card db-state">
-    <p class="ob-muted">Leyendo los campos de tu CRM… <span class="ob-spinner" aria-hidden="true"></span></p>
+    <p class="ob-muted"><span data-i18n="db.loading">Leyendo los campos de tu CRM…</span> <span class="ob-spinner" aria-hidden="true"></span></p>
     <div class="db-skeleton" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
   </section>
 
   <!-- Sin sesión -->
   <section id="state-signin" class="ob-card db-state" hidden>
-    <h2>Inicia sesión para ver tus campos</h2>
-    <p class="ob-muted">Esta página usa la misma cuenta con la que registraste tu WhatsApp.</p>
-    <div class="ob-actions"><a class="ob-btn" href="../">Iniciar sesión</a></div>
+    <h2 data-i18n="db.signin.title">Inicia sesión para ver tus campos</h2>
+    <p class="ob-muted" data-i18n="db.signin.sub">Esta página usa la misma cuenta con la que registraste tu WhatsApp.</p>
+    <div class="ob-actions"><a class="ob-btn" href="../" data-i18n="db.signin.btn">Iniciar sesión</a></div>
   </section>
 
   <!-- Sin CRM conectado -->
   <section id="state-nocrm" class="ob-card db-state" hidden>
-    <h2>Primero conecta tu CRM</h2>
-    <p class="ob-muted">Cuando conectes HubSpot en el paso 3 de tu registro, aquí aparecerán todos tus campos para que elijas cuáles puede consultar Comando.</p>
-    <div class="ob-actions"><a class="ob-btn" href="../panel/#/cuenta">Conectar mi CRM</a></div>
+    <h2 data-i18n="db.nocrm.title">Primero conecta tu CRM</h2>
+    <p class="ob-muted" data-i18n="db.nocrm.sub">Cuando conectes tu CRM desde el panel, aquí aparecerán todos tus campos para que elijas cuáles puede consultar Comando.</p>
+    <div class="ob-actions"><a class="ob-btn" href="../panel/#/cuenta" data-i18n="db.nocrm.btn">Conectar mi CRM</a></div>
   </section>
 
   <!-- Error de API -->
   <section id="state-error" class="ob-card db-state" hidden>
-    <h2>No pudimos cargar tus campos</h2>
+    <h2 data-i18n="db.error.title">No pudimos cargar tus campos</h2>
     <p class="ob-muted" id="error-detail"></p>
-    <div class="ob-actions"><button type="button" class="ob-btn" id="retry">Reintentar</button><a class="ob-btn ob-btn-secondary" href="../">Volver</a></div>
+    <div class="ob-actions"><button type="button" class="ob-btn" id="retry" data-i18n="db.error.retry">Reintentar</button><a class="ob-btn ob-btn-secondary" href="../" data-i18n="db.error.back">Volver</a></div>
   </section>
 
   <!-- Aplicación -->
@@ -67,6 +67,6 @@
   <p class="db-foot ob-muted ob-small">Los cambios se guardan solos. Los campos marcados como <strong>sensibles</strong> se consultan en vivo en tu CRM cada vez que hacen falta.</p>
   <p id="live" class="db-sr" role="status" aria-live="polite"></p>
 </main>
-<script type="module" src="dashboard.js?v=3"></script>
+<script type="module" src="dashboard.js?v=4"></script>
 </body>
 </html>

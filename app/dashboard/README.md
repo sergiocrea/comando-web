@@ -5,6 +5,32 @@ Un CRM real tiene ~190 propiedades por objeto; la página evita que eso abrume m
 primero lo que ya está activo, después un máximo de 8 sugerencias con su motivo, y dejando
 el catálogo completo plegado detrás de un buscador.
 
+## Idioma
+
+La pantalla vive en los tres idiomas (`strings.js` de esta carpeta) y **hereda el
+del panel**: el mismo `localStorage` que escribe el selector de `/app/panel/`.
+Antes estaba solo en castellano, así que un cliente con el panel en inglés
+pulsaba «Qué puede consultar Comando» y cambiaba de idioma al cambiar de
+pantalla.
+
+Diccionario propio y no un bloque más en `../strings.js` por peso: el del panel
+son 609 claves (~60 KB) y esta pantalla usa 77. `register()` fusiona en la misma
+tabla, así que `t()` y la garantía de los tres idiomas son las mismas;
+`tooling/check-app-i18n.mjs` comprueba cada diccionario por separado —contra el
+código *y* contra los `data-i18n` del HTML— justamente porque cada página carga
+el suyo y una clave del otro saldría en pantalla como `⟨clave⟩`.
+
+**Sin selector propio**, a propósito: el de aquí no podría guardar la elección en
+la cuenta (esta página solo habla con los dos endpoints de campos, ver abajo) y
+dejaría el panel y las respuestas de WhatsApp en desacuerdo. Para revisarla en
+otro idioma: `?lang=en`, `?lang=pt`.
+
+Lo que **no** se traduce: la etiqueta y el nombre interno de cada propiedad, que
+son del CRM del cliente y ya están en su idioma. Sí se traducen los nombres de
+los tipos de registro (Contactos · Negocios · Empresas), que son nuestros, aunque
+el engine mande el suyo en `label`; para un objeto a medida manda su etiqueta,
+que es su único nombre.
+
 ## Privacidad (restricción de producto, no la rompas)
 
 **Esta página es de configuración, no un visor de datos: nunca muestra información de leads
@@ -72,6 +98,7 @@ habilitada en tu cuenta" en vez de un error genérico.
 | `fields-api.js`   | cliente de los dos endpoints + detección de "sin CRM"          |
 | `fields-ui.js`    | orden, motivos, búsqueda, filas, interruptores, guardado       |
 | `mock-fields.js`  | fixture y API falsa para `?mock=…` (solo metadatos)            |
+| `strings.js`      | el diccionario de esta pantalla en castellano, inglés y portugués |
 | `dashboard.css`   | estilos propios; los tokens y botones vienen de `../onboarding.css` |
 
 Sin build ni dependencias externas: módulos ES nativos y CSS. Por eso hay que servirlo por
@@ -92,6 +119,7 @@ python3 -m http.server 8000
   Cada `PATCH` simulado se registra en la consola para ver qué mandaría al engine.
   - `?mock=error` → API caída (con botón Reintentar).
   - `?mock=nocrm` → todavía sin CRM conectado.
+  - `?lang=en` · `?lang=pt` → la pantalla entera en el otro idioma.
   - En `?mock=1`, el campo **"Campo que falla al guardar (demo)"** siempre falla:
     sirve para ver el rollback y el error en línea.
 
