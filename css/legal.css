@@ -1,8 +1,24 @@
 .legal-body{background:#0a0a0a;color:#d6d6d6;font-family:"Neuehaasunicaw 1 G",Inter,Arial,sans-serif;margin:0;line-height:1.6}
-.legal-nav{display:flex;justify-content:space-between;align-items:center;padding:1.5rem 2rem;border-bottom:1px solid #1e1e1e}
+.legal-nav{display:flex;flex-wrap:wrap;gap:.75rem 1rem;justify-content:space-between;align-items:center;padding:1.5rem 2rem;border-bottom:1px solid #1e1e1e}
 .legal-brand{display:flex;align-items:center;gap:.75rem;color:#fff;text-decoration:none;font-family:Neuemachina,"Space Grotesk",Inter,sans-serif;font-weight:600;font-size:1.25rem}
 .legal-back{color:#4d7cff;text-decoration:none;font-family:"Jetbrainsmono Variable",monospace;font-size:.85rem;letter-spacing:.04em}
 .legal-back:hover{text-decoration:underline}
+
+/* Conmutador de idioma de las legales. Las tres existen en castellano, inglés y
+   portugués, pero hasta ahora solo se salía de una por los enlaces del pie:
+   quien llegaba a /en/privacidad.html desde un buscador no tenía cómo volver a
+   su idioma. Es el mismo control que la barra del landing y lleva a la MISMA
+   página, no al inicio; el estilo no se trae de allí porque aquel es oscuro
+   sobre blanco y aquí, sobre negro, se leería como un parche: se repinta con
+   los grises y la tipografía de esta hoja. */
+.legal-nav-end{display:flex;flex-wrap:wrap;align-items:center;gap:.75rem 1.25rem}
+.legal-nav .lang-switch{display:inline-flex;align-items:center;gap:.12rem;padding:.15rem;border:1px solid #1e1e1e;border-radius:.4rem;background:#141414}
+.legal-nav .lang-switch a,.legal-nav .lang-switch .lang-switch-current{font-family:"Jetbrainsmono Variable",monospace;font-size:.72rem;letter-spacing:.06em;line-height:1;padding:.32rem .45rem;border-radius:.28rem;text-decoration:none}
+.legal-nav .lang-switch a{color:#8a8a8a;transition:color .15s,background-color .15s}
+.legal-nav .lang-switch a:hover{color:#fff;background:#1e1e1e}
+.legal-nav .lang-switch .lang-switch-current{color:#fff;background:#242424}
+.legal-nav .lang-switch a:focus-visible{outline:2px solid #4d7cff;outline-offset:2px}
+@media (prefers-reduced-motion: reduce){.legal-nav .lang-switch a{transition:none}}
 .legal-main{max-width:52rem;margin:0 auto;padding:3rem 1.5rem 5rem}
 .legal-eyebrow{font-family:"Jetbrainsmono Variable",monospace;font-size:.75rem;letter-spacing:.08em;color:#4d7cff;margin:0 0 1rem}
 .legal-main h1{font-family:Neuemachina,"Space Grotesk",Inter,sans-serif;font-weight:600;font-size:clamp(2rem,5vw,3rem);color:#fff;line-height:1.1;margin:0 0 1.5rem}
@@ -13,7 +29,7 @@
 .legal-main .legal-intro{font-size:1.1rem;color:#e6e6e6}
 .legal-foot{display:flex;flex-wrap:wrap;gap:1rem;justify-content:space-between;padding:1.5rem 2rem;border-top:1px solid #1e1e1e;font-family:"Jetbrainsmono Variable",monospace;font-size:.75rem;letter-spacing:.04em;color:#8a8a8a}
 .legal-foot a{color:#8a8a8a;text-decoration:none}.legal-foot a:hover{color:#fff}
-@media (max-width:600px){.legal-nav,.legal-foot{padding:1rem 1.25rem}}
+@media (max-width:600px){.legal-nav,.legal-foot{padding:1rem 1.25rem}.legal-brand{font-size:1.1rem}.legal-nav-end{gap:.5rem .9rem}.legal-back{font-size:.8rem}}
 
 /* brand: wordmark "comando" con la o-cursor (variante A: parpadeo suave). En reposo/reduced-motion la o es un anillo. */
 .cmd-wordmark { display: inline-flex; align-items: center; gap: .05em; font-family: Neuemachina, "Space Grotesk", Inter, sans-serif; font-weight: 700; letter-spacing: -.01em; color: #fff; text-transform: lowercase; line-height: 1; }
