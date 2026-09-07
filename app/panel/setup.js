@@ -8,11 +8,14 @@
    - `crmActions`: los manejadores de esos botones (OAuth por Nango en ventana emergente,
      confirmación por sondeo, selector de hojas de Google). */
 
-import { esc, toast, ICON, fmtDate } from './ui.js?v=6';
+import { esc, toast, ICON, fmtDate } from './ui.js?v=7';
 import { t } from '../i18n.js?v=1';
 
 const cfg = () => window.COMANDO_CONFIG || {};
-const NAMES = { hubspot: 'HubSpot', salesforce: 'Salesforce', 'google-sheets': 'Google Sheets', pipedrive: 'Pipedrive', zoho: 'Zoho CRM', kommo: 'Kommo', shopify: 'Shopify', tiendanube: 'Tiendanube', woocommerce: 'WooCommerce', mercadolibre: 'Mercado Libre', vtex: 'VTEX' };
+/* Exportado porque no solo lo usa la rejilla: la tarjeta de Cuenta necesita
+   decir «la sacamos de tu HubSpot», con el nombre del proveedor y no con la
+   clave técnica. Los nombres de producto no se traducen. */
+export const NAMES = { hubspot: 'HubSpot', salesforce: 'Salesforce', 'google-sheets': 'Google Sheets', pipedrive: 'Pipedrive', zoho: 'Zoho CRM', kommo: 'Kommo', shopify: 'Shopify', tiendanube: 'Tiendanube', woocommerce: 'WooCommerce', mercadolibre: 'Mercado Libre', vtex: 'VTEX' };
 const READY = ['hubspot', 'google-sheets', 'salesforce'];
 const SOON = ['pipedrive', 'zoho', 'kommo', 'shopify', 'tiendanube', 'woocommerce', 'mercadolibre', 'vtex'];
 const logo = (p) => `<img src="../../assets/img/logos/${p === 'google-sheets' ? 'googlesheets' : esc(p)}.svg" alt="">`;

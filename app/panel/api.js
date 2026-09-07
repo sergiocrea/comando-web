@@ -7,7 +7,7 @@
      equivalente para pedirlo por WhatsApp. Ver README.md: tabla de endpoints.
    - `createMockApi()` sirve los datos de mock-data.js con una pequeña latencia. */
 
-import { MOCK, MOCK_DELAY_MS } from './mock-data.js?v=6';
+import { MOCK, MOCK_DELAY_MS } from './mock-data.js?v=7';
 
 const PENDING = (reason) => ({ pending: true, reason });
 
@@ -50,6 +50,13 @@ export function createApi(cfg, getToken) {
     /** Llamada directa (la usa setup.js para el flujo de WhatsApp y de conexión). */
     raw: (path, options = {}) => call(path, options),
     me: () => call('/auth/me'),
+    /* La moneda de la cuenta, no una preferencia personal: decide con qué
+       símbolo ve la plata TODO el equipo, y por eso el engine solo la deja
+       escribir a `owner` y `admin` (403 para los demás). El tenant sale de la
+       sesión: mandarlo en el cuerpo sería un 400, porque el esquema es
+       `.strict()`. Va por `optional()` porque la ruta todavía no está
+       publicada: mientras tanto es «se activa pronto» y no un fallo. */
+    setCurrency: (currency) => optional(() => mutate('/tenant/currency', 'PUT', { currency }), 'currency'),
     connections: async () => (await call('/integrations/connections')).connections || [],
     sheets: () => optional(async () => (await call('/integrations/google-sheets/sources')).sources || [], 'sheets'),
     agent: () => call('/operator-agent'),
@@ -99,6 +106,18 @@ export function createMockApi() {
   const wait = (v) => new Promise((r) => setTimeout(() => r(structuredClone(v)), MOCK_DELAY_MS));
   const log = (what, payload) => { console.info('[comando panel mock]', what, payload || ''); return wait({ ok: true }); };
   const a = MOCK.agent;
+  /* Los tres estados de la moneda se pueden mirar sin engine, que es la única
+     forma de revisar que la pregunta aparece cuando toca y calla cuando no:
+     `?mock=1&moneda=crm` (la trajo el CRM), `&moneda=account` (la declararon),
+     `&moneda=none` (nadie la sabe: es el único caso en que se pregunta), y
+     `&rol=agent` para ver la pantalla de quien no puede cambiarla. */
+  const me = structuredClone(MOCK.me);
+  const params = new URLSearchParams(location.search);
+  const source = params.get('moneda');
+  if (source === 'none') { me.currency = null; me.currencySource = null; }
+  else if (source === 'account') { me.currency = 'USD'; me.currencySource = 'account'; }
+  else if (source === 'crm') { me.currency = 'PEN'; me.currencySource = 'crm'; }
+  if (params.get('rol')) me.role = params.get('rol');
   /* El «worker» de mentira, para poder ver el ciclo entero de la consola sin
      engine: encola, tarda un par de segundos en planear, y una pregunta se
      responde sola mientras que una escritura queda esperando el CONFIRMAR. */
@@ -134,7 +153,16 @@ export function createMockApi() {
   return {
     mode: 'mock',
     raw: (path, options) => { log('raw ' + path, options && options.body); return wait(path.includes('whatsapp/start') ? { comandoNumber: '+51 912 000 000', code: 'K7Q2ZP', waLink: 'https://wa.me/51912000000?text=VERIFICAR%20K7Q2ZP' } : path.includes('/auth/language') ? { status: 'ok' } : path.includes('reconcile') ? { status: 'connected' } : path.includes('connect-sessions') ? { token: 'mock', connectionId: 'mock-conn' } : { ok: true, purged: true, purgeAfter: new Date(Date.now() + 7 * 864e5).toISOString() }); },
-    me: () => wait(MOCK.me),
+    me: () => wait(me),
+    /* Igual que el engine: pasa a `account` y ya no se puede volver atrás.
+       Con `&pendiente=moneda` responde como el engine de hoy, que todavía no
+       publica la ruta: es la única forma de mirar la degradación a «se activa
+       pronto» sin desplegar. */
+    setCurrency: (currency) => {
+      if (params.get('pendiente') === 'moneda') return wait(PENDING('currency'));
+      me.currency = String(currency).toUpperCase(); me.currencySource = 'account';
+      return log('PUT /tenant/currency', me.currency).then(() => ({ currency: me.currency, source: 'account' }));
+    },
     connections: () => wait(MOCK.connections),
     sheets: () => wait(MOCK.connections[1].sources),
     agent: () => wait({ profile: a.profile, preferences: a.preferences, memories: a.memories, rules: a.rules, notifications: a.notifications, aliases: a.aliases, kpis: a.kpis }),

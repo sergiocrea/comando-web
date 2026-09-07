@@ -7,13 +7,13 @@
    - una sola acción principal por fila; lo demás va dentro de «más»;
    - vocabulario del operador (plata en juego, parado, sin dueño, repetidos), nunca del sistema. */
 
-import { isPending } from './api.js?v=7';
-import { crmBlock, crmActions, whatsappStep } from './setup.js?v=6';
+import { isPending } from './api.js?v=8';
+import { crmBlock, crmActions, whatsappStep, NAMES as PROVIDER_NAMES } from './setup.js?v=7';
 import {
   esc, num, money, pct, fmtTime, fmtDate, fmtDateTime, monthName, dayLabel, sameDay, rel, isToday, isPast, isoDay,
   wa, waBtn, askLine, chip, statusChip, bar, spark, kpi, card, row, moreBox, empty, soon, toast, ICON, SIGNAL_PHRASE,
-  personName, personEmail, highValueAmount,
-} from './ui.js?v=6';
+  personName, personEmail, highValueAmount, SYMBOL, setAccountCurrency,
+} from './ui.js?v=7';
 import { t, tn } from '../i18n.js?v=1';
 
 /** Renderiza una parte según el estado de su dato. */
@@ -684,6 +684,56 @@ function metaCard(value) {
   }, { what: t('mk.meta'), phrase: t('wa.connectAds'), extra: t('mk.metaOffSub') });
 }
 
+/* ------------------------------------------------- la moneda de la cuenta
+   Se pregunta UNA vez y solo cuando de verdad no la sabe nadie
+   (`currencySource === null`) y ya hay un CRM conectado: si la declaró alguien
+   de la cuenta, o si la trajo el CRM al autorizar, volver a preguntarla es
+   pedirle al cliente un dato que ya tenemos. Editable siempre desde aquí,
+   porque el CRM también se equivoca y quien la declaró pudo teclear mal.
+
+   Solo `owner` y `admin`: no es una preferencia personal —decide con qué
+   símbolo ve la plata TODO el equipo— y el engine devuelve 403 al resto. A
+   quien no puede se le dice quién puede, en vez de enseñarle un campo que va a
+   fallar. Cuando `/auth/me` no trae `role` (engine anterior) se enseña igual:
+   en ese engine la ruta tampoco existe, así que lo que sale es «se activa
+   pronto» y no un error. */
+const canSetCurrency = (me) => !me.role || me.role === 'owner' || me.role === 'admin';
+
+/* Un campo con lista de sugerencias en vez de un desplegable cerrado: el engine
+   acepta cualquier ISO 4217 de tres letras y un desplegable dejaría fuera al
+   cliente en guaraníes. La lista lleva código y símbolo, que no se traducen. */
+function currencyForm(me) {
+  const options = Object.keys(SYMBOL).map((c) => `<option value="${c}">${c} · ${esc(SYMBOL[c])}</option>`).join('');
+  return `<form class="form currency-form" data-form="currency" autocomplete="off">
+    <label for="cur-input">${esc(t('cuenta.currencyLabel'))}
+      <input id="cur-input" name="currency" list="cur-codes" required maxlength="3" pattern="[A-Za-z]{3}" placeholder="PEN" value="${esc(me.currency || '')}">
+    </label>
+    <datalist id="cur-codes">${options}</datalist>
+    <div class="form-foot"><button class="btn primary" type="submit">${esc(t('common.save'))}</button><span class="form-msg"></span></div>
+    <p class="hint">${esc(t('cuenta.currencyForever'))}</p>
+  </form>`;
+}
+
+function currencyRow(me, active) {
+  const crm = (active && (PROVIDER_NAMES[active.provider] || active.name)) || t('cuenta.currencyTheCrm');
+  const can = canSetCurrency(me);
+  const src = me.currencySource;
+  // Preguntar en cuanto hay CRM y sigue sin saberse: es el momento en que el
+  // dato hace falta, y el operador acaba de mirar esta misma tarjeta.
+  const ask = !src && can && Boolean(active);
+  const value = me.currency
+    ? chip(SYMBOL[me.currency] ? `${me.currency} · ${SYMBOL[me.currency]}` : me.currency, 'ok')
+    : chip(t('cuenta.currencyUnset'), 'warn');
+  const sub = ask ? t('cuenta.currencyAskSub', { crm })
+    : src === 'account' ? t('cuenta.currencyFromAccount')
+      : src === 'crm' ? t('cuenta.currencyFromCrm', { crm })
+        : `${t('cuenta.currencyUnknown')}${can ? '' : ' ' + t('cuenta.currencyOnlyOwner')}`;
+  return row({
+    ico: '💱', title: `${esc(t('cuenta.currency'))} ${value}`, sub: esc(sub),
+    primary: can && !ask ? `<button class="btn sm ghost" data-act="acc:currency">${esc(t(me.currency ? 'cuenta.currencyChange' : 'cuenta.currencySet'))}</button>` : '',
+  }) + `<div id="currency-box">${ask ? currencyForm(me) : ''}</div>`;
+}
+
 /* ==================================================================== CUENTA */
 const cuenta = {
   id: 'cuenta', get title() { return t('nav.cuenta'); }, get sub() { return t('sub.cuenta'); }, icon: 'user',
@@ -697,14 +747,17 @@ const cuenta = {
     const plan = part(d.quota, (q) => { const total = q.commands.allowance + q.commands.addons + q.commands.adjustments; const share = total ? q.commands.used / total : 0; const cls = share >= 1 ? 'bad' : share >= 0.8 ? 'warn' : '';
       return `<div class="kpi"><div class="kpi-label">${esc(t('cuenta.plan', { name: q.plan.name, price: q.plan.priceUsd, interval: t(q.plan.interval === 'month' ? 'cuenta.month' : 'cuenta.year') }))}</div><div class="kpi-value">${num(q.commands.used)}<small>${esc(t('cuenta.ofCommands', { n: num(total) }))}</small></div><div class="progress ${cls}"><i style="width:${Math.min(100, Math.round(share * 100))}%"></i></div><div class="kpi-sub">${share >= 0.8 ? `<span class="sev-warning">${esc(t('cuenta.over80'))}</span> ` : ''}${esc(t('cuenta.renews', { date: fmtDate(q.period.resetAt) }))}${q.blockedReason ? ` · <span class="sev-warning">${esc(q.blockedReason)}</span>` : ''}</div></div>`; },
       { what: t('cuenta.usageWhat'), phrase: t('wa.commandsLeft'), extra: t('cuenta.yourPlan', { plan: planName(me.plan) }) });
+    // El CRM activo se resuelve antes de la tarjeta de cuenta: la moneda dice de
+    // dónde salió («la sacamos de tu HubSpot») y necesita su nombre.
+    const conns = val(d.connections, []); const active = conns.find((c) => c.bound && c.status === 'active'); const recoverable = conns.find((c) => c.recoverable);
     const cuentaCard = card(t('cuenta.yourAccount'), `<div class="list">
       ${row({ ico: '👤', title: esc(personName(me, ctx)), sub: esc(personEmail(me, ctx)), primary: `<button class="btn sm" data-act="acc:profile">${esc(t('cuenta.edit'))}</button>` })}
       ${row({ ico: ICON.wa, title: `WhatsApp ${me.whatsapp ? statusChip(me.whatsapp.status) : ''}`, sub: `${esc(me.whatsapp?.phone || t('cuenta.notLinked'))}${me.comandoNumber ? ` · ${esc(t('cuenta.youWriteTo', { number: me.comandoNumber }))}` : ''}`, primary: `<button class="btn sm ghost" data-act="wa:change">${esc(t('cuenta.changeNumber'))}</button>` })}
       <div id="wa-change-box"></div>
+      ${currencyRow(me, active)}
       <div class="row"><div class="row-ico">💳</div><div class="row-body">${plan}</div><div class="row-actions"><a class="btn sm" href="../../#precios">${esc(t('cuenta.changePlan'))}</a></div></div>
     </div>`);
 
-    const conns = val(d.connections, []); const active = conns.find((c) => c.bound && c.status === 'active'); const recoverable = conns.find((c) => c.recoverable);
     const h = val(d.health, null); const mk = val(d.mk, null);
     // Las cuentas de anuncios salen del MISMO sitio que la tarjeta de Marketing.
     // Antes se leían del resumen de marketing, que todavía es de mentira: la
@@ -747,7 +800,42 @@ const cuenta = {
     'team:invite': () => { toast(t('cuenta.inviteToast')); navigator.clipboard?.writeText(location.origin + '/app/'); },
     'mk:connect': marketing.act['mk:connect'],
     'wa:change': (el, ctx, d, reload) => { const box = document.getElementById('wa-change-box'); if (!box) return; el.disabled = true; whatsappStep(box, ctx, () => { toast(t('cuenta.waLinked'), 'ok'); ctx.cache = {}; reload(); }); box.scrollIntoView({ behavior: 'smooth', block: 'start' }); },
+    'acc:currency': (el, ctx, d) => {
+      const box = document.getElementById('currency-box');
+      if (!box) return;
+      el.disabled = true;
+      box.innerHTML = currencyForm(val(d.me, {}));
+      const input = box.querySelector('input');
+      if (input) { input.focus(); input.select(); }
+    },
     ...crmActions,
+  },
+  forms: {
+    /**
+     * Guardar la moneda cambia el símbolo de TODA la plata del panel, no solo
+     * de esta tarjeta: se actualiza el respaldo que lee `money()`, el `me` que
+     * ya está en memoria, y se recarga para que la fila deje de preguntar. El
+     * aviso va por toast además de por el mensaje del formulario, porque el
+     * repintado se lleva por delante el formulario y con él su mensaje.
+     */
+    currency: async (form, ctx, d, reload) => {
+      const code = String(new FormData(form).get('currency') || '').trim().toUpperCase();
+      if (!/^[A-Z]{3}$/.test(code)) throw new Error(t('cuenta.currencyInvalid'));
+      const saved = await ctx.api.setCurrency(code);
+      // La ruta todavía no está publicada: 404 es «se activa pronto», no un fallo.
+      if (isPending(saved)) return t('common.comingSoon', { what: t('cuenta.currencyWhat') });
+      const value = (saved && saved.currency) || code;
+      const source = (saved && saved.source) || 'account';
+      setAccountCurrency(value);
+      const me = val(d.me, null);
+      if (me) { me.currency = value; me.currencySource = source; }
+      if (ctx.me) { ctx.me.currency = value; ctx.me.currencySource = source; }
+      const done = t('cuenta.currencySaved', { currency: value });
+      toast(done, 'ok');
+      ctx.cache = {};
+      reload();
+      return done;
+    },
   },
 };
 
