@@ -1735,13 +1735,17 @@ html { scroll-behavior: smooth; }
      —de ahí los z-index de la maqueta—: la oclusión es lo que convierte «hay
      cables» en «esto entra AHÍ». */
   background-image: repeating-linear-gradient(90deg,
-    rgba(77, 124, 255, .85) 0 6px, rgba(77, 124, 255, 0) 6px 16px);
-  background-size: 16px 100%;
+    rgba(77, 124, 255, .95) 0 9px, rgba(77, 124, 255, 0) 9px 17px);
+  background-size: 17px 100%;
+  /* Un halo del propio azul: sobre el crema del fondo, una línea fina sin halo
+     se pierde en cuanto la pantalla tiene brillo. Cuesta un box-shadow fijo,
+     no se anima. */
+  box-shadow: 0 0 6px rgba(77, 124, 255, .55);
   /* El desvanecido hacia el origen ya no puede vivir en el degradado del fondo
      —ahora lo ocupan los guiones—, así que pasa a máscara: el riel nace de la
      nada junto a la columna y llega entero al teléfono. */
-  -webkit-mask-image: linear-gradient(90deg, transparent, #000 55%);
-  mask-image: linear-gradient(90deg, transparent, #000 55%);
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 28%);
+  mask-image: linear-gradient(90deg, transparent, #000 28%);
   animation: uc-flow .9s linear infinite;
 }
 /* Desfasados: tres rieles marcando el paso a la vez se leerían como una sola
@@ -1756,7 +1760,7 @@ html { scroll-behavior: smooth; }
     /* 5rem de hueco visible + 3,5rem que ya corren bajo el marco del teléfono */
     left: 100%; top: 50%; width: 8.5rem; height: 0;
   }
-  .uc-wire i { top: 0; left: 0; right: 0; height: 1px; }
+  .uc-wire i { top: 0; left: 0; right: 0; height: 2px; border-radius: 2px; }
   .uc-wire i:nth-child(1) { transform: rotate(-13deg); }
   .uc-wire i:nth-child(3) { transform: rotate(13deg); }
 }
@@ -1777,15 +1781,15 @@ html { scroll-behavior: smooth; }
     left: 38%; bottom: 100%; width: 0; height: 5rem;
   }
   .uc-wire i {
-    top: 0; bottom: 0; left: 0; width: 1px; height: auto;
+    top: 0; bottom: 0; left: 0; width: 2px; height: auto; border-radius: 2px;
     transform-origin: 50% 0;
     /* Aquí el origen es la tira (abajo) y el destino el teléfono (arriba): el
        patrón y su desvanecido giran con el riel, y los guiones suben. */
     background-image: repeating-linear-gradient(0deg,
-      rgba(77, 124, 255, .85) 0 6px, rgba(77, 124, 255, 0) 6px 16px);
-    background-size: 100% 16px;
-    -webkit-mask-image: linear-gradient(0deg, transparent, #000 55%);
-    mask-image: linear-gradient(0deg, transparent, #000 55%);
+      rgba(77, 124, 255, .95) 0 9px, rgba(77, 124, 255, 0) 9px 17px);
+    background-size: 100% 17px;
+    -webkit-mask-image: linear-gradient(0deg, transparent, #000 28%);
+    mask-image: linear-gradient(0deg, transparent, #000 28%);
     animation-name: uc-flow-up;
   }
   .uc-wire i:nth-child(1) { transform: rotate(16deg); }
@@ -1794,8 +1798,8 @@ html { scroll-behavior: smooth; }
 
 /* Un solo periodo del patrón. Se anima `background-position`, que no toca la
    maqueta ni obliga a recalcular nada del resto de la página. */
-@keyframes uc-flow { to { background-position: 16px 0; } }
-@keyframes uc-flow-up { to { background-position: 0 -16px; } }
+@keyframes uc-flow { to { background-position: 17px 0; } }
+@keyframes uc-flow-up { to { background-position: 0 -17px; } }
 
 /* Sin movimiento, los guiones se paran pero NO desaparecen: tres líneas
    discontinuas que convergen en el teléfono siguen contando el trayecto, y
