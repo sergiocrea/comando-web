@@ -461,12 +461,12 @@ register({
 register({
   es: {
     'nav.badgeTitle': 'Lo que te espera en {section}. No es tu cupo de comandos.',
-    'nav.hoy': 'Hoy', 'nav.agenda': 'Agenda', 'nav.crm': 'Mi CRM', 'nav.avisos': 'Avisos',
+    'nav.hoy': 'Hoy', 'nav.agenda': 'Agenda', 'nav.crm': 'Resumen', 'nav.avisos': 'Automatizaciones',
     'nav.marketing': 'Marketing', 'nav.cuenta': 'Cuenta',
     'sub.hoy': 'Qué hago ahora.',
     'sub.agenda': 'Tus recordatorios, visitas y cierres por día.',
-    'sub.crm': 'Cuánta plata hay en juego y qué está viejo, vacío, repetido o sin dueño.',
-    'sub.avisos': 'De qué te avisa Comando, cuándo te escribe y qué más puede vigilar.',
+    'sub.crm': 'Cuánta plata hay en juego y qué está viejo, vacío, repetido o sin dueño. Es para mirar: lo que hay que hacer está en Hoy.',
+    'sub.avisos': 'Lo que Comando hace solo: de qué te avisa, cuándo te escribe y qué más puede vigilar.',
     'sub.marketing': 'Qué te traen tus anuncios de Facebook, Instagram y TikTok, y qué dice tu analista.',
     'sub.cuenta': 'Tu plan, tu CRM, tu equipo y lo que Comando sabe de ti.',
     /* Hoy */
@@ -646,12 +646,12 @@ register({
 register({
   en: {
     'nav.badgeTitle': 'What is waiting for you in {section}. This is not your command quota.',
-    'nav.hoy': 'Today', 'nav.agenda': 'Calendar', 'nav.crm': 'My CRM', 'nav.avisos': 'Alerts',
+    'nav.hoy': 'Today', 'nav.agenda': 'Calendar', 'nav.crm': 'Overview', 'nav.avisos': 'Automations',
     'nav.marketing': 'Marketing', 'nav.cuenta': 'Account',
     'sub.hoy': 'What I do now.',
     'sub.agenda': 'Your reminders, visits and closes by day.',
-    'sub.crm': 'How much money is in play and what is old, empty, duplicated or has no owner.',
-    'sub.avisos': 'What Comando alerts you about, when it writes, and what else it can watch.',
+    'sub.crm': 'How much money is in play and what is old, empty, duplicated or has no owner. This is to look at: what needs doing is in Today.',
+    'sub.avisos': 'What Comando does on its own: what it alerts you about, when it writes, and what else it can watch.',
     'sub.marketing': 'What your Facebook, Instagram and TikTok ads bring you, and what your analyst says.',
     'sub.cuenta': 'Your plan, your CRM, your team and what Comando knows about you.',
     'hoy.greet.morning': 'Good morning', 'hoy.greet.afternoon': 'Good afternoon', 'hoy.greet.evening': 'Good evening',
@@ -824,12 +824,12 @@ register({
 register({
   pt: {
     'nav.badgeTitle': 'O que espera por você em {section}. Não é a sua cota de comandos.',
-    'nav.hoy': 'Hoje', 'nav.agenda': 'Agenda', 'nav.crm': 'Meu CRM', 'nav.avisos': 'Avisos',
+    'nav.hoy': 'Hoje', 'nav.agenda': 'Agenda', 'nav.crm': 'Resumo', 'nav.avisos': 'Automações',
     'nav.marketing': 'Marketing', 'nav.cuenta': 'Conta',
     'sub.hoy': 'O que eu faço agora.',
     'sub.agenda': 'Seus lembretes, visitas e fechamentos por dia.',
-    'sub.crm': 'Quanto dinheiro está em jogo e o que está velho, vazio, repetido ou sem dono.',
-    'sub.avisos': 'Do que o Comando te avisa, quando ele escreve e o que mais pode vigiar.',
+    'sub.crm': 'Quanto dinheiro está em jogo e o que está velho, vazio, repetido ou sem dono. É para olhar: o que precisa ser feito está em Hoje.',
+    'sub.avisos': 'O que o Comando faz sozinho: do que te avisa, quando te escreve e o que mais pode vigiar.',
     'sub.marketing': 'O que seus anúncios do Facebook, Instagram e TikTok trazem, e o que o seu analista diz.',
     'sub.cuenta': 'Seu plano, seu CRM, seu time e o que o Comando sabe de você.',
     'hoy.greet.morning': 'Bom dia', 'hoy.greet.afternoon': 'Boa tarde', 'hoy.greet.evening': 'Boa noite',

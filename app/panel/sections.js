@@ -7,7 +7,7 @@
    - una sola acción principal por fila; lo demás va dentro de «más»;
    - vocabulario del operador (plata en juego, parado, sin dueño, repetidos), nunca del sistema. */
 
-import { isPending } from './api.js?v=6';
+import { isPending } from './api.js?v=7';
 import { crmBlock, crmActions, whatsappStep } from './setup.js?v=6';
 import {
   esc, num, money, pct, fmtTime, fmtDate, fmtDateTime, monthName, dayLabel, sameDay, rel, isToday, isPast, isoDay,
@@ -534,4 +534,10 @@ const cuenta = {
   },
 };
 
-export const SECTIONS = [hoy, agenda, crm, avisos, marketing, cuenta];
+/* El orden del menú es una decisión de producto, no del código:
+   Hoy (qué hago ahora) · Resumen (cómo va la cosa) · Agenda (qué viene) ·
+   Automatizaciones · Marketing · Cuenta. Agenda baja al tercer puesto porque
+   se mira una vez al día; el Resumen se mira de pasada muchas veces.
+   Los `id` NO cambian con los rótulos: son las rutas (#/crm, #/avisos) que la
+   gente ya tiene guardadas y las claves que dicen dónde se lee cada texto. */
+export const SECTIONS = [hoy, crm, agenda, avisos, marketing, cuenta];
