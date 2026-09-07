@@ -86,6 +86,9 @@ Sin build ni dependencias: módulos ES nativos. Servir por HTTP:
 cd comando-web && python3 -m http.server 8000
 # http://localhost:8000/app/panel/?mock=1   ← sin backend, todas las secciones con datos
 # http://localhost:8000/app/panel/?mock=1&wa=pending   ← el paso «Vincula tu WhatsApp» dentro del panel
+# http://localhost:8000/app/panel/?mock=1&moneda=none   ← moneda sin declarar: es el único caso en que se pregunta
+# ...&moneda=crm (la trajo el conector) · &moneda=account (la declaró la cuenta)
+# ...&rol=agent (quien no puede cambiarla) · &pendiente=moneda (el 404 de hoy: «se activa pronto»)
 # http://localhost:8000/app/panel/          ← sesión de Clerk + engine real
 ```
 
@@ -106,7 +109,8 @@ no como error: así se puede desplegar antes de que el backend termine.
 
 | método y ruta | usado en | notas |
 |---|---|---|
-| `GET /auth/me` | cabecera, Hoy, Cuenta | `SignupStatus`: `plan`, `whatsapp`, `comandoNumber`, `waLink`, `crmConnected`. **Falta** `name`, `role`, `timezone`, `country` (el panel los toma de Clerk si no vienen) |
+| `GET /auth/me` | cabecera, Hoy, Cuenta | `SignupStatus`: `plan`, `whatsapp`, `comandoNumber`, `waLink`, `crmConnected`, `name`, `email`, `role`, `timezone`, `currency` y `currencySource` (`account` la declaró la cuenta · `crm` la trajo el conector · `null` no la sabe nadie: **el único caso en que se pregunta**). **Falta** `country` (el panel cae a Clerk para lo que no venga) |
+| `PUT /tenant/currency` | Cuenta › Tu cuenta | `{currency:'USD'}` con `x-request-id` obligatorio → `200 {currency, source:'account'}`. `400` si no es ISO 4217 de tres letras, si falta la cabecera o si el cuerpo trae cualquier campo de más (es `.strict()`: **el tenant sale de la sesión, mandarlo es un 400**); `403` si el operador es `agent`, `supervisor` o `analyst`. Acepta minúsculas y normaliza. No se puede volver a «no declarada». Mientras la rama del engine no esté publicada devuelve 404 y el panel muestra «se activa pronto» |
 | `GET /integrations/connections` | Cuenta | **Pedido**: incluir `settings.crmCapabilities` (writes, hiddenFields, deniedObjects, tagField), `lastReconciledAt`, `lastInboundAt`, `driftCount` y conteos del espejo por objeto |
 | `GET /integrations/google-sheets/sources` | Cuenta | |
 | `GET /crm/fields` | (ya no se muestra; `api.fieldsSummary` sigue disponible) | ya lo usa `/app/dashboard/` |
@@ -144,6 +148,7 @@ Todos bajo la misma auth. Formas mínimas que el panel espera; se pueden extende
 
 - Toda ruta respeta RLS por `tenant_id`/`operator_id`; un `agent` ve lo suyo, un `owner` ve el tenant.
 - Los montos vienen en unidades mayores y con `currency` ISO; el panel formatea (`S/ 9.870.000`).
+- Cuando una respuesta no trae `currency`, el panel usa la de la cuenta (`/auth/me`). Si tampoco la hay, **escribe la cifra sin símbolo**: nunca inventa uno.
 - Nunca ids internos de etapa/dueño en las respuestas: etiquetas del catálogo (`crm_property_catalog`).
 - Fechas en ISO 8601 con zona; el panel las muestra en la zona del operador.
 - `404`/`501` significan «no implementado» y el panel lo muestra como «se activa pronto».

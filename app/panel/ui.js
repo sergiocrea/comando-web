@@ -5,20 +5,36 @@ import { t, locale, localeTag } from '../i18n.js?v=1';
 
 export const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 
-const SYMBOL = { PEN: 'S/', USD: '$', MXN: 'MX$', COP: 'COP$', CLP: 'CLP$', ARS: 'AR$', BRL: 'R$' };
+export const SYMBOL = { PEN: 'S/', USD: '$', MXN: 'MX$', COP: 'COP$', CLP: 'CLP$', ARS: 'AR$', BRL: 'R$', UYU: '$U', BOB: 'Bs', PYG: '₲', CRC: '₡', GTQ: 'Q', DOP: 'RD$', EUR: '€' };
 export function num(n) { if (n == null || Number.isNaN(Number(n))) return t('common.dash'); return Number(n).toLocaleString(localeTag()); }
+
+/* ---------- la moneda de la cuenta ----------
+   `/auth/me` la trae resuelta (declarada por el cliente o traída por el CRM) y
+   panel.js la deja aquí una vez, igual que el número de WhatsApp con
+   `setWaBase()`. Es el RESPALDO de todo el panel: sin ella, media pantalla se
+   quedaba sin símbolo porque solo el resumen de cartera sabía la moneda, y las
+   demás partes (salud del CRM, umbrales de aviso) traen importes a secas. */
+let account = null;
+export function setAccountCurrency(code) {
+  account = /^[A-Za-z]{3}$/.test(String(code || '')) ? String(code).toUpperCase() : null;
+}
+export const accountCurrency = () => account;
+
 /**
- * Un importe con la moneda de la CUENTA, que la pone siempre quien llama.
+ * Un importe con su moneda.
  *
- * Antes esto tenía `PEN` por defecto: un cliente en dólares veía «S/ 12.000»
- * sobre cifras que su CRM guarda en USD, y no hay nada peor que una cifra bien
- * traída con la moneda equivocada. Sin moneda no se inventa símbolo: se enseña
- * la cifra sola, que es incompleto pero no es mentira.
+ * Primero la que traiga el dato (la cartera dice en qué moneda están sus
+ * negocios), y si no la de la cuenta. Antes esto tenía `PEN` por defecto: un
+ * cliente en dólares veía «S/ 12.000» sobre cifras que su CRM guarda en USD, y
+ * no hay nada peor que una cifra bien traída con la moneda equivocada. Cuando
+ * no se sabe ninguna de las dos NO se inventa símbolo: se enseña la cifra sola,
+ * que es incompleto pero no es mentira.
  */
 export function money(n, currency) {
   if (n == null) return t('common.dash');
+  const code = currency || account;
   const amount = num(Math.round(n));
-  return currency ? (SYMBOL[currency] || currency) + ' ' + amount : amount;
+  return code ? (SYMBOL[code] || code) + ' ' + amount : amount;
 }
 export function pct(x, digits = 0) { if (x == null) return t('common.dash'); return (x * 100).toLocaleString(localeTag(), { minimumFractionDigits: digits, maximumFractionDigits: digits }) + ' %'; }
 export function compact(n) {
@@ -104,13 +120,15 @@ export const SIGNAL_PHRASE = {
  *
  * `thresholds.highValue` es un mapa por moneda (`{mode, PEN: …, USD: …}`), y
  * antes se leía siempre la clave `PEN`: a un cliente en dólares le salía «desde
- * —» porque su umbral está bajo `USD`. Se busca su moneda y, si no se sabe
- * cuál es, se usa la única que el engine tenga para ese tenant.
+ * —» porque su umbral está bajo `USD`. Se busca su moneda —la del dato, y si no
+ * la de la cuenta— y, si no se sabe cuál es, se usa la única que el engine
+ * tenga para ese tenant.
  */
 export function highValueAmount(thresholds, currency) {
   const hv = (thresholds && thresholds.highValue) || {};
   const currencies = Object.keys(hv).filter((k) => /^[A-Z]{3}$/.test(k) && typeof hv[k] === 'number');
-  const key = currency && currencies.includes(currency) ? currency : currencies[0];
+  const mine = currency || account;
+  const key = mine && currencies.includes(mine) ? mine : currencies[0];
   return key ? money(hv[key], key) : money(null);
 }
 

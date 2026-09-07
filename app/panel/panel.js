@@ -4,11 +4,11 @@
    - Cada sección carga sus datos con Promise.allSettled: una parte que falle o que
      aún no exista en el engine no tumba la página. */
 
-import { createApi, createMockApi } from './api.js?v=7';
-import { SECTIONS } from './sections.js?v=10';
-import { whatsappStep, resumePendingConnection } from './setup.js?v=6';
-import { esc, setWaBase, wa, skeleton, toast, ICON, isToday, isPast, personName } from './ui.js?v=6';
-import '../strings.js?v=4';
+import { createApi, createMockApi } from './api.js?v=8';
+import { SECTIONS } from './sections.js?v=11';
+import { whatsappStep, resumePendingConnection } from './setup.js?v=7';
+import { esc, setWaBase, setAccountCurrency, wa, skeleton, toast, ICON, isToday, isPast, personName } from './ui.js?v=7';
+import '../strings.js?v=5';
 import { initLocale, adoptAccountLocale, mountLanguagePicker, onLocaleChange, locale, t } from '../i18n.js?v=1';
 
 // El idioma se resuelve ANTES del primer pintado: si se resolviera después, la
@@ -152,6 +152,11 @@ async function start() {
     // El idioma que eligió al registrarse manda sobre el del navegador, pero no
     // sobre lo que haya tocado en el selector en esta sesión.
     adoptAccountLocale(me.locale);
+    // La moneda de la cuenta, antes del primer pintado y para todo el panel: sin
+    // esto solo el resumen de cartera sabía con qué símbolo escribir la plata, y
+    // el resto de las pantallas caía en «S/» daba igual dónde estuviera el
+    // cliente. Cuando el engine no la sabe llega `null` y no se pinta símbolo.
+    setAccountCurrency(me.currency);
     if (me.waLink || me.comandoNumber) setWaBase(me.waLink || 'https://wa.me/' + String(me.comandoNumber).replace(/\D/g, ''));
     $('wa-top').href = wa(t('wa.whatMattersToday'));
     const name = personName(me, ctx);

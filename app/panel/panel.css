@@ -218,6 +218,12 @@ table.tbl { width: 100%; border-collapse: separate; border-spacing: 0; font-size
 .form-foot { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
 .form-msg { font-size: 13px; color: var(--g600); }
 .form-msg.ok { color: var(--success-ink); } .form-msg.bad { color: var(--error-ink); }
+/* La moneda vive dentro de la lista de «Tu cuenta», debajo de su propia fila:
+   un código de tres letras no necesita el ancho de la tarjeta, y estirarlo
+   haría pensar que ahí cabe una frase. */
+.currency-form { gap: 12px; padding: 4px 0 16px; }
+.currency-form input { max-width: 180px; text-transform: uppercase; }
+.currency-form .hint { margin: -4px 0 0; }
 
 /* ---------- vacíos, pendientes, skeleton ---------- */
 .empty { padding: 24px 12px; text-align: center; color: var(--g600); font-size: 14px; line-height: 1.6; }

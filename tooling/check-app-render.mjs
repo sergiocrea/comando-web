@@ -23,8 +23,8 @@ globalThis.localStorage = { getItem: () => null, setItem() {}, removeItem() {} }
 globalThis.window = { COMANDO_CONFIG: {}, addEventListener() {}, location: globalThis.location, innerWidth: 1200 };
 globalThis.setInterval = () => 0;
 
-const { SECTIONS } = await import('../app/panel/sections.js?v=10');
-await import('../app/strings.js?v=4');
+const { SECTIONS } = await import('../app/panel/sections.js?v=11');
+await import('../app/strings.js?v=5');
 const i18n = await import('../app/i18n.js?v=1');
 
 /* Datos vacíos: lo que se mide es el texto, no los números. */

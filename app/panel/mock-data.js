@@ -28,6 +28,10 @@ export const MOCK = {
     crmConnected: true,
     timezone: 'America/Lima',
     country: 'PE',
+    // La trajo HubSpot al conectar, que es el caso más común: por eso no se le
+    // pregunta nada a este tenant. Con `?moneda=none` se ve el que sí.
+    currency: 'PEN',
+    currencySource: 'crm',
   },
 
   connections: [
