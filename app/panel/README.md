@@ -140,7 +140,7 @@ Todos bajo la misma auth. Formas mínimas que el panel espera; se pueden extende
 | `GET /automation-rules` | Avisos › Cuando pasa algo | `[{id,name,event,entity,condition (en palabras),action (en palabras),groupWindow?,status,firedWeek,createdAt}]` | `automation_rule` del `automation-rule-evaluator` |
 | `GET /automation-rules/playbooks` | Avisos › Ideas | `[{group,id,name,ask,evidence,active,needs?}]` | `docs/research/command-training-dataset/patterns.json` + qué reglas del tenant coinciden |
 | `GET /sales-intelligence/policy` | Avisos › Siempre (cada señal activa como frase «te avisa cuando…»; «Apagar» abre WhatsApp) | `{enabledSignals:[…9],thresholds:{inactiveDays,closeDateApproachingDays,stageStalledDays,highValue:{mode:'p75'|'absolute',<CUR>:mayor}},criticalFields,routes}` | `policy-schema.ts`; el cambio de señales sigue siendo por WhatsApp («no me avises más de…») |
-| `GET /billing/quota` | Cuenta | `{plan:{code,name,priceUsd,interval},period:{start,end,resetAt},commands:{allowance,addons,adjustments,used,balance},contacts:{used,limit},connections:{used,limit|null},audioShare,blockedReason|null,invoices:[{id,date,amount,status}]}` | UC-006 «cuota efectiva» del control plane, expuesto al propio tenant |
+| `GET /billing/quota` | Cuenta | `{plan:{code,name,interval:'none'|'monthly'|'annual',price:{amountMinor,currency,source:'subscription'|'catalog'}|null}, period:{key,kind:'lifetime'|'monthly',start,end|null,resetAt|null}, commands:{allowance|null,addons,adjustments,used,balance|null}, contacts:{used|null,limit|null}, connections:{used,limit|null}, audioShare:null, blockedReason:'command_quota_exhausted'|null, billingVisible, invoices:[{id,date,periodEnd,amountMinor,currency,status,hostedUrl|null}]}`. **Ya no hay `priceUsd`** ni `amount` a secas: ver §4.4. Mientras la rama del engine no esté publicada devuelve 404 y la tarjeta de plan muestra «se activa pronto» | `resolve_command_balance` (000114) + `tenant_command_usage`, `command_quota_adjustment`, `tenant_entitlement_snapshot`, `commercial_plan*`, `billing_invoice`. Es la MISMA fuente que descuenta el cupo |
 | `GET /team` | Cuenta (sin mostrar `commandsMonth`: política anti-vigilancia) | `{people:[{id,name,role,whatsapp:'verified'|'pending',team,crmOwner|null,commandsMonth,lastActive}],roles:{owner,admin,supervisor,agent,analyst},crmOwners,limits:{assignMax,broadcastMaxCost,discountMaxPct,stepUpAbove}}` | `operator_identity`, `resolve_operator_crm_owner`, policy por rol |
 | `GET /marketing/overview` | Marketing | ver §5 | plan 16 de `comando-pro`; **ya desplegado** |
 | `POST /marketing/refresh` | Marketing (el botón «Actualizar») | ver §5; **siempre 200**, también cuando el límite lo deja fuera | ídem |
@@ -148,11 +148,49 @@ Todos bajo la misma auth. Formas mínimas que el panel espera; se pueden extende
 ### 4.3 Reglas para el backend
 
 - Toda ruta respeta RLS por `tenant_id`/`operator_id`; un `agent` ve lo suyo, un `owner` ve el tenant.
-- Los montos vienen en unidades mayores y con `currency` ISO; el panel formatea (`S/ 9.870.000`).
+- Los montos vienen en unidades mayores y con `currency` ISO; el panel formatea (`S/ 9.870.000`). **Excepción: facturación** (`/v1/public/plans` y `/billing/quota`) va en unidades **mínimas** (`amountMinor`), porque ahí los céntimos son el dato y una suma con coma acaba descuadrando.
 - Cuando una respuesta no trae `currency`, el panel usa la de la cuenta (`/auth/me`). Si tampoco la hay, **escribe la cifra sin símbolo**: nunca inventa uno.
 - Nunca ids internos de etapa/dueño en las respuestas: etiquetas del catálogo (`crm_property_catalog`).
 - Fechas en ISO 8601 con zona; el panel las muestra en la zona del operador.
 - `404`/`501` significan «no implementado» y el panel lo muestra como «se activa pronto».
+
+### 4.4 `GET /billing/quota`: lo que cambió del contrato original y por qué
+
+El cupo se descuenta de verdad desde hace meses (`CommandQuotaPort.consume()`, y en el plan
+gratuito además corta), pero no había forma de consultarlo. Esta ruta lo devuelve leyendo las
+mismas tablas y la misma función SQL que hace el descuento, para que el número de la pantalla
+y el que corta el servicio no puedan divergir. Cuatro apartados se apartaron del contrato que
+esta tabla pedía, y ninguno por gusto:
+
+- **`priceUsd` ya no existe.** Suponía dólares, y el catálogo es multimoneda desde la 000110
+  (`currency` + `amount_minor`); con un cliente facturado en soles, `priceUsd` mentía. En su
+  lugar va `price:{amountMinor,currency,source}` en **unidades mínimas**, igual que
+  `GET /v1/public/plans`. `source:'subscription'` es lo que ese cliente aceptó pagar (copiado
+  al contratar, inmune a subidas posteriores); `source:'catalog'` es el precio publicado de su
+  versión de plan, elegido en la moneda de la cuenta cuando el catálogo la tiene. **Nunca se
+  convierte de una moneda a otra.** `price` es `null` cuando no hay precio publicado —hoy es lo
+  normal: la 000134 dejó los precios nuevos en borrador— y entonces el panel **omite la cifra**
+  en vez de inventarla.
+- **`audioShare` es siempre `null`.** El canal distingue `text | audio | other` al recibir el
+  mensaje, pero eso se pierde en la transcripción: ni `operator_dialogue_entry` ni
+  `tenant_command_usage` guardan de qué tipo era la entrada. Es la misma razón por la que
+  `GET /operator/commands` no trae `voice`. Un porcentaje inventado en una pantalla de
+  facturación es peor que un hueco.
+- **El periodo es el del CUPO, no el de la factura.** `kind:'monthly'` cuenta por mes
+  calendario **en UTC**, que es la clave que escribe el descuento; `kind:'lifetime'` es el
+  gratuito, cuyo cupo **no se reinicia**, y por eso `end` y `resetAt` vienen `null`: un
+  `resetAt` ahí sería prometer una recarga que no va a llegar. `contacts.used` es `null` —no
+  cero— cuando el espejo del CRM todavía no está provisionado.
+- **El cupo es del tenant y el dinero no lo ve cualquiera.** `commands` es el saldo
+  **compartido** de la empresa (`tenant_command_usage` tiene clave `(tenant_id, period_key)` y
+  no guarda quién gastó cada comando), así que un vendedor ve el mismo saldo que su dueño: es
+  el que le van a cortar a él. El precio y las facturas, en cambio, solo van para `owner` y
+  `admin` —el mismo criterio de `PUT /tenant/currency`—; `billingVisible` lo dice, para que el
+  panel distinga «no tienes facturas» de «no te toca verlas».
+
+`blockedReason` solo trae `'command_quota_exhausted'`, que es lo único que hoy detiene la
+ejecución. Un impago no aparece: la suscripción se guarda, pero nada corta por ella todavía, y
+anunciar un corte que no ocurre asusta sin motivo.
 
 ## 5. Marketing: alcance del módulo nuevo
 
