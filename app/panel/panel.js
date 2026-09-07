@@ -102,10 +102,20 @@ $('page').addEventListener('click', async (ev) => {
   try { await fn(el, ctx, ctx.cache[section.id], reload, rerender); } catch (e) { toast(e.message || t('common.failed'), 'bad'); }
 });
 $('page').addEventListener('submit', async (ev) => {
-  const form = ev.target.closest('form[data-form]');
+  const form = ev.target.closest('form');
   if (!form) return;
-  ev.preventDefault();
   const section = SECTIONS.find((s) => s.id === currentId());
+  // La consola de comandos no «guarda» nada: encola una frase y espera la
+  // respuesta. Por eso lleva `data-send` y no `data-form`: el ciclo de abajo
+  // (Guardando… / Guardado) mentiría sobre lo que está pasando.
+  if (form.dataset.send) {
+    ev.preventDefault();
+    const run = section.act && section.act[form.dataset.send];
+    if (run) { try { await run(form, ctx, ctx.cache[section.id], reload, rerender); } catch (e) { toast(e.message || t('common.failed'), 'bad'); } }
+    return;
+  }
+  if (!form.dataset.form) return;
+  ev.preventDefault();
   const fn = section.forms && section.forms[form.dataset.form];
   if (!fn) return;
   const msg = form.querySelector('.form-msg'); const btn = form.querySelector('button[type=submit]');

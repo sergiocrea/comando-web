@@ -68,12 +68,17 @@ function approvalRow(a) {
   });
 }
 const HIST_KIND = { executed: 'ok', pending: 'warn', awaiting_approval: 'warn', cancelled: '', failed: 'bad', declined: '', expired: '' };
+/* Un turno recién registrado también llega en `pending`, y eso NO es un plan
+   esperando la palabra: es Comando pensando. Lo que distingue una cosa de la
+   otra es `kind` (`PLAN_PREVIEW`). Se conserva el camino por `status` para el
+   diálogo antiguo, que no traía `kind`. */
+const awaitsWord = (x) => x.kind === 'PLAN_PREVIEW' || (!x.kind && x.status === 'pending');
 function histRow(h) {
   const kind = HIST_KIND[h.status];
   return row({
-    ico: h.voice ? '🎤' : '💬', title: `<q>${esc(h.utterance)}</q>`,
+    ico: '💬', title: `<q>${esc(h.utterance)}</q>`,
     sub: `${esc(h.plan && h.plan !== '—' ? h.plan : (h.note || ''))} · ${esc(rel(h.at))}`,
-    primary: h.status === 'pending'
+    primary: awaitsWord(h)
       ? waBtn(t('wa.confirm'), t('hist.confirm'), 'btn sm primary')
       : chip(kind === undefined ? h.status : t('hist.' + h.status), kind || ''),
   });
@@ -105,6 +110,218 @@ const approvalActions = () => ({
   'ap:reject': async (el, ctx, d, reload) => { const reason = window.prompt(t('prompt.rejectReason')); if (!reason) return; el.disabled = true; try { await ctx.api.decideApproval(el.dataset.id, 'reject', reason); toast(t('toast.rejected'), 'ok'); reload(); } catch (e) { toast(e.message, 'bad'); el.disabled = false; } },
 });
 
+/* ======================================================== CONSOLA DE COMANDOS
+   Escribir aquí es exactamente lo mismo que escribirle por WhatsApp: el panel
+   ENCOLA la frase por la misma puerta y luego consulta el diálogo. No ejecuta
+   nada por su cuenta (plan 15 §1) —la vista previa, el CONFIRMAR, el cupo, las
+   aprobaciones y el historial viven en ese único camino, y un atajo desde el
+   navegador los duplicaría hasta que un día dejaran de coincidir—.
+
+   La consola va ENCIMA de la bandeja, no en su lugar: un cuadro de texto vacío
+   no le dice nada a quien entra por primera vez, y la lista de pendientes es
+   lo que hace que valga la pena abrir el panel.
+
+   Cuando el origen es el panel, el engine NO manda la respuesta por WhatsApp:
+   esta pantalla es el único sitio donde aparece. Por eso la consola se queda
+   mirando y por eso el aviso de los 30 s dice dónde buscarla después. */
+const POLL_MS = 1500;
+const POLL_UNTIL_MS = 30_000;
+/**
+ * El gesto que toca en cada turno sale de `kind`, no del texto ni del estado:
+ * un turno recién registrado llega con `status: 'pending'` y sin `note`, y eso
+ * es «pensando…», no un plan esperando el CONFIRMAR.
+ */
+const GESTURE = {
+  PLAN_PREVIEW: 'confirm',   // vista previa lista: falta la palabra
+  PIN_REQUIRED: 'pin',       // segundo factor; el código llega por WhatsApp
+  APPROVAL_CREATED: 'wait',  // le toca a un administrador, no al operador
+};
+const gestureOf = (e) => (/^CLARIFICATION/.test(e.kind || '') ? 'reply' : GESTURE[e.kind] || '');
+/** Mientras no haya ni plan, ni respuesta, ni desenlace, sigue pensando. */
+const stillThinking = (x) => x.status === 'pending' && !x.note && !x.plan;
+
+const consoleState = (ctx) => (ctx.console || (ctx.console = { entries: [] }));
+/* El plan viene escrito para WhatsApp, con *negritas* de asterisco. Aquí se
+   leerían como asteriscos sueltos; se traducen después de escapar, que es
+   cuando ya no puede colarse nada del texto. */
+const waMarkup = (text) => esc(text).replace(/\*([^*\n]+)\*/g, '<b>$1</b>');
+
+function consoleRow(e) {
+  const q = `<q>${esc(e.utterance)}</q>`;
+  if (e.status === 'thinking') return row({ ico: '<span class="spinner"></span>', title: q, sub: esc(t('console.thinking')) });
+  if (e.status === 'soon') return row({ ico: '🔌', title: q, sub: `<div class="ask">${askLine(e.utterance, t('console.soonAsk'))}</div>` });
+  if (e.status === 'slow') return row({ ico: '⏳', title: q, sub: esc(t('console.slow')) });
+  if (e.status === 'error') return row({ ico: '⚠️', cls: 'critical', title: q, sub: esc(e.note || t('common.failed')) });
+
+  const gesture = gestureOf(e);
+  /* El plan es una vista previa con saltos de línea: va en el bloque que ya usan
+     las aprobaciones, no aplastado en una línea de subtítulo. */
+  const preview = gesture === 'confirm' && e.plan ? `<div class="wa-preview">${waMarkup(e.plan)}</div>` : '';
+  const said = e.note || (gesture === 'confirm' ? '' : e.plan) || '';
+  const sub = `${esc(said)}${e.expiresAt && gesture ? `${said ? ' · ' : ''}${esc(t('console.expires', { when: rel(e.expiresAt) }))}` : ''}${preview}`;
+  /* La palabra exacta, no un sinónimo: «OK» ejecuta pero «dale» y 👍 piden la
+     palabra (plan 10). El botón manda lo que el worker espera leer. */
+  const primary = gesture === 'confirm'
+    ? `<button class="btn sm primary" data-act="cmd:confirm" data-key="${esc(e.key)}">${esc(t('wa.confirm'))}</button>`
+    : gesture === 'wait' || gesture === 'pin' || gesture === 'reply'
+      ? ''
+      : chip(HIST_KIND[e.status] === undefined ? e.status : t('hist.' + e.status), HIST_KIND[e.status] || '');
+  const ico = gesture === 'confirm' ? '📋' : gesture === 'pin' ? '🔑' : gesture === 'wait' ? '⏳' : gesture === 'reply' ? '❓' : e.status === 'executed' ? '✅' : '💬';
+  const main = row({ ico, cls: gesture === 'confirm' || gesture === 'pin' ? 'warning' : '', title: q, sub, primary });
+
+  if (gesture === 'wait') return main + `<div class="console-note">${esc(t('console.waitingAdmin'))}</div>`;
+  if (gesture === 'pin') return main + `<div class="console-note">${esc(t('console.pinNote'))}</div>` + replyForm(e, t('console.pin'), true);
+  if (gesture === 'reply') return main + replyForm(e, t('console.reply'), false);
+  return main;
+}
+const replyForm = (e, placeholder, numeric) => `<form class="console-reply" data-send="cmd:reply" data-key="${esc(e.key)}" autocomplete="off">
+  <input class="console-input" name="reply" type="text"${numeric ? ' inputmode="numeric" maxlength="8"' : ''} placeholder="${esc(placeholder)}" aria-label="${esc(placeholder)}">
+  <button class="btn sm primary" type="submit">${esc(t('console.send'))}</button></form>`;
+
+const consoleLog = (ctx) => {
+  const entries = consoleState(ctx).entries;
+  return entries.length ? `<div class="list">${entries.map(consoleRow).join('')}</div>` : '';
+};
+function paintLog(ctx) {
+  const host = document.getElementById('console-log');
+  if (host) host.innerHTML = consoleLog(ctx);
+}
+
+/**
+ * Consulta el diálogo hasta que el turno `entry` tiene algo que enseñar.
+ * `was` es el `kind` anterior cuando se está esperando a que CAMBIE (después
+ * de un CONFIRMAR o de un código): sin eso, la primera consulta encontraría el
+ * mismo turno de siempre y diría que ya terminó.
+ */
+async function followUp(entry, ctx, was) {
+  const deadline = Date.now() + POLL_UNTIL_MS;
+  while (Date.now() < deadline) {
+    await new Promise((r) => setTimeout(r, POLL_MS));
+    let dialogue;
+    try { dialogue = await ctx.api.commands(20); } catch (e) { continue; }
+    if (isPending(dialogue)) { entry.status = 'soon'; paintLog(ctx); return; }
+    const items = Array.isArray(dialogue) ? dialogue : (dialogue.entries || dialogue.items || []);
+    const found = items.find((x) => x.id === entry.id);
+    if (!found || stillThinking(found) || (was && found.kind === was)) continue;
+    Object.assign(entry, { status: found.status, kind: found.kind, plan: found.plan, note: found.note, expiresAt: found.expiresAt });
+    paintLog(ctx);
+    return;
+  }
+  /* Pasados los 30 s se deja de mirar: la frase ya está encolada y su respuesta
+     aparecerá abajo, en «Lo último que pediste». Insistir más tiempo gasta
+     batería para no enterarse antes. */
+  entry.status = 'slow';
+  paintLog(ctx);
+}
+
+/** Encola una frase y se queda mirando el turno que crea. */
+async function sendUtterance(utterance, ctx) {
+  const text = String(utterance || '').trim().slice(0, 1000);
+  if (!text) return;
+  const entry = { key: 'c' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6), utterance: text, at: new Date().toISOString(), status: 'thinking' };
+  consoleState(ctx).entries.unshift(entry);
+  paintLog(ctx);
+  await enqueue(entry, text, ctx);
+}
+
+/**
+ * La parte que habla con el engine, separada porque también la usan el botón
+ * de CONFIRMAR y la caja del código: los tres encolan por la misma ruta.
+ * `idem` se guarda en el turno para que un reintento sea un duplicado y no un
+ * segundo comando: el engine deriva el id de esa clave.
+ */
+async function enqueue(entry, text, ctx, was) {
+  entry.idem = entry.idem || crypto.randomUUID();
+  try {
+    const r = await ctx.api.sendCommand(text, entry.idem);
+    /* Mientras la ruta no esté publicada esto es un 404, que no es un fallo:
+       es «se activa pronto», con la misma frase lista para WhatsApp. */
+    if (isPending(r)) { entry.status = 'soon'; paintLog(ctx); return; }
+    if (r && r.id && !entry.id) entry.id = r.id;
+    /* Sin id no hay a qué mirar. Se dice y se para, en vez de sondear 30 s
+       una respuesta que no se va a poder reconocer. */
+    if (!entry.id) { entry.status = 'slow'; paintLog(ctx); return; }
+    await followUp(entry, ctx, was);
+  } catch (e) {
+    entry.status = 'error'; entry.note = e.message;
+    paintLog(ctx);
+  }
+}
+
+/* ---------------------------------------------------- el catálogo de skills
+   Las frases que Comando ya entiende, agrupadas y con nombre. La frase ES el
+   nombre, en las palabras del operador: así no hay una etiqueta aparte que se
+   pueda desincronizar de lo que realmente se ejecuta.
+   Aquí solo van las frases que se sostienen solas. Las que llevan el nombre de
+   un registro («muéstrame {name}») siguen viviendo en su fila, que es donde el
+   nombre existe. Una frase que acaba en espacio o en dos puntos está
+   incompleta a propósito («avísame cuando ») y se escribe en el campo. */
+const SKILLS = [
+  ['skills.crm', ['wa.moneyInPlay', 'wa.dealsByStage', 'wa.stalledDeals', 'wa.whatToReview']],
+  ['skills.agenda', ['wa.whatMattersToday', 'wa.thisWeek', 'wa.newReminder']],
+  ['skills.autos', ['wa.myAlerts', 'wa.whichAutomations', 'wa.newAlert', 'wa.quietHours', 'wa.noMessagesToday']],
+  ['skills.marketing', ['wa.leadsPerCampaign', 'wa.weeklyReport', 'wa.newBudgetRule', 'wa.connectAds']],
+  ['skills.cuenta', ['wa.commandsLeft', 'wa.whoUses', 'wa.lastThing', 'wa.teach']],
+];
+const isPartial = (phrase) => /[\s:]$/.test(phrase);
+function skillsView() {
+  const groups = SKILLS.map(([group, keys]) => `<div class="skills-group"><h4>${esc(t(group))}</h4><div class="skills-row">${keys.map((k) => {
+    const phrase = t(k);
+    const partial = isPartial(phrase);
+    return `<button type="button" class="skill${partial ? ' is-partial' : ''}" data-act="${partial ? 'cmd:fill' : 'cmd:run'}" data-phrase="${esc(phrase)}" title="${esc(phrase)}">${esc(partial ? phrase.trim() + '…' : phrase)}</button>`;
+  }).join('')}</div></div>`).join('');
+  return `<details class="skills"><summary>${esc(t('skills.title'))}</summary><div class="skills-body"><p class="skills-sub">${esc(t('skills.sub'))}</p>${groups}</div></details>`;
+}
+
+function consoleView(ctx) {
+  return card(t('console.title'), `<form class="console-form" data-send="cmd:send" autocomplete="off">
+      <input class="console-input" name="utterance" type="text" maxlength="1000" enterkeyhint="send" placeholder="${esc(t('console.placeholder'))}" aria-label="${esc(t('console.title'))}">
+      <button class="btn primary" type="submit">${esc(t('console.send'))}</button>
+    </form>
+    <div class="console-log" id="console-log">${consoleLog(ctx)}</div>
+    ${skillsView()}`, { sub: esc(t('console.sub')), cls: 'console' });
+}
+
+const consoleActions = () => {
+  /* Responder a un turno (el CONFIRMAR, el código, una aclaración) encola texto
+     por la MISMA ruta y luego espera a que ese mismo turno cambie de `kind`. */
+  const answer = async (entry, text, ctx) => {
+    if (!entry || !text) return;
+    const was = entry.kind;
+    /* Clave nueva: el CONFIRMAR es OTRO mensaje, no un reintento del primero.
+       Reusar la clave haría que el engine lo tomara por duplicado y no pasara
+       nada. Dentro de `enqueue` sí se conserva, para que un reintento del
+       mismo mensaje siga siendo el mismo mensaje. */
+    entry.idem = crypto.randomUUID();
+    entry.status = 'thinking'; entry.note = ''; paintLog(ctx);
+    await enqueue(entry, text, ctx, was);
+  };
+  const find = (ctx, key) => consoleState(ctx).entries.find((x) => x.key === key);
+  return {
+    'cmd:send': async (form, ctx) => {
+      const input = form.querySelector('.console-input');
+      const text = input.value;
+      input.value = '';
+      await sendUtterance(text, ctx);
+    },
+    'cmd:run': async (el, ctx) => { el.blur(); await sendUtterance(el.dataset.phrase, ctx); },
+    'cmd:fill': (el) => {
+      const input = document.querySelector('.console-form .console-input');
+      if (!input) return;
+      input.value = el.dataset.phrase;
+      input.focus();
+      input.setSelectionRange(input.value.length, input.value.length);
+    },
+    'cmd:confirm': async (el, ctx) => { el.disabled = true; await answer(find(ctx, el.dataset.key), t('wa.confirm'), ctx); },
+    'cmd:reply': async (form, ctx) => {
+      const input = form.querySelector('.console-input');
+      const text = input.value.trim();
+      input.value = '';
+      await answer(find(ctx, form.dataset.key), text, ctx);
+    },
+  };
+};
+
 /* ===================================================================== HOY */
 const hoy = {
   id: 'hoy', get title() { return t('nav.hoy'); }, get sub() { return t('sub.hoy'); }, icon: 'home',
@@ -116,7 +333,7 @@ const hoy = {
     const today = tasks.filter((t) => isToday(t.dueAt)).sort((a, b) => a.dueAt.localeCompare(b.dueAt));
     const overdue = tasks.filter((t) => isPast(t.dueAt) && !isToday(t.dueAt)).sort((a, b) => a.dueAt.localeCompare(b.dueAt));
     const hist = val(d.history, []);
-    const pendingPlan = hist.find((x) => x.status === 'pending');
+    const pendingPlan = hist.find(awaitsWord);
     const waiting = hist.filter((x) => x.status === 'awaiting_approval');
     const approvals = val(d.approvals, []).filter((a) => a.status === 'pending');
     const pipe = val(d.pipeline, null);
@@ -157,13 +374,13 @@ const hoy = {
       const top = hh.metrics.filter((m) => m.severity === 'high' || m.severity === 'warning').slice(0, 3);
       return `<div class="bars">${top.map((m) => bar(m.label, m.value, m.of || Math.max(m.value, 1), { cls: m.severity === 'high' ? 'warn' : 'blue', text: `<b>${num(m.value)}</b>${m.of ? ' / ' + num(m.of) : ''}` })).join('')}</div><div class="status-line" style="margin-top:14px">${syncLine(hh.sync)}</div>`;
     }, { what: t('hoy.review'), phrase: t('wa.whatToReview') }), { more: t('hoy.seeAll'), moreHref: '#/crm' });
-    const last = card(t('hoy.last'), part(d.history, (hs) => list(hs.filter((h) => h.status !== 'pending').slice(0, 5), histRow, t('hoy.neverWrote')), { what: t('hoy.last'), phrase: t('wa.lastThing') }),
+    const last = card(t('hoy.last'), part(d.history, (hs) => list(hs.filter((h) => !awaitsWord(h) && !(h.status === 'pending' && !h.note && !h.plan)).slice(0, 5), histRow, t('hoy.neverWrote')), { what: t('hoy.last'), phrase: t('wa.lastThing') }),
       { right: waBtn(t('wa.undo'), t('hoy.undoLast'), 'btn sm ghost') });
 
     const noCrm = me.status === 'ok' && me.crmConnected === false ? `<div class="card setup-nudge"><div class="row"><div class="row-ico ok">🔌</div><div class="row-body"><div class="row-title">${esc(t('hoy.connectCrm'))}</div><div class="row-sub">${esc(t('hoy.connectCrmSub'))}</div></div><div class="row-actions"><a class="btn sm primary" href="#/cuenta">${esc(t('hoy.connectCrmBtn'))}</a></div></div></div>` : '';
-    return `<div class="stack">${welcome}${noCrm}${kpis}${tray}<div class="two">${review}${last}</div></div>`;
+    return `<div class="stack">${welcome}${noCrm}${kpis}${consoleView(ctx)}${tray}<div class="two">${review}${last}</div></div>`;
   },
-  act: { ...recActions(), ...taskActions(), ...approvalActions() },
+  act: { ...recActions(), ...taskActions(), ...approvalActions(), ...consoleActions() },
 };
 
 /* ================================================================== AGENDA */

@@ -290,7 +290,7 @@ export const MOCK = {
     { id: 'h7', at: ago(49), utterance: 'mueve el 1101 a negociación y créame tarea de llamar el jueves', plan: 'Mover a Negociación → 1 negocio · Crear tarea «Llamar» (jue 09:00)', status: 'executed', types: ['MOVE_STAGE', 'CREATE_TASK'], ref: 'F0F0-1234', records: 1 },
     { id: 'h8', at: ago(52), utterance: 'ponle 195 al de mendoza', plan: '—', status: 'declined', types: [], ref: '', note: 'Comando: «Hoy tiene 210; 195 es bajar 7,1 %, ¿dale?» (monto absoluto aún no soportado)' },
     { id: 'h9', at: ago(75), utterance: 'manda promo-v2 a los de surco', plan: 'Enviar plantilla promo-v2 → 3 contactos · Costo S/ 3', status: 'failed', types: ['BROADCAST'], ref: '9A9A-5566', records: 3, note: 'No pude completar la ejecución. Revertí los cambios de este plan.' },
-    { id: 'h10', at: ago(98), utterance: '🎤 (nota de voz 14 s) «pásame mis negocios abiertos ordenados por monto»', plan: 'Reporte: mis negocios abiertos por monto', status: 'executed', types: ['GENERATE_REPORT'], ref: '7C7C-0011', records: 33, voice: true },
+    { id: 'h10', at: ago(98), utterance: '🎤 (nota de voz 14 s) «pásame mis negocios abiertos ordenados por monto»', plan: 'Reporte: mis negocios abiertos por monto', status: 'executed', types: ['GENERATE_REPORT'], ref: '7C7C-0011', records: 33 },
     { id: 'h11', at: ago(120), utterance: 'deshacer', plan: 'Quitar etiqueta «Frío» → 19 contactos', status: 'executed', types: ['UNTAG'], ref: '5E5E-3322', records: 19, note: 'Deshizo el plan anterior' },
   ],
 

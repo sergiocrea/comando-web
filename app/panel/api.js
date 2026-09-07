@@ -7,7 +7,7 @@
      equivalente para pedirlo por WhatsApp. Ver README.md: tabla de endpoints.
    - `createMockApi()` sirve los datos de mock-data.js con una pequeña latencia. */
 
-import { MOCK, MOCK_DELAY_MS } from './mock-data.js?v=5';
+import { MOCK, MOCK_DELAY_MS } from './mock-data.js?v=6';
 
 const PENDING = (reason) => ({ pending: true, reason });
 
@@ -30,8 +30,13 @@ export function createApi(cfg, getToken) {
     if (!res.ok) throw Object.assign(new Error(body.message || 'Error ' + res.status), { status: res.status, body });
     return body;
   }
-  const mutate = (path, method, body) => call(path, {
-    method, headers: { 'x-request-id': crypto.randomUUID(), 'idempotency-key': crypto.randomUUID() },
+  /* `idem` se pasa desde fuera cuando quien llama quiere poder REINTENTAR sin
+     duplicar: el engine deriva el id del turno de la `idempotency-key` (con el
+     tenant y el operador), así que repetir la misma clave convierte el reintento
+     en duplicado en vez de en un segundo comando. Sin ella, una clave nueva por
+     intento es lo correcto: cada clic es una orden distinta. */
+  const mutate = (path, method, body, idem) => call(path, {
+    method, headers: { 'x-request-id': crypto.randomUUID(), 'idempotency-key': idem || crypto.randomUUID() },
     body: body === undefined ? '{}' : JSON.stringify(body),
   });
   /** Un 404/501 significa «todavía no está en el engine», no un fallo. */
@@ -68,6 +73,12 @@ export function createApi(cfg, getToken) {
     health: () => optional(() => call('/crm/health'), 'health'),
     pipeline: () => optional(() => call('/crm/pipeline/summary'), 'pipeline'),
     history: () => optional(() => call('/operator/commands?limit=50'), 'history'),
+    /* La consola (plan 15): el panel ENCOLA por la misma puerta que WhatsApp y
+       después consulta el diálogo. No ejecuta: si ejecutara por su cuenta, la
+       vista previa, el CONFIRMAR, el cupo y el historial tendrían dos caminos
+       que empiezan iguales y divergen solos. */
+    sendCommand: (utterance, idem) => optional(() => mutate('/operator/commands', 'POST', { utterance }, idem), 'console'),
+    commands: (limit = 20) => optional(() => call('/operator/commands?limit=' + limit), 'console'),
     approvals: () => optional(() => call('/approvals?status=pending,approved,rejected&limit=50'), 'approvals'),
     eventRules: () => optional(() => call('/automation-rules'), 'eventRules'),
     policy: () => optional(() => call('/sales-intelligence/policy'), 'policy'),
@@ -88,6 +99,38 @@ export function createMockApi() {
   const wait = (v) => new Promise((r) => setTimeout(() => r(structuredClone(v)), MOCK_DELAY_MS));
   const log = (what, payload) => { console.info('[comando panel mock]', what, payload || ''); return wait({ ok: true }); };
   const a = MOCK.agent;
+  /* El «worker» de mentira, para poder ver el ciclo entero de la consola sin
+     engine: encola, tarda un par de segundos en planear, y una pregunta se
+     responde sola mientras que una escritura queda esperando el CONFIRMAR. */
+  const feed = structuredClone(MOCK.history);
+  const ASKS = /^(qu[eé]|cu[aá]nt|qui[eé]n|cu[aá]l|what|how|who|which|o que|quanto|quem|qual)/i;
+  const CONFIRM = /^(confirmar|confirm)$/i;
+  /* El turno aparece PRIMERO en `pending` y sin `note` —eso es «pensando…»— y
+     un momento después con su `kind`, como hace el engine de verdad. */
+  function mockEnqueue(utterance) {
+    const text = String(utterance).trim();
+    const id = 'm' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+    if (CONFIRM.test(text) || /^\d{4,8}$/.test(text)) {
+      const waiting = feed.find((x) => x.kind === 'PLAN_PREVIEW' || x.kind === 'PIN_REQUIRED');
+      if (waiting) setTimeout(() => { waiting.status = 'executed'; waiting.kind = 'EXECUTED'; waiting.note = 'Listo: etiqueta VIP en 12 registros.'; }, 1200);
+      return id;
+    }
+    /* Qué gesto sale, por el texto, para poder ver los cuatro sin engine:
+       pregunta → hecho; envío masivo → lo aprueba un administrador; dinero →
+       segundo factor; lo demás → vista previa esperando la palabra. */
+    const expiresAt = new Date(Date.now() + 9e5).toISOString();
+    const outcome = ASKS.test(text)
+      ? { status: 'executed', kind: 'EXECUTED', note: 'Tienes S/ 9.870.000 en 41 negocios abiertos.', records: 41 }
+      : /promo|masiv|broadcast|plantilla/i.test(text)
+        ? { status: 'awaiting_approval', kind: 'APPROVAL_CREATED', note: 'Envío masivo con costo S/ 120: excede tu límite.', records: 120, expiresAt }
+        : /descuento|precio|monto|discount|price|desconto/i.test(text)
+          ? { status: 'pending', kind: 'PIN_REQUIRED', note: 'Esto toca dinero. Te mandé el código por WhatsApp.', records: 15, expiresAt }
+          : { status: 'pending', kind: 'PLAN_PREVIEW', plan: '📋 *Plan*\nEtiquetar VIP → 12 contactos\nVence en 15 minutos', records: 12, expiresAt };
+    const turn = { id, at: new Date().toISOString(), utterance: text, plan: null, status: 'pending', types: [], records: 0, ref: null, kind: 'QUEUED' };
+    setTimeout(() => feed.unshift(turn), 900);
+    setTimeout(() => Object.assign(turn, outcome), 2600);
+    return id;
+  }
   return {
     mode: 'mock',
     raw: (path, options) => { log('raw ' + path, options && options.body); return wait(path.includes('whatsapp/start') ? { comandoNumber: '+51 912 000 000', code: 'K7Q2ZP', waLink: 'https://wa.me/51912000000?text=VERIFICAR%20K7Q2ZP' } : path.includes('/auth/language') ? { status: 'ok' } : path.includes('reconcile') ? { status: 'connected' } : path.includes('connect-sessions') ? { token: 'mock', connectionId: 'mock-conn' } : { ok: true, purged: true, purgeAfter: new Date(Date.now() + 7 * 864e5).toISOString() }); },
@@ -110,7 +153,9 @@ export function createMockApi() {
     calendar: () => wait(MOCK.calendar),
     health: () => wait(MOCK.health),
     pipeline: () => wait(MOCK.pipeline),
-    history: () => wait(MOCK.history),
+    history: () => wait(feed),
+    sendCommand: (utterance) => wait({ id: mockEnqueue(utterance), status: 'accepted' }),
+    commands: () => wait(feed),
     approvals: () => wait(MOCK.approvals),
     eventRules: () => wait(a.eventRules),
     policy: () => wait(a.policy),
