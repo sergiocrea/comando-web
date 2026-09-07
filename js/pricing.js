@@ -7,25 +7,59 @@
    cambia en inglés y portugués. Lo que NO cambia son los números: un plan de
    US$ 8 con 70 000 contactos es el mismo plan en los tres, y tenerlo escrito
    una sola vez es lo que impide que un precio se quede viejo en un idioma.
+
+   Y por qué los números están escritos y no se piden al motor: ver
+   `tooling/plans-check.mjs`. En resumen: una página de precios que espera a la
+   red puede salir vacía, y salir vacía es peor que salir desactualizada. Lo que
+   sí hay es UNA copia de cada número —PLAN_LADDER y ADDONS, aquí abajo— y una
+   comprobación que grita cuando deja de coincidir con lo que se cobra.
    ============================================================ */
+
+/**
+ * La escalera de planes: la única copia de cada número en todo el archivo.
+ *
+ * Antes cada cifra estaba escrita tantas veces como frases la mencionaban: el
+ * «30» del plan gratis vivía en la tarjeta y otra vez en el FAQ, en tres
+ * idiomas. Cambiar un plan obligaba a acordarse de siete sitios, y olvidarse de
+ * uno no rompe nada visible: la página simplemente promete algo que ya no es.
+ * Ahora las frases llevan marcas —`{gratis.comandos}`— que se rellenan al
+ * pintar, así que solo hay un sitio donde equivocarse.
+ *
+ * `code` es el código del plan en el motor (`free`, no `gratis`): es lo que
+ * permite a `tooling/plans-check.mjs` comparar esto con `/v1/public/plans`.
+ */
+const PLAN_LADDER = [
+  { id: 'gratis',  code: 'free',    price: 0,               contacts: 20000,  commands: 30,   connections: 1 },
+  { id: 'basico',  code: 'basico',  price: 3, listPrice: 6, contacts: 20000,  commands: 200,  connections: 2 },
+  { id: 'starter', code: 'starter', price: 8,               contacts: 70000,  commands: 700,  connections: 5 },
+  { id: 'pro',     code: 'pro',     price: 20,              contacts: 200000, commands: 2000, connections: null },
+];
+
+/** Los paquetes que se suman sin cambiar de plan. Misma regla: una sola copia. */
+const ADDONS = {
+  contacts: { amount: 20000, price: 1 },
+  commands: { amount: 500,   price: 8 },
+};
+
 const PRICING_CONFIG = {
   billing: { annualFreeMonths: 2 },          // anual = precio mensual × 10 / 12
   featuredPlan: 'starter',
   cta: { trialBase: '/app/', trialLabel: 'Elegir plan', freeLabel: 'Empezar gratis', enterpriseHref: '#pricing-form', enterpriseLabel: 'Habla con ventas' },
-  title: 'Haz menos trabajo manual desde US$ 3 al mes.',
+  title: 'Haz menos trabajo manual desde {basico.precio} al mes.',
   subtitle: 'Actualiza el CRM, crea seguimientos y recibe alertas desde WhatsApp. Prueba gratis.',
   // Cada plan muestra solo 4 líneas: contactos, comandos, usuario y un diferencial.
+  // Aquí va lo que es presentación; los números salen de PLAN_LADDER por `id`.
   plans: [
-    { id: 'gratis',  name: 'Gratis',  price: 0,  contacts: 20000, commands: 30,   crms: '<b>1</b> CRM conectado', note: 'Prueba individual, sin tarjeta.' },
-    { id: 'basico',  name: 'Básico',  price: 3,  listPrice: 6, contacts: 20000, commands: 200,  crms: '<b>2</b> CRM conectados', ads: '<b>1</b> cuenta de Meta Ads' },
-    { id: 'starter', name: 'Starter', price: 8,  contacts: 70000, commands: 700,  crms: '<b>5</b> CRM conectados', ads: '<b>3</b> cuentas de anuncios' },
-    { id: 'pro',     name: 'Pro',     price: 20, contacts: 200000, commands: 2000, crms: '<b>CRM ilimitados</b>', ads: '<b>Anuncios ilimitados</b>' },
+    { id: 'gratis',  name: 'Gratis',  crms: '<b>{gratis.conexiones}</b> CRM conectado',  note: 'Prueba individual, sin tarjeta.' },
+    { id: 'basico',  name: 'Básico',  crms: '<b>{basico.conexiones}</b> CRM conectados', ads: '<b>1</b> cuenta de Meta Ads' },
+    { id: 'starter', name: 'Starter', crms: '<b>{starter.conexiones}</b> CRM conectados', ads: '<b>3</b> cuentas de anuncios' },
+    { id: 'pro',     name: 'Pro',     crms: '<b>CRM ilimitados</b>', ads: '<b>Anuncios ilimitados</b>' },
   ],
-  enterpriseLine: '¿Más de 200 000 contactos, integraciones avanzadas o soporte dedicado?',
+  enterpriseLine: '¿Más de {pro.contactos} contactos, integraciones avanzadas o soporte dedicado?',
   commandNote: 'Un comando es cada pedido que le haces a Comando por WhatsApp, por texto o por audio. Las confirmaciones y las respuestas no cuentan.',
   addons: [
-    { label: '+20 000 contactos', price: 1 },
-    { label: '+500 comandos',    price: 8 },
+    { id: 'contacts', label: '+{addon.contactos} contactos' },
+    { id: 'commands', label: '+{addon.comandos} comandos' },
   ],
   addonsIntro: '¿Te quedas corto? Suma paquetes sin cambiar de plan:',
   overageNote: 'Te avisamos al 80 % de tu límite. Nunca cortamos el servicio sin aviso.',
@@ -38,22 +72,10 @@ const PRICING_CONFIG = {
     'Comandos por texto o audio de WhatsApp',
     'Un plan individual con comandos propios',
   ],
-  comparison: {
-    title: '¿Cuánto es esto frente a tu CRM?',
-    intro: 'Comando complementa a tu CRM, no lo sustituye. Referencia: precios de lista de HubSpot 2026, facturación anual.',
-    rows: [
-      { contacts: 'Hasta 20 000',      hubspot: 'Marketing Hub Starter: $20/asiento/mes (1 000 contactos; +$50 por cada 1 000)', comando: 'Básico: $3/usuario/mes, 20 000 contactos a tu alcance' },
-      { contacts: '20 000 – 70 000',  hubspot: 'Marketing Hub Professional: desde $890/mes (2 000 contactos; +$250 por 5 000)', comando: 'Starter: $8/usuario/mes, 70 000 contactos a tu alcance' },
-      { contacts: '70 000 – 200 000', hubspot: 'Marketing Hub Enterprise: desde $3 600/mes (10 000 contactos)', comando: 'Pro: $20/mes, 200 000 contactos a tu alcance' },
-      { contacts: 'Usuario', hubspot: 'Sales Hub Professional: $90/asiento/mes', comando: 'Plan individual desde $3/mes' },
-    ],
-    message: 'Actualiza, da seguimiento y recibe alertas sin abrir el CRM.',
-    footnote: 'Precios de HubSpot sujetos a cambio. Comando funciona con cualquier plan de HubSpot, incluido el gratuito.',
-  },
   faq: [
-    { q: '¿Cómo se calcula el precio?', a: 'Cada persona usa un plan según cuántos contactos de su CRM necesita tener a su alcance. Si dos usuarios necesitan hasta 20 000 contactos cada uno, cada uno usa un plan Básico de US$ 3 al mes. Puedes cambiar de plan cuando quieras; se prorratea.' },
-    { q: '¿Qué cuenta como comando y qué pasa si me paso?', a: 'Un comando es cada pedido que le haces a Comando por WhatsApp, por texto o por audio; una nota de voz cuenta como 1,5. Las confirmaciones («sí», «ok») y las respuestas de Comando no cuentan. Te avisamos al 80 % del cupo y nunca cortamos el servicio sin aviso: puedes sumar paquetes de 500 comandos por $8 o subir de plan.' },
-    { q: '¿Qué incluye el plan Gratis?', a: '30 comandos para una persona, con hasta 20 000 contactos a tu alcance y 1 CRM conectado, sin tarjeta. Cuando se te acaben, eliges un plan y sigues donde ibas.' },
+    { q: '¿Cómo se calcula el precio?', a: 'Cada persona usa un plan según cuántos contactos de su CRM necesita tener a su alcance. Si dos usuarios necesitan hasta {basico.contactos} contactos cada uno, cada uno usa un plan Básico de {basico.precio} al mes. Puedes cambiar de plan cuando quieras; se prorratea.' },
+    { q: '¿Qué cuenta como comando y qué pasa si me paso?', a: 'Un comando es cada pedido que le haces a Comando por WhatsApp, por texto o por audio; una nota de voz cuenta como 1,5. Las confirmaciones («sí», «ok») y las respuestas de Comando no cuentan. Te avisamos al 80 % del cupo y nunca cortamos el servicio sin aviso: puedes sumar paquetes de {addon.comandos} comandos por {addon.comandosPrecio} o subir de plan.' },
+    { q: '¿Qué incluye el plan Gratis?', a: '{gratis.comandos} comandos para una persona, con hasta {gratis.contactos} contactos a tu alcance y {gratis.conexiones} CRM conectado, sin tarjeta. Cuando se te acaben, eliges un plan y sigues donde ibas.' },
     { q: '¿Cada cuánto se actualiza mi CRM en Comando?', a: 'Cuando tu CRM envía eventos, los cambios llegan en tiempo real. Cuando no los envía, Comando revisa los cambios cada 6 horas en Básico, cada 30 minutos en Starter y cada 5 minutos en Pro.' },
     { q: '¿Comando les escribe a mis clientes?', a: 'No desde tu número personal: Meta bloquea los envíos automáticos desde WhatsApp no oficial. Comando prepara el mensaje y te lo entrega listo para enviarlo con un toque (modo asistido), así que no necesitas contratar la API de WhatsApp Business para empezar. Si conectas un número oficial de WhatsApp Business, los envíos automáticos con plantillas aprobadas quedan disponibles.' },
     { q: '¿Qué pasa si pido algo que mi CRM no permite?', a: 'Comando te lo dice y te propone la alternativa que sí puede hacer (por ejemplo, crear la tarea en vez de llamar, o contar desde hoy si tu CRM no guarda historial de ese campo).' },
@@ -82,27 +104,27 @@ const PRICING_I18N = {
       formSaved: 'Done, we have your details. Tell us which CRM you use and we will let you know first.',
     },
     cta: { trialLabel: 'Choose plan', freeLabel: 'Start free', enterpriseLabel: 'Talk to sales' },
-    title: 'Do less manual work from US$ 3 a month.',
+    title: 'Do less manual work from {basico.precio} a month.',
     subtitle: 'Update the CRM, create follow-ups and get alerts from WhatsApp. Free to try.',
     planNames: { gratis: 'Free', basico: 'Basic', starter: 'Starter', pro: 'Pro' },
     planCrms: {
-      gratis: '<b>1</b> CRM connected', basico: '<b>2</b> CRMs connected',
-      starter: '<b>5</b> CRMs connected', pro: '<b>Unlimited CRMs</b>',
+      gratis: '<b>{gratis.conexiones}</b> CRM connected', basico: '<b>{basico.conexiones}</b> CRMs connected',
+      starter: '<b>{starter.conexiones}</b> CRMs connected', pro: '<b>Unlimited CRMs</b>',
     },
     planAds: {
       basico: '<b>1</b> Meta Ads account', starter: '<b>3</b> ad accounts',
       pro: '<b>Unlimited ads</b>',
     },
     planNotes: { gratis: 'Individual trial, no card.' },
-    enterpriseLine: 'More than 200,000 contacts, advanced integrations or dedicated support?',
+    enterpriseLine: 'More than {pro.contactos} contacts, advanced integrations or dedicated support?',
     commandNote: 'A command is every request you make to Comando on WhatsApp, by text or by voice. Confirmations and replies do not count.',
-    addonLabels: { '+20 000 contactos': '+20,000 contacts', '+500 comandos': '+500 commands' },
+    addonLabels: { contacts: '+{addon.contactos} contacts', commands: '+{addon.comandos} commands' },
     addonsIntro: 'Running short? Add packs without changing plan:',
     overageNote: 'We warn you at 80 % of your limit. We never cut the service without telling you.',
     faq: [
-      { q: 'How is the price calculated?', a: 'Each person uses a plan based on how many CRM contacts they need within reach. If two users each need up to 20,000 contacts, each uses a Basic plan at US$ 3 a month. You can change plan whenever you want; it is prorated.' },
-      { q: 'What counts as a command and what happens if I go over?', a: 'A command is every request you make to Comando on WhatsApp, by text or by voice; a voice note counts as 1.5. Confirmations ("yes", "ok") and Comando\'s replies do not count. We warn you at 80 % of your quota and never cut the service without telling you: you can add packs of 500 commands for $8 or move up a plan.' },
-      { q: 'What does the Free plan include?', a: '30 commands for one person, with up to 20,000 contacts within reach and 1 CRM connected, no card. When they run out, you pick a plan and carry on where you were.' },
+      { q: 'How is the price calculated?', a: 'Each person uses a plan based on how many CRM contacts they need within reach. If two users each need up to {basico.contactos} contacts, each uses a Basic plan at {basico.precio} a month. You can change plan whenever you want; it is prorated.' },
+      { q: 'What counts as a command and what happens if I go over?', a: 'A command is every request you make to Comando on WhatsApp, by text or by voice; a voice note counts as 1.5. Confirmations ("yes", "ok") and Comando\'s replies do not count. We warn you at 80 % of your quota and never cut the service without telling you: you can add packs of {addon.comandos} commands for {addon.comandosPrecio} or move up a plan.' },
+      { q: 'What does the Free plan include?', a: '{gratis.comandos} commands for one person, with up to {gratis.contactos} contacts within reach and {gratis.conexiones} CRM connected, no card. When they run out, you pick a plan and carry on where you were.' },
       { q: 'How often is my CRM refreshed in Comando?', a: 'When your CRM sends events, changes arrive in real time. When it does not, Comando checks for changes every 6 hours on Basic, every 30 minutes on Starter and every 5 minutes on Pro.' },
       { q: 'Does Comando message my customers?', a: 'Not from your personal number: Meta blocks automated sends from unofficial WhatsApp. Comando prepares the message and hands it to you ready to send with one tap (assisted mode), so you do not need the WhatsApp Business API to start. If you connect an official WhatsApp Business number, automated sends with approved templates become available.' },
       { q: 'What if I ask for something my CRM does not allow?', a: 'Comando tells you and offers the alternative it can do (for example, creating the task instead of calling, or counting from today if your CRM keeps no history of that field).' },
@@ -127,27 +149,27 @@ const PRICING_I18N = {
       formSaved: 'Pronto, já temos seus dados. Diga qual é o seu CRM e a gente avisa você primeiro.',
     },
     cta: { trialLabel: 'Escolher plano', freeLabel: 'Começar grátis', enterpriseLabel: 'Falar com vendas' },
-    title: 'Faça menos trabalho manual a partir de US$ 3 por mês.',
+    title: 'Faça menos trabalho manual a partir de {basico.precio} por mês.',
     subtitle: 'Atualize o CRM, crie acompanhamentos e receba alertas pelo WhatsApp. Teste grátis.',
     planNames: { gratis: 'Grátis', basico: 'Básico', starter: 'Starter', pro: 'Pro' },
     planCrms: {
-      gratis: '<b>1</b> CRM conectado', basico: '<b>2</b> CRMs conectados',
-      starter: '<b>5</b> CRMs conectados', pro: '<b>CRMs ilimitados</b>',
+      gratis: '<b>{gratis.conexiones}</b> CRM conectado', basico: '<b>{basico.conexiones}</b> CRMs conectados',
+      starter: '<b>{starter.conexiones}</b> CRMs conectados', pro: '<b>CRMs ilimitados</b>',
     },
     planAds: {
       basico: '<b>1</b> conta de Meta Ads', starter: '<b>3</b> contas de anúncios',
       pro: '<b>Anúncios ilimitados</b>',
     },
     planNotes: { gratis: 'Teste individual, sem cartão.' },
-    enterpriseLine: 'Mais de 200 000 contatos, integrações avançadas ou suporte dedicado?',
+    enterpriseLine: 'Mais de {pro.contactos} contatos, integrações avançadas ou suporte dedicado?',
     commandNote: 'Um comando é cada pedido que você faz ao Comando pelo WhatsApp, por texto ou por áudio. As confirmações e as respostas não contam.',
-    addonLabels: { '+20 000 contactos': '+20 000 contatos', '+500 comandos': '+500 comandos' },
+    addonLabels: { contacts: '+{addon.contactos} contatos', commands: '+{addon.comandos} comandos' },
     addonsIntro: 'Ficou curto? Some pacotes sem trocar de plano:',
     overageNote: 'A gente avisa a 80 % do seu limite. Nunca cortamos o serviço sem avisar.',
     faq: [
-      { q: 'Como o preço é calculado?', a: 'Cada pessoa usa um plano conforme quantos contatos do CRM precisa ter ao alcance. Se dois usuários precisam de até 20 000 contatos cada, cada um usa um plano Básico de US$ 3 por mês. Você pode trocar de plano quando quiser; é proporcional.' },
-      { q: 'O que conta como comando e o que acontece se eu passar?', a: 'Um comando é cada pedido que você faz ao Comando pelo WhatsApp, por texto ou por áudio; um áudio conta como 1,5. As confirmações («sim», «ok») e as respostas do Comando não contam. A gente avisa a 80 % da cota e nunca corta o serviço sem avisar: você pode somar pacotes de 500 comandos por $8 ou subir de plano.' },
-      { q: 'O que inclui o plano Grátis?', a: '30 comandos para uma pessoa, com até 20 000 contatos ao alcance e 1 CRM conectado, sem cartão. Quando acabarem, você escolhe um plano e continua de onde parou.' },
+      { q: 'Como o preço é calculado?', a: 'Cada pessoa usa um plano conforme quantos contatos do CRM precisa ter ao alcance. Se dois usuários precisam de até {basico.contactos} contatos cada, cada um usa um plano Básico de {basico.precio} por mês. Você pode trocar de plano quando quiser; é proporcional.' },
+      { q: 'O que conta como comando e o que acontece se eu passar?', a: 'Um comando é cada pedido que você faz ao Comando pelo WhatsApp, por texto ou por áudio; um áudio conta como 1,5. As confirmações («sim», «ok») e as respostas do Comando não contam. A gente avisa a 80 % da cota e nunca corta o serviço sem avisar: você pode somar pacotes de {addon.comandos} comandos por {addon.comandosPrecio} ou subir de plano.' },
+      { q: 'O que inclui o plano Grátis?', a: '{gratis.comandos} comandos para uma pessoa, com até {gratis.contactos} contatos ao alcance e {gratis.conexiones} CRM conectado, sem cartão. Quando acabarem, você escolhe um plano e continua de onde parou.' },
       { q: 'De quanto em quanto tempo meu CRM é atualizado no Comando?', a: 'Quando seu CRM envia eventos, as mudanças chegam em tempo real. Quando não envia, o Comando verifica as mudanças a cada 6 horas no Básico, a cada 30 minutos no Starter e a cada 5 minutos no Pro.' },
       { q: 'O Comando escreve para os meus clientes?', a: 'Não pelo seu número pessoal: a Meta bloqueia envios automáticos pelo WhatsApp não oficial. O Comando prepara a mensagem e entrega pronta para você enviar com um toque (modo assistido), então não precisa contratar a API do WhatsApp Business para começar. Se conectar um número oficial do WhatsApp Business, os envios automáticos com modelos aprovados ficam disponíveis.' },
       { q: 'E se eu pedir algo que meu CRM não permite?', a: 'O Comando diz isso e propõe a alternativa que ele consegue fazer (por exemplo, criar a tarefa em vez de ligar, ou contar a partir de hoje se seu CRM não guarda histórico desse campo).' },
@@ -178,15 +200,58 @@ const PRICING_I18N = {
     formSending: 'Enviando…',
     formSaved: 'Listo, ya tenemos tus datos. Dinos cuál es tu CRM y te avisamos primero.',
   };
+  const state = { annual: false };
+  const NUMBERS = { es: 'es-PE', en: 'en-US', pt: 'pt-BR' }[LANG] ?? 'es-PE';
+  const fmtN = (n) => n.toLocaleString(NUMBERS).replace(/,/g, ' ').replace(/\./g, ' ');
+  function money(usd) { if (usd == null) return null; const v = Number.isInteger(usd) ? usd : Math.round(usd * 100) / 100; return 'US$ ' + v.toLocaleString(NUMBERS); }
+  function monthly(p) { if (p == null) return null; return state.annual ? p * (12 - C.billing.annualFreeMonths) / 12 : p; }
+
+  /**
+   * Las marcas `{plan.campo}` de los textos, resueltas contra PLAN_LADDER.
+   *
+   * Se resuelven aquí y no al escribirlas porque el número también se formatea
+   * según el idioma: la misma frase dice «20 000» y «20,000» sin que nadie
+   * tenga que acordarse de las dos.
+   */
+  const TOKENS = (() => {
+    const map = {};
+    for (const plan of PLAN_LADDER) {
+      map[plan.id + '.comandos'] = fmtN(plan.commands);
+      map[plan.id + '.contactos'] = plan.contacts == null ? '' : fmtN(plan.contacts);
+      map[plan.id + '.conexiones'] = plan.connections == null ? '' : fmtN(plan.connections);
+      map[plan.id + '.precio'] = money(plan.price);
+    }
+    map['addon.contactos'] = fmtN(ADDONS.contacts.amount);
+    map['addon.contactosPrecio'] = money(ADDONS.contacts.price);
+    map['addon.comandos'] = fmtN(ADDONS.commands.amount);
+    map['addon.comandosPrecio'] = money(ADDONS.commands.price);
+    return map;
+  })();
+  /* Una marca sin valor se queda escrita tal cual en la página. Es feo a
+     propósito: un hueco vacío pasa desapercibido y una frase a la que le falta
+     el número se lee como si el plan no tuviera límite. */
+  const fill = (value) => {
+    if (typeof value === 'string') return value.replace(/\{([a-z]+\.[a-zA-Z]+)\}/g, (whole, key) => TOKENS[key] ?? whole);
+    if (Array.isArray(value)) return value.map(fill);
+    if (value && typeof value === 'object') return Object.fromEntries(Object.entries(value).map(([k, v]) => [k, fill(v)]));
+    return value;
+  };
+
   // Los números y los enlaces son los mismos en los tres idiomas; solo las
   // palabras cambian. Así un precio nuevo no puede quedarse viejo en un idioma.
-  const C = L
+  const LADDER = Object.fromEntries(PLAN_LADDER.map((plan) => [plan.id, plan]));
+  const BASE = {
+    ...PRICING_CONFIG,
+    plans: PRICING_CONFIG.plans.map((plan) => ({ ...LADDER[plan.id], ...plan })),
+    addons: PRICING_CONFIG.addons.map((addon) => ({ ...addon, price: ADDONS[addon.id].price })),
+  };
+  const C = fill(L
     ? {
-        ...PRICING_CONFIG,
-        cta: { ...PRICING_CONFIG.cta, ...L.cta },
+        ...BASE,
+        cta: { ...BASE.cta, ...L.cta },
         title: L.title,
         subtitle: L.subtitle,
-        plans: PRICING_CONFIG.plans.map((plan) => ({
+        plans: BASE.plans.map((plan) => ({
           ...plan,
           name: L.planNames[plan.id] ?? plan.name,
           ...(plan.crms ? { crms: L.planCrms[plan.id] ?? plan.crms } : {}),
@@ -195,17 +260,12 @@ const PRICING_I18N = {
         })),
         enterpriseLine: L.enterpriseLine,
         commandNote: L.commandNote,
-        addons: PRICING_CONFIG.addons.map((addon) => ({ ...addon, label: L.addonLabels[addon.label] ?? addon.label })),
+        addons: BASE.addons.map((addon) => ({ ...addon, label: L.addonLabels[addon.id] ?? addon.label })),
         addonsIntro: L.addonsIntro,
         overageNote: L.overageNote,
         faq: L.faq,
       }
-    : PRICING_CONFIG;
-  const state = { annual: false };
-  const NUMBERS = { es: 'es-PE', en: 'en-US', pt: 'pt-BR' }[LANG] ?? 'es-PE';
-  const fmtN = (n) => n.toLocaleString(NUMBERS).replace(/,/g, ' ').replace(/\./g, ' ');
-  function money(usd) { if (usd == null) return null; const v = Number.isInteger(usd) ? usd : Math.round(usd * 100) / 100; return 'US$ ' + v.toLocaleString(NUMBERS); }
-  function monthly(p) { if (p == null) return null; return state.annual ? p * (12 - C.billing.annualFreeMonths) / 12 : p; }
+    : BASE);
   const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 
   function renderHead() {

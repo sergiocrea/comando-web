@@ -51,6 +51,32 @@ sin que nadie lo supiera.
 - **Probar en local**: `npx wrangler pages dev . --port 8788 --kv LEADS_KV`. Con
   `python3 -m http.server 8000` no hay función y se ve el camino de respaldo.
 
+## Los precios que anuncia la página
+
+La escalera de planes (comandos, contactos, CRM conectados y precio) no se
+decide aquí: vive en la base del motor y se publica desde la consola de
+administración de `comando-pro`. En la landing está escrita, en un solo sitio
+—`PLAN_LADDER` y `ADDONS`, arriba de `js/pricing.js`—, y las frases que la
+mencionan llevan marcas (`{gratis.comandos}`, `{basico.precio}`) que se rellenan
+al pintar, en los tres idiomas.
+
+Está escrita a propósito y no pedida al motor: una página de precios que espera
+a la red puede salir vacía, y una página de precios vacía no vende nada y encima
+parece rota. El razonamiento completo —y por qué hoy `GET /v1/public/plans` ni
+siquiera trae los precios— está en la cabecera de `tooling/plans-check.mjs`.
+
+Lo que evita que se quede vieja es esa comprobación:
+
+```bash
+node tooling/plans-check.mjs            # contra app.comando.pro
+node tooling/plans-check.mjs --url http://localhost:3000/api
+```
+
+Compara lo escrito con lo que sirve el motor y falla si dejan de coincidir. El
+flujo `.github/workflows/precios.yml` la corre a diario, no solo al desplegar:
+entre dos despliegues de la landing pueden pasar semanas y el precio pudo
+cambiar en cualquiera de ellas.
+
 ## Assets (`assets/`)
 
 - `videos/benefits-v2.mp4` (+ `img/benefits-poster-v1.jpg`) — video de fondo de la sección "Modo automático" (personas usando Comando: gimnasio, auto, etc.). **Pendiente de aportar**: mientras no exista, se ve un fondo degradado. Recomendado: 1920×1080, H.264, sin audio, 10–20 s en loop, < 6 MB.

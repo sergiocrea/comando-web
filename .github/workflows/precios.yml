@@ -1,0 +1,34 @@
+# La página de precios promete cifras que se deciden en otro repositorio: la
+# escalera de planes vive en la base del motor y se publica desde la consola de
+# administración. Nadie se acuerda de venir aquí a cambiarlas el mismo día.
+#
+# Por eso se comprueban solas todos los días, y no solo al desplegar: entre dos
+# despliegues de la landing pueden pasar semanas, y el precio pudo cambiar en
+# cualquiera de ellas. La comprobación va aparte del despliegue a propósito —un
+# motor caído no debe impedir publicar una corrección de texto—; lo que hace es
+# poner el flujo en rojo para que alguien lo mire.
+name: Los precios anunciados siguen siendo los que se cobran
+
+on:
+  schedule:
+    - cron: '17 12 * * *'
+  push:
+    branches: [main]
+    paths:
+      - 'js/pricing.js'
+      - 'tooling/plans-check.mjs'
+      - '.github/workflows/precios.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  comprobar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node tooling/plans-check.mjs
