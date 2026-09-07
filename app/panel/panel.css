@@ -52,11 +52,16 @@ q { quotes: "“" "”"; }
 .side-foot b { color: var(--g800); display: block; font-weight: 600; }
 
 .tabbar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 40; display: grid; grid-template-columns: repeat(6, 1fr); background: rgba(255, 255, 255, .92); backdrop-filter: blur(10px); border-top: 1px solid var(--line); padding: 6px 4px calc(6px + env(safe-area-inset-bottom)); }
-.tabbar a { display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 6px 2px; border-radius: 10px; color: var(--g600); text-decoration: none; font-size: 10.5px; font-weight: 600; position: relative; min-height: 48px; }
+.tabbar a { display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 6px 2px; border-radius: 10px; color: var(--g600); text-decoration: none; font-size: 10.5px; font-weight: 600; position: relative; min-height: 48px; min-width: 0; }
 .tabbar a .nav-ico { width: 24px; height: 24px; color: var(--g500); }
 .tabbar a .nav-ico svg { width: 22px; height: 22px; }
 .tabbar a.is-on { color: var(--primary-dark); }
 .tabbar a.is-on .nav-ico { color: var(--primary); }
+/* «Automatizaciones» no cabe en una sexta parte de una pantalla de 360 px. Se
+   recorta en la barra de abajo en vez de inventar un segundo nombre para la
+   misma sección: el nombre completo está en el título de la página, en la barra
+   lateral y en el DOM (los lectores de pantalla lo leen entero). */
+.tabbar a .nav-label { max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .tabbar a .nav-badge { position: absolute; top: 2px; right: calc(50% - 22px); margin: 0; font-size: 10px; padding: 0 5px; border-radius: 8px; background: var(--error); color: #fff; }
 
 .main { min-width: 0; }
@@ -384,3 +389,40 @@ ul.plain { margin: 0; padding-left: 18px; color: var(--g600); line-height: 1.7; 
 }
 .lang-picker select:hover { border-color: var(--g800, #1C252E); }
 .lang-picker select:focus-visible { outline: 2px solid var(--g800, #1C252E); outline-offset: 1px; }
+
+/* ---------- la consola de comandos y el catálogo de skills (plan 15) ----------
+   Va encima de la bandeja, no en su lugar: la lista de pendientes es lo que
+   hace que valga la pena abrir el panel, y un cuadro vacío no dice nada. */
+.card.console { border: 1px solid rgba(0, 167, 111, .3); }
+.console-form { display: flex; gap: 10px; align-items: center; }
+.console-input { flex: 1 1 auto; min-width: 0; font: inherit; font-size: 16px; padding: 12px 14px; border-radius: 10px; border: 1px solid rgba(145, 158, 171, .32); background: #fff; color: var(--g800); }
+.console-input::placeholder { color: var(--g500); }
+.console-input:focus { outline: none; border: 2px solid var(--primary); padding: 11px 13px; }
+.console-form .btn.primary { padding: 11px 18px; }
+.console-log:not(:empty) { margin-top: 14px; }
+.console-log .row-title q { font-style: normal; }
+.console-log .spinner { margin-top: 4px; }
+
+.console-note { font-size: 13px; color: var(--warning-ink); background: var(--warning-soft); border-radius: 8px; padding: 8px 12px; margin: 0 0 8px; }
+.console-reply { display: flex; gap: 8px; align-items: center; margin: 0 0 12px; }
+.console-reply .console-input { font-size: 15px; padding: 9px 12px; }
+.console-reply .console-input[inputmode="numeric"] { max-width: 160px; letter-spacing: .1em; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+.console-reply .console-input:focus { border-width: 2px; padding: 8px 11px; }
+.console-log .wa-preview { margin-top: 8px; }
+
+.skills { margin-top: 14px; border-top: var(--line-dash); padding-top: 12px; }
+.skills > summary { cursor: pointer; font-size: 13px; font-weight: 700; color: var(--primary-dark); list-style: none; display: inline-flex; align-items: center; gap: 6px; }
+.skills > summary::-webkit-details-marker { display: none; }
+.skills > summary::before { content: ""; width: 0; height: 0; border: 5px solid transparent; border-left-color: currentColor; transition: transform .15s; transform-origin: 3px 50%; }
+.skills[open] > summary::before { transform: rotate(90deg); }
+.skills-body { padding-top: 10px; display: grid; gap: 14px; }
+.skills-sub { font-size: 13px; color: var(--g600); line-height: 1.6; }
+.skills-group h4 { font-size: 12px; text-transform: uppercase; letter-spacing: .04em; color: var(--g500); margin-bottom: 8px; }
+.skills-row { display: flex; flex-wrap: wrap; gap: 8px; }
+.skill { font: inherit; font-size: 13px; line-height: 1.4; text-align: left; border: 1px solid rgba(145, 158, 171, .32); background: #fff; color: var(--g800); border-radius: 8px; padding: 6px 12px; cursor: pointer; }
+.skill:hover { border-color: var(--primary); background: var(--primary-soft); color: var(--primary-dark); }
+.skill.is-partial { border-style: dashed; color: var(--g600); }
+@media (max-width: 560px) {
+  .console-form { flex-wrap: wrap; }
+  .console-form .btn.primary { flex: 1 0 100%; justify-content: center; }
+}

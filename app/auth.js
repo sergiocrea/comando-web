@@ -1,7 +1,7 @@
 /* Acceso a Comando (/app/): iniciar sesión o crear cuenta con Clerk y pasar al panel.
    Los pasos siguientes (vincular WhatsApp, conectar el CRM) viven dentro de /app/panel/.
    Sin build: ClerkJS se carga desde el Frontend API de la instancia. */
-import './strings.js?v=2';
+import './strings.js?v=4';
 import { initLocale, mountLanguagePicker, onLocaleChange, locale, t } from './i18n.js?v=1';
 
 initLocale();
@@ -22,6 +22,34 @@ function paint() {
   }
 }
 
+/**
+ * Cuántos comandos regala el plan gratis, según el catálogo publicado.
+ *
+ * El número estaba escrito en el diccionario, en tres idiomas. Coincidía con la
+ * base, pero el día que se cambie el plan la pantalla de registro seguiría
+ * prometiendo lo de antes, y una promesa comercial equivocada es la peor clase
+ * de dato en duro. `GET /v1/public/plans` sirve la misma vista que manda en el
+ * cobro, es pública y viene cacheada cinco minutos.
+ *
+ * Si no llega, NO se inventa un número: el subtítulo se queda sin cifra. Y no
+ * se espera indefinidamente: esto va en paralelo con la carga de ClerkJS, así
+ * que en la práctica no añade espera, pero si el motor no contesta la pantalla
+ * de acceso no se queda colgada por un adorno.
+ */
+async function freeCommandLimit(engineUrl) {
+  if (!engineUrl) return null;
+  try {
+    const ctl = new AbortController();
+    const timer = setTimeout(() => ctl.abort(), 2500);
+    const res = await fetch(String(engineUrl).replace(/\/$/, '') + '/v1/public/plans', { signal: ctl.signal });
+    clearTimeout(timer);
+    if (!res.ok) return null;
+    const plans = (await res.json()).plans || [];
+    const free = plans.find((x) => x.code === 'free' || x.code === 'gratis');
+    return free && typeof free.commandLimit === 'number' ? free.commandLimit : null;
+  } catch (e) { return null; }
+}
+
 (function () {
   const cfg = window.COMANDO_CONFIG;
   const $ = (id) => document.getElementById(id);
@@ -40,7 +68,12 @@ function paint() {
       s.src = 'https://' + cfg.clerkFrontendApi + '/npm/@clerk/clerk-js@5/dist/clerk.browser.js';
       s.setAttribute('data-clerk-publishable-key', cfg.clerkPublishableKey);
       s.async = true; s.crossOrigin = 'anonymous';
-      await new Promise((res, rej) => { s.onload = res; s.onerror = () => rej(new Error(t('auth.loadFailed'))); document.head.appendChild(s); });
+      // Las dos peticiones van juntas: el catálogo no le suma espera a nadie.
+      const [, freeCommands] = await Promise.all([
+        new Promise((res, rej) => { s.onload = res; s.onerror = () => rej(new Error(t('auth.loadFailed'))); document.head.appendChild(s); }),
+        freeCommandLimit(cfg.engineUrl),
+      ]);
+      const signUpSub = () => (freeCommands == null ? t('clerk.signUpSubNoLimit') : t('clerk.signUpSub', { n: freeCommands }));
       const clerk = window.Clerk;
       const emailCode = () => ({
         title: t('clerk.checkEmail'), subtitle: t('clerk.codeSent'),
@@ -62,7 +95,7 @@ function paint() {
           formFieldLabel__emailAddress_username: t('clerk.emailShort'),
           backButton: t('clerk.back'),
           signUp: {
-            start: { title: t('clerk.signUpTitle'), subtitle: t('clerk.signUpSub'), actionText: t('clerk.haveAccount'), actionLink: t('clerk.signInLink') },
+            start: { title: t('clerk.signUpTitle'), subtitle: signUpSub(), actionText: t('clerk.haveAccount'), actionLink: t('clerk.signInLink') },
             emailCode: emailCode(),
             continue: { title: t('clerk.completeData'), subtitle: t('clerk.completeSub') },
           },

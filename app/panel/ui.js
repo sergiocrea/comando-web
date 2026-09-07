@@ -7,7 +7,19 @@ export const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&a
 
 const SYMBOL = { PEN: 'S/', USD: '$', MXN: 'MX$', COP: 'COP$', CLP: 'CLP$', ARS: 'AR$', BRL: 'R$' };
 export function num(n) { if (n == null || Number.isNaN(Number(n))) return t('common.dash'); return Number(n).toLocaleString(localeTag()); }
-export function money(n, currency = 'PEN') { if (n == null) return t('common.dash'); return (SYMBOL[currency] || currency) + ' ' + num(Math.round(n)); }
+/**
+ * Un importe con la moneda de la CUENTA, que la pone siempre quien llama.
+ *
+ * Antes esto tenía `PEN` por defecto: un cliente en dólares veía «S/ 12.000»
+ * sobre cifras que su CRM guarda en USD, y no hay nada peor que una cifra bien
+ * traída con la moneda equivocada. Sin moneda no se inventa símbolo: se enseña
+ * la cifra sola, que es incompleto pero no es mentira.
+ */
+export function money(n, currency) {
+  if (n == null) return t('common.dash');
+  const amount = num(Math.round(n));
+  return currency ? (SYMBOL[currency] || currency) + ' ' + amount : amount;
+}
 export function pct(x, digits = 0) { if (x == null) return t('common.dash'); return (x * 100).toLocaleString(localeTag(), { minimumFractionDigits: digits, maximumFractionDigits: digits }) + ' %'; }
 export function compact(n) {
   if (n == null) return t('common.dash');
@@ -43,6 +55,15 @@ export function isToday(iso) { return sameDay(new Date(iso), new Date()); }
 export function isPast(iso) { return new Date(iso).getTime() < Date.now(); }
 export function isoDay(d) { return d.toISOString().slice(0, 10); }
 
+/* ---------- quién es el cliente ----------
+   Una sola forma de resolver el nombre para TODO el panel. Hoy `/auth/me` no
+   devuelve `name` ni `email` (el engine sirve `signup_status`, que solo trae
+   plan, WhatsApp y locale), así que sin este orden cada pantalla se inventaba
+   el suyo: la barra lateral caía en Clerk y ponía «Sergio», y el saludo de Hoy
+   caía en un literal y ponía «Buenas tardes, operador» al mismo cliente. */
+export const personName = (me, ctx) => (me && me.name) || (ctx && ctx.user && (ctx.user.fullName || ctx.user.firstName)) || t('boot.yourAccount');
+export const personEmail = (me, ctx) => (me && me.email) || (ctx && ctx.user && ctx.user.primaryEmailAddress && ctx.user.primaryEmailAddress.emailAddress) || '';
+
 /* ---------- WhatsApp: cada widget puede pedir lo mismo por chat ---------- */
 let waBase = 'https://wa.me/';
 export function setWaBase(link) { if (link) waBase = link.replace(/\?.*$/, ''); }
@@ -74,10 +95,25 @@ export const SIGNAL_PHRASE = {
   missing_next_step: () => t('phrase.missing_next_step'),
   overdue_task: () => t('phrase.overdue_task'),
   stage_stalled: (th) => t('phrase.stage_stalled', { days: th.stageStalledDays }),
-  high_value_attention: (th, cur) => t('phrase.high_value_attention', { amount: cur }),
+  high_value_attention: (th, amount) => t('phrase.high_value_attention', { amount }),
   missing_owner: () => t('phrase.missing_owner'),
   missing_critical_data: () => t('phrase.missing_critical_data'),
 };
+/**
+ * El umbral de «negocio grande», en la moneda de la cuenta.
+ *
+ * `thresholds.highValue` es un mapa por moneda (`{mode, PEN: …, USD: …}`), y
+ * antes se leía siempre la clave `PEN`: a un cliente en dólares le salía «desde
+ * —» porque su umbral está bajo `USD`. Se busca su moneda y, si no se sabe
+ * cuál es, se usa la única que el engine tenga para ese tenant.
+ */
+export function highValueAmount(thresholds, currency) {
+  const hv = (thresholds && thresholds.highValue) || {};
+  const currencies = Object.keys(hv).filter((k) => /^[A-Z]{3}$/.test(k) && typeof hv[k] === 'number');
+  const key = currency && currencies.includes(currency) ? currency : currencies[0];
+  return key ? money(hv[key], key) : money(null);
+}
+
 const COMMAND_TYPES = new Set([
   'TAG', 'UNTAG', 'UPDATE_FIELD', 'BROADCAST', 'NOTE', 'ASSIGN', 'MOVE_STAGE', 'CREATE_TASK', 'CANCEL_TASK',
   'NOTIFY', 'GENERATE_REPORT', 'CREATE_AUTOMATION_RULE', 'CREATE_AGENT_RULE', 'PAUSE_AUTOMATION',
