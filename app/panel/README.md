@@ -50,7 +50,7 @@ qué se eliminó y por qué) está en [`docs/rediseno-2026-09-05.md`](docs/redis
 | `#/crm` | **Resumen** | ¿Cuánta plata hay y qué está mal? | «Plata en juego»: 3 números (abierta, ganado, perdido), por etapa, por campo propio. «Qué revisar»: estado del CRM en una línea («al día · hace 6 h»), aviso de dueños (D5) solo si aplica, 12 filas (viejo, vacío, repetido, sin dueño) con «Ver la lista» y, en «más», «Avisarme cada semana» y «cómo lo sacas en tu CRM» | `GET /crm/pipeline/summary`, `GET /crm/health` |
 | `#/agenda` | **Agenda** | ¿Qué tengo esta semana? | Lista por día (Vencidas · Hoy · Mañana · Esta semana · Más adelante; Hechas plegadas) con «Hecha» como acción principal; vista de mes opcional. Solo lo del vendedor: recordatorios, visitas, reuniones y cierres esperados. Nada del sistema. | `operator_task`, `expectedCloseDate`, meetings del CRM |
 | `#/avisos` | **Automatizaciones** | ¿Qué hace Comando solo? | «Comando te avisa cuando…» en tres bloques: Siempre (señales activas como frases, «Apagar»), Cuando pasa algo (reglas por evento, «Pausar»), Cada cierto tiempo (avisos con cadencia y reportes programados, «Pausar»). «Cuándo te escribe» (horario, máximo por día, interruptor; resumen de la mañana: cadencia y hora). «Ideas para activar con una frase» (8 playbooks no activos) | `operator-agent`, `sales-intelligence/policy`, `automation-rules`, `pipeline.scheduledReports`, `playbooks` |
-| `#/marketing` | **Marketing** | ¿Qué me traen los anuncios y qué dice mi analista? | 4 números (inversión, leads, costo por lead, costo por venta); campañas como filas (canal, gasto, leads, CPL, ganados; «Pausar» / «Reanudar», en «más» subir presupuesto y ver sus leads) con las cuentas conectadas; **analista humano** (próxima revisión, recomendaciones con «Aplicar», «Preguntarle» por WhatsApp, preguntas anteriores plegadas); embudo anuncio→venta; «Lo que se hace solo» (automatizaciones); reportes semanal/mensual («Al WhatsApp») | `GET /marketing/overview` (§5) |
+| `#/marketing` | **Marketing** | ¿Cuánto invertí y qué me trajo? | De cuándo son los datos y el botón de actualizar; **un bloque de inversión y resultados por moneda** (nunca sumados); campañas agrupadas por moneda con **ROAS donde existe y costo por resultado donde no**; estado de cada cuenta publicitaria (`sin_datos` ≠ `error`); debajo, la tarjeta de conexión de Meta Ads | `GET /marketing/overview`, `POST /marketing/refresh` (§5) |
 | `#/cuenta` | **Cuenta** | ¿Cómo está mi cuenta? | Tu cuenta (nombre, WhatsApp, plan con barra de comandos usados, cambiar de plan); Tu CRM y tus cuentas (CRM activo con estado en una línea, hojas, cuentas de anuncios; conectar / cambiar); Tu equipo (personas con rol y WhatsApp, sin métricas de uso; aviso de dueños); Lo que Comando sabe de ti (memoria explícita con «Olvidar», «Enseñarle algo» por WhatsApp); Privacidad y salida | `auth/me`, `billing/quota`, connections, sheets, `team`, `operator-agent`, Clerk |
 
 Los rótulos y las rutas no coinciden a propósito: `#/crm` se llama **Resumen** (el nombre
@@ -142,7 +142,8 @@ Todos bajo la misma auth. Formas mínimas que el panel espera; se pueden extende
 | `GET /sales-intelligence/policy` | Avisos › Siempre (cada señal activa como frase «te avisa cuando…»; «Apagar» abre WhatsApp) | `{enabledSignals:[…9],thresholds:{inactiveDays,closeDateApproachingDays,stageStalledDays,highValue:{mode:'p75'|'absolute',<CUR>:mayor}},criticalFields,routes}` | `policy-schema.ts`; el cambio de señales sigue siendo por WhatsApp («no me avises más de…») |
 | `GET /billing/quota` | Cuenta | `{plan:{code,name,priceUsd,interval},period:{start,end,resetAt},commands:{allowance,addons,adjustments,used,balance},contacts:{used,limit},connections:{used,limit|null},audioShare,blockedReason|null,invoices:[{id,date,amount,status}]}` | UC-006 «cuota efectiva» del control plane, expuesto al propio tenant |
 | `GET /team` | Cuenta (sin mostrar `commandsMonth`: política anti-vigilancia) | `{people:[{id,name,role,whatsapp:'verified'|'pending',team,crmOwner|null,commandsMonth,lastActive}],roles:{owner,admin,supervisor,agent,analyst},crmOwners,limits:{assignMax,broadcastMaxCost,discountMaxPct,stepUpAbove}}` | `operator_identity`, `resolve_operator_crm_owner`, policy por rol |
-| `GET /marketing/overview` | Marketing, Cuenta (cuentas de anuncios) | ver §5 | módulo nuevo |
+| `GET /marketing/overview` | Marketing | ver §5 | plan 16 de `comando-pro`; **ya desplegado** |
+| `POST /marketing/refresh` | Marketing (el botón «Actualizar») | ver §5; **siempre 200**, también cuando el límite lo deja fuera | ídem |
 
 ### 4.3 Reglas para el backend
 
@@ -156,7 +157,10 @@ Todos bajo la misma auth. Formas mínimas que el panel espera; se pueden extende
 ## 5. Marketing: alcance del módulo nuevo
 
 Encargo: automatizar campañas de Facebook, Instagram y TikTok de las empresas, con reportería
-y un analista humano. El panel lo modela así; el backend no existe todavía.
+y un analista humano. **La LECTURA de Meta ya existe** —el plan 16 de `comando-pro` está
+desplegado y es lo que pinta la pantalla hoy, ver abajo—; el resto de este alcance (TikTok, la
+atribución al CRM, las automatizaciones de campaña, los reportes y el analista) sigue siendo
+proyecto y NO se pinta con datos de mentira: lo que no existe no sale.
 
 **Cuentas.** Conexión por Nango (misma frontera de credenciales que los CRM):
 `POST /integrations/nango/connect-sessions {integrationId:'meta-ads'|'tiktok-ads'}`. Objetos:
@@ -188,8 +192,40 @@ Entidades: `marketing_analyst_assignment` (analista, tenant, próxima revisión,
 recomendación es un comando normal por WhatsApp. **Pendiente de decidir**: si el servicio va
 incluido en Pro/Enterprise o se contrata aparte (no está en `prompt-precios.md`).
 
-**`GET /marketing/overview`** devuelve `{accounts:[{id,provider:'meta'|'tiktok'|'google-ads',name,status:'active'|'pending'|'soon',channels,lastSyncAt,adAccount}], period:{label,spend,currency,impressions,clicks,leads,cpl,contacted5min,qualified,won,revenue,prevSpend,prevLeads,prevCpl}, campaigns:[{id,name,channel,objective,status,dailyBudget,spend,leads,cpl,ctr,trend,crmQualified,crmWon,pausedReason?}], funnel:[{label,value}], automations:[{id,name,status,firedMonth,kind:'budget'|'speed'|'audience'|'report'}], reports:[{id,title,at,kind,highlights}], analyst:{name,title,avatar,nextReviewAt,lastDeliveryAt,responseSla,recommendations:[…],requests:[…]}}`.
-Mutaciones previstas: `POST /marketing/requests` (opcional: hoy el panel pregunta al analista por WhatsApp con la frase lista), `POST /marketing/recommendations/:id/{apply|dismiss}` (hoy «Aplicar» abre WhatsApp).
+**`GET /marketing/overview`** (plan 16 §6 de `comando-pro`) devuelve
+`{connection:{status:'disconnected'|'pending'|'active'|'error'|'revoked',connectedAt,lastErrorCode}, period:{label,days,since,until}, totals:[{currency,spend,impressions,clicks,accounts:[…],byResult:[{kind,results,spend,costPerResult,conversionValue,roas}]}], campaigns:[{id,name,accountRef,accountName,currency,objective,spend,impressions,clicks,ctr,result:{kind,results,costPerResult}|null,conversionValue,roas,roasUnavailable}], accounts:[{id,provider,adAccount,name,businessName,currency,state:'pendiente'|'con_datos'|'sin_datos'|'error',refreshedAt,ageSeconds,campaigns,lastErrorCode,nextManualRefreshAt}], freshness:{refreshedAt,ageSeconds,stale,pending,failing}, refresh:{allowed,retryAfterSeconds,nextAllowedAt}}`.
+
+Lo que el panel **no** puede hacer con esto, y por qué:
+
+- **`totals` es una lista, un bloque por moneda, y no existe un gasto único.** Se quitó a
+  propósito del contrato: las cuentas de un mismo cliente están en PEN y USD a la vez y un
+  total que las mezclara sería un número que parece información y no lo es. Dentro de cada
+  moneda, los resultados van separados por tipo por la misma razón.
+- **El ROAS solo se pinta donde existe.** `roas: 0` sí se enseña —gasto sin ingreso medido—;
+  cuando es `null`, `roasUnavailable` dice por qué (`sin_valor_de_conversion` · `sin_gasto`) y
+  **en su lugar va el costo por resultado**. Una inmobiliaria no tiene valor de conversión y
+  un ROAS 0 inventado haría parecer fracasada una campaña que va bien.
+- **`result` puede ser `null`** («no sabemos qué cuenta como resultado en este objetivo»),
+  `result.results` puede ser `0` —que es un número real— y entonces `costPerResult` es `null`:
+  dividir entre cero no es un costo altísimo, es que no existe.
+- **`freshness.ageSeconds` es la edad del dato MÁS VIEJO** y la pantalla la dice siempre
+  («Datos de hace 40 min»). Con `refreshedAt: null` y `pending > 0` todavía viene la primera
+  copia, y eso no es un error.
+- **`account.state` distingue `sin_datos` de `error`.** Una cuenta conectada y sin gasto no es
+  un fallo; desde una tabla vacía se ven igual y el panel las dice distinto.
+- El rótulo del periodo se arma con `period.days` en los tres idiomas: `period.label` viene del
+  motor en castellano y se pinta a un cliente que puede estar leyendo en inglés.
+
+**`POST /marketing/refresh`** (sin cuerpo) → `{accepted, reason:'ok'|'sin_conexion'|'conexion_marcada'|'sin_cuentas'|'limitado'|'cupo_de_meta', refreshed:[…], throttled:[{accountRef,retryAfterSeconds}], failed:[{accountRef,code}], retryAfterSeconds, nextAllowedAt, overview:{…}}`.
+**Siempre 200**, también cuando el límite de cinco minutos por cuenta lo deja fuera: el panel
+nunca lo trata como un error, enseña cuándo se podrá volver a pedir y **no vuelve a pedir el
+overview**, que viene dentro. `reason:'conexion_marcada'` es el token retirado desde Facebook:
+lleva a reconectar en la tarjeta de Meta Ads, no a reintentar.
+
+Lo que queda fuera a propósito (plan 16 §8): pausar y cambiar presupuesto —van por WhatsApp con
+vista previa y `CONFIRMAR`, y todavía no existen—, el estado y el presupuesto de cada campaña,
+el desglose por plataforma, la atribución al CRM (`crmQualified`, `crmWon`, el embudo
+anuncio→venta), el analista humano y los reportes, y TikTok y Google Ads.
 
 ### 5.1 Meta Ads: la conexión (plan 14 de `comando-pro`)
 

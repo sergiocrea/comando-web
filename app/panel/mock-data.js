@@ -332,49 +332,149 @@ export const MOCK = {
     lastErrorCode: null,
     accounts: [
       { accountRef: 'act_4471002233', name: 'Inmobiliaria Rojas', accountStatus: 1, currency: 'PEN', timezoneName: 'America/Lima', businessId: '55501', businessName: 'Grupo Rojas', selected: true },
-      { accountRef: 'act_4471009988', name: 'Rojas · Proyectos nuevos', accountStatus: 1, currency: 'PEN', timezoneName: 'America/Lima', businessId: '55501', businessName: 'Grupo Rojas', selected: false },
-      { accountRef: 'act_8890114455', name: 'Pruebas internas', accountStatus: 2, currency: 'USD', timezoneName: 'America/Lima', businessId: null, businessName: null, selected: false },
+      { accountRef: 'act_7712003344', name: 'Rojas · Miami', accountStatus: 1, currency: 'USD', timezoneName: 'America/Lima', businessId: '55501', businessName: 'Grupo Rojas', selected: true },
+      { accountRef: 'act_4471009988', name: 'Rojas · Proyectos nuevos', accountStatus: 1, currency: 'PEN', timezoneName: 'America/Lima', businessId: '55501', businessName: 'Grupo Rojas', selected: true },
+      { accountRef: 'act_8890114455', name: 'Pruebas internas', accountStatus: 2, currency: 'USD', timezoneName: 'America/Lima', businessId: null, businessName: null, selected: true },
     ],
-  },
-
-  marketing: {
-    accounts: [
-      { id: 'ma1', provider: 'meta', name: 'Meta Ads · Inmobiliaria Rojas', status: 'active', channels: ['Facebook', 'Instagram'], lastSyncAt: ago(0.7), adAccount: 'act_4471…' },
-      { id: 'ma2', provider: 'tiktok', name: 'TikTok Ads', status: 'pending', channels: ['TikTok'], lastSyncAt: null },
-      { id: 'ma3', provider: 'google-ads', name: 'Google Ads', status: 'soon', channels: ['Búsqueda', 'YouTube'] },
-    ],
-    period: { label: 'Últimos 30 días', spend: 4_850, currency: 'PEN', impressions: 412_000, clicks: 6_930, leads: 138, cpl: 35.1, contacted5min: 0.58, qualified: 41, won: 3, revenue: 1_120_000, prevSpend: 5_200, prevLeads: 121, prevCpl: 43 },
-    campaigns: [
-      { id: 'cp1', name: 'Torres del Parque · Lanzamiento', channel: 'Facebook + Instagram', objective: 'Leads', status: 'active', dailyBudget: 60, spend: 1_720, leads: 58, cpl: 29.7, ctr: 1.9, trend: 'up', crmQualified: 19, crmWon: 2 },
-      { id: 'cp2', name: 'Miraflores Sky · Retargeting visitas', channel: 'Instagram', objective: 'Leads', status: 'active', dailyBudget: 40, spend: 1_180, leads: 34, cpl: 34.7, ctr: 2.4, trend: 'flat', crmQualified: 12, crmWon: 1 },
-      { id: 'cp3', name: 'San Isidro Prime · Video tour', channel: 'TikTok', objective: 'Tráfico', status: 'paused', dailyBudget: 30, spend: 610, leads: 9, cpl: 67.8, ctr: 0.8, trend: 'down', crmQualified: 2, crmWon: 0, pausedReason: 'CPL sobre S/ 60 tres días seguidos (regla automática)' },
-      { id: 'cp4', name: 'Surco Garden · Últimas unidades', channel: 'Facebook', objective: 'Leads', status: 'active', dailyBudget: 45, spend: 1_340, leads: 37, cpl: 36.2, ctr: 1.5, trend: 'up', crmQualified: 8, crmWon: 0 },
-    ],
-    funnel: [ { label: 'Impresiones', value: 412_000 }, { label: 'Clics', value: 6_930 }, { label: 'Leads en CRM', value: 138 }, { label: 'Contactados < 5 min', value: 80 }, { label: 'Calificados', value: 41 }, { label: 'Visitas', value: 17 }, { label: 'Ganados', value: 3 } ],
-    automations: [
-      { id: 'mk1', name: 'Pausar campaña si el CPL supera S/ 60 tres días seguidos', status: 'active', firedMonth: 1, kind: 'budget' },
-      { id: 'mk2', name: 'Lead de Meta Ads sin contacto en 5 minutos → avisar al dueño', status: 'active', firedMonth: 23, kind: 'speed' },
-      { id: 'mk3', name: 'Contactos en Cerrado ganado → excluir de todas las audiencias', status: 'active', firedMonth: 3, kind: 'audience' },
-      { id: 'mk4', name: 'Negocios en Negociación → audiencia de retargeting Instagram', status: 'active', firedMonth: 17, kind: 'audience' },
-      { id: 'mk5', name: 'Subir 20 % el presupuesto de la campaña con mejor CPL cada lunes (con confirmación)', status: 'paused', firedMonth: 0, kind: 'budget' },
-      { id: 'mk6', name: 'Reporte semanal de campañas por WhatsApp los lunes 08:30', status: 'active', firedMonth: 4, kind: 'report' },
-    ],
-    reports: [
-      { id: 'rp1', title: 'Semana 1–7 set · Campañas y embudo', at: ago(24 * 1), kind: 'weekly', highlights: ['CPL bajó 18 % vs semana anterior', 'Torres del Parque concentra el 42 % de los leads', '9 leads de TikTok sin calificar'] },
-      { id: 'rp2', title: 'Agosto · Resumen mensual', at: ago(24 * 5), kind: 'monthly', highlights: ['138 leads · 41 calificados · 3 ventas', 'Costo por venta: S/ 1.617', 'Meta Ads supera a portales en calificación (30 % vs 22 %)'] },
-      { id: 'rp3', title: 'Semana 25–31 ago · Campañas y embudo', at: ago(24 * 8), kind: 'weekly', highlights: ['Retargeting Instagram: mejor CTR (2,4 %)'] },
-    ],
-    analyst: {
-      name: 'Valeria Núñez', title: 'Analista de marketing · Comando', avatar: 'VN', nextReviewAt: at(6, 10, 0), lastDeliveryAt: ago(24 * 1), responseSla: '1 día hábil',
-      recommendations: [
-        { id: 'an1', at: ago(24 * 1), text: 'Mover S/ 20/día de TikTok a Retargeting Instagram: mismo gasto, +11 leads estimados.', status: 'pending', impact: 'alto' },
-        { id: 'an2', at: ago(24 * 1), text: 'Los leads de Adondevivir llegan sin teléfono la mitad de las veces: pedir el campo obligatorio en el formulario del portal.', status: 'pending', impact: 'medio' },
-        { id: 'an3', at: ago(24 * 8), text: 'Creativo «video tour» en Facebook: CTR 0,8 % vs 1,9 % del carrusel. Reemplazar.', status: 'applied', impact: 'alto' },
-        { id: 'an4', at: ago(24 * 15), text: 'Excluir del retargeting a los que ya separaron.', status: 'applied', impact: 'medio' },
-      ],
-      requests: [ { id: 'rq1', at: ago(24 * 3), topic: '¿Vale la pena TikTok para San Isidro Prime?', status: 'answered', answer: 'Con 9 leads a S/ 68 no. Pausamos y reasignamos el presupuesto (ver recomendación del 4 de set).' } ],
-    },
   },
 };
 
 export const MOCK_DELAY_MS = 350;
+
+/* ------------------------------------------------------- Marketing (plan 16)
+   Las métricas de Meta con la forma que devuelve el motor de verdad. El
+   endpoint pide sesión, así que esta es la ÚNICA manera de mirar la pantalla
+   entera antes de desplegar; por eso el caso normal trae a propósito todo lo
+   que se puede torcer: dos monedas a la vez, una campaña con ROAS y otra sin
+   valor de conversión, una que gastó y no consiguió ni un lead, un objetivo
+   del que no sabemos qué contar, una cuenta sin datos y otra con la última
+   consulta fallida.
+
+   `?mock=1&mk=...` cambia el caso: `limitado` (el botón dentro de los cinco
+   minutos), `marcada` (Facebook retiró el permiso), `primera` (todavía no hay
+   copia) y `sin` (sin conexión). */
+
+const day = (offset) => new Date(now.getTime() + offset * DAY).toISOString().slice(0, 10);
+const MIN = 60;
+
+const MK_ACCOUNTS = [
+  { id: 'act_4471002233', provider: 'meta', adAccount: 'act_4471002233', name: 'Inmobiliaria Rojas', businessName: 'Grupo Rojas',
+    currency: 'PEN', state: 'con_datos', refreshedAt: ago(0.6), ageSeconds: 36 * MIN, campaigns: 3, lastErrorCode: null, nextManualRefreshAt: null },
+  { id: 'act_7712003344', provider: 'meta', adAccount: 'act_7712003344', name: 'Rojas · Miami', businessName: 'Grupo Rojas',
+    currency: 'USD', state: 'con_datos', refreshedAt: ago(0.62), ageSeconds: 37 * MIN, campaigns: 2, lastErrorCode: null, nextManualRefreshAt: null },
+  // Recién conectada y sin gasto en el periodo: un vacío honesto, no un fallo.
+  { id: 'act_4471009988', provider: 'meta', adAccount: 'act_4471009988', name: 'Rojas · Proyectos nuevos', businessName: 'Grupo Rojas',
+    currency: 'PEN', state: 'sin_datos', refreshedAt: ago(0.6), ageSeconds: 36 * MIN, campaigns: 0, lastErrorCode: null, nextManualRefreshAt: null },
+  // La última consulta no salió y la copia buena SIGUE AHÍ, con su fecha.
+  { id: 'act_8890114455', provider: 'meta', adAccount: 'act_8890114455', name: 'Pruebas internas', businessName: null,
+    currency: 'USD', state: 'error', refreshedAt: ago(0.7), ageSeconds: 42 * MIN, campaigns: 1, lastErrorCode: 'META_4',
+    nextManualRefreshAt: new Date(now.getTime() + 212_000).toISOString() },
+];
+
+const MK_CAMPAIGNS = [
+  /* Inmobiliaria: su resultado es un lead, no una venta, así que Meta no
+     devuelve valor de conversión y NO hay ROAS que enseñar. */
+  { id: '23851', name: 'Torres del Parque · Lanzamiento', accountRef: 'act_4471002233', accountName: 'Inmobiliaria Rojas',
+    currency: 'PEN', objective: 'OUTCOME_LEADS', spend: 1720.5, impressions: 218_000, clicks: 3980, ctr: 0.0183,
+    result: { kind: 'lead', results: 58, costPerResult: 29.66 }, conversionValue: null, roas: null, roasUnavailable: 'sin_valor_de_conversion' },
+  // Objetivo de leads con destino WhatsApp: lo que se cuenta son conversaciones.
+  { id: '23852', name: 'Miraflores Sky · Retargeting visitas', accountRef: 'act_4471002233', accountName: 'Inmobiliaria Rojas',
+    currency: 'PEN', objective: 'OUTCOME_LEADS', spend: 1180.2, impressions: 96_000, clicks: 1740, ctr: 0.0181,
+    result: { kind: 'mensaje', results: 34, costPerResult: 34.71 }, conversionValue: null, roas: null, roasUnavailable: 'sin_valor_de_conversion' },
+  /* Gastó y no consiguió ni uno: `results: 0` es un número real y su costo por
+     resultado es `null`, no infinito ni cero. */
+  { id: '23853', name: 'Surco Garden · Últimas unidades', accountRef: 'act_4471002233', accountName: 'Inmobiliaria Rojas',
+    currency: 'PEN', objective: 'OUTCOME_LEADS', spend: 1949.42, impressions: 98_000, clicks: 1210, ctr: 0.0123,
+    result: { kind: 'lead', results: 0, costPerResult: null }, conversionValue: null, roas: null, roasUnavailable: 'sin_valor_de_conversion' },
+  // Comercio en dólares: aquí sí hay ingreso medido, y por tanto ROAS.
+  { id: '31007', name: 'Rojas Miami · Ventas web', accountRef: 'act_7712003344', accountName: 'Rojas · Miami',
+    currency: 'USD', objective: 'OUTCOME_SALES', spend: 300, impressions: 88_000, clicks: 2100, ctr: 0.0239,
+    result: { kind: 'compra', results: 12, costPerResult: 25 }, conversionValue: 1560, roas: 5.2, roasUnavailable: null },
+  /* ROAS 0: Meta SÍ devolvió el valor y es cero. Gasto sin ingreso es una mala
+     noticia de verdad y se enseña, al revés que la ausencia de valor. */
+  { id: '31008', name: 'Rojas Miami · Catálogo', accountRef: 'act_7712003344', accountName: 'Rojas · Miami',
+    currency: 'USD', objective: 'OUTCOME_SALES', spend: 60, impressions: 21_000, clicks: 410, ctr: 0.0195,
+    result: { kind: 'compra', results: 0, costPerResult: null }, conversionValue: 0, roas: 0, roasUnavailable: null },
+  /* Objetivo que no está en la tabla: no sabemos qué cuenta como resultado
+     aquí, y `result: null` lo dice en vez de inventarse un cero. */
+  { id: '90211', name: 'Pruebas internas · Marca', accountRef: 'act_8890114455', accountName: 'Pruebas internas',
+    currency: 'USD', objective: 'OUTCOME_LOCAL_AWARENESS', spend: 45.8, impressions: 132_000, clicks: 260, ctr: 0.002,
+    result: null, conversionValue: null, roas: null, roasUnavailable: 'sin_valor_de_conversion' },
+];
+
+const MK_TOTALS = [
+  { currency: 'PEN', spend: 4850.12, impressions: 412_000, clicks: 6930, accounts: ['act_4471002233'],
+    byResult: [
+      { kind: 'lead', results: 58, spend: 3669.92, costPerResult: 63.27, conversionValue: null, roas: null },
+      { kind: 'mensaje', results: 34, spend: 1180.2, costPerResult: 34.71, conversionValue: null, roas: null },
+    ] },
+  { currency: 'USD', spend: 405.8, impressions: 241_000, clicks: 2770, accounts: ['act_7712003344', 'act_8890114455'],
+    byResult: [
+      { kind: 'compra', results: 12, spend: 360, costPerResult: 30, conversionValue: 1560, roas: 4.33 },
+    ] },
+];
+
+const mkPeriod = () => ({ label: 'Últimos 30 días', days: 30, since: day(-29), until: day(0) });
+
+/** El overview del caso pedido. */
+export function marketingOverview(scenario) {
+  const base = {
+    connection: { status: 'active', connectedAt: ago(24 * 6), lastErrorCode: null },
+    period: mkPeriod(),
+    totals: structuredClone(MK_TOTALS),
+    campaigns: structuredClone(MK_CAMPAIGNS),
+    accounts: structuredClone(MK_ACCOUNTS),
+    // La edad de la pantalla es la del dato MÁS VIEJO (42 min, la cuenta que
+    // falló), no la del más reciente: eso la haría parecer más fresca.
+    freshness: { refreshedAt: ago(0.7), ageSeconds: 42 * MIN, stale: false, pending: 0, failing: 1 },
+    refresh: { allowed: true, retryAfterSeconds: 0, nextAllowedAt: null },
+  };
+  if (scenario === 'sin') {
+    return { connection: { status: 'disconnected', connectedAt: null, lastErrorCode: null }, period: mkPeriod(),
+      totals: [], campaigns: [], accounts: [],
+      freshness: { refreshedAt: null, ageSeconds: null, stale: false, pending: 0, failing: 0 },
+      refresh: { allowed: false, retryAfterSeconds: 0, nextAllowedAt: null } };
+  }
+  if (scenario === 'primera') {
+    // Todavía trayendo la primera copia: no hay edad, y eso NO es un error.
+    base.totals = []; base.campaigns = [];
+    base.accounts = base.accounts.slice(0, 2).map((a) => ({ ...a, state: 'pendiente', refreshedAt: null, ageSeconds: null, campaigns: 0, lastErrorCode: null }));
+    base.freshness = { refreshedAt: null, ageSeconds: null, stale: false, pending: 2, failing: 0 };
+    return base;
+  }
+  if (scenario === 'limitado') {
+    base.refresh = { allowed: false, retryAfterSeconds: 212, nextAllowedAt: new Date(now.getTime() + 212_000).toISOString() };
+    return base;
+  }
+  if (scenario === 'marcada') {
+    // El permiso retirado desde Facebook: los números de la última copia se
+    // conservan —una pantalla en blanco sería peor— y la conexión va marcada.
+    base.connection = { status: 'error', connectedAt: ago(24 * 6), lastErrorCode: 'META_190' };
+    base.accounts = base.accounts.map((a) => ({ ...a, state: 'error', lastErrorCode: 'META_190', refreshedAt: ago(26), ageSeconds: 26 * 3600 }));
+    base.freshness = { refreshedAt: ago(26), ageSeconds: 26 * 3600, stale: true, pending: 0, failing: 4 };
+    return base;
+  }
+  return base;
+}
+
+/** La respuesta del botón. Siempre 200, también cuando toca esperar. */
+export function marketingRefresh(scenario) {
+  const overview = marketingOverview(scenario);
+  if (scenario === 'sin') return { accepted: false, reason: 'sin_conexion', refreshed: [], throttled: [], failed: [], retryAfterSeconds: 0, nextAllowedAt: null, overview };
+  if (scenario === 'marcada') return { accepted: false, reason: 'conexion_marcada', refreshed: [], throttled: [], failed: [{ accountRef: 'act_4471002233', code: 'META_190' }], retryAfterSeconds: 0, nextAllowedAt: null, overview };
+  if (scenario === 'limitado') return { accepted: false, reason: 'limitado', refreshed: [], throttled: MK_ACCOUNTS.map((a) => ({ accountRef: a.id, retryAfterSeconds: 212 })), failed: [], retryAfterSeconds: 212, nextAllowedAt: new Date(now.getTime() + 212_000).toISOString(), overview };
+  // El caso normal: dos cuentas al día, una que tuvo que esperar y otra que
+  // devolvió el límite de Meta. El límite es POR CUENTA, así que refrescar
+  // unas y esperar por otras es lo esperable, no un fallo.
+  return { accepted: true, reason: 'ok', refreshed: ['act_4471002233', 'act_7712003344'],
+    throttled: [{ accountRef: 'act_4471009988', retryAfterSeconds: 96 }],
+    failed: [{ accountRef: 'act_8890114455', code: 'META_4' }],
+    retryAfterSeconds: 0, nextAllowedAt: null, overview };
+}
+
+/** La conexión, coherente con el caso: sin ella no hay métricas que pedir. */
+export function metaStatus(scenario) {
+  if (scenario === 'sin') return { ...structuredClone(MOCK.meta), status: 'disconnected', connectedAt: null, accounts: [] };
+  if (scenario === 'marcada') return { ...structuredClone(MOCK.meta), status: 'error', lastErrorCode: 'META_190' };
+  return structuredClone(MOCK.meta);
+}

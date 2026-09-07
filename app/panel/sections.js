@@ -7,14 +7,14 @@
    - una sola acción principal por fila; lo demás va dentro de «más»;
    - vocabulario del operador (plata en juego, parado, sin dueño, repetidos), nunca del sistema. */
 
-import { isPending } from './api.js?v=9';
+import { isPending } from './api.js?v=10';
 import { crmBlock, crmActions, whatsappStep, NAMES as PROVIDER_NAMES } from './setup.js?v=7';
 import {
   esc, num, money, pct, fmtTime, fmtDate, fmtDateTime, monthName, dayLabel, sameDay, rel, isToday, isPast, isoDay,
   wa, waBtn, askLine, chip, statusChip, bar, spark, kpi, card, row, moreBox, empty, soon, toast, ICON, SIGNAL_PHRASE,
   personName, personEmail, highValueAmount, SYMBOL, setAccountCurrency,
 } from './ui.js?v=7';
-import { t, tn } from '../i18n.js?v=1';
+import { t, tn, localeTag } from '../i18n.js?v=1';
 
 /** Renderiza una parte según el estado de su dato. */
 function part(v, fn, opts = {}) {
@@ -571,36 +571,249 @@ const avisos = {
   },
 };
 
-/* ================================================================= MARKETING */
+/* ================================================================= MARKETING
+   Las métricas reales de Meta Ads (plan 16 §6). Tres decisiones del contrato
+   mandan sobre todo lo que se ve aquí:
+
+   - **`totals` es una LISTA, un bloque por moneda, y no existe un gasto
+     único.** Las cuentas de un mismo cliente están en soles y en dólares a la
+     vez; un total que las mezclara sería un número que parece información y no
+     lo es. Por eso ni el resumen ni las campañas suman entre monedas, y cada
+     importe se pinta con la suya al lado.
+   - **El ROAS solo se enseña donde existe.** Una inmobiliaria no tiene valor
+     de conversión —su resultado es un lead, no una venta—, así que Meta no
+     devuelve ingresos y no hay ROAS que calcular. En su lugar va el costo por
+     resultado. Un `roas: 0` inventado haría parecer fracasada una campaña que
+     va bien; un `roas: 0` de verdad sí se enseña, porque es una mala noticia
+     real.
+   - **Los números son una copia local, así que la pantalla dice de cuándo
+     son.** Una copia que no dice su edad se lee como si fuera de ahora mismo. */
+
+/** Los siete tipos de resultado del contrato. El motor manda el `kind`; la
+    etiqueta que lee el cliente («leads», «conversaciones», «compras») la pone
+    el panel, en sus tres idiomas. Un lead y una compra no son lo mismo. */
+const RESULT_KINDS = new Set(['lead', 'mensaje', 'compra', 'instalacion', 'clic', 'alcance', 'interaccion']);
+const RESULT_ICO = { lead: '🧲', mensaje: '💬', compra: '🛒', instalacion: '📲', clic: '👆', alcance: '📣', interaccion: '👍' };
+/* Meta estrena objetivos cada año: un `kind` que todavía no conocemos se
+   enseña tal cual en vez de como ⟨clave⟩. */
+const resultLabel = (kind, n) => (RESULT_KINDS.has(kind) ? t('mk.kind.' + kind + (n === 1 ? '_one' : '_other')) : String(kind || ''));
+
+/**
+ * Un costo por resultado con sus céntimos.
+ *
+ * `money()` redondea a la unidad, que está bien para un gasto de cuatro cifras
+ * y no para la cifra que ocupa el sitio del ROAS: entre «S/ 29,66 por lead» y
+ * «S/ 30 por lead» hay justo la diferencia que el cliente mira. La moneda
+ * siempre viene pegada al dato, así que aquí no hay respaldo de cuenta.
+ */
+function moneyExact(n, currency) {
+  if (n == null) return t('common.dash');
+  const amount = Number(n).toLocaleString(localeTag(), { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  return currency ? `${SYMBOL[currency] || currency} ${amount}` : amount;
+}
+
+/** Un día suelto («2026-08-07») en la fecha corta del idioma. Se le pega la
+    hora local a propósito: `new Date('2026-08-07')` es medianoche UTC y en
+    Lima se leería como el día anterior. */
+const dayOf = (iso) => (iso ? fmtDate(`${iso}T00:00:00`) : '');
+
+/** «hace 40 min», desde la edad en segundos que manda el motor. */
+function ageAgo(seconds) {
+  if (seconds == null) return '';
+  const s = Math.max(0, Math.round(seconds));
+  const [n, unit] = s < 3600 ? [Math.max(1, Math.round(s / 60)), t('ui.min')]
+    : s < 86_400 ? [Math.round(s / 3600), t('ui.hour')]
+      : [Math.round(s / 86_400), t('ui.day')];
+  return t('ui.ago', { t: `${n} ${unit}` });
+}
+/** La espera del botón, en la unidad que se entiende sin hacer cuentas. */
+function waitText(seconds) {
+  const s = Math.max(0, Math.round(seconds || 0));
+  return s >= 60 ? `${Math.ceil(s / 60)} ${t('ui.min')}` : `${s} ${t('mk.sec')}`;
+}
+/** El ROAS con dos decimales: «5,2×» dice más que «5,2000000001». */
+const roasText = (roas) => t('mk.roasValue', { x: num(Math.round(roas * 100) / 100) });
+
+/**
+ * La columna que cambia: ROAS donde existe y, donde no, el costo por resultado.
+ *
+ * El hueco y el cero son las dos formas de mentir aquí. `roas: 0` se enseña
+ * —gasto sin ingreso medido—; la AUSENCIA de valor de conversión no se enseña
+ * como cero, sino que cede el sitio al costo por resultado, que es la cifra que
+ * el cliente sí puede usar. Y una campaña con cero resultados no tiene costo
+ * por resultado: dividir entre cero no es un costo altísimo, es que no existe.
+ */
+function roasOrCost(currency, result, roas, roasUnavailable) {
+  if (roas != null) return chip(roasText(roas), roas >= 1 ? 'ok' : 'warn');
+  if (result && result.costPerResult != null) return chip(t('mk.costPer', { amount: moneyExact(result.costPerResult, currency), kind: resultLabel(result.kind, 1) }), 'info');
+  if (roasUnavailable === 'sin_gasto') return chip(t('mk.noSpend'), 'soon');
+  if (result) return chip(t('mk.noCostYet'), 'soon');
+  // Sin `result` no hay nada que poner aquí: el porqué ya lo dice la fila.
+  return '';
+}
+
+/** Lo que consiguió una campaña: el número, su tipo, y el «no sabemos». */
+function resultText(result) {
+  if (!result) return `<span class="hint">${esc(t('mk.resultUnknown'))}</span>`;
+  return `<b>${num(result.results)}</b> ${esc(resultLabel(result.kind, result.results))}`;
+}
+
+/**
+ * Un bloque de resumen POR MONEDA.
+ *
+ * Nunca hay uno solo con todo dentro: con dos monedas salen dos tarjetas y no
+ * se suman. Dentro, los resultados van separados por tipo por la misma razón:
+ * leads y compras en la misma columna mienten igual que soles con dólares.
+ */
+function totalsCard(total, alone) {
+  const accounts = (total.accounts || []).length;
+  const label = SYMBOL[total.currency] ? `${total.currency} · ${SYMBOL[total.currency]}` : total.currency;
+  const kpis = `<div class="grid c3">
+    ${kpi(t('mk.spendLabel'), money(total.spend, total.currency), esc(tn('mk.fromAccounts', accounts, { n: num(accounts) })))}
+    ${kpi(t('mk.impressions'), num(total.impressions))}
+    ${kpi(t('mk.clicks'), num(total.clicks), total.impressions ? esc(t('mk.ctrIs', { pct: pct(total.clicks / total.impressions, 2) })) : '')}
+  </div>`;
+  const results = list(total.byResult || [], (b) => row({
+    ico: RESULT_ICO[b.kind] || '🎯',
+    title: `<b>${num(b.results)}</b> ${esc(resultLabel(b.kind, b.results))}`,
+    sub: `${esc(t('mk.ofSpend', { spend: money(b.spend, total.currency) }))}${b.costPerResult != null ? ` · ${esc(t('mk.costPer', { amount: moneyExact(b.costPerResult, total.currency), kind: resultLabel(b.kind, 1) }))}` : ''}`,
+    primary: b.roas != null ? chip(roasText(b.roas), b.roas >= 1 ? 'ok' : 'warn') : '',
+  }), t('mk.noResults'));
+  // El recordatorio de que esta moneda va sola solo tiene sentido si hay otra.
+  return card(t('mk.totalsIn', { currency: label }), kpis + results, alone ? {} : { sub: t('mk.totalsSub') });
+}
+
+/** Una campaña: su gasto con su moneda, lo que consiguió, y ROAS o costo. */
+const campaignRow = (c) => row({
+  ico: '<img class="logo-sm" src="../../assets/img/logos/meta.svg" alt="">',
+  title: esc(c.name),
+  sub: `${esc(c.accountName || c.accountRef)} · ${esc(t('mk.spent', { spend: money(c.spend, c.currency) }))} · ${resultText(c.result)}${c.ctr != null ? ` · ${esc(t('mk.ctrIs', { pct: pct(c.ctr, 2) }))}` : ''}`,
+  primary: roasOrCost(c.currency, c.result, c.roas, c.roasUnavailable),
+  more: waBtn(t('wa.campaignLeads', { name: c.name }), t('mk.seeLeads')),
+});
+
+const ACCOUNT_STATE_KIND = { pendiente: 'soon', con_datos: 'ok', sin_datos: '', error: 'bad' };
+/**
+ * El estado de cada cuenta publicitaria.
+ *
+ * `sin_datos` y `error` se ven iguales desde una tabla vacía y no son lo mismo:
+ * una cuenta recién conectada que todavía no gastó no es un fallo, y decírselo
+ * al cliente como si lo fuera le manda a arreglar algo que no está roto.
+ */
+const accountRow = (a) => row({
+  ico: '<img class="logo-sm" src="../../assets/img/logos/meta.svg" alt="">',
+  title: `${esc(a.name || a.adAccount)} ${chip(t('mk.state.' + (a.state in ACCOUNT_STATE_KIND ? a.state : 'pendiente')), ACCOUNT_STATE_KIND[a.state] || '')}`,
+  sub: [
+    esc(a.adAccount || a.id),
+    a.currency ? esc(a.currency) : '',
+    a.campaigns != null ? esc(tn('mk.nCampaigns', a.campaigns, { n: num(a.campaigns) })) : '',
+    a.refreshedAt && a.ageSeconds != null ? esc(t('mk.updated', { age: ageAgo(a.ageSeconds) })) : esc(t('mk.neverUpdated')),
+  ].filter(Boolean).join(' · '),
+  meta: [
+    a.state === 'sin_datos' ? `<span class="hint">${esc(t('mk.stateNoDataNote'))}</span>` : '',
+    a.state === 'error' ? `<span class="sev-warning">${esc(t('mk.stateErrorNote', { code: a.lastErrorCode || '—' }))}</span>` : '',
+    a.nextManualRefreshAt ? `<span class="hint">${esc(t('mk.nextRefresh', { when: rel(a.nextManualRefreshAt) }))}</span>` : '',
+  ].filter(Boolean).join(''),
+});
+
+/**
+ * De cuándo son los números, y el botón para pedirlos otra vez.
+ *
+ * La edad es la del dato MÁS VIEJO: enseñar la del más reciente haría parecer
+ * la pantalla más fresca de lo que es. Sin ninguna copia todavía no hay edad
+ * que enseñar, y eso no es un error: es que la primera copia viene en camino.
+ */
+function freshnessLine(m) {
+  const f = m.freshness || {};
+  const r = m.refresh || {};
+  const age = f.refreshedAt && f.ageSeconds != null
+    ? chip(t('mk.dataFrom', { age: ageAgo(f.ageSeconds) }), f.stale ? 'warn' : 'ok')
+    : chip(t('mk.firstCopy'), 'soon');
+  const pending = f.pending ? `<span class="hint">${esc(tn('mk.pendingAccounts', f.pending, { n: num(f.pending) }))}</span>` : '';
+  const failing = f.failing ? `<span class="sev-warning">${esc(tn('mk.failingAccounts', f.failing, { n: num(f.failing) }))}</span>` : '';
+  // Cuando el límite de cinco minutos está en curso el botón no se puede
+  // pulsar, y a su lado va CUÁNDO se podrá: un botón apagado sin explicación
+  // se lee como una avería.
+  const blocked = r.allowed === false && r.retryAfterSeconds > 0;
+  return `<p class="status-line">${age}${pending}${failing}
+    <button class="btn sm ghost" data-act="mk:refresh"${blocked ? ' disabled' : ''}>${esc(t('mk.refresh'))}</button>
+    ${blocked ? `<span class="hint">${esc(t('mk.refreshWait', { t: waitText(r.retryAfterSeconds) }))}</span>` : ''}</p>`;
+}
+
+/** Qué contarle al operador después de pulsar el botón. Nunca «falló». */
+function refreshMessage(r) {
+  if (r.reason === 'conexion_marcada') return t('mk.refreshMarked');
+  if (r.reason === 'sin_conexion') return t('mk.refreshNoConnection');
+  if (r.reason === 'sin_cuentas') return t('mk.refreshNoAccounts');
+  if (r.reason === 'cupo_de_meta') return t('mk.refreshQuota');
+  if (r.reason === 'limitado') return t('mk.refreshLimited', { t: waitText(r.retryAfterSeconds) });
+  const done = (r.refreshed || []).length;
+  const waited = (r.throttled || []).length;
+  const failed = (r.failed || []).length;
+  const parts = [];
+  if (done) parts.push(tn('mk.refreshDone', done, { n: num(done) }));
+  // El límite es POR CUENTA: refrescar unas y esperar por otras es lo normal.
+  if (waited) parts.push(tn('mk.refreshWaited', waited, { n: num(waited) }));
+  if (failed) parts.push(tn('mk.refreshFailed', failed, { n: num(failed) }));
+  return parts.length ? parts.join(' · ') : t('mk.refreshNothing');
+}
+
 const marketing = {
   id: 'marketing', get title() { return t('nav.marketing'); }, get sub() { return t('sub.marketing'); }, icon: 'mega',
   load: (api) => ({ mk: api.marketing(), meta: api.metaStatus() }),
   view(d) {
-    const logo = (p) => `<img class="logo-sm" src="../../assets/img/logos/${p === 'google-ads' ? 'automation' : esc(p)}.svg" alt="">`;
     const body = part(d.mk, (m) => {
-      const cur = m.period.currency;
-      const delta = (a, b, inverse) => { if (!b) return ''; const x = (a - b) / b; const good = inverse ? x < 0 : x > 0; return `<span class="${good ? 'sev-ok' : 'sev-warning'}">${esc(t('mk.vsPrev', { sign: x > 0 ? '+' : '', pct: Math.round(x * 100) }))}</span>`; };
-      const accounts = `<div class="inline-list" style="margin-bottom:16px">${m.accounts.map((a) => `<span class="chip ${a.status === 'active' ? 'ok' : a.status === 'pending' ? 'warn' : 'soon'}">${logo(a.provider)} ${esc(a.name)} · ${esc(t(a.status === 'active' ? 'mk.connected' : a.status === 'pending' ? 'mk.needsAuth' : 'mk.soon'))}</span>`).join('')}<button class="btn sm ghost" data-act="mk:connect">${esc(t('mk.connectAnother'))}</button></div>`;
-      const kpis = `<div class="grid c4">${kpi(t('mk.spend', { period: m.period.label }), money(m.period.spend, cur), delta(m.period.spend, m.period.prevSpend, true))}${kpi(t('mk.leadsIn'), num(m.period.leads), delta(m.period.leads, m.period.prevLeads))}${kpi(t('mk.cpl'), money(m.period.cpl, cur), delta(m.period.cpl, m.period.prevCpl, true))}${kpi(t('mk.cpa'), money(m.period.won ? m.period.spend / m.period.won : 0, cur), `${esc(tn('mk.sale', m.period.won, { n: num(m.period.won) }))} · ${money(m.period.revenue, cur)}`)}</div>`;
-      const camps = card(t('mk.campaigns'), accounts + list(m.campaigns, (c) => row({
-        ico: logo(/tiktok/i.test(c.channel) ? 'tiktok' : 'meta'), title: esc(c.name) + (c.status !== 'active' ? ' ' + statusChip('paused') : ''),
-        sub: `${esc(c.channel)} · ${t('mk.spent', { spend: money(c.spend, cur) })} · ${t('mk.leadsAt', { leads: num(c.leads), cpl: money(c.cpl, cur) })} · ${esc(tn('mk.won', c.crmWon, { n: num(c.crmWon) }))}${c.pausedReason ? `<br><span class="sev-warning">${esc(c.pausedReason)}</span>` : ''}`,
-        primary: c.status === 'active' ? waBtn(t('wa.pauseCampaign', { name: c.name }), t('avisos.pause')) : waBtn(t('wa.resumeCampaign', { name: c.name }), t('avisos.resume'), 'btn sm primary'),
-        more: `${waBtn(t('wa.raiseBudget', { name: c.name }), t('mk.raiseBudget'))}${waBtn(t('wa.campaignLeads', { name: c.name }), t('mk.seeLeads'))}`,
-      })), { sub: t('mk.campaignsSub') });
-      const an = m.analyst;
-      const analyst = card(t('mk.analyst'), `<div class="person"><div class="avatar">${esc(an.avatar)}</div><div><b>${esc(an.name)}</b><div class="hint">${esc(t('mk.reviewsWeekly', { when: fmtDateTime(an.nextReviewAt) }))}</div></div></div>
-        <h3 class="group-title" style="margin-top:16px">${esc(t('mk.recommends'))}</h3>
-        ${list(an.recommendations.filter((r) => r.status === 'pending'), (r) => row({ ico: '💡', cls: 'warning', title: esc(r.text), sub: esc(t('mk.impact', { date: fmtDate(r.at), impact: r.impact })), primary: waBtn(t('wa.applyRecommendation', { text: r.text }), t('mk.apply'), 'btn sm primary'), more: `<button class="btn sm ghost" data-act="mk:later" data-id="${esc(r.id)}">${esc(t('row.later'))}</button>` }), t('mk.nothingPending'))}
-        ${an.requests.length ? moreBox(list(an.requests, (q) => row({ ico: '❓', title: esc(q.topic), sub: esc(q.answer || t('mk.underReview')) })), t('mk.alreadyAsked')) : ''}`,
-        { right: waBtn(t('wa.askAnalyst'), t('mk.askHim'), 'btn sm primary') });
-      const funnel = card(t('mk.funnel'), `<div class="funnel">${m.funnel.map((s, i) => `<div class="funnel-step"><span>${esc(s.label)}</span><div class="bar-track"><div class="bar-fill ${i < 2 ? 'blue' : i < 5 ? '' : 'warn'}" style="width:${Math.max(2, Math.round((Math.log10(s.value + 1) / Math.log10(m.funnel[0].value + 1)) * 100))}%"></div></div><span class="bar-val"><b>${num(s.value)}</b>${i ? ` · ${Math.round((s.value / m.funnel[i - 1].value) * 100)} %` : ''}</span></div>`).join('')}</div>`, { sub: m.period.label });
-      const autos = card(t('mk.automations'), list(m.automations, (a) => row({ ico: { budget: '💸', speed: '⚡', audience: '🎯', report: '📊' }[a.kind] || '🔁', title: esc(a.name) + (a.status !== 'active' ? ' ' + statusChip('paused') : ''), sub: esc(tn('mk.timesMonth', a.firedMonth, { n: num(a.firedMonth) })), primary: a.status === 'active' ? waBtn(t('wa.pauseAutomation', { name: a.name }), t('avisos.pause')) : waBtn(t('wa.resumeAutomation', { name: a.name }), t('avisos.resume'), 'btn sm primary') })),
-        { right: waBtn(t('wa.newBudgetRule'), t('mk.new'), 'btn sm primary') });
-      const reports = card(t('mk.reports'), list(m.reports, (r) => row({ ico: '📈', title: esc(r.title), sub: r.highlights.map(esc).join(' · '), primary: waBtn(t('wa.sendReport', { title: r.title }), t('mk.toWhatsApp'), 'btn sm primary') })), { sub: t('mk.reportsSub'), right: waBtn(t('wa.weeklyReport'), t('mk.askNow')) });
-      return `${kpis}${camps}<div class="two">${analyst}${funnel}</div><div class="two">${autos}${reports}</div>`;
+      const conn = m.connection || {};
+      // Sin conexión no hay métricas que pintar, y decirlo es mejor que una
+      // tabla vacía: lo que falta es un clic en la tarjeta de aquí al lado.
+      if (conn.status === 'disconnected') return empty(t('mk.notConnected'), t('mk.notConnectedSub'));
+      const period = m.period || {};
+      // El motor manda `period.label` en castellano; la pantalla habla tres
+      // idiomas, así que el rótulo se arma con `days` y solo se cae al del
+      // motor si algún día dejara de venir.
+      const periodLabel = period.days ? tn('mk.lastDays', period.days, { n: num(period.days) }) : (period.label || '');
+      const range = period.since && period.until ? `<span class="hint">${esc(t('mk.range', { since: dayOf(period.since), until: dayOf(period.until) }))}</span>` : '';
+      // Un token retirado desde Facebook no se arregla insistiendo: se dice que
+      // hay que volver a conectar, y los últimos números se quedan donde están.
+      const marked = conn.status === 'error' || conn.status === 'revoked'
+        ? `<p class="note warn">${esc(t('mk.connectionMarked', { code: conn.lastErrorCode || '—' }))}</p>` : '';
+      // El título del bloque va fuera de las tarjetas —hay una por moneda— así
+      // que el vacío tampoco lo repite: sería el mismo rótulo dos veces.
+      const totals = (m.totals || []).length
+        ? m.totals.map((x) => totalsCard(x, m.totals.length === 1)).join('')
+        : `<section class="card">${empty(t('mk.noTotals'), t('mk.noTotalsSub'))}</section>`;
+      /* Con más de una moneda se dice POR QUÉ no hay un total único: si no, la
+         ausencia se lee como un dato que falta y alguien acaba sumándolo a
+         mano. */
+      const noSum = (m.totals || []).length > 1 ? `<p class="note">${esc(t('mk.noSum'))}</p>` : '';
+      /* Las campañas se agrupan por moneda y NO se ordenan entre grupos: una
+         lista ordenada por gasto con soles y dólares mezclados invita a leer
+         «1.720 > 300» como si significara algo. */
+      const byCurrency = new Map();
+      (m.campaigns || []).forEach((c) => {
+        if (!byCurrency.has(c.currency)) byCurrency.set(c.currency, []);
+        byCurrency.get(c.currency).push(c);
+      });
+      const camps = byCurrency.size
+        ? [...byCurrency].map(([currency, items]) => {
+          const heading = byCurrency.size > 1 ? `<h3 class="group-title">${esc(SYMBOL[currency] ? `${currency} · ${SYMBOL[currency]}` : currency)}</h3>` : '';
+          return heading + list([...items].sort((a, b) => (b.spend || 0) - (a.spend || 0)), campaignRow);
+        }).join('')
+        : empty(t('mk.noCampaigns'), t('mk.noCampaignsSub'));
+      /* Por qué a estas campañas no se les enseña ROAS, dicho UNA vez y no en
+         cada fila: para una inmobiliaria el motivo es el mismo en todas. */
+      const roasNote = (m.campaigns || []).some((c) => c.roas == null && c.roasUnavailable === 'sin_valor_de_conversion')
+        ? `<p class="note">${esc(t('mk.roasNote'))}</p>` : '';
+      const accounts = card(t('mk.accountsCard'), list(m.accounts || [], accountRow, t('mk.noAccounts')), { sub: t('mk.accountsSub') });
+      return `${marked}${freshnessLine(m)}<div class="page-head" style="margin:0"><div><h2>${esc(t('mk.totals'))}</h2><p>${esc(periodLabel)} ${range}</p></div></div>${totals}${noSum}
+        ${card(t('mk.campaigns'), camps + roasNote, { sub: t('mk.campaignsSub') })}${accounts}`;
     }, { what: t('mk.what'), phrase: t('wa.connectAds'), extra: t('mk.extra') });
-    return `<div class="stack">${head(this.title, this.sub, waBtn(t('wa.leadsPerCampaign'), t('mk.askOnWhatsApp'), 'btn primary'))}${metaCard(d.meta)}${body}</div>`;
+    /* La tarjeta de Meta Ads (plan 14) va DEBAJO cuando hay números que
+       enseñar, y encima cuando lo que toca es conectar: lo primero que se ve
+       tiene que ser lo que el operador vino a hacer. */
+    const connected = !(d.mk instanceof Error) && !isPending(d.mk) && d.mk && d.mk.connection && d.mk.connection.status === 'active';
+    const meta = metaCard(d.meta);
+    return `<div class="stack">${head(this.title, this.sub, waBtn(t('wa.leadsPerCampaign'), t('mk.askOnWhatsApp'), 'btn primary'))}${connected ? body + meta : meta + body}</div>`;
   },
   act: {
     /**
@@ -617,6 +830,29 @@ const marketing = {
       } catch (e) {
         // 404/501: el engine todavía no trae el conector. No es culpa suya.
         toast(e.status === 404 || e.status === 501 ? t('mk.connectSoon') : e.message, 'bad');
+      } finally { if (el) el.disabled = false; }
+    },
+    /**
+     * Pedirle a Meta los números otra vez.
+     *
+     * Nunca es un error: la ruta devuelve 200 también cuando el límite de cinco
+     * minutos deja la petición fuera, y entonces lo que hay que enseñar es
+     * CUÁNDO se podrá volver a pedir, no un fallo. La respuesta trae el
+     * overview dentro, así que se repinta con lo que ya vino en vez de pedirlo
+     * por segunda vez.
+     */
+    'mk:refresh': async (el, ctx, d, reload, rerender) => {
+      if (el) el.disabled = true;
+      try {
+        const r = await ctx.api.marketingRefresh();
+        if (isPending(r)) { toast(t('common.comingSoon', { what: t('mk.what') })); return; }
+        if (r && r.overview) { d.mk = r.overview; rerender(); }
+        toast(refreshMessage(r || {}), r && r.accepted ? 'ok' : '');
+        // El permiso retirado se arregla reconectando, y eso vive en la tarjeta
+        // de Meta Ads: se vuelve a pedir su estado para que lo diga ella.
+        if (r && r.reason === 'conexion_marcada') { ctx.cache = {}; reload(); }
+      } catch (e) {
+        toast(e.message, 'bad');
       } finally { if (el) el.disabled = false; }
     },
     'meta:refresh': async (el, ctx, d, reload) => {
@@ -636,7 +872,6 @@ const marketing = {
       try { await ctx.api.metaDisconnect(); toast(t('mk.metaRemoved'), 'ok'); ctx.cache = {}; reload(); }
       catch (e) { toast(e.message, 'bad'); el.disabled = false; }
     },
-    'mk:later': (el) => { el.closest('.row').style.opacity = '.5'; toast(t('mk.nextReview')); },
   },
 };
 
@@ -737,7 +972,7 @@ function currencyRow(me, active) {
 /* ==================================================================== CUENTA */
 const cuenta = {
   id: 'cuenta', get title() { return t('nav.cuenta'); }, get sub() { return t('sub.cuenta'); }, icon: 'user',
-  load: (api) => ({ me: api.me(), quota: api.quota(), connections: api.connections(), sheets: api.sheets(), mk: api.marketing(), meta: api.metaStatus(), team: api.team(), agent: api.agent(), health: api.health() }),
+  load: (api) => ({ me: api.me(), quota: api.quota(), connections: api.connections(), sheets: api.sheets(), meta: api.metaStatus(), team: api.team(), agent: api.agent(), health: api.health() }),
   view(d, ctx) {
     const me = val(d.me, {});
     const PLAN = { gratis: 'plan.gratis', free: 'plan.gratis', basico: 'plan.basico', starter: 'plan.starter', pro: 'plan.pro', enterprise: 'plan.enterprise' };
@@ -758,7 +993,7 @@ const cuenta = {
       <div class="row"><div class="row-ico">💳</div><div class="row-body">${plan}</div><div class="row-actions"><a class="btn sm" href="../../#precios">${esc(t('cuenta.changePlan'))}</a></div></div>
     </div>`);
 
-    const h = val(d.health, null); const mk = val(d.mk, null);
+    const h = val(d.health, null);
     // Las cuentas de anuncios salen del MISMO sitio que la tarjeta de Marketing.
     // Antes se leían del resumen de marketing, que todavía es de mentira: la
     // tarjeta decía «sin cuentas conectadas» con Meta conectado de verdad, y una
