@@ -7,7 +7,7 @@
      equivalente para pedirlo por WhatsApp. Ver README.md: tabla de endpoints.
    - `createMockApi()` sirve los datos de mock-data.js con una pequeña latencia. */
 
-import { MOCK, MOCK_DELAY_MS } from './mock-data.js?v=7';
+import { MOCK, MOCK_DELAY_MS, marketingOverview, marketingRefresh, metaStatus } from './mock-data.js?v=8';
 
 const PENDING = (reason) => ({ pending: true, reason });
 
@@ -91,20 +91,15 @@ export function createApi(cfg, getToken) {
     policy: () => optional(() => call('/sales-intelligence/policy'), 'policy'),
     quota: () => optional(() => call('/billing/quota'), 'quota'),
     team: () => optional(() => call('/team'), 'team'),
-    // `/marketing/overview` existe en el motor desde el 7-sep y devuelve las
-    // métricas reales de Meta, pero con OTRA forma que la que esta pantalla
-    // sabe pintar (la del mock: analyst, period.currency, accounts[].provider).
-    // Hasta que la pantalla se reescriba, un payload que no trae esa forma se
-    // trata como «todavía no está»: es lo que el panel ya sabe mostrar, y es
-    // cierto —la pantalla no lo soporta— en vez de reventar con
-    // «Cannot read properties of undefined».
-    marketing: () =>
-      optional(async () => {
-        const overview = await call('/marketing/overview');
-        const renderable =
-          overview && overview.analyst && overview.period && overview.period.currency;
-        return renderable ? overview : PENDING('marketing');
-      }, 'marketing'),
+    /* Las métricas de Meta (plan 16 §6): `{connection, period, totals[],
+       campaigns[], accounts[], freshness, refresh}`. `totals` es una lista con
+       un bloque por moneda y no hay un gasto único, a propósito. */
+    marketing: () => optional(() => call('/marketing/overview'), 'marketing'),
+    /* El botón de actualizar. Devuelve SIEMPRE 200 —también cuando el límite de
+       cinco minutos lo deja fuera— y trae el overview dentro, así que quien
+       llama no vuelve a pedirlo. Va por `mutate()` porque, aunque parezca una
+       lectura, llama a Meta y reescribe la copia. */
+    marketingRefresh: () => optional(() => mutate('/marketing/refresh', 'POST'), 'marketing'),
     playbooks: () => optional(() => call('/automation-rules/playbooks'), 'playbooks'),
     /* ---- Meta Ads: la conexión, no las campañas (plan 14) ---- */
     metaStatus: () => optional(() => call('/integrations/meta/status'), 'meta'),
@@ -202,11 +197,17 @@ export function createMockApi() {
     policy: () => wait(a.policy),
     quota: () => wait(MOCK.quota),
     team: () => wait(MOCK.team),
-    marketing: () => wait(MOCK.marketing),
+    /* El caso que se quiere mirar va en la URL: `?mock=1&mk=limitado` (el
+       botón dentro de los cinco minutos), `&mk=marcada` (Facebook retiró el
+       permiso), `&mk=primera` (todavía sin copia) y `&mk=sin` (sin conectar).
+       Sin sesión no se puede llamar al endpoint de verdad, así que es la única
+       forma de revisar los casos que importan antes de desplegar. */
+    marketing: () => wait(marketingOverview(params.get('mk'))),
+    marketingRefresh: () => wait(marketingRefresh(params.get('mk'))),
     playbooks: () => wait(MOCK.playbooks),
-    metaStatus: () => wait(MOCK.meta),
+    metaStatus: () => wait(metaStatus(params.get('mk'))),
     metaConnect: () => log('POST /integrations/meta/connect'),
-    metaRefreshAccounts: () => wait(MOCK.meta),
+    metaRefreshAccounts: () => wait(metaStatus(params.get('mk'))),
     metaSelectAccounts: (refs) => log('POST /integrations/meta/accounts', refs),
     metaDisconnect: () => log('DELETE /integrations/meta/connection'),
   };
