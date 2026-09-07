@@ -91,7 +91,20 @@ export function createApi(cfg, getToken) {
     policy: () => optional(() => call('/sales-intelligence/policy'), 'policy'),
     quota: () => optional(() => call('/billing/quota'), 'quota'),
     team: () => optional(() => call('/team'), 'team'),
-    marketing: () => optional(() => call('/marketing/overview'), 'marketing'),
+    // `/marketing/overview` existe en el motor desde el 7-sep y devuelve las
+    // métricas reales de Meta, pero con OTRA forma que la que esta pantalla
+    // sabe pintar (la del mock: analyst, period.currency, accounts[].provider).
+    // Hasta que la pantalla se reescriba, un payload que no trae esa forma se
+    // trata como «todavía no está»: es lo que el panel ya sabe mostrar, y es
+    // cierto —la pantalla no lo soporta— en vez de reventar con
+    // «Cannot read properties of undefined».
+    marketing: () =>
+      optional(async () => {
+        const overview = await call('/marketing/overview');
+        const renderable =
+          overview && overview.analyst && overview.period && overview.period.currency;
+        return renderable ? overview : PENDING('marketing');
+      }, 'marketing'),
     playbooks: () => optional(() => call('/automation-rules/playbooks'), 'playbooks'),
     /* ---- Meta Ads: la conexión, no las campañas (plan 14) ---- */
     metaStatus: () => optional(() => call('/integrations/meta/status'), 'meta'),
