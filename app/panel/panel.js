@@ -4,11 +4,11 @@
    - Cada sección carga sus datos con Promise.allSettled: una parte que falle o que
      aún no exista en el engine no tumba la página. */
 
-import { createApi, createMockApi } from './api.js?v=10';
-import { SECTIONS } from './sections.js?v=12';
+import { createApi, createMockApi } from './api.js?v=11';
+import { SECTIONS } from './sections.js?v=13';
 import { whatsappStep, resumePendingConnection } from './setup.js?v=7';
 import { esc, setWaBase, setAccountCurrency, wa, skeleton, toast, ICON, isToday, isPast, personName } from './ui.js?v=7';
-import '../strings.js?v=6';
+import '../strings.js?v=7';
 import { initLocale, adoptAccountLocale, mountLanguagePicker, onLocaleChange, locale, t } from '../i18n.js?v=1';
 
 // El idioma se resuelve ANTES del primer pintado: si se resolviera después, la
