@@ -765,6 +765,13 @@ function cuentasDe(meta) {
     name: a.name,
     currency: a.currency,
     selected: Boolean(a.selected),
+    // Lo que antes vivía en la tarjeta de abajo: el portfolio con el que el
+    // cliente las tiene en la cabeza, el identificador con el que se reclama a
+    // Meta, su huso —que decide qué día es «ayer»— y si Meta la inhabilitó.
+    businessName: a.businessName,
+    accountRef: a.accountRef || a.account_ref || a.id,
+    timezoneName: a.timezoneName,
+    accountStatus: a.accountStatus,
   }));
 }
 
@@ -805,13 +812,37 @@ function filterBar(m, cuentas) {
   // que persiste sin decirlo deja al operador sin saber si quedó.
   const elegidas = (cuentas || []).filter((c) => c.selected).length;
   const total = (cuentas || []).length;
-  const casillas = (cuentas || [])
-    .map((c) => `<label class="filtro-opcion"><input type="checkbox" class="mk-cuenta" data-act="mk:accounts" value="${esc(c.id)}"${c.selected ? ' checked' : ''}> ${esc(c.name)} <span class="hint">${esc(c.currency || '')}</span></label>`)
-    .join('');
+  // Agrupadas por portfolio, como el cliente las tiene en el Business Manager
+  // y no como se las devuelve Graph. Con dos cuentas que se llaman casi igual
+  // —«Academia ipluton» y «Academia ipluton.com»— el portfolio y el `act_…`
+  // son lo único que distingue cuál es cuál, así que van aquí, donde se
+  // elige, y no en una tarjeta al final de la página.
+  const porPortfolio = new Map();
+  for (const c of cuentas || []) {
+    const clave = c.businessName || t('mk.metaNoPortfolio');
+    if (!porPortfolio.has(clave)) porPortfolio.set(clave, []);
+    porPortfolio.get(clave).push(c);
+  }
+  const grupos = [...porPortfolio].map(([nombre, items]) => `
+    <p class="filtro-grupo">${esc(nombre)}</p>
+    ${items.map((c) => `<label class="filtro-opcion">
+      <input type="checkbox" class="mk-cuenta" data-act="mk:accounts" value="${esc(c.id)}"${c.selected ? ' checked' : ''}>
+      <span class="filtro-texto">
+        <span class="filtro-nombre">${esc(c.name)}</span>
+        <span class="filtro-detalle">${esc(c.accountRef || '')}${c.currency ? ` · ${esc(c.currency)}` : ''}${c.timezoneName ? ` · ${esc(c.timezoneName)}` : ''}</span>
+        ${c.accountStatus && c.accountStatus !== 1 ? `<span class="filtro-aviso sev-warning">${esc(t('mk.metaDisabled'))}</span>` : ''}
+      </span>
+    </label>`).join('')}`).join('');
   const cuentasFiltro = total
     ? `<details class="filtro">
          <summary>${esc(tn('mk.filterAccounts', elegidas, { n: num(elegidas), total: num(total) }))}</summary>
-         <div class="filtro-panel">${casillas}</div>
+         <div class="filtro-panel">
+           ${grupos}
+           <div class="filtro-pie">
+             <button class="btn sm ghost" data-act="meta:refresh">${esc(t('mk.metaRefresh'))}</button>
+             <span class="hint">${esc(t('mk.metaRefreshHint'))}</span>
+           </div>
+         </div>
        </details>`
     : '';
   return `<div class="filtros" role="group" aria-label="${esc(t('mk.filtersLabel'))}">
@@ -1029,8 +1060,19 @@ const marketing = {
       try { await ctx.api.metaRefreshAccounts(); ctx.cache = {}; reload(); }
       catch (e) { toast(e.message, 'bad'); el.disabled = false; }
     },
-    'meta:disconnect': async (el, ctx, d, reload) => {
-      if (!window.confirm(t('mk.metaConfirmOff'))) return;
+    /* Dos pasos, y el primero no hace nada: enseña la pregunta y esconde el
+       botón. Un `window.confirm()` sale fuera de la página, se lee en diagonal
+       y no puede decir lo que implica; la tarjeta sí, y ya lo dice encima. */
+    'meta:disconnect': (el) => {
+      const caja = document.querySelector('[data-confirmar="meta"]');
+      if (caja) caja.classList.remove('oculto');
+      el.closest('.inline-list')?.classList.add('oculto');
+    },
+    'meta:disconnectNo': (el) => {
+      el.closest('[data-confirmar="meta"]')?.classList.add('oculto');
+      document.querySelector('[data-act="meta:disconnect"]')?.closest('.inline-list')?.classList.remove('oculto');
+    },
+    'meta:disconnectYes': async (el, ctx, d, reload) => {
       el.disabled = true;
       try { await ctx.api.metaDisconnect(); toast(t('mk.metaRemoved'), 'ok'); ctx.cache = {}; reload(); }
       catch (e) { toast(e.message, 'bad'); el.disabled = false; }
@@ -1054,28 +1096,36 @@ function metaCard(value) {
         ${s.status === 'pending' ? `<p class="note warn">${esc(t('mk.metaPendingNote'))}</p>` : ''}
         <div class="inline-list" style="margin-top:12px"><button class="btn primary" data-act="mk:connect">${esc(t(s.status === 'disconnected' ? 'mk.metaConnect' : 'mk.metaRetry'))}</button></div>`,
         { sub: t('mk.metaSub'), right: logo });
-    // Agrupadas por portfolio: es como el cliente las tiene en su cabeza y en
-    // el Business Manager, no como se las devuelve Graph.
-    const groups = new Map();
-    (s.accounts || []).forEach((a) => {
-      const key = a.businessName || t('mk.metaNoPortfolio');
-      if (!groups.has(key)) groups.set(key, []);
-      groups.get(key).push(a);
-    });
-    const accounts = groups.size
-      ? [...groups].map(([name, items]) => `<h3 class="group-title">${esc(name)}</h3>${list(items, (a) => row({
-        ico: logo,
-        title: `${a.selected ? `${chip(t('mk.metaInUse'), 'ok')} ` : ''}${esc(a.name)}`,
-        sub: `${esc(a.accountRef)}${a.currency ? ` · ${esc(a.currency)}` : ''}${a.timezoneName ? ` · ${esc(a.timezoneName)}` : ''}${a.accountStatus && a.accountStatus !== 1 ? ` · <span class="sev-warning">${esc(t('mk.metaDisabled'))}</span>` : ''}`,
-      }))}`).join('')
-      : `<div class="empty"><b>${esc(t('mk.metaNoAccounts'))}</b></div>`;
+    /* La tarjeta ya no elige cuentas: eso vive arriba, en el filtro, junto al
+       periodo, porque es donde el operador lo piensa. Aquí queda lo único que
+       es de la CONEXIÓN y no de una cuenta suelta —desde cuándo, cuándo caduca
+       el permiso— y la salida.
+
+       Y la salida se explica antes de ofrecerse. Desconectar no es un botón
+       reversible: corta el acceso en el acto y borra el permiso en Meta. Lo que
+       cuesta de verdad no es reconectar, es que al hacerlo hay una conexión
+       nueva y el historial hay que volver a traerlo, con el techo de 37 meses
+       que pone Meta. Eso se dice ANTES, no en un `confirm()` del navegador que
+       nadie lee. */
+    const consecuencias = ['mk.offStops', 'mk.offWhatsapp', 'mk.offHistory']
+      .map((k) => `<li>${esc(t(k))}</li>`).join('');
+    const sinCuentas = (s.accounts || []).length
+      ? ''
+      : `<p class="note warn">${esc(t('mk.metaNoAccounts'))}</p>`;
     return card(t('mk.meta'), `
-      <h3 class="group-title">${esc(t('mk.metaAccounts'))}</h3>${accounts}
-      ${s.tokenExpiresAt ? `<p class="note warn" style="margin-top:12px">${esc(t('mk.metaExpires', { date: fmtDate(s.tokenExpiresAt) }))}</p>` : ''}
-      <p class="note">${esc(t('mk.metaPickAbove'))}</p>
+      ${s.tokenExpiresAt ? `<p class="note warn">${esc(t('mk.metaExpires', { date: fmtDate(s.tokenExpiresAt) }))}</p>` : ''}
+      ${sinCuentas}
+      <h3 class="group-title">${esc(t('mk.offTitle'))}</h3>
+      <ul class="consecuencias">${consecuencias}</ul>
       <div class="inline-list" style="margin-top:16px">
-        <button class="btn sm ghost" data-act="meta:refresh">${esc(t('mk.metaRefresh'))}</button>
         <button class="btn sm danger" data-act="meta:disconnect">${esc(t('mk.metaDisconnect'))}</button>
+      </div>
+      <div class="confirmar oculto" data-confirmar="meta">
+        <b>${esc(t('mk.offConfirmQ'))}</b>
+        <span class="inline-list">
+          <button class="btn sm danger" data-act="meta:disconnectYes">${esc(t('mk.offConfirmYes'))}</button>
+          <button class="btn sm ghost" data-act="meta:disconnectNo">${esc(t('row.cancel'))}</button>
+        </span>
       </div>`,
       { sub: s.connectedAt ? t('mk.metaSince', { date: fmtDate(s.connectedAt) }) : t('mk.metaSub'),
         right: `${logo}${chip(t('mk.connected'), 'ok')}` });

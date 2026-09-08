@@ -303,9 +303,26 @@ Tres consecuencias que el código sostiene y conviene no deshacer:
   Meta, gasta cupo y está limitado a una vez cada cinco minutos: tiene que ser
   deliberado. Lo mismo «Traer historial».
 
-Las casillas de cuenta viven **solo** en la barra. La tarjeta de Meta enseña
-cuáles están en uso, pero no deja marcarlas: dos juegos de casillas sobre lo
-mismo es cómo se acaba con una marcada, la otra no, y nadie sabiendo cuál manda.
+Las casillas de cuenta viven **solo** en la barra, y con ellas **toda la ficha**
+de cada cuenta: portfolio, `act_…`, moneda, huso y el aviso de inhabilitada. No
+es adorno. El caso real que lo obligó son dos cuentas llamadas «Academia
+ipluton» y «Academia ipluton.com»: con solo el nombre no se sabe cuál se está
+marcando, y ese dato estaba a página y media de scroll, en otra tarjeta. Lo que
+distingue una opción tiene que estar en la opción.
+
+La tarjeta de Meta, en consecuencia, ya no lista cuentas. Le queda lo que es de
+la CONEXIÓN y no de una cuenta suelta —desde cuándo, cuándo caduca el permiso—
+y la salida, explicada antes de ofrecerse y confirmada en la propia tarjeta.
+Nada de `window.confirm()`: se lee en diagonal y no cabe en él lo que esto
+cuesta. Las tres consecuencias que se enseñan son ciertas y están comprobadas
+contra el motor (`000107_connection_disconnect_retention.sql`): el acceso se
+corta en el acto y el permiso se borra en Meta; Comando deja de contestar sobre
+anuncios; y al reconectar hay **otra** conexión, así que el historial se ve
+vacío y hay que traerlo de nuevo, con el techo de 37 meses de Meta.
+
+«Tus cuentas publicitarias» sigue existiendo aparte y no es lo mismo: no dice
+cuáles se miran, dice **de cuándo son los números de cada una y cuál no
+respondió**. Es salud del dato, no selección.
 
 ## 6. Las versiones (`?v=`), y por qué hay un guardia
 
