@@ -19,6 +19,15 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      # Tres cosas que solo se ven ya publicadas y con el cliente delante: una
+      # seccion que revienta, una clave sin traducir, y —dos veces ya— un
+      # fichero cambiado sin subirle el `?v=`, que Pages sigue sirviendo viejo.
+      - name: Comprobar antes de publicar
+        run: |
+          node tooling/check-app-render.mjs
+          node tooling/check-app-i18n.mjs
+          node tooling/check-versiones.mjs
+
       - name: Deploy (wrangler pages deploy)
         uses: cloudflare/wrangler-action@v3
         with:
