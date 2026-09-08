@@ -8,12 +8,12 @@
    - vocabulario del operador (plata en juego, parado, sin dueño, repetidos), nunca del sistema. */
 
 import { isPending } from './api.js?v=11';
-import { crmBlock, crmActions, whatsappStep, NAMES as PROVIDER_NAMES } from './setup.js?v=7';
+import { crmBlock, crmActions, whatsappStep, NAMES as PROVIDER_NAMES } from './setup.js?v=8';
 import {
   esc, num, money, pct, fmtTime, fmtDate, fmtDateTime, monthName, dayLabel, sameDay, rel, isToday, isPast, isoDay,
   wa, waBtn, askLine, chip, statusChip, bar, spark, kpi, card, row, moreBox, empty, soon, skeleton, toast, ICON, SIGNAL_PHRASE,
   personName, personEmail, highValueAmount, SYMBOL, setAccountCurrency,
-} from './ui.js?v=7';
+} from './ui.js?v=8';
 import { t, tn, localeTag } from '../i18n.js?v=1';
 
 /** Renderiza una parte según el estado de su dato. */
@@ -615,7 +615,7 @@ function moneyExact(n, currency) {
 /** Un día suelto («2026-08-07») en la fecha corta del idioma. Se le pega la
     hora local a propósito: `new Date('2026-08-07')` es medianoche UTC y en
     Lima se leería como el día anterior. */
-const dayOf = (iso) => (iso ? fmtDate(`${iso}T00:00:00`) : '');
+const dayOf = (iso) => (iso ? fmtDate(iso) : '');
 
 /** «hace 40 min», desde la edad en segundos que manda el motor. */
 function ageAgo(seconds) {
@@ -755,6 +755,29 @@ function frescura(m) {
  * Cuando el límite de cinco minutos está en curso, la opción se apaga y DEBAJO
  * va cuándo se podrá: una opción apagada sin explicación se lee como una avería.
  */
+/**
+ * Pedir un periodo. `null` son los últimos 30 días, que los decide el servidor.
+ *
+ * Guarda la elección en `ctx` ANTES de pedir: si la llamada falla, la etiqueta
+ * y los números siguen siendo coherentes entre sí —los de antes— porque no se
+ * llega a repintar.
+ */
+async function pedirPeriodo(ctx, d, rerender, periodo) {
+  const previo = ctx.mkPeriodo || null;
+  ctx.mkPeriodo = periodo;
+  cargando(true);
+  try {
+    const r = periodo
+      ? await ctx.api.marketingOverviewBetween(periodo.since, periodo.until)
+      : await ctx.api.marketing();
+    if (isPending(r)) { toast(t('common.comingSoon', { what: t('mk.what') })); ctx.mkPeriodo = previo; return; }
+    if (r) { d.mk = r; rerender(); }
+  } catch (e) {
+    ctx.mkPeriodo = previo;
+    toast(e.message, 'bad');
+  } finally { cargando(false); }
+}
+
 /** Elegir una opción cierra el menú: si se queda abierto tapa justo los números
  *  que se acaban de pedir, que es lo que uno estaba mirando. */
 function cerrarMenu(el) { el?.closest('details.filtro')?.removeAttribute('open'); }
@@ -840,28 +863,84 @@ function cuentasDe(meta) {
  * «Actualizar», que no es un filtro: llama a Meta, gasta cupo y está limitado a
  * una vez cada cinco minutos, así que tiene que seguir siendo deliberado.
  */
-function filterBar(m, cuentas) {
-  const hoy = new Date();
+/**
+ * Los atajos de periodo.
+ *
+ * Se calculan, no se escriben: una lista fija con «2025» dentro envejece sola y
+ * el año que viene ofrece como «pasado» un año que ya no lo es.
+ *
+ * El año en curso se corta HOY, no el 31 de diciembre: pedirle a Meta los meses
+ * que aún no han pasado no devuelve nada y deja una etiqueta que miente («del 1
+ * ene al 31 dic» estando en septiembre).
+ */
+function periodosDe(hoy) {
   const anio = hoy.getUTCFullYear();
-  const p = m.period || {};
-  // Cuando se pidió un tramo, el motor lo devuelve TAL CUAL y calza con una
-  // opción. Cuando no, `since`/`until` salen de los datos y no calzan con
-  // ninguna, así que el navegador enseña la primera: «últimos 30 días». Sin
-  // repetir aquí el 30, que lo decide `windowDays` en el servidor y puede
-  // cambiar sin que este fichero se entere.
-  const elegido = p.since && p.until ? `${p.since}|${p.until}` : '';
-  const periodos = [
-    { v: '', l: t('mk.periodLast30') },
-    { v: `${anio}-01-01|${anio}-12-31`, l: t('mk.periodThisYear', { y: anio }) },
-    { v: `${anio - 1}-01-01|${anio - 1}-12-31`, l: t('mk.periodYear', { y: anio - 1 }) },
-    { v: `${anio - 2}-01-01|${anio - 2}-12-31`, l: t('mk.periodYear', { y: anio - 2 }) },
+  const dia = (d) => isoDay(new Date(hoy.getTime() - d * 86400000));
+  const anual = (y) => ({
+    id: `a${y}`,
+    label: y === anio ? t('mk.periodThisYear', { y }) : t('mk.periodYear', { y }),
+    since: `${y}-01-01`,
+    until: y === anio ? isoDay(hoy) : `${y}-12-31`,
+  });
+  return [
+    { id: '30d', label: t('mk.periodLast30'), since: '', until: '' },
+    { id: '90d', label: t('mk.periodLast90'), since: dia(89), until: isoDay(hoy) },
+    anual(anio), anual(anio - 1), anual(anio - 2),
   ];
-  const opciones = periodos
-    .map((o) => `<option value="${esc(o.v)}"${o.v === elegido ? ' selected' : ''}>${esc(o.l)}</option>`)
-    .join('');
-  // Las cuentas: cuántas de cuántas, y el desplegable con las casillas. Se
-  // guarda al marcar, sin botón — y se dice que se guardó, porque una elección
-  // que persiste sin decirlo deja al operador sin saber si quedó.
+}
+
+/**
+ * Qué periodo se está mirando. Lo sabe el PANEL, no la respuesta.
+ *
+ * Antes se deducía del `since`/`until` que devolvía el motor, y no se puede: sin
+ * tramo, esas dos fechas salen de los datos —la primera y la última con gasto—,
+ * no de lo que se pidió. Cualquier deducción a partir de ahí adivina. Aquí lo
+ * decide quien lo eligió, que es el operador pulsando.
+ */
+const periodoActivo = (ctx) => (ctx && ctx.mkPeriodo) || null;
+
+/**
+ * El selector de periodo: cinco atajos y un rango de fechas de verdad.
+ *
+ * Era un `<select>` con cuatro opciones fijas, y eso obliga a que la pregunta
+ * que uno tiene quepa en una de las cuatro. «Del 1 de marzo al 15 de abril» no
+ * cabía en ninguna.
+ *
+ * Las dos fechas no llevan botón de aplicar: en cuanto las DOS tienen valor, se
+ * pide. Media respuesta no es una pregunta, así que con una sola no pasa nada.
+ * Y si vienen del revés se intercambian —un rango es simétrico y no hay otra
+ * cosa que el operador pudiera haber querido decir—.
+ *
+ * El suelo son 37 meses: es el techo de la API de Meta, así que por debajo de
+ * ahí no hay nada que traer ni podrá haberlo. El techo es hoy.
+ */
+function periodPicker(ctx, hoy) {
+  const lista = periodosDe(hoy);
+  const activo = periodoActivo(ctx);
+  const atajo = activo ? lista.find((x) => x.id === activo.id) : lista[0];
+  const etiqueta = atajo ? atajo.label : t('mk.periodRange', { from: fmtDate(activo.since, true), to: fmtDate(activo.until, true) });
+  const opciones = lista.map((x) => {
+    const puesto = atajo ? x.id === atajo.id : false;
+    return `<button class="menu-item${puesto ? ' elegido' : ''}"${puesto ? ' aria-current="true"' : ''} data-act="mk:period" data-id="${esc(x.id)}" data-since="${esc(x.since)}" data-until="${esc(x.until)}"><span class="menu-titulo">${esc(x.label)}</span></button>`;
+  }).join('');
+  const suelo = isoDay(new Date(Date.UTC(hoy.getUTCFullYear(), hoy.getUTCMonth() - 37, 1)));
+  const techo = isoDay(hoy);
+  const [desde, hasta] = atajo ? ['', ''] : [activo.since, activo.until];
+  return `<details class="filtro">
+    <summary aria-label="${esc(t('mk.periodLabel'))}">${esc(etiqueta)}</summary>
+    <div class="filtro-panel">
+      ${opciones}
+      <div class="filtro-fechas">
+        <p class="filtro-grupo">${esc(t('mk.periodCustom'))}</p>
+        <label><span>${esc(t('mk.periodFrom'))}</span><input type="date" data-act="mk:fecha" data-extremo="desde" value="${esc(desde)}" min="${suelo}" max="${techo}"></label>
+        <label><span>${esc(t('mk.periodTo'))}</span><input type="date" data-act="mk:fecha" data-extremo="hasta" value="${esc(hasta)}" min="${suelo}" max="${techo}"></label>
+      </div>
+    </div>
+  </details>`;
+}
+
+function filterBar(m, cuentas, ctx) {
+  // Cuántas de cuántas cuentas se están mirando, que es lo que dice la píldora.
   const elegidas = (cuentas || []).filter((c) => c.selected).length;
   const total = (cuentas || []).length;
   // Agrupadas por portfolio, como el cliente las tiene en el Business Manager
@@ -898,7 +977,7 @@ function filterBar(m, cuentas) {
        </details>`
     : '';
   return `<div class="filtros" role="group" aria-label="${esc(t('mk.filtersLabel'))}">
-    <select class="sel sm" data-act="mk:period" aria-label="${esc(t('mk.periodLabel'))}">${opciones}</select>
+    ${periodPicker(ctx, new Date())}
     ${cuentasFiltro}
     <div class="filtros-fin">${frescura(m)}${menuDeDatos(m)}</div>
   </div>`;
@@ -925,8 +1004,16 @@ function refreshMessage(r) {
 
 const marketing = {
   id: 'marketing', get title() { return t('nav.marketing'); }, get sub() { return t('sub.marketing'); }, icon: 'mega',
-  load: (api) => ({ mk: api.marketing(), meta: api.metaStatus() }),
-  view(d) {
+  /* El periodo elegido sobrevive a un `reload()`.
+   *
+   * Sin esto: eliges «Todo 2024», marcas una cuenta —que recarga— y los números
+   * vuelven callados a los últimos 30 días mientras la etiqueta sigue diciendo
+   * 2024. La pantalla mentía sobre qué estabas mirando. */
+  load: (api, ctx) => {
+    const p = periodoActivo(ctx);
+    return { mk: p ? api.marketingOverviewBetween(p.since, p.until) : api.marketing(), meta: api.metaStatus() };
+  },
+  view(d, ctx) {
     const body = part(d.mk, (m) => {
       const conn = m.connection || {};
       // Sin conexión no hay métricas que pintar, y decirlo es mejor que una
@@ -973,7 +1060,7 @@ const marketing = {
       // `mk-cuerpo` es lo que se atenúa mientras se cargan otros filtros: sin
       // marcarlo, cambiar de periodo deja los números VIEJOS en pantalla unos
       // segundos y se leen como los nuevos.
-      return `${marked}${filterBar(m, cuentasDe(d.meta))}
+      return `${marked}${filterBar(m, cuentasDe(d.meta), ctx)}
         <div id="mk-cuerpo"><div class="page-head" style="margin:0"><div><h2>${esc(t('mk.totals'))}</h2><p>${esc(periodLabel)} ${range}</p></div></div>${totals}${noSum}
         ${card(t('mk.campaigns'), camps + roasNote, { sub: t('mk.campaignsSub') })}${accounts}</div>`;
     }, { what: t('mk.what'), phrase: t('wa.connectAds'), extra: t('mk.extra') });
@@ -1033,22 +1120,23 @@ const marketing = {
      * repinta. Recargar traería otra vez el CRM, la agenda y los avisos para
      * cambiar un desplegable.
      */
+    /* Elegir ES la acción: no hay «aplicar». `ctx.mkPeriodo` recuerda qué se
+       pidió para que un `reload()` posterior vuelva a pedir lo mismo. */
     'mk:period': async (el, ctx, d, reload, rerender) => {
-      const [since, until] = String(el.value || '').split('|');
-      // Elegir ES la acción: no hay «aplicar». Lo que sí hace falta es DECIR
-      // que está cargando — sin eso, los números viejos se quedan en pantalla
-      // unos segundos y se leen como los del periodo nuevo.
-      cargando(true);
-      if (el) el.disabled = true;
-      try {
-        const r = since && until
-          ? await ctx.api.marketingOverviewBetween(since, until)
-          : await ctx.api.marketing();
-        if (isPending(r)) { toast(t('common.comingSoon', { what: t('mk.what') })); return; }
-        if (r) { d.mk = r; rerender(); }
-      } catch (e) {
-        toast(e.message, 'bad');
-      } finally { cargando(false); if (el) el.disabled = false; }
+      const { id, since, until } = el.dataset;
+      cerrarMenu(el);
+      await pedirPeriodo(ctx, d, rerender, since && until ? { id, since, until } : null);
+    },
+    /* Las dos fechas del rango. Con una sola no se pide nada: media respuesta no
+       es una pregunta. Del revés se intercambian — un rango es simétrico. */
+    'mk:fecha': async (el, ctx, d, reload, rerender) => {
+      const caja = el.closest('.filtro-fechas');
+      let desde = caja?.querySelector('[data-extremo="desde"]')?.value || '';
+      let hasta = caja?.querySelector('[data-extremo="hasta"]')?.value || '';
+      if (!desde || !hasta) return;
+      if (desde > hasta) [desde, hasta] = [hasta, desde];
+      cerrarMenu(el);
+      await pedirPeriodo(ctx, d, rerender, { id: 'rango', since: desde, until: hasta });
     },
     /**
      * Marcar o desmarcar una cuenta.

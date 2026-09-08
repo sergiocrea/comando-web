@@ -4,8 +4,8 @@
     "sha": "5c5fb97213bddd5f"
   },
   "app/auth.js": {
-    "v": "10",
-    "sha": "633b41beb71a7f62"
+    "v": "11",
+    "sha": "f1dac9db235ffffa"
   },
   "app/dashboard/dashboard.css": {
     "v": "1",
@@ -48,32 +48,32 @@
     "sha": "25928c43a50e5403"
   },
   "app/panel/panel.css": {
-    "v": "12",
-    "sha": "8c87f8917f03025e"
+    "v": "13",
+    "sha": "c2e739945829cd3a"
   },
   "app/panel/panel.js": {
-    "v": "18",
-    "sha": "6d8b87841ff1141a"
+    "v": "19",
+    "sha": "ba61afb477a3acbc"
   },
   "app/panel/sections.js": {
-    "v": "18",
-    "sha": "73b8dda2f4e7665a"
+    "v": "19",
+    "sha": "816bd0c0064023cc"
   },
   "app/panel/setup.js": {
-    "v": "7",
-    "sha": "370bb2236046d959"
+    "v": "8",
+    "sha": "a9784df24a2daff8"
   },
   "app/panel/ui.js": {
-    "v": "7",
-    "sha": "ea239d04646e6fe3"
+    "v": "8",
+    "sha": "f2ffc0ea9cf2556c"
   },
   "app/phone-picker.js": {
     "v": "4",
     "sha": "643bc4a65b2bd765"
   },
   "app/strings.js": {
-    "v": "10",
-    "sha": "3bf95e9c9c2d5842"
+    "v": "11",
+    "sha": "eba1365950563532"
   },
   "assets/img/og-image.jpg": {
     "v": "4",

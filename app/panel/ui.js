@@ -49,7 +49,14 @@ const dow = () => t('ui.dow').split(',');
 const months = () => t('ui.months').split(',');
 export function fmtTime(iso) { const d = new Date(iso); return d.toLocaleTimeString(localeTag(), { hour: '2-digit', minute: '2-digit', hour12: locale() === 'en' }); }
 export function fmtDate(iso, withYear) {
-  const d = new Date(iso);
+  /* Una fecha SIN hora («2024-03-01») la parsea el navegador como medianoche
+   * UTC, y luego `getDate()` la lee en la hora de aquí: al oeste de Greenwich
+   * sale el día ANTERIOR. El picker de periodo enseñaba «29 feb – 14 abr» sobre
+   * un rango del 1 de marzo al 15 de abril.
+   *
+   * Se ancla a medianoche LOCAL, que es lo que una fecha sin hora significa.
+   * Iba parcheado en un solo sitio (`dayOf`); la regla vive aquí. */
+  const d = new Date(/^\d{4}-\d{2}-\d{2}$/.test(String(iso)) ? `${iso}T00:00:00` : iso);
   const month = months()[d.getMonth()].slice(0, 3);
   // En inglés el mes va delante; en castellano y portugués, detrás.
   const core = locale() === 'en' ? `${month} ${d.getDate()}` : `${d.getDate()} ${month}`;

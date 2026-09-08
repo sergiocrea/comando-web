@@ -330,6 +330,20 @@ table.tbl { width: 100%; border-collapse: separate; border-spacing: 0; font-size
 .menu-item:hover:not(:disabled) { background: rgba(145, 158, 171, .10); }
 .menu-item:disabled { cursor: default; opacity: .55; }
 .menu-titulo { font-size: 15px; font-weight: 600; color: var(--g800, #1C252E); }
+/* El atajo puesto se marca con un signo, no solo con color: el color solo no lo
+   ve quien no distingue verde de gris. */
+.menu-item.elegido .menu-titulo { color: var(--brand-ink, #007867); }
+.menu-item.elegido .menu-titulo::after { content: ' ✓'; }
+
+/* El rango de fechas, debajo de los atajos y separado: son la misma pregunta
+   —qué periodo— pero una se responde con un clic y la otra con dos fechas. */
+.filtro-fechas { margin-top: 8px; padding: 10px 12px 4px; border-top: 1px solid rgba(145, 158, 171, .20); display: grid; gap: 8px; }
+.filtro-fechas .filtro-grupo { margin: 0 0 2px; }
+.filtro-fechas label { display: flex; align-items: center; gap: 10px; font-size: 13px; color: var(--g600); }
+.filtro-fechas label > span { flex: none; min-width: 46px; }
+.filtro-fechas input { flex: 1; min-width: 0; font: inherit; font-size: 13px; padding: 6px 8px; border: 1px solid rgba(145, 158, 171, .32); border-radius: 8px; background: #fff; color: var(--g800, #1C252E); }
+.filtro-fechas input:hover { border-color: var(--g800, #1C252E); }
+.filtro-fechas input:focus-visible { outline: 2px solid var(--g800, #1C252E); outline-offset: 1px; }
 /* El panel de cuentas lleva la ficha entera —portfolio, `act_…`, moneda y
    huso—, que antes vivía en una tarjeta al final de la página. Con dos cuentas
    que se llaman casi igual, eso es lo único que distingue cuál se está

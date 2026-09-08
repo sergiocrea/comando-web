@@ -8,7 +8,7 @@
    - `crmActions`: los manejadores de esos botones (OAuth por Nango en ventana emergente,
      confirmación por sondeo, selector de hojas de Google). */
 
-import { esc, toast, ICON, fmtDate } from './ui.js?v=7';
+import { esc, toast, ICON, fmtDate } from './ui.js?v=8';
 import { t } from '../i18n.js?v=1';
 
 const cfg = () => window.COMANDO_CONFIG || {};

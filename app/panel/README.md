@@ -299,6 +299,18 @@ Tres consecuencias que el código sostiene y conviene no deshacer:
   que persiste en silencio deja al operador sin saber si tomó. Desmarcar la
   ÚLTIMA se rechaza y se dice por qué; sin ninguna cuenta no hay nada que
   copiar.
+- **El periodo es un rango de fechas, no cuatro opciones fijas.** Cinco atajos
+  —30 días, 90 días y los tres últimos años, todos calculados— y debajo dos
+  `<input type="date">`. Sin botón de aplicar: se pide en cuanto las DOS tienen
+  valor, y si vienen del revés se intercambian. El suelo son 37 meses, que es el
+  techo de la API de Meta; el techo, hoy. El año en curso se corta HOY y no el
+  31 de diciembre, o la etiqueta miente.
+- **Qué periodo se mira lo sabe el panel (`ctx.mkPeriodo`), no la respuesta.**
+  Sin tramo, el `since`/`until` que devuelve el motor sale de los DATOS —la
+  primera y la última fecha con gasto—, no de lo que se pidió, así que deducirlo
+  de ahí es adivinar. Y `load` lo recibe por `ctx`: sin eso, marcar una cuenta
+  recargaba y devolvía los números a 30 días mientras la etiqueta seguía
+  diciendo «Todo 2024».
 - **Las dos acciones que llaman a Meta viven juntas, a la derecha y detrás de
   un menú** («Actualizar» → «Actualizar ahora» / «Traer historial»). Ninguna es
   un filtro: las dos salen a la API y gastan cupo, así que no se pulsan de paso.

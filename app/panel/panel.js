@@ -5,10 +5,10 @@
      aún no exista en el engine no tumba la página. */
 
 import { createApi, createMockApi } from './api.js?v=11';
-import { SECTIONS } from './sections.js?v=18';
-import { whatsappStep, resumePendingConnection } from './setup.js?v=7';
-import { esc, setWaBase, setAccountCurrency, wa, skeleton, toast, ICON, isToday, isPast, personName } from './ui.js?v=7';
-import '../strings.js?v=10';
+import { SECTIONS } from './sections.js?v=19';
+import { whatsappStep, resumePendingConnection } from './setup.js?v=8';
+import { esc, setWaBase, setAccountCurrency, wa, skeleton, toast, ICON, isToday, isPast, personName } from './ui.js?v=8';
+import '../strings.js?v=11';
 import { initLocale, adoptAccountLocale, mountLanguagePicker, onLocaleChange, locale, t } from '../i18n.js?v=1';
 
 // El idioma se resuelve ANTES del primer pintado: si se resolviera después, la
@@ -104,7 +104,7 @@ $('page').addEventListener('click', async (ev) => {
   // —y el manejador de cuentas espera a la red—: el operador veía la casilla
   // saltar atrás y el camino de error la volvía a girar, dejándola al revés de
   // lo que había pasado. Se despacha por `change`, abajo, con los desplegables.
-  if (el.tagName === 'SELECT' || el.type === 'checkbox') return;
+  if (el.tagName === 'SELECT' || el.tagName === 'INPUT') return;
   const fn = section.act && section.act[el.dataset.act];
   if (!fn) return;
   try { await fn(el, ctx, ctx.cache[section.id], reload, rerender); } catch (e) { toast(e.message || t('common.failed'), 'bad'); }
@@ -121,9 +121,12 @@ $('page').addEventListener('click', async (ev) => {
  * falta `preventDefault()`, y eso deshace la marca en cuanto el manejador
  * espera a la red. Por `change` el valor es de verdad el nuevo, así que
  * revertir en el camino de error vuelve a significar lo que dice.
+ *
+ * Y los `<input type="date">` del rango, por lo mismo que el desplegable: el
+ * `click` es abrir el calendario, no elegir el día.
  */
 $('page').addEventListener('change', async (ev) => {
-  const el = ev.target.closest('select[data-act],input[type="checkbox"][data-act]');
+  const el = ev.target.closest('select[data-act],input[data-act]');
   if (!el) return;
   const section = SECTIONS.find((s) => s.id === currentId());
   const fn = section.act && section.act[el.dataset.act];
