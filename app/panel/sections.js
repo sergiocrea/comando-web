@@ -11,7 +11,7 @@ import { isPending } from './api.js?v=11';
 import { crmBlock, crmActions, whatsappStep, NAMES as PROVIDER_NAMES } from './setup.js?v=7';
 import {
   esc, num, money, pct, fmtTime, fmtDate, fmtDateTime, monthName, dayLabel, sameDay, rel, isToday, isPast, isoDay,
-  wa, waBtn, askLine, chip, statusChip, bar, spark, kpi, card, row, moreBox, empty, soon, toast, ICON, SIGNAL_PHRASE,
+  wa, waBtn, askLine, chip, statusChip, bar, spark, kpi, card, row, moreBox, empty, soon, skeleton, toast, ICON, SIGNAL_PHRASE,
   personName, personEmail, highValueAmount, SYMBOL, setAccountCurrency,
 } from './ui.js?v=7';
 import { t, tn, localeTag } from '../i18n.js?v=1';
@@ -723,34 +723,82 @@ const accountRow = (a) => row({
  * la pantalla más fresca de lo que es. Sin ninguna copia todavía no hay edad
  * que enseñar, y eso no es un error: es que la primera copia viene en camino.
  */
-function freshnessLine(m) {
+/**
+ * De cuándo son los números, y las dos acciones que salen a pedírselos a Meta.
+ *
+ * Vive a la DERECHA de la misma barra que los filtros porque es la otra mitad
+ * de la misma pregunta: «qué estoy mirando» a la izquierda, «de cuándo es y
+ * cómo lo refresco» a la derecha.
+ *
+ * La edad va en letra pequeña y apagada cuando todo está bien —es la respuesta
+ * a una pregunta que casi nunca se hace— y solo levanta la voz cuando el dato
+ * está viejo o una cuenta no respondió. Un cartel verde y grande cada vez que
+ * cargas la pantalla enseña a no mirarlo.
+ */
+function frescura(m) {
   const f = m.freshness || {};
-  const r = m.refresh || {};
-  const age = f.refreshedAt && f.ageSeconds != null
-    ? chip(t('mk.dataFrom', { age: ageAgo(f.ageSeconds) }), f.stale ? 'warn' : 'ok')
-    : chip(t('mk.firstCopy'), 'soon');
-  const pending = f.pending ? `<span class="hint">${esc(tn('mk.pendingAccounts', f.pending, { n: num(f.pending) }))}</span>` : '';
-  const failing = f.failing ? `<span class="sev-warning">${esc(tn('mk.failingAccounts', f.failing, { n: num(f.failing) }))}</span>` : '';
-  // Cuando el límite de cinco minutos está en curso el botón no se puede
-  // pulsar, y a su lado va CUÁNDO se podrá: un botón apagado sin explicación
-  // se lee como una avería.
-  const blocked = r.allowed === false && r.retryAfterSeconds > 0;
-  return `<p class="status-line">${age}${pending}${failing}
-    <button class="btn sm ghost" data-act="mk:refresh"${blocked ? ' disabled' : ''}>${esc(t('mk.refresh'))}</button>
-    ${blocked ? `<span class="hint">${esc(t('mk.refreshWait', { t: waitText(r.retryAfterSeconds) }))}</span>` : ''}
-    </p>`;
+  const edad = f.refreshedAt && f.ageSeconds != null
+    ? `<span class="frescura-edad${f.stale ? ' sev-warning' : ''}">${esc(t('mk.dataFrom', { age: ageAgo(f.ageSeconds) }))}</span>`
+    : `<span class="frescura-edad">${esc(t('mk.firstCopy'))}</span>`;
+  const pending = f.pending ? `<span class="frescura-edad">${esc(tn('mk.pendingAccounts', f.pending, { n: num(f.pending) }))}</span>` : '';
+  const failing = f.failing ? `<span class="frescura-edad sev-warning">${esc(tn('mk.failingAccounts', f.failing, { n: num(f.failing) }))}</span>` : '';
+  return `${edad}${pending}${failing}`;
 }
 
 /**
- * Atenuar los números mientras llegan los del filtro nuevo.
+ * El menú de traer datos.
  *
- * No es decoración: sin esto, cambiar de periodo deja los números VIEJOS en
- * pantalla el segundo que tarda la respuesta, y se leen como los nuevos. En una
- * pantalla sobre dinero, ese segundo basta para creerse una cifra que no es.
+ * «Actualizar» y «Traer historial» hacían lo mismo en sitios distintos: las dos
+ * salen a Meta, las dos gastan cupo y ninguna es un filtro. Juntas en un menú
+ * queda claro que son la misma familia, y ninguna se pulsa de paso.
+ *
+ * Cuando el límite de cinco minutos está en curso, la opción se apaga y DEBAJO
+ * va cuándo se podrá: una opción apagada sin explicación se lee como una avería.
+ */
+function menuDeDatos(m) {
+  const r = m.refresh || {};
+  const bloqueado = r.allowed === false && r.retryAfterSeconds > 0;
+  return `<details class="filtro a-la-derecha">
+    <summary>${esc(t('mk.refresh'))}</summary>
+    <div class="filtro-panel">
+      <button class="menu-item" data-act="mk:refresh"${bloqueado ? ' disabled' : ''}>
+        <span class="menu-titulo">${esc(t('mk.refreshNow'))}</span>
+        <span class="hint">${esc(bloqueado ? t('mk.refreshWait', { t: waitText(r.retryAfterSeconds) }) : t('mk.refreshNowSub'))}</span>
+      </button>
+      <button class="menu-item" data-act="mk:import">
+        <span class="menu-titulo">${esc(t('mk.importHistory'))}</span>
+        <span class="hint">${esc(t('mk.importHistorySub'))}</span>
+      </button>
+    </div>
+  </details>`;
+}
+
+/**
+ * Esqueletos mientras llegan los números, en vez de los de antes.
+ *
+ * No es decoración. Primero se atenuaban, y no bastaba: con una cuenta recién
+ * marcada o un periodo sin datos todavía, lo que quedaba debajo del velo eran
+ * los estados VACÍOS —«Todavía sin gasto en el periodo», «Ninguna campaña con
+ * gasto»— que se leen como la respuesta cuando en realidad la respuesta aún no
+ * ha llegado. Traer el historial tarda lo que tarde Meta, y en ese rato el
+ * operador se creía que no tenía campañas.
+ *
+ * Un esqueleto no se puede confundir con un dato: no dice nada.
  */
 function cargando(si) {
   const cuerpo = document.getElementById('mk-cuerpo');
-  if (cuerpo) cuerpo.classList.toggle('cargando', Boolean(si));
+  if (!cuerpo) return;
+  if (!si) {
+    cuerpo.classList.remove('esperando');
+    cuerpo.querySelector('.mk-espera')?.remove();
+    return;
+  }
+  if (cuerpo.querySelector('.mk-espera')) return;
+  cuerpo.classList.add('esperando');
+  cuerpo.insertAdjacentHTML('afterbegin', `<div class="mk-espera">
+    ${card(t('mk.totals'), skeleton(2), { sub: t('mk.waitingSub') })}
+    ${card(t('mk.campaigns'), skeleton(4), { sub: t('mk.campaignsSub') })}
+  </div>`);
 }
 
 /**
@@ -848,7 +896,7 @@ function filterBar(m, cuentas) {
   return `<div class="filtros" role="group" aria-label="${esc(t('mk.filtersLabel'))}">
     <select class="sel sm" data-act="mk:period" aria-label="${esc(t('mk.periodLabel'))}">${opciones}</select>
     ${cuentasFiltro}
-    <span class="accion"><button class="btn sm ghost" data-act="mk:import">${esc(t('mk.importHistory'))}</button></span>
+    <div class="filtros-fin">${frescura(m)}${menuDeDatos(m)}</div>
   </div>`;
 }
 
@@ -921,7 +969,7 @@ const marketing = {
       // `mk-cuerpo` es lo que se atenúa mientras se cargan otros filtros: sin
       // marcarlo, cambiar de periodo deja los números VIEJOS en pantalla unos
       // segundos y se leen como los nuevos.
-      return `${marked}${freshnessLine(m)}${filterBar(m, cuentasDe(d.meta))}
+      return `${marked}${filterBar(m, cuentasDe(d.meta))}
         <div id="mk-cuerpo"><div class="page-head" style="margin:0"><div><h2>${esc(t('mk.totals'))}</h2><p>${esc(periodLabel)} ${range}</p></div></div>${totals}${noSum}
         ${card(t('mk.campaigns'), camps + roasNote, { sub: t('mk.campaignsSub') })}${accounts}</div>`;
     }, { what: t('mk.what'), phrase: t('wa.connectAds'), extra: t('mk.extra') });
@@ -970,7 +1018,7 @@ const marketing = {
         if (r && r.reason === 'conexion_marcada') { ctx.cache = {}; reload(); }
       } catch (e) {
         toast(e.message, 'bad');
-      } finally { if (el) el.disabled = false; }
+      } finally { cargando(false); if (el) el.disabled = false; }
     },
     /**
      * Mirar otro periodo.
@@ -1039,6 +1087,9 @@ const marketing = {
      */
     'mk:import': async (el, ctx, d, reload, rerender) => {
       if (el) el.disabled = true;
+      // La espera más larga de la pantalla —Meta manda meses de golpe— y la
+      // única que no lo decía: se veía «Ninguna campaña con gasto» todo el rato.
+      cargando(true);
       toast(t('mk.importStarted'));
       try {
         const r = await ctx.api.marketingImportHistory();
@@ -1060,18 +1111,19 @@ const marketing = {
       try { await ctx.api.metaRefreshAccounts(); ctx.cache = {}; reload(); }
       catch (e) { toast(e.message, 'bad'); el.disabled = false; }
     },
-    /* Dos pasos, y el primero no hace nada: enseña la pregunta y esconde el
-       botón. Un `window.confirm()` sale fuera de la página, se lee en diagonal
-       y no puede decir lo que implica; la tarjeta sí, y ya lo dice encima. */
-    'meta:disconnect': (el) => {
-      const caja = document.querySelector('[data-confirmar="meta"]');
-      if (caja) caja.classList.remove('oculto');
-      el.closest('.inline-list')?.classList.add('oculto');
-    },
-    'meta:disconnectNo': (el) => {
-      el.closest('[data-confirmar="meta"]')?.classList.add('oculto');
-      document.querySelector('[data-act="meta:disconnect"]')?.closest('.inline-list')?.classList.remove('oculto');
-    },
+    /* Un `<dialog>` de verdad, no una caja dentro de la tarjeta.
+     *
+     * `showModal()` lo sube a la capa superior, así que no lo recorta ni lo
+     * tapa ningún `overflow` de las tarjetas, y trae hechos el fondo, la tecla
+     * de escape y el foco atrapado — que en una acción destructiva no son
+     * adorno: son que no se confirme sin querer con la tecla equivocada.
+     *
+     * A propósito NO se cierra pulsando el fondo. En un diálogo que borra algo,
+     * un clic despistado fuera de la caja no debe contar como respuesta. Se
+     * sale por «Cancelar» o por escape, que son deliberados; y «Cancelar» lleva
+     * el foco de entrada, para que la tecla fácil sea la que no rompe nada. */
+    'meta:disconnect': () => { document.getElementById('meta-off')?.showModal(); },
+    'meta:disconnectNo': () => { document.getElementById('meta-off')?.close(); },
     'meta:disconnectYes': async (el, ctx, d, reload) => {
       el.disabled = true;
       try { await ctx.api.metaDisconnect(); toast(t('mk.metaRemoved'), 'ok'); ctx.cache = {}; reload(); }
@@ -1120,13 +1172,16 @@ function metaCard(value) {
       <div class="inline-list" style="margin-top:16px">
         <button class="btn sm danger" data-act="meta:disconnect">${esc(t('mk.metaDisconnect'))}</button>
       </div>
-      <div class="confirmar oculto" data-confirmar="meta">
-        <b>${esc(t('mk.offConfirmQ'))}</b>
-        <span class="inline-list">
-          <button class="btn sm danger" data-act="meta:disconnectYes">${esc(t('mk.offConfirmYes'))}</button>
-          <button class="btn sm ghost" data-act="meta:disconnectNo">${esc(t('row.cancel'))}</button>
-        </span>
-      </div>`,
+      <dialog class="modal" id="meta-off">
+        <div class="modal-caja">
+          <h3>${esc(t('mk.offConfirmQ'))}</h3>
+          <p>${esc(t('mk.offConfirmWhy'))}</p>
+          <div class="modal-pie">
+            <button class="btn sm ghost" data-act="meta:disconnectNo" autofocus>${esc(t('row.cancel'))}</button>
+            <button class="btn sm danger" data-act="meta:disconnectYes">${esc(t('mk.offConfirmYes'))}</button>
+          </div>
+        </div>
+      </dialog>`,
       { sub: s.connectedAt ? t('mk.metaSince', { date: fmtDate(s.connectedAt) }) : t('mk.metaSub'),
         right: `${logo}${chip(t('mk.connected'), 'ok')}` });
   }, { what: t('mk.meta'), phrase: t('wa.connectAds'), extra: t('mk.metaOffSub') });

@@ -314,9 +314,22 @@ table.tbl { width: 100%; border-collapse: separate; border-spacing: 0; font-size
    2024, no hay nada, y quieres traerlo— pero NO es un filtro: llama a Meta y
    gasta cupo. Un separador y un borde lo dicen sin una palabra de más; sin
    ellos se lee como texto suelto entre dos píldoras y nadie lo pulsa. */
-.filtros .accion { display: flex; align-items: center; gap: 8px; margin-left: 4px; padding-left: 12px; border-left: 1px solid rgba(145, 158, 171, .24); }
-.filtros .accion .btn.ghost { border-color: rgba(145, 158, 171, .32); }
-.filtros .accion .btn.ghost:hover { border-color: var(--g800, #1C252E); }
+/* La derecha de la barra: de cuándo son los números y las dos acciones que
+   salen a pedírselos a Meta. Ninguna es un filtro, y por eso están al otro
+   lado y detrás de un menú: llaman a la API, gastan cupo y están limitadas. */
+.filtros-fin { margin-left: auto; display: flex; align-items: center; gap: 12px; }
+/* La edad, pequeña y apagada mientras todo va bien. Solo `sev-warning` la
+   levanta —dato viejo, cuenta que no respondió—, que es cuando importa. */
+.frescura-edad { font-size: 12.5px; color: var(--g600); white-space: nowrap; }
+/* `.sev-warning` está 190 líneas más arriba y con la misma especificidad, así
+   que el gris de aquí se lo comía y el aviso salía apagado. Un aviso invisible
+   es peor que no ponerlo: hay que ganarle explícitamente. */
+.frescura-edad.sev-warning { color: var(--warning-ink); }
+.filtros .filtro.a-la-derecha .filtro-panel { left: auto; right: 0; min-width: 268px; }
+.menu-item { display: flex; flex-direction: column; align-items: flex-start; gap: 2px; width: 100%; padding: 9px 12px; border: none; border-radius: 8px; background: none; text-align: left; font: inherit; cursor: pointer; }
+.menu-item:hover:not(:disabled) { background: rgba(145, 158, 171, .10); }
+.menu-item:disabled { cursor: default; opacity: .55; }
+.menu-titulo { font-size: 15px; font-weight: 600; color: var(--g800, #1C252E); }
 /* El panel de cuentas lleva la ficha entera —portfolio, `act_…`, moneda y
    huso—, que antes vivía en una tarjeta al final de la página. Con dos cuentas
    que se llaman casi igual, eso es lo único que distingue cuál se está
@@ -346,14 +359,27 @@ table.tbl { width: 100%; border-collapse: separate; border-spacing: 0; font-size
    que esto cuesta. */
 .consecuencias { margin: 6px 0 0; padding-left: 20px; color: var(--g600); font-size: 14px; }
 .consecuencias li { margin: 5px 0; line-height: 1.45; }
-.confirmar { display: flex; align-items: center; flex-wrap: wrap; gap: 12px; margin-top: 14px; padding: 12px 14px; border-radius: 10px; background: rgba(255, 86, 48, .08); border: 1px solid rgba(255, 86, 48, .28); }
-.oculto { display: none !important; }
+/* El diálogo de desconectar. `showModal()` lo sube a la capa superior, así que
+   ni el `overflow` de las tarjetas ni el `z-index` de la barra fija lo tapan, y
+   el fondo, la tecla de escape y el foco atrapado vienen hechos. */
+.modal { border: none; padding: 0; background: transparent; max-width: min(430px, calc(100vw - 32px)); }
+.modal::backdrop { background: rgba(28, 37, 46, .45); }
+.modal-caja { background: var(--card, #fff); border-radius: 14px; padding: 24px; box-shadow: 0 24px 60px rgba(28, 37, 46, .24); }
+.modal-caja h3 { margin: 0 0 8px; font-size: 18px; line-height: 1.3; }
+.modal-caja p { margin: 0; color: var(--g600); font-size: 14px; line-height: 1.55; }
+.modal-pie { display: flex; justify-content: flex-end; gap: 10px; margin-top: 22px; }
 
-/* Mientras llegan los números del filtro nuevo, los viejos se atenúan y dejan
-   de aceptar clics: sin esto se quedan en pantalla un segundo y se leen como
-   los nuevos, que en una pantalla sobre dinero basta para creerse otra cifra. */
-#mk-cuerpo { transition: opacity .15s ease; }
-#mk-cuerpo.cargando { opacity: .45; pointer-events: none; }
+/* `.stack` reparte su `gap` entre sus HIJOS DIRECTOS. Al envolver el cuerpo de
+   Marketing en `#mk-cuerpo` —para poder cambiarlo entero mientras carga— las
+   tarjetas dejaron de ser hijas de `.stack` y se quedaron pegadas unas a otras.
+   El envoltorio hereda la misma separación, que es la que había. */
+#mk-cuerpo, .mk-espera { display: grid; gap: 24px; }
+
+/* Mientras llegan los números NO se atenúan los de antes: se sustituyen por
+   esqueletos. Atenuar dejaba legibles los estados vacíos —«Todavía sin gasto en
+   el periodo»— y eso se lee como la respuesta cuando la respuesta no ha
+   llegado. Un esqueleto no se puede confundir con un dato. */
+#mk-cuerpo.esperando > :not(.mk-espera) { display: none; }
 
 .card .card { box-shadow: none; background: var(--g100); }
 .card .card b { font-weight: 600; }

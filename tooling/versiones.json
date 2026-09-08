@@ -4,8 +4,8 @@
     "sha": "5c5fb97213bddd5f"
   },
   "app/auth.js": {
-    "v": "9",
-    "sha": "f1666daadd79bf6e"
+    "v": "10",
+    "sha": "633b41beb71a7f62"
   },
   "app/dashboard/dashboard.css": {
     "v": "1",
@@ -48,16 +48,16 @@
     "sha": "25928c43a50e5403"
   },
   "app/panel/panel.css": {
-    "v": "11",
-    "sha": "f2d1fc43058d2bf5"
+    "v": "12",
+    "sha": "8c87f8917f03025e"
   },
   "app/panel/panel.js": {
-    "v": "16",
-    "sha": "0d3379f859bfb9cd"
+    "v": "17",
+    "sha": "4f9c268fdb34c270"
   },
   "app/panel/sections.js": {
-    "v": "16",
-    "sha": "228d6aa6fd6edea2"
+    "v": "17",
+    "sha": "09fd0df08860502c"
   },
   "app/panel/setup.js": {
     "v": "7",
@@ -72,8 +72,8 @@
     "sha": "643bc4a65b2bd765"
   },
   "app/strings.js": {
-    "v": "9",
-    "sha": "30f98d097761de53"
+    "v": "10",
+    "sha": "3bf95e9c9c2d5842"
   },
   "assets/img/og-image.jpg": {
     "v": "4",

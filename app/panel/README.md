@@ -299,9 +299,24 @@ Tres consecuencias que el código sostiene y conviene no deshacer:
   que persiste en silencio deja al operador sin saber si tomó. Desmarcar la
   ÚLTIMA se rechaza y se dice por qué; sin ninguna cuenta no hay nada que
   copiar.
-- **«Actualizar» no es un filtro y por eso sigue siendo un botón.** Llama a
-  Meta, gasta cupo y está limitado a una vez cada cinco minutos: tiene que ser
-  deliberado. Lo mismo «Traer historial».
+- **Las dos acciones que llaman a Meta viven juntas, a la derecha y detrás de
+  un menú** («Actualizar» → «Actualizar ahora» / «Traer historial»). Ninguna es
+  un filtro: las dos salen a la API y gastan cupo, así que no se pulsan de paso.
+  Sus límites son distintos y eso se ve: el de cinco minutos apaga solo
+  «Actualizar ahora», y debajo dice cuándo se podrá.
+- **A su izquierda, de cuándo son los números**, en letra pequeña y apagada
+  mientras todo va bien. Solo levanta la voz —ámbar— si el dato está viejo o una
+  cuenta no respondió. Un cartel verde y grande en cada carga enseña a no
+  mirarlo. Ojo con el color: `.sev-warning` está 190 líneas más arriba en el
+  CSS y con la misma especificidad, así que hace falta `.frescura-edad.sev-warning`
+  o el gris se come el aviso.
+- **Mientras se traen datos, el cuerpo se sustituye por esqueletos**, no se
+  atenúa. Atenuar dejaba legibles los estados vacíos —«Todavía sin gasto en el
+  periodo»— y eso se lee como la respuesta cuando la respuesta no ha llegado.
+  Traer el historial tarda lo que tarde Meta.
+- `#mk-cuerpo` **tiene que llevar el `gap: 24px`** de `.stack`: `.stack` se lo
+  reparte a sus HIJOS DIRECTOS, y al envolver el cuerpo las tarjetas dejaron de
+  serlo y se quedaron pegadas.
 
 Las casillas de cuenta viven **solo** en la barra, y con ellas **toda la ficha**
 de cada cuenta: portfolio, `act_…`, moneda, huso y el aviso de inhabilitada. No
