@@ -286,17 +286,37 @@ table.tbl { width: 100%; border-collapse: separate; border-spacing: 0; font-size
    periodo y qué cuentas— en una fila. Elegir aplica; no hay botón de aplicar. */
 .filtros { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 4px 0 16px; }
 .filtros .filtro { position: relative; }
+
+/* Los DOS controles de la barra —el `select` de periodo y el desplegable de
+   cuentas— se pintan con la MISMA regla. Estuvieron en reglas separadas y bastó
+   mover el `select` de sitio para que la suya (`.status-line select.sel`)
+   dejara de aplicar: el navegador pintó el suyo, cuadrado y gris, al lado de
+   una píldora. Juntos ya no pueden separarse. */
+.filtros select.sel,
 .filtros .filtro > summary {
-  list-style: none; cursor: pointer;
-  border: 1px solid rgba(145, 158, 171, .32); border-radius: 8px; background: #fff;
-  font-size: 13px; font-weight: 600; color: var(--g800, #1C252E);
-  padding: 6px 24px 6px 10px; line-height: 1.2;
+  appearance: none; -webkit-appearance: none; list-style: none; cursor: pointer;
+  border: 1px solid rgba(145, 158, 171, .32); border-radius: 8px;
+  background: #fff; color: var(--g800, #1C252E);
+  font: inherit; font-size: 13px; font-weight: 600;
+  padding: 6px 26px 6px 11px; line-height: 1.25;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23637381' stroke-width='2' stroke-linecap='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
-  background-repeat: no-repeat; background-position: right 6px center; background-size: 14px;
+  background-repeat: no-repeat; background-position: right 7px center; background-size: 14px;
 }
 .filtros .filtro > summary::-webkit-details-marker { display: none; }
-.filtros .filtro > summary:hover { border-color: var(--g800, #1C252E); }
+.filtros select.sel:hover,
+.filtros .filtro > summary:hover,
 .filtros .filtro[open] > summary { border-color: var(--g800, #1C252E); }
+.filtros select.sel:focus-visible,
+.filtros .filtro > summary:focus-visible { outline: 2px solid var(--g800, #1C252E); outline-offset: 1px; }
+.filtros select.sel:disabled { opacity: .55; cursor: default; }
+
+/* «Traer historial» va en la barra porque se piensa junto al periodo —eliges
+   2024, no hay nada, y quieres traerlo— pero NO es un filtro: llama a Meta y
+   gasta cupo. Un separador y un borde lo dicen sin una palabra de más; sin
+   ellos se lee como texto suelto entre dos píldoras y nadie lo pulsa. */
+.filtros .accion { display: flex; align-items: center; gap: 8px; margin-left: 4px; padding-left: 12px; border-left: 1px solid rgba(145, 158, 171, .24); }
+.filtros .accion .btn.ghost { border-color: rgba(145, 158, 171, .32); }
+.filtros .accion .btn.ghost:hover { border-color: var(--g800, #1C252E); }
 .filtro-panel {
   position: absolute; z-index: 20; margin-top: 6px; min-width: 260px;
   background: #fff; border: 1px solid rgba(145, 158, 171, .32); border-radius: 10px;
@@ -311,21 +331,6 @@ table.tbl { width: 100%; border-collapse: separate; border-spacing: 0; font-size
 #mk-cuerpo { transition: opacity .15s ease; }
 #mk-cuerpo.cargando { opacity: .45; pointer-events: none; }
 
-/* El selector de periodo de Marketing. Mismo aire que el de idioma de la barra:
-   un chip con flecha, no un `select` del sistema — que en la línea de estado se
-   ve como algo que se coló de otra pantalla. */
-.status-line select.sel {
-  appearance: none; -webkit-appearance: none;
-  border: 1px solid rgba(145, 158, 171, .32); border-radius: 8px;
-  background: #fff; color: var(--g800, #1C252E);
-  font: inherit; font-size: 13px; font-weight: 600;
-  padding: 5px 24px 5px 10px; line-height: 1.2; cursor: pointer;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23637381' stroke-width='2' stroke-linecap='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
-  background-repeat: no-repeat; background-position: right 6px center; background-size: 14px;
-}
-.status-line select.sel:hover { border-color: var(--g800, #1C252E); }
-.status-line select.sel:focus-visible { outline: 2px solid var(--g800, #1C252E); outline-offset: 1px; }
-.status-line select.sel:disabled { opacity: .55; cursor: default; }
 .card .card { box-shadow: none; background: var(--g100); }
 .card .card b { font-weight: 600; }
 

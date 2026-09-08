@@ -817,7 +817,7 @@ function filterBar(m, cuentas) {
   return `<div class="filtros" role="group" aria-label="${esc(t('mk.filtersLabel'))}">
     <select class="sel sm" data-act="mk:period" aria-label="${esc(t('mk.periodLabel'))}">${opciones}</select>
     ${cuentasFiltro}
-    <button class="btn sm ghost" data-act="mk:import">${esc(t('mk.importHistory'))}</button>
+    <span class="accion"><button class="btn sm ghost" data-act="mk:import">${esc(t('mk.importHistory'))}</button></span>
   </div>`;
 }
 

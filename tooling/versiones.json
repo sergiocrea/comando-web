@@ -48,16 +48,16 @@
     "sha": "25928c43a50e5403"
   },
   "app/panel/panel.css": {
-    "v": "9",
-    "sha": "c94d1610b072aaf7"
+    "v": "10",
+    "sha": "4243651fbc5db2c5"
   },
   "app/panel/panel.js": {
-    "v": "14",
-    "sha": "765ac14457b9280a"
+    "v": "15",
+    "sha": "187e7d838ebc2a46"
   },
   "app/panel/sections.js": {
-    "v": "14",
-    "sha": "588382558e9afa7e"
+    "v": "15",
+    "sha": "904e3da9ff161e56"
   },
   "app/panel/setup.js": {
     "v": "7",
