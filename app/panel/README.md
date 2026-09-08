@@ -50,7 +50,7 @@ qué se eliminó y por qué) está en [`docs/rediseno-2026-09-05.md`](docs/redis
 | `#/crm` | **Resumen** | ¿Cuánta plata hay y qué está mal? | «Plata en juego»: 3 números (abierta, ganado, perdido), por etapa, por campo propio. «Qué revisar»: estado del CRM en una línea («al día · hace 6 h»), aviso de dueños (D5) solo si aplica, 12 filas (viejo, vacío, repetido, sin dueño) con «Ver la lista» y, en «más», «Avisarme cada semana» y «cómo lo sacas en tu CRM» | `GET /crm/pipeline/summary`, `GET /crm/health` |
 | `#/agenda` | **Agenda** | ¿Qué tengo esta semana? | Lista por día (Vencidas · Hoy · Mañana · Esta semana · Más adelante; Hechas plegadas) con «Hecha» como acción principal; vista de mes opcional. Solo lo del vendedor: recordatorios, visitas, reuniones y cierres esperados. Nada del sistema. | `operator_task`, `expectedCloseDate`, meetings del CRM |
 | `#/avisos` | **Automatizaciones** | ¿Qué hace Comando solo? | «Comando te avisa cuando…» en tres bloques: Siempre (señales activas como frases, «Apagar»), Cuando pasa algo (reglas por evento, «Pausar»), Cada cierto tiempo (avisos con cadencia y reportes programados, «Pausar»). «Cuándo te escribe» (horario, máximo por día, interruptor; resumen de la mañana: cadencia y hora). «Ideas para activar con una frase» (8 playbooks no activos) | `operator-agent`, `sales-intelligence/policy`, `automation-rules`, `pipeline.scheduledReports`, `playbooks` |
-| `#/marketing` | **Marketing** | ¿Cuánto invertí y qué me trajo? | De cuándo son los datos y el botón de actualizar; **un bloque de inversión y resultados por moneda** (nunca sumados); campañas agrupadas por moneda con **ROAS donde existe y costo por resultado donde no**; estado de cada cuenta publicitaria (`sin_datos` ≠ `error`); debajo, la tarjeta de conexión de Meta Ads | `GET /marketing/overview`, `POST /marketing/refresh` (§5) |
+| `#/marketing` | **Marketing** | ¿Cuánto invertí y qué me trajo? | De cuándo son los datos y el botón de actualizar; **una barra de filtros — periodo y cuentas — que aplica al elegir, sin botón**; **un bloque de inversión y resultados por moneda** (nunca sumados); campañas agrupadas por moneda con **ROAS donde existe y costo por resultado donde no**; estado de cada cuenta publicitaria (`sin_datos` ≠ `error`); debajo, la tarjeta de conexión de Meta Ads | `GET /marketing/overview`, `POST /marketing/refresh` (§5) |
 | `#/cuenta` | **Cuenta** | ¿Cómo está mi cuenta? | Tu cuenta (nombre, WhatsApp, plan con barra de comandos usados, cambiar de plan); Tu CRM y tus cuentas (CRM activo con estado en una línea, hojas, cuentas de anuncios; conectar / cambiar); Tu equipo (personas con rol y WhatsApp, sin métricas de uso; aviso de dueños); Lo que Comando sabe de ti (memoria explícita con «Olvidar», «Enseñarle algo» por WhatsApp); Privacidad y salida | `auth/me`, `billing/quota`, connections, sheets, `team`, `operator-agent`, Clerk |
 
 Los rótulos y las rutas no coinciden a propósito: `#/crm` se llama **Resumen** (el nombre
@@ -280,7 +280,50 @@ a `META_PANEL_RETURN_URL` con `?meta=connected` o `?meta=error&reason=…`. `pan
 un aviso y limpia la URL. `tokenExpiresAt` es `null` cuando el permiso no caduca, que es el caso
 normal con el token de usuario de sistema: si trae fecha, la tarjeta avisa.
 
-## 6. Lo que el panel deja explícitamente fuera
+### 5.2 La barra de filtros: elegir es la acción
+
+Periodo y cuentas son dos ejes de la misma pregunta —«¿cuánto gasté, cuándo y
+dónde?»— y hasta ahora vivían separados: el periodo arriba, las cuentas abajo,
+dentro de la tarjeta de conexión de Meta. Ahora están juntos en una barra, y
+**no hay botón de aplicar**: elegir ES la acción. Un «aplicar» detrás de un
+desplegable obliga a decir dos veces lo mismo.
+
+Tres consecuencias que el código sostiene y conviene no deshacer:
+
+- **Mientras carga, los números se atenúan** (`#mk-cuerpo.cargando`). Sin eso,
+  cambiar de periodo deja las cifras VIEJAS en pantalla el segundo que tarda la
+  respuesta, y se leen como las nuevas. En una pantalla sobre dinero, ese
+  segundo basta para creerse una cifra que no es.
+- **Las cuentas se guardan al marcar**, y se avisa de que quedó guardado: no es
+  solo una vista, cambia lo que el trabajo horario sincroniza, y una elección
+  que persiste en silencio deja al operador sin saber si tomó. Desmarcar la
+  ÚLTIMA se rechaza y se dice por qué; sin ninguna cuenta no hay nada que
+  copiar.
+- **«Actualizar» no es un filtro y por eso sigue siendo un botón.** Llama a
+  Meta, gasta cupo y está limitado a una vez cada cinco minutos: tiene que ser
+  deliberado. Lo mismo «Traer historial».
+
+Las casillas de cuenta viven **solo** en la barra. La tarjeta de Meta enseña
+cuáles están en uso, pero no deja marcarlas: dos juegos de casillas sobre lo
+mismo es cómo se acaba con una marcada, la otra no, y nadie sabiendo cuál manda.
+
+## 6. Las versiones (`?v=`), y por qué hay un guardia
+
+Cloudflare Pages cachea por URL completa. Un fichero cambiado y publicado con la
+misma versión **sigue llegando viejo al operador**, con el despliegue en verde.
+
+Y no basta con subir la hoja: los módulos se importan con la versión escrita
+DENTRO del importador. Si `panel.js?v=13` está en caché, el navegador no lo
+vuelve a pedir y sigue importando `sections.js?v=13` aunque el HTML apunte a
+otra cosa. **Hay que subir toda la cadena hasta el HTML.**
+
+`node tooling/check-versiones.mjs` lo comprueba guardando la huella del
+contenido junto a la versión publicada, y corre en el despliegue. La cadena se
+enrosca sola: cambiar `sections.js` rompe su huella y obliga a subirle la
+versión; subírsela cambia los bytes de `panel.js`, que rompe la suya. Tras
+subirlas, `node tooling/check-versiones.mjs --registrar`.
+
+## 7. Lo que el panel deja explícitamente fuera
 
 - Editar campos del CRM registro por registro (eso es WhatsApp con vista previa).
 - Crear reglas con formularios: las reglas nacen de una frase; el panel las lista, pausa y reanuda.
@@ -290,7 +333,7 @@ normal con el token de usuario de sistema: si trae fecha, la tarjeta avisa.
 - Rankings de personas o métricas de uso de Comando por persona visibles al grupo.
 - Enviar mensajes a clientes: el panel abre `wa.me` del contacto para que el operador lo mande él.
 
-## 7. Fuentes en `comando-pro` de las que sale cada decisión
+## 8. Fuentes en `comando-pro` de las que sale cada decisión
 
 - `docs/research/capabilities/capabilities.json` y `catalogo-respuestas.md` — capacidades, degradaciones, textos de WhatsApp.
 - `docs/research/capabilities/banks/dolores-crm.README.md` — vocabulario del portal, 12 familias de dolor, distribución del banco.

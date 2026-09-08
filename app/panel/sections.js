@@ -738,36 +738,89 @@ function freshnessLine(m) {
   return `<p class="status-line">${age}${pending}${failing}
     <button class="btn sm ghost" data-act="mk:refresh"${blocked ? ' disabled' : ''}>${esc(t('mk.refresh'))}</button>
     ${blocked ? `<span class="hint">${esc(t('mk.refreshWait', { t: waitText(r.retryAfterSeconds) }))}</span>` : ''}
-    ${periodPicker(m)}</p>`;
+    </p>`;
 }
 
 /**
- * Desde cuándo se están mirando los números.
+ * Atenuar los números mientras llegan los del filtro nuevo.
  *
- * Sin esto, el panel solo sabía enseñar los últimos 30 días: una cuenta que
- * dejó de gastar hace meses se veía en blanco aunque su historia estuviera
- * guardada, y la pantalla decía «no hubo campañas activas» sobre datos que sí
- * existen.
- *
- * Los años se calculan, no se escriben: una lista fija con «2025» dentro
- * envejece sola y el año que viene ofrece un periodo que ya no es el pasado.
+ * No es decoración: sin esto, cambiar de periodo deja los números VIEJOS en
+ * pantalla el segundo que tarda la respuesta, y se leen como los nuevos. En una
+ * pantalla sobre dinero, ese segundo basta para creerse una cifra que no es.
  */
-function periodPicker(m) {
+function cargando(si) {
+  const cuerpo = document.getElementById('mk-cuerpo');
+  if (cuerpo) cuerpo.classList.toggle('cargando', Boolean(si));
+}
+
+/**
+ * Las cuentas publicitarias que el cliente eligió, sacadas del estado de la
+ * conexión. Van al filtro para que «qué periodo» y «qué cuentas» se elijan en
+ * el mismo sitio, que es donde el operador los piensa juntos.
+ */
+function cuentasDe(meta) {
+  if (!meta || meta instanceof Error || isPending(meta)) return [];
+  return (meta.accounts || []).map((a) => ({
+    id: a.id || a.accountRef || a.account_ref,
+    name: a.name,
+    currency: a.currency,
+    selected: Boolean(a.selected),
+  }));
+}
+
+/**
+ * La barra de filtros de Marketing.
+ *
+ * Dos filtros sobre lo mismo —qué periodo y qué cuentas— que hasta ahora vivían
+ * en sitios distintos: el periodo arriba y las cuentas abajo, dentro de la
+ * tarjeta de conexión. Verlos juntos es lo que hace evidente que son dos ejes
+ * de la misma pregunta.
+ *
+ * **No hay botón de aplicar.** Elegir ES la acción; un «aplicar» detrás de un
+ * desplegable obliga a decir dos veces lo mismo. Lo que sí queda como botón es
+ * «Actualizar», que no es un filtro: llama a Meta, gasta cupo y está limitado a
+ * una vez cada cinco minutos, así que tiene que seguir siendo deliberado.
+ */
+function filterBar(m, cuentas) {
   const hoy = new Date();
   const anio = hoy.getUTCFullYear();
-  const elegido = (m && m.period && m.period.since) || '';
-  const opciones = [
+  const p = m.period || {};
+  // Cuando se pidió un tramo, el motor lo devuelve TAL CUAL y calza con una
+  // opción. Cuando no, `since`/`until` salen de los datos y no calzan con
+  // ninguna, así que el navegador enseña la primera: «últimos 30 días». Sin
+  // repetir aquí el 30, que lo decide `windowDays` en el servidor y puede
+  // cambiar sin que este fichero se entere.
+  const elegido = p.since && p.until ? `${p.since}|${p.until}` : '';
+  const periodos = [
     { v: '', l: t('mk.periodLast30') },
     { v: `${anio}-01-01|${anio}-12-31`, l: t('mk.periodThisYear', { y: anio }) },
     { v: `${anio - 1}-01-01|${anio - 1}-12-31`, l: t('mk.periodYear', { y: anio - 1 }) },
     { v: `${anio - 2}-01-01|${anio - 2}-12-31`, l: t('mk.periodYear', { y: anio - 2 }) },
   ];
-  const sel = opciones
-    .map((o) => `<option value="${esc(o.v)}"${o.v.startsWith(elegido) && elegido ? ' selected' : ''}>${esc(o.l)}</option>`)
+  const opciones = periodos
+    .map((o) => `<option value="${esc(o.v)}"${o.v === elegido ? ' selected' : ''}>${esc(o.l)}</option>`)
     .join('');
-  return `<select class="sel sm" data-act="mk:period" aria-label="${esc(t('mk.periodLabel'))}">${sel}</select>
-    <button class="btn sm ghost" data-act="mk:import">${esc(t('mk.importHistory'))}</button>`;
+  // Las cuentas: cuántas de cuántas, y el desplegable con las casillas. Se
+  // guarda al marcar, sin botón — y se dice que se guardó, porque una elección
+  // que persiste sin decirlo deja al operador sin saber si quedó.
+  const elegidas = (cuentas || []).filter((c) => c.selected).length;
+  const total = (cuentas || []).length;
+  const casillas = (cuentas || [])
+    .map((c) => `<label class="filtro-opcion"><input type="checkbox" class="mk-cuenta" data-act="mk:accounts" value="${esc(c.id)}"${c.selected ? ' checked' : ''}> ${esc(c.name)} <span class="hint">${esc(c.currency || '')}</span></label>`)
+    .join('');
+  const cuentasFiltro = total
+    ? `<details class="filtro">
+         <summary>${esc(tn('mk.filterAccounts', elegidas, { n: num(elegidas), total: num(total) }))}</summary>
+         <div class="filtro-panel">${casillas}</div>
+       </details>`
+    : '';
+  return `<div class="filtros" role="group" aria-label="${esc(t('mk.filtersLabel'))}">
+    <select class="sel sm" data-act="mk:period" aria-label="${esc(t('mk.periodLabel'))}">${opciones}</select>
+    ${cuentasFiltro}
+    <button class="btn sm ghost" data-act="mk:import">${esc(t('mk.importHistory'))}</button>
+  </div>`;
 }
+
 
 /** Qué contarle al operador después de pulsar el botón. Nunca «falló». */
 function refreshMessage(r) {
@@ -834,8 +887,12 @@ const marketing = {
       const roasNote = (m.campaigns || []).some((c) => c.roas == null && c.roasUnavailable === 'sin_valor_de_conversion')
         ? `<p class="note">${esc(t('mk.roasNote'))}</p>` : '';
       const accounts = card(t('mk.accountsCard'), list(m.accounts || [], accountRow, t('mk.noAccounts')), { sub: t('mk.accountsSub') });
-      return `${marked}${freshnessLine(m)}<div class="page-head" style="margin:0"><div><h2>${esc(t('mk.totals'))}</h2><p>${esc(periodLabel)} ${range}</p></div></div>${totals}${noSum}
-        ${card(t('mk.campaigns'), camps + roasNote, { sub: t('mk.campaignsSub') })}${accounts}`;
+      // `mk-cuerpo` es lo que se atenúa mientras se cargan otros filtros: sin
+      // marcarlo, cambiar de periodo deja los números VIEJOS en pantalla unos
+      // segundos y se leen como los nuevos.
+      return `${marked}${freshnessLine(m)}${filterBar(m, cuentasDe(d.meta))}
+        <div id="mk-cuerpo"><div class="page-head" style="margin:0"><div><h2>${esc(t('mk.totals'))}</h2><p>${esc(periodLabel)} ${range}</p></div></div>${totals}${noSum}
+        ${card(t('mk.campaigns'), camps + roasNote, { sub: t('mk.campaignsSub') })}${accounts}</div>`;
     }, { what: t('mk.what'), phrase: t('wa.connectAds'), extra: t('mk.extra') });
     /* La tarjeta de Meta Ads (plan 14) va DEBAJO cuando hay números que
        enseñar, y encima cuando lo que toca es conectar: lo primero que se ve
@@ -893,6 +950,10 @@ const marketing = {
      */
     'mk:period': async (el, ctx, d, reload, rerender) => {
       const [since, until] = String(el.value || '').split('|');
+      // Elegir ES la acción: no hay «aplicar». Lo que sí hace falta es DECIR
+      // que está cargando — sin eso, los números viejos se quedan en pantalla
+      // unos segundos y se leen como los del periodo nuevo.
+      cargando(true);
       if (el) el.disabled = true;
       try {
         const r = since && until
@@ -902,7 +963,38 @@ const marketing = {
         if (r) { d.mk = r; rerender(); }
       } catch (e) {
         toast(e.message, 'bad');
-      } finally { if (el) el.disabled = false; }
+      } finally { cargando(false); if (el) el.disabled = false; }
+    },
+    /**
+     * Marcar o desmarcar una cuenta.
+     *
+     * Se guarda al instante, sin «Guardar la elección»: es un filtro más y
+     * pedir un segundo clic para confirmar lo que ya se dijo sobra.
+     *
+     * Pero NO es solo una vista: cambia lo que el trabajo horario sincroniza.
+     * Por eso se avisa de que quedó guardado —una elección que persiste en
+     * silencio deja al operador sin saber si tomó— y por eso desmarcar la
+     * ÚLTIMA se rechaza: sin ninguna cuenta no hay nada que copiar, y eso se
+     * dice en vez de dejarlo pasar y que el panel se vacíe sin explicación.
+     */
+    'mk:accounts': async (el, ctx, d, reload, rerender) => {
+      const refs = [...document.querySelectorAll('input.mk-cuenta:checked')].map((i) => i.value);
+      if (!refs.length) {
+        el.checked = true;
+        toast(t('mk.accountsAtLeastOne'));
+        return;
+      }
+      cargando(true);
+      try {
+        await ctx.api.metaSelectAccounts(refs);
+        toast(t('mk.metaSaved'), 'ok');
+        ctx.cache = {};
+        reload();
+      } catch (e) {
+        el.checked = !el.checked;
+        toast(e.message, 'bad');
+        cargando(false);
+      }
     },
     /**
      * Traer de Meta lo anterior a la ventana.
@@ -935,12 +1027,6 @@ const marketing = {
     'meta:refresh': async (el, ctx, d, reload) => {
       el.disabled = true;
       try { await ctx.api.metaRefreshAccounts(); ctx.cache = {}; reload(); }
-      catch (e) { toast(e.message, 'bad'); el.disabled = false; }
-    },
-    'meta:save': async (el, ctx, d, reload) => {
-      const refs = [...document.querySelectorAll('input.meta-acc:checked')].map((i) => i.value);
-      el.disabled = true;
-      try { await ctx.api.metaSelectAccounts(refs); toast(t('mk.metaSaved'), 'ok'); ctx.cache = {}; reload(); }
       catch (e) { toast(e.message, 'bad'); el.disabled = false; }
     },
     'meta:disconnect': async (el, ctx, d, reload) => {
@@ -979,15 +1065,15 @@ function metaCard(value) {
     const accounts = groups.size
       ? [...groups].map(([name, items]) => `<h3 class="group-title">${esc(name)}</h3>${list(items, (a) => row({
         ico: logo,
-        title: `<label><input type="checkbox" class="meta-acc" value="${esc(a.accountRef)}"${a.selected ? ' checked' : ''}> ${esc(a.name)}</label>`,
+        title: `${a.selected ? `${chip(t('mk.metaInUse'), 'ok')} ` : ''}${esc(a.name)}`,
         sub: `${esc(a.accountRef)}${a.currency ? ` · ${esc(a.currency)}` : ''}${a.timezoneName ? ` · ${esc(a.timezoneName)}` : ''}${a.accountStatus && a.accountStatus !== 1 ? ` · <span class="sev-warning">${esc(t('mk.metaDisabled'))}</span>` : ''}`,
       }))}`).join('')
       : `<div class="empty"><b>${esc(t('mk.metaNoAccounts'))}</b></div>`;
     return card(t('mk.meta'), `
       <h3 class="group-title">${esc(t('mk.metaAccounts'))}</h3>${accounts}
       ${s.tokenExpiresAt ? `<p class="note warn" style="margin-top:12px">${esc(t('mk.metaExpires', { date: fmtDate(s.tokenExpiresAt) }))}</p>` : ''}
+      <p class="note">${esc(t('mk.metaPickAbove'))}</p>
       <div class="inline-list" style="margin-top:16px">
-        <button class="btn sm primary" data-act="meta:save">${esc(t('mk.metaSave'))}</button>
         <button class="btn sm ghost" data-act="meta:refresh">${esc(t('mk.metaRefresh'))}</button>
         <button class="btn sm danger" data-act="meta:disconnect">${esc(t('mk.metaDisconnect'))}</button>
       </div>`,
