@@ -737,7 +737,36 @@ function freshnessLine(m) {
   const blocked = r.allowed === false && r.retryAfterSeconds > 0;
   return `<p class="status-line">${age}${pending}${failing}
     <button class="btn sm ghost" data-act="mk:refresh"${blocked ? ' disabled' : ''}>${esc(t('mk.refresh'))}</button>
-    ${blocked ? `<span class="hint">${esc(t('mk.refreshWait', { t: waitText(r.retryAfterSeconds) }))}</span>` : ''}</p>`;
+    ${blocked ? `<span class="hint">${esc(t('mk.refreshWait', { t: waitText(r.retryAfterSeconds) }))}</span>` : ''}
+    ${periodPicker(m)}</p>`;
+}
+
+/**
+ * Desde cuándo se están mirando los números.
+ *
+ * Sin esto, el panel solo sabía enseñar los últimos 30 días: una cuenta que
+ * dejó de gastar hace meses se veía en blanco aunque su historia estuviera
+ * guardada, y la pantalla decía «no hubo campañas activas» sobre datos que sí
+ * existen.
+ *
+ * Los años se calculan, no se escriben: una lista fija con «2025» dentro
+ * envejece sola y el año que viene ofrece un periodo que ya no es el pasado.
+ */
+function periodPicker(m) {
+  const hoy = new Date();
+  const anio = hoy.getUTCFullYear();
+  const elegido = (m && m.period && m.period.since) || '';
+  const opciones = [
+    { v: '', l: t('mk.periodLast30') },
+    { v: `${anio}-01-01|${anio}-12-31`, l: t('mk.periodThisYear', { y: anio }) },
+    { v: `${anio - 1}-01-01|${anio - 1}-12-31`, l: t('mk.periodYear', { y: anio - 1 }) },
+    { v: `${anio - 2}-01-01|${anio - 2}-12-31`, l: t('mk.periodYear', { y: anio - 2 }) },
+  ];
+  const sel = opciones
+    .map((o) => `<option value="${esc(o.v)}"${o.v.startsWith(elegido) && elegido ? ' selected' : ''}>${esc(o.l)}</option>`)
+    .join('');
+  return `<select class="sel sm" data-act="mk:period" aria-label="${esc(t('mk.periodLabel'))}">${sel}</select>
+    <button class="btn sm ghost" data-act="mk:import">${esc(t('mk.importHistory'))}</button>`;
 }
 
 /** Qué contarle al operador después de pulsar el botón. Nunca «falló». */
@@ -851,6 +880,54 @@ const marketing = {
         // El permiso retirado se arregla reconectando, y eso vive en la tarjeta
         // de Meta Ads: se vuelve a pedir su estado para que lo diga ella.
         if (r && r.reason === 'conexion_marcada') { ctx.cache = {}; reload(); }
+      } catch (e) {
+        toast(e.message, 'bad');
+      } finally { if (el) el.disabled = false; }
+    },
+    /**
+     * Mirar otro periodo.
+     *
+     * No recarga la sección entera: pide SOLO el overview de ese tramo y
+     * repinta. Recargar traería otra vez el CRM, la agenda y los avisos para
+     * cambiar un desplegable.
+     */
+    'mk:period': async (el, ctx, d, reload, rerender) => {
+      const [since, until] = String(el.value || '').split('|');
+      if (el) el.disabled = true;
+      try {
+        const r = since && until
+          ? await ctx.api.marketingOverviewBetween(since, until)
+          : await ctx.api.marketing();
+        if (isPending(r)) { toast(t('common.comingSoon', { what: t('mk.what') })); return; }
+        if (r) { d.mk = r; rerender(); }
+      } catch (e) {
+        toast(e.message, 'bad');
+      } finally { if (el) el.disabled = false; }
+    },
+    /**
+     * Traer de Meta lo anterior a la ventana.
+     *
+     * Puede tardar: son hasta 37 meses pedidos mes a mes. Se avisa antes de
+     * empezar, porque un botón que se queda apagado medio minuto sin decir
+     * nada se lee como una avería.
+     *
+     * Meta no da nada de hace más de 37 meses, y eso NO es un fallo nuestro:
+     * se dice tal cual en vez de dejar creer que faltan datos por traer.
+     */
+    'mk:import': async (el, ctx, d, reload, rerender) => {
+      if (el) el.disabled = true;
+      toast(t('mk.importStarted'));
+      try {
+        const r = await ctx.api.marketingImportHistory();
+        if (isPending(r)) { toast(t('common.comingSoon', { what: t('mk.what') })); return; }
+        if (r && r.overview) { d.mk = r.overview; rerender(); }
+        const dias = (r && r.days) || 0;
+        toast(
+          dias
+            ? tn('mk.importDone', dias, { n: num(dias), c: num((r && r.campaigns) || 0) })
+            : t('mk.importEmpty'),
+          dias ? 'ok' : '',
+        );
       } catch (e) {
         toast(e.message, 'bad');
       } finally { if (el) el.disabled = false; }

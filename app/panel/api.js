@@ -100,6 +100,14 @@ export function createApi(cfg, getToken) {
        llama no vuelve a pedirlo. Va por `mutate()` porque, aunque parezca una
        lectura, llama a Meta y reescribe la copia. */
     marketingRefresh: () => optional(() => mutate('/marketing/refresh', 'POST'), 'marketing'),
+    // El periodo va en la URL: sin él, una cuenta que dejó de gastar hace meses
+    // se ve VACÍA aunque su historia esté guardada.
+    marketingOverviewBetween: (since, until) =>
+      optional(() => call(`/marketing/overview?since=${encodeURIComponent(since)}&until=${encodeURIComponent(until)}`), 'marketing'),
+    // Traer de Meta lo anterior a la ventana. Lo hace también el trabajo
+    // horario una vez por cuenta; el botón existe porque quien acaba de
+    // conectar quiere ver sus números ahora, no dentro de una hora.
+    marketingImportHistory: () => optional(() => mutate('/marketing/import-history', 'POST'), 'marketing'),
     playbooks: () => optional(() => call('/automation-rules/playbooks'), 'playbooks'),
     /* ---- Meta Ads: la conexión, no las campañas (plan 14) ---- */
     metaStatus: () => optional(() => call('/integrations/meta/status'), 'meta'),

@@ -96,9 +96,29 @@ $('page').addEventListener('click', async (ev) => {
   if (el.dataset.reload !== undefined) return reload();
   if (el.dataset.tab) { ctx.tabs[section.id] = el.dataset.tab; rerender(); return; }
   if (el.dataset.cal) { section.act.cal(el, ctx, ctx.cache[section.id], reload, rerender); return; }
+  // Un desplegable se atiende en `change`, no aquí: al pulsarlo para ABRIRLO el
+  // valor todavía es el viejo, así que despacharlo desde el `click` pediría el
+  // periodo anterior al elegido.
+  if (el.tagName === 'SELECT') return;
   const fn = section.act && section.act[el.dataset.act];
   if (!fn) return;
   if (el.type === 'checkbox') ev.preventDefault();
+  try { await fn(el, ctx, ctx.cache[section.id], reload, rerender); } catch (e) { toast(e.message || t('common.failed'), 'bad'); }
+});
+/*
+ * Un `<select>` no se «pulsa»: cambia.
+ *
+ * La delegación de arriba es por `click`, y con un desplegable eso dispara al
+ * abrirlo —cuando el valor todavía es el viejo— y no al elegir. El selector de
+ * periodo de Marketing habría quedado inerte o, peor, pidiendo el periodo
+ * anterior. Se despacha al mismo sitio, por `change`.
+ */
+$('page').addEventListener('change', async (ev) => {
+  const el = ev.target.closest('select[data-act]');
+  if (!el) return;
+  const section = SECTIONS.find((s) => s.id === currentId());
+  const fn = section.act && section.act[el.dataset.act];
+  if (!fn) return;
   try { await fn(el, ctx, ctx.cache[section.id], reload, rerender); } catch (e) { toast(e.message || t('common.failed'), 'bad'); }
 });
 $('page').addEventListener('submit', async (ev) => {
