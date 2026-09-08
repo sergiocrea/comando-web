@@ -383,6 +383,15 @@ table.tbl { width: 100%; border-collapse: separate; border-spacing: 0; font-size
 .modal-caja p { margin: 0; color: var(--g600); font-size: 14px; line-height: 1.55; }
 .modal-pie { display: flex; justify-content: flex-end; gap: 10px; margin-top: 22px; }
 
+/* La consola como diálogo, para las secciones que no la llevan dentro. Más
+   ancha que un diálogo de confirmación: aquí se lee una respuesta, no se
+   contesta sí o no. */
+.consola-dialogo { max-width: min(720px, calc(100vw - 32px)); width: 100%; }
+.consola-dialogo .modal-caja { padding: 20px; }
+.consola-cabecera { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 14px; }
+.consola-cabecera h3 { margin: 0; font-size: 17px; }
+.consola-dialogo .console-log { max-height: 52vh; overflow-y: auto; margin-top: 14px; }
+
 /* `.stack` reparte su `gap` entre sus HIJOS DIRECTOS. Al envolver el cuerpo de
    Marketing en `#mk-cuerpo` —para poder cambiarlo entero mientras carga— las
    tarjetas dejaron de ser hijas de `.stack` y se quedaron pegadas unas a otras.

@@ -8,12 +8,12 @@
    - vocabulario del operador (plata en juego, parado, sin dueño, repetidos), nunca del sistema. */
 
 import { isPending } from './api.js?v=11';
-import { crmBlock, crmActions, whatsappStep, NAMES as PROVIDER_NAMES } from './setup.js?v=8';
+import { crmBlock, crmActions, whatsappStep, NAMES as PROVIDER_NAMES } from './setup.js?v=9';
 import {
   esc, num, money, pct, fmtTime, fmtDate, fmtDateTime, monthName, dayLabel, sameDay, rel, isToday, isPast, isoDay,
-  wa, waBtn, askLine, chip, statusChip, bar, spark, kpi, card, row, moreBox, empty, soon, skeleton, toast, ICON, SIGNAL_PHRASE,
+  wa, waBtn, waLink, askLine, chip, statusChip, bar, spark, kpi, card, row, moreBox, empty, soon, skeleton, toast, ICON, SIGNAL_PHRASE,
   personName, personEmail, highValueAmount, SYMBOL, setAccountCurrency,
-} from './ui.js?v=8';
+} from './ui.js?v=9';
 import { t, tn, localeTag } from '../i18n.js?v=1';
 
 /** Renderiza una parte según el estado de su dato. */
@@ -282,6 +282,40 @@ function consoleView(ctx) {
     ${skillsView()}`, { sub: esc(t('console.sub')), cls: 'console' });
 }
 
+/**
+ * La consola, disponible desde CUALQUIER sección.
+ *
+ * Vivía solo en «Hoy», y por eso 26 botones repartidos por el panel abrían
+ * WhatsApp en vez de ejecutar: no había dónde escribir ni dónde leer la
+ * respuesta. El estado ya vivía en `ctx` —sobrevive al cambio de sección— y
+ * `paintLog` busca `#console-log` por id, así que basta con que exista.
+ *
+ * En «Hoy» sigue estando en la página, que es su sitio: es la portada y la
+ * consola es lo que se hace ahí. En el resto se abre como diálogo, y por eso el
+ * `id` no se duplica nunca: uno u otro, nunca los dos.
+ */
+export function consolaGlobal(ctx) {
+  return `<dialog class="modal consola-dialogo" id="consola">
+    <div class="modal-caja">
+      <div class="consola-cabecera">
+        <h3>${esc(t('console.title'))}</h3>
+        <button class="btn sm ghost" data-act="consola:cerrar">${esc(t('row.cancel'))}</button>
+      </div>
+      <form class="console-form" data-send="cmd:send" autocomplete="off">
+        <input class="console-input" name="utterance" type="text" maxlength="1000" enterkeyhint="send" placeholder="${esc(t('console.placeholder'))}" aria-label="${esc(t('console.title'))}">
+        <button class="btn primary" type="submit">${esc(t('console.send'))}</button>
+      </form>
+      <div class="console-log" id="console-log">${consoleLog(ctx)}</div>
+    </div>
+  </dialog>`;
+}
+
+/** Las acciones que valen en todas las secciones, no solo en «Hoy». */
+export const globalActions = () => ({
+  ...consoleActions(),
+  'consola:cerrar': () => document.getElementById('consola')?.close(),
+});
+
 const consoleActions = () => {
   /* Responder a un turno (el CONFIRMAR, el código, una aclaración) encola texto
      por la MISMA ruta y luego espera a que ese mismo turno cambie de `kind`. */
@@ -304,7 +338,15 @@ const consoleActions = () => {
       input.value = '';
       await sendUtterance(text, ctx);
     },
-    'cmd:run': async (el, ctx) => { el.blur(); await sendUtterance(el.dataset.phrase, ctx); },
+    /* Ejecutar aquí en vez de irse a WhatsApp. Si la consola no está en la
+       página —o sea, en cualquier sección que no sea «Hoy»— se abre el diálogo
+       ANTES de mandar: si no, la respuesta se pinta donde nadie la ve. */
+    'cmd:run': async (el, ctx) => {
+      el.blur();
+      const dialogo = document.getElementById('consola');
+      if (dialogo && !document.querySelector('.page .console-log')) dialogo.showModal();
+      await sendUtterance(el.dataset.phrase, ctx);
+    },
     'cmd:fill': (el) => {
       const input = document.querySelector('.console-form .console-input');
       if (!input) return;
@@ -368,7 +410,7 @@ const hoy = {
       <circle cx="300" cy="70" r="26" fill="#00A76F"/><path d="M288 70l8 8 16-16" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
     const welcome = `<div class="welcome"><div class="welcome-body"><h2>${esc(t('hoy.hello', { greet, name: personName(me, ctx) }))}</h2>
       <p>${count ? tn('hoy.youHave', count) : esc(t('hoy.nothingUrgentNow'))} ${esc(t('hoy.askByPhrase'))}</p>
-      ${waBtn(t('wa.whatMattersToday'), t('common.writeToComando'), 'btn primary')}</div><div class="welcome-art">${art}</div></div>`;
+      ${waLink(t('wa.whatMattersToday'), t('common.writeToComando'), 'btn primary')}</div><div class="welcome-art">${art}</div></div>`;
 
     const review = card(t('hoy.review'), part(d.health, (hh) => {
       const top = hh.metrics.filter((m) => m.severity === 'high' || m.severity === 'warning').slice(0, 3);
@@ -411,7 +453,7 @@ const agenda = {
           : waBtn(t('wa.remindBefore', { title: e.title }), t('agenda.remindMe'), 'btn sm primary'),
       });
     };
-    const actions = waBtn(t('wa.newReminder'), t('agenda.newReminder'), 'btn primary');
+    const actions = waLink(t('wa.newReminder'), t('agenda.newReminder'), 'btn primary');
     const toggle = `<div class="seg"><button data-tab="lista" class="${mode === 'lista' ? 'is-on' : ''}">${esc(t('agenda.list'))}</button><button data-tab="mes" class="${mode === 'mes' ? 'is-on' : ''}">${esc(t('agenda.month'))}</button></div>`;
     const pendingNote = isPending(d.cal) ? `<p class="note">${esc(t('agenda.pendingNote'))} ${askLine(t('wa.thisWeek'), t('agenda.meanwhile'))}</p>` : '';
 
@@ -488,7 +530,7 @@ const crm = {
       return `${ownersNote}<div class="card"><div class="card-head"><div><h2>${esc(t('crm.whatToReview'))}</h2><p>${esc(t('crm.neverDeletes'))}</p></div>${syncLine(h.sync)}</div><div class="list">${rows}</div></div>`;
     }, { what: t('hoy.review'), phrase: t('wa.stalledDeals') });
 
-    return `<div class="stack">${head(this.title, this.sub, waBtn(t('wa.moneyInPlay'), t('common.askOnWhatsApp'), 'btn primary'))}${plata}${revisar}</div>`;
+    return `<div class="stack">${head(this.title, this.sub, waLink(t('wa.moneyInPlay'), t('common.askOnWhatsApp'), 'btn primary'))}${plata}${revisar}</div>`;
   },
 };
 
@@ -1069,7 +1111,7 @@ const marketing = {
        tiene que ser lo que el operador vino a hacer. */
     const connected = !(d.mk instanceof Error) && !isPending(d.mk) && d.mk && d.mk.connection && d.mk.connection.status === 'active';
     const meta = metaCard(d.meta);
-    return `<div class="stack">${head(this.title, this.sub, waBtn(t('wa.leadsPerCampaign'), t('mk.askOnWhatsApp'), 'btn primary'))}${connected ? body + meta : meta + body}</div>`;
+    return `<div class="stack">${head(this.title, this.sub, waLink(t('wa.leadsPerCampaign'), t('mk.askOnWhatsApp'), 'btn primary'))}${connected ? body + meta : meta + body}</div>`;
   },
   act: {
     /**

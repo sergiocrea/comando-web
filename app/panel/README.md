@@ -351,6 +351,32 @@ vacío y hay que traerlo de nuevo, con el techo de 37 meses de Meta.
 cuáles se miran, dice **de cuándo son los números de cada una y cuál no
 respondió**. Es salud del dato, no selección.
 
+## 6. La consola, y por qué los botones ya no abren WhatsApp
+
+Había 26 botones repartidos por el panel que prometían una acción —«cancela esta
+tarea», «por qué esta alerta», «olvida esto»— y lo que hacían era **mandarte a
+WhatsApp a escribirla tú**. Era la mayor distancia entre lo que el panel promete
+y lo que hace.
+
+No faltaba la maquinaria: la acción `cmd:run` ya existía y mandaba la frase por
+la consola. Faltaba que la consola existiera fuera de «Hoy».
+
+- En **«Hoy»** sigue en la página: es la portada y la consola es lo que se hace
+  ahí.
+- En **el resto** se monta como `<dialog>` en `#consola-global`, que vive FUERA
+  de `#page` — si estuviera dentro, un repintado de la sección se la llevaría
+  mientras el operador lee una respuesta.
+- Nunca hay dos: el montaje mira si la página ya trae un `.console-log`. Por eso
+  el `id="console-log"` que busca `paintLog` no se duplica jamás.
+- Las acciones de la consola valen en todas las secciones sin cablearlas una a
+  una: el despachador de `panel.js` cae a una tabla `GLOBALES` cuando la sección
+  no conoce la acción.
+
+**`waBtn` ejecuta; `waLink` manda a WhatsApp.** Se separaron a propósito: si la
+etiqueta nombra WhatsApp —«Preguntar por WhatsApp», «Escribir a Comando»— el
+botón tiene que ir a WhatsApp. Lo contrario es mentirle al operador. Quedaron 22
+que ejecutan y 4 cabeceras que siguen siendo enlace.
+
 ## 6. Las versiones (`?v=`), y por qué hay un guardia
 
 Cloudflare Pages cachea por URL completa. Un fichero cambiado y publicado con la

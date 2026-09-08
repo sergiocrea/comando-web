@@ -9,7 +9,7 @@
 <link rel="icon" href="../../assets/img/favicon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@700&display=swap" rel="stylesheet">
-<link href="panel.css?v=13" rel="stylesheet">
+<link href="panel.css?v=14" rel="stylesheet">
 <!-- Config publica: la clave publishable de Clerk NO es secreta (misma que /app/) -->
 <script>
   window.COMANDO_CONFIG = {
@@ -47,6 +47,9 @@
     </header>
     <div class="mock-banner" id="mock-banner" hidden>Datos de ejemplo: nada de esto es real ni se guarda. <a href="./">Salir</a></div>
     <main class="page" id="page" aria-live="polite"></main>
+    <!-- La consola global vive FUERA de `#page`: un repintado de la sección no
+         puede llevársela mientras el operador lee una respuesta. -->
+    <div id="consola-global"></div>
   </div>
 
   <nav class="tabbar" id="tabbar" aria-label="Secciones"></nav>
@@ -54,6 +57,6 @@
 <script src="https://accounts.google.com/gsi/client" async></script>
 <script src="https://apis.google.com/js/api.js" async></script>
 <script src="../phone-picker.js?v=4"></script>
-<script type="module" src="panel.js?v=19"></script>
+<script type="module" src="panel.js?v=21"></script>
 </body>
 </html>

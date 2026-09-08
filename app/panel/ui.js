@@ -91,7 +91,28 @@ export const personEmail = (me, ctx) => (me && me.email) || (ctx && ctx.user && 
 let waBase = 'https://wa.me/';
 export function setWaBase(link) { if (link) waBase = link.replace(/\?.*$/, ''); }
 export const wa = (phrase) => waBase + (phrase ? '?text=' + encodeURIComponent(phrase) : '');
-export function waBtn(phrase, label, cls = 'btn sm wa') {
+/**
+ * Un botón que EJECUTA la frase, aquí, en la consola.
+ *
+ * Antes abría WhatsApp: 26 botones repartidos por el panel que prometían una
+ * acción y lo que hacían era mandarte a otra aplicación a escribirla tú. Era la
+ * mayor distancia entre lo que el panel promete y lo que hace.
+ *
+ * La frase es la misma que se mandaba a WhatsApp —está probada y traducida—, y
+ * el camino es el que ya usaba la consola de «Hoy». Lo único que faltaba era
+ * que la consola existiera fuera de «Hoy».
+ */
+export function waBtn(phrase, label, cls = 'btn sm ghost') {
+  label = label ?? t('common.run');
+  return `<button class="${cls}" data-act="cmd:run" data-phrase="${esc(phrase)}" title="${esc(phrase)}">${esc(label)}</button>`;
+}
+
+/**
+ * Y el que SÍ manda a WhatsApp, para los pocos sitios donde eso es lo que se
+ * ofrece —«pregúntaselo por WhatsApp»—. Si la etiqueta nombra WhatsApp, el
+ * botón tiene que ir a WhatsApp; lo contrario es mentirle al operador.
+ */
+export function waLink(phrase, label, cls = 'btn sm wa') {
   label = label ?? t('common.askOnWhatsApp');
   return `<a class="${cls}" href="${wa(phrase)}" target="_blank" rel="noopener" title="${esc(phrase)}">${ICON.wa}${esc(label)}</a>`;
 }
