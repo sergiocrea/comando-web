@@ -5,7 +5,7 @@
      aún no exista en el engine no tumba la página. */
 
 import { createApi, createMockApi } from './api.js?v=11';
-import { SECTIONS } from './sections.js?v=17';
+import { SECTIONS } from './sections.js?v=18';
 import { whatsappStep, resumePendingConnection } from './setup.js?v=7';
 import { esc, setWaBase, setAccountCurrency, wa, skeleton, toast, ICON, isToday, isPast, personName } from './ui.js?v=7';
 import '../strings.js?v=10';

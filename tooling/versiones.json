@@ -52,12 +52,12 @@
     "sha": "8c87f8917f03025e"
   },
   "app/panel/panel.js": {
-    "v": "17",
-    "sha": "4f9c268fdb34c270"
+    "v": "18",
+    "sha": "6d8b87841ff1141a"
   },
   "app/panel/sections.js": {
-    "v": "17",
-    "sha": "09fd0df08860502c"
+    "v": "18",
+    "sha": "73b8dda2f4e7665a"
   },
   "app/panel/setup.js": {
     "v": "7",

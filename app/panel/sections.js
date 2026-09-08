@@ -755,6 +755,10 @@ function frescura(m) {
  * Cuando el límite de cinco minutos está en curso, la opción se apaga y DEBAJO
  * va cuándo se podrá: una opción apagada sin explicación se lee como una avería.
  */
+/** Elegir una opción cierra el menú: si se queda abierto tapa justo los números
+ *  que se acaban de pedir, que es lo que uno estaba mirando. */
+function cerrarMenu(el) { el?.closest('details.filtro')?.removeAttribute('open'); }
+
 function menuDeDatos(m) {
   const r = m.refresh || {};
   const bloqueado = r.allowed === false && r.retryAfterSeconds > 0;
@@ -1008,6 +1012,8 @@ const marketing = {
      */
     'mk:refresh': async (el, ctx, d, reload, rerender) => {
       if (el) el.disabled = true;
+      cerrarMenu(el);
+      cargando(true);
       try {
         const r = await ctx.api.marketingRefresh();
         if (isPending(r)) { toast(t('common.comingSoon', { what: t('mk.what') })); return; }
@@ -1087,6 +1093,7 @@ const marketing = {
      */
     'mk:import': async (el, ctx, d, reload, rerender) => {
       if (el) el.disabled = true;
+      cerrarMenu(el);
       // La espera más larga de la pantalla —Meta manda meses de golpe— y la
       // única que no lo decía: se veía «Ninguna campaña con gasto» todo el rato.
       cargando(true);
