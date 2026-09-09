@@ -182,12 +182,19 @@ async function start() {
     return;
   }
   // Datos de cabecera: número de Comando (para los enlaces a WhatsApp) y nombre.
-  // Tras crear la cuenta, el webhook de Clerk tarda unos segundos en aprovisionar el
-  // tenant; hasta entonces /auth/me responde 401. Se reintenta en vez de fallar.
+  // El motor crea la cuenta en esta misma llamada si todavía no existe, así que
+  // ya no hay que esperar a que llegue el aviso de Clerk. Lo que sí puede fallar
+  // es la base en ese instante: eso llega como 503 y sí merece reintento. Un 401
+  // es un token inválido y no mejora esperando; se reintenta una vez porque el
+  // cliente ya pidió token nuevo y la segunda suele bastar tras un despliegue.
   let me = null;
-  for (let i = 0; i < 20; i += 1) {
+  for (let i = 0; i < 6; i += 1) {
     try { me = await ctx.api.me(); break; }
-    catch (e) { if (e.status !== 401 || mock) { console.warn('[panel] /auth/me', e); break; } await new Promise((r) => setTimeout(r, 1500)); }
+    catch (e) {
+      const retryable = e.status === 503 || (e.status === 401 && i === 0);
+      if (!retryable || mock) { console.warn('[panel] /auth/me', e); break; }
+      await new Promise((r) => setTimeout(r, 1200 * (i + 1)));
+    }
   }
   if (me) {
     ctx.me = me;
