@@ -189,7 +189,7 @@ const HREFLANG = `    <link rel="alternate" hreflang="es" href="https://comando.
  */
 function absolutePaths(html, locale) {
   return html
-    .replace(/(\b(?:href|src)=")([^"]*)(")/g, (whole, before, target, after) => {
+    .replace(/(\b(?:href|src|poster)=")([^"]*)(")/g, (whole, before, target, after) => {
       if (/^(?:https?:|#|mailto:|tel:|data:)/.test(target)) return whole;
       if (target === '/') return `${before}/${locale}/${after}`;
       // `/#casos` es el home con un ancla: también vive dentro del idioma.
@@ -199,7 +199,16 @@ function absolutePaths(html, locale) {
       const prefix = LOCAL_PAGES.has(file) ? `/${locale}/` : '/';
       return `${before}${prefix}${target}${after}`;
     })
-    .replace(/(\bcontent=")(assets\/)/g, '$1/$2');
+    .replace(/(\bcontent=")(assets\/)/g, '$1/$2')
+    // `srcset` lleva varias rutas —«assets/a.png 500w, assets/b.avif 1245w»— y
+    // el navegador lo prefiere sobre `src`: si se queda relativo, la imagen
+    // sale rota aunque `src` esté bien.
+    .replace(/(\bsrcset=")([^"]*)(")/g, (whole, before, list, after) => {
+      const fixed = list.replace(/(^|,)(\s*)([^\s,]+)/g, (part, sep, space, url) =>
+        /^(?:https?:|data:|\/)/.test(url) ? part : `${sep}${space}/${url}`,
+      );
+      return `${before}${fixed}${after}`;
+    });
 }
 
 /**
