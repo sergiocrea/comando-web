@@ -1,7 +1,7 @@
 {
  "seccion": {
   "eyebrow": "META ADS",
-  "titulo": "Gastas en anuncios sin saber cuál te trae clientes.",
+  "titulo": "Qué anuncio termina en venta, no solo en lead",
   "subtitulo": "Comando te lo cuenta cada mañana por WhatsApp.",
   "cierre": "El informe llega solo. Las respuestas, cuando las pides.",
   "cta": {
@@ -22,7 +22,7 @@
   {
    "rol": "Meta, TikTok y Google Ads",
    "vertical": "Informe y preguntas",
-   "titulo": "Qué anuncio termina en venta, no solo en lead",
+   "titulo": "",
    "proactivo": "☀️ Buenos días. Ayer invertiste US$ 214 en 5 campañas y entraron 38 leads: US$ 5,60 cada uno, 12 % menos que la semana pasada. «Remarketing» lleva 3 días gastando sin resultados. Responde VER para el detalle.",
    "comandos": [
     {
@@ -46,7 +46,8 @@
      "r": "Listo. Cada lunes a las 8:00 recibes inversión, leads, costo por lead y las campañas fuera de rango. El primero llega el lunes 15."
     }
    ],
-   "resultado": "Cero minutos en el Ads Manager. Cada decisión de presupuesto, con el dato delante."
+   "resultado": "Cero minutos en el Ads Manager. Cada decisión de presupuesto, con el dato delante.",
+   "meta": "Comandos"
   }
  ]
 }

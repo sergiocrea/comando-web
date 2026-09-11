@@ -1,7 +1,7 @@
 {
  "seccion": {
   "eyebrow": "META ADS",
-  "titulo": "You spend on ads without knowing which one brings customers.",
+  "titulo": "Which ad ends in a sale, not just a lead",
   "subtitulo": "Comando tells you every morning on WhatsApp.",
   "cierre": "The report arrives on its own. The answers, whenever you ask.",
   "cta": {
@@ -22,7 +22,7 @@
   {
    "rol": "Meta, TikTok and Google Ads",
    "vertical": "Report and questions",
-   "titulo": "Which ad ends in a sale, not just a lead",
+   "titulo": "",
    "proactivo": "☀️ Good morning. Yesterday you spent US$ 214 across 5 campaigns and got 38 leads: US$ 5.60 each, 12% less than last week. \"Remarketing\" has been spending for 3 days with no results. Reply VIEW for the details.",
    "comandos": [
     {
@@ -46,7 +46,8 @@
      "r": "Done. Every Monday at 8:00 you get spend, leads, cost per lead and the campaigns out of range. The first one arrives Monday the 15th."
     }
    ],
-   "resultado": "Zero minutes in Ads Manager. Every budget decision, with the numbers in front of you."
+   "resultado": "Zero minutes in Ads Manager. Every budget decision, with the numbers in front of you.",
+   "meta": "Commands"
   }
  ]
 }

@@ -138,7 +138,8 @@
       return (c.proactivo ? `<li class="is-pro"><button type="button" class="uc-dot is-pro${step === -1 ? ' is-on' : ''}${step > -1 ? ' is-past' : ''}" data-step="-1" aria-label="${esc(T.proAria(PRO_TIME))}"><i></i><span>${PRO_TIME}</span></button></li>` : '') + c.comandos.map((m, i) => `<li><button type="button" class="uc-dot${i === step ? ' is-on' : ''}${i < step ? ' is-past' : ''}" data-step="${i}" aria-label="${esc(T.sendAria(TIMES[i] || ''))}"><i></i><span>${TIMES[i] || ''}</span></button></li>`).join('');
     }
     function outcomeHtml(c) {
-      return `<div class="uc-card-meta">${esc(c.rol)} · ${esc(c.vertical)}</div><h3 class="uc-card-title">${esc(c.titulo)}</h3>
+      // `meta` sustituye a «rol · sector» cuando el caso no se elige entre varios.
+      return `<div class="uc-card-meta">${c.meta ? esc(c.meta) : `${esc(c.rol)} · ${esc(c.vertical)}`}</div>${c.titulo ? `<h3 class="uc-card-title">${esc(c.titulo)}</h3>` : ''}
         <ol class="uc-steps">${c.proactivo ? `<li><button type="button" class="uc-step uc-step-pro${step === -1 ? ' is-on' : ''}" data-step="-1"><span class="uc-step-time">${PRO_TIME}</span><span class="uc-step-text"><b>${esc(T.proStep)}</b> ${esc(c.proactivo)}</span></button></li>` : ''}${c.comandos.map((m, i) => `<li><button type="button" class="uc-step${i === step ? ' is-on' : ''}" data-step="${i}"><span class="uc-step-time">${TIMES[i] || ''}</span><span class="uc-step-text">${esc(m.u)}</span></button></li>`).join('')}</ol>
         <div class="uc-result">${esc(c.resultado)}</div>
   `;
@@ -228,7 +229,7 @@
   }
 
   const meta = document.getElementById('metaads-root');
-  if (meta) mount(meta, { data: 'metaads', pickers: false, feed: false, ads: true, version: 6 });
+  if (meta) mount(meta, { data: 'metaads', pickers: false, feed: false, ads: true, version: 7 });
   const dia = document.getElementById('usecases-root');
   if (dia) mount(dia, { data: 'usecases', pickers: true, feed: true, anchor: 'como-funciona', version: 16 });
 })();
