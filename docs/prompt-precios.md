@@ -43,7 +43,7 @@ sección debe sentirse parte de la misma página.
 | Contactos disponibles | hasta 20,000 | hasta 20,000 | hasta 70,000 | hasta 200,000 | A medida |
 | Comandos incluidos (texto o audio; una nota de voz = 1.5) | 50 en total | 150 / mes | 500 / mes | 1,500 / mes | Negociados |
 | CRM conectados | 1 | 2 | 5 | Ilimitados | A medida |
-| Cuentas de anuncios (Meta Ads, TikTok Ads) | — | 1 | 3 | Ilimitadas | A medida |
+| Cuentas de anuncios (Meta Ads, TikTok Ads) | 1 (Meta Ads) | 1 | 3 | Ilimitadas | A medida |
 | Usuarios incluidos | 1 | 1 | 1 | 1 | Negociados |
 | Soporte | Autoservicio | Estándar | Estándar | WhatsApp | Dedicado + SLA |
 

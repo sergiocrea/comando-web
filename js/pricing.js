@@ -50,7 +50,7 @@ const PRICING_CONFIG = {
   // Cada plan muestra solo 4 líneas: contactos, comandos, usuario y un diferencial.
   // Aquí va lo que es presentación; los números salen de PLAN_LADDER por `id`.
   plans: [
-    { id: 'gratis',  name: 'Gratis',  crms: '<b>{gratis.conexiones}</b> CRM conectado',  note: 'Prueba individual, sin tarjeta.' },
+    { id: 'gratis',  name: 'Gratis',  crms: '<b>{gratis.conexiones}</b> CRM conectado',  ads: '<b>1</b> cuenta de Meta Ads', note: 'Prueba individual, sin tarjeta.' },
     { id: 'basico',  name: 'Básico',  crms: '<b>{basico.conexiones}</b> CRM conectados', ads: '<b>1</b> cuenta de Meta Ads' },
     { id: 'starter', name: 'Starter', crms: '<b>{starter.conexiones}</b> CRM conectados', ads: '<b>3</b> cuentas de anuncios' },
     { id: 'pro',     name: 'Pro',     crms: '<b>CRM ilimitados</b>', ads: '<b>Anuncios ilimitados</b>' },
@@ -112,7 +112,7 @@ const PRICING_I18N = {
       starter: '<b>{starter.conexiones}</b> CRMs connected', pro: '<b>Unlimited CRMs</b>',
     },
     planAds: {
-      basico: '<b>1</b> Meta Ads account', starter: '<b>3</b> ad accounts',
+      gratis: '<b>1</b> Meta Ads account', basico: '<b>1</b> Meta Ads account', starter: '<b>3</b> ad accounts',
       pro: '<b>Unlimited ads</b>',
     },
     planNotes: { gratis: 'Individual trial, no card.' },
@@ -157,7 +157,7 @@ const PRICING_I18N = {
       starter: '<b>{starter.conexiones}</b> CRMs conectados', pro: '<b>CRMs ilimitados</b>',
     },
     planAds: {
-      basico: '<b>1</b> conta de Meta Ads', starter: '<b>3</b> contas de anúncios',
+      gratis: '<b>1</b> conta de Meta Ads', basico: '<b>1</b> conta de Meta Ads', starter: '<b>3</b> contas de anúncios',
       pro: '<b>Anúncios ilimitados</b>',
     },
     planNotes: { gratis: 'Teste individual, sem cartão.' },
