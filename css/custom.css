@@ -1363,9 +1363,11 @@ html { scroll-behavior: smooth; }
 .section_usecases { padding: 3rem 0 3rem; }
 .section_usecases .section_features-header-component { grid-row-gap: .6rem; row-gap: .6rem; }
 .section_usecases .section_features-heading { font-size: clamp(1.5rem, 1rem + 1.6vw, 2.35rem); }
-/* El titular va en dos tiempos: el h2 dice el problema y el subtítulo la
-   solución. Antes el subtítulo iba oculto; ahora es la mitad que vende. */
-.uc-subtitle { display: block; max-width: 38rem; margin-top: .85rem; font-size: 1.05rem; line-height: 1.5; }
+/* El titular va en dos tiempos y dos colores: el h2, en negro, dice el
+   problema; el subtítulo, en azul, la solución. El rótulo pequeño de arriba
+   sobraba: tres piezas de texto en tres colores se leían como ruido. */
+.section_usecases .section_features-eyebrow { display: none; }
+.uc-subtitle { display: block; max-width: 40rem; margin-top: 1rem; font-size: 1.15rem; line-height: 1.45; font-weight: 500; color: #315fef; }
 .uc-tabs { margin-top: 1.5rem; }
 .uc-anchor, .section-anchor { display: block; height: 0; scroll-margin-top: calc(var(--nav-height, 5rem) + 1rem); }
 
