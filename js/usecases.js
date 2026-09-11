@@ -17,20 +17,20 @@
     es: { rol: 'Rol', sector: 'Sector', proTag: 'Comando te avisa', proStep: 'Comando te avisa.',
           proAria: (t) => `Aviso de Comando a las ${t}`, sendAria: (t) => `Enviar el mensaje de las ${t}`,
           chat: 'Conversación de WhatsApp con Comando', moments: 'Momentos del día', feed: 'De tus sistemas',
-          ads: 'Tus anuncios', adsHint: 'gasto · leads · costo por lead' },
+          ads: 'Tus anuncios' },
     en: { rol: 'Role', sector: 'Sector', proTag: 'Comando tells you', proStep: 'Comando tells you.',
           proAria: (t) => `Comando alert at ${t}`, sendAria: (t) => `Send the ${t} message`,
           chat: 'WhatsApp conversation with Comando', moments: 'Moments of the day', feed: 'From your systems',
-          ads: 'Your ads', adsHint: 'spend · leads · cost per lead' },
+          ads: 'Your ads' },
     pt: { rol: 'Papel', sector: 'Setor', proTag: 'O Comando te avisa', proStep: 'O Comando te avisa.',
           proAria: (t) => `Aviso do Comando às ${t}`, sendAria: (t) => `Enviar a mensagem das ${t}`,
           chat: 'Conversa de WhatsApp com o Comando', moments: 'Momentos do dia', feed: 'Dos seus sistemas',
-          ads: 'Seus anúncios', adsHint: 'gasto · leads · custo por lead' },
+          ads: 'Seus anúncios' },
   }[LANG] ?? {
     rol: 'Rol', sector: 'Sector', proTag: 'Comando te avisa', proStep: 'Comando te avisa.',
     proAria: (t) => `Aviso de Comando a las ${t}`, sendAria: (t) => `Enviar el mensaje de las ${t}`,
     chat: 'Conversación de WhatsApp con Comando', moments: 'Momentos del día', feed: 'De tus sistemas',
-    ads: 'Tus anuncios', adsHint: 'gasto · leads · costo por lead',
+    ads: 'Tus anuncios',
   };
 
   // ---- El caudal que alimenta la conversación ----
@@ -91,7 +91,7 @@
   function adsHtml() {
     return `<div class="uc-feed uc-ads" aria-hidden="true">
       <div class="uc-feed-label">${esc(T.ads)}</div>
-      <ul class="uc-ads-cards">${ADS.map(([f, n, c]) => `<li><i class="uc-feed-logo" style="--uc-marca:${c};--uc-logo:url(/assets/img/logos/${f}.svg)"></i><span>${esc(n)}<small>${esc(T.adsHint)}</small></span></li>`).join('')}</ul>
+      <ul class="uc-ads-cards">${ADS.map(([f, n, c]) => `<li><i class="uc-feed-logo" style="--uc-marca:${c};--uc-logo:url(/assets/img/logos/${f}.svg)"></i><span>${esc(n)}</span></li>`).join('')}</ul>
       <div class="uc-wire"><i></i><i></i><i></i></div>
     </div>`;
   }
