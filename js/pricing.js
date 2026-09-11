@@ -45,8 +45,8 @@ const PRICING_CONFIG = {
   billing: { annualFreeMonths: 2 },          // anual = precio mensual × 10 / 12
   featuredPlan: 'starter',
   cta: { trialBase: '/app/', trialLabel: 'Elegir plan', freeLabel: 'Empezar gratis', enterpriseHref: '#pricing-form', enterpriseLabel: 'Habla con ventas' },
-  title: 'Haz menos trabajo manual desde {basico.precio} al mes.',
-  subtitle: 'Actualiza el CRM, crea seguimientos y recibe alertas desde WhatsApp. Prueba gratis.',
+  title: 'El CRM te roba horas.',
+  subtitle: 'Recupéralas desde {basico.precio} al mes. Prueba gratis.',
   // Cada plan muestra solo 4 líneas: contactos, comandos, usuario y un diferencial.
   // Aquí va lo que es presentación; los números salen de PLAN_LADDER por `id`.
   plans: [
@@ -104,8 +104,8 @@ const PRICING_I18N = {
       formSaved: 'Done, we have your details. Tell us which CRM you use and we will let you know first.',
     },
     cta: { trialLabel: 'Choose plan', freeLabel: 'Start free', enterpriseLabel: 'Talk to sales' },
-    title: 'Do less manual work from {basico.precio} a month.',
-    subtitle: 'Update the CRM, create follow-ups and get alerts from WhatsApp. Free to try.',
+    title: 'The CRM steals your hours.',
+    subtitle: 'Get them back from {basico.precio} a month. Free to try.',
     planNames: { gratis: 'Free', basico: 'Basic', starter: 'Starter', pro: 'Pro' },
     planCrms: {
       gratis: '<b>{gratis.conexiones}</b> CRM connected', basico: '<b>{basico.conexiones}</b> CRMs connected',
@@ -149,8 +149,8 @@ const PRICING_I18N = {
       formSaved: 'Pronto, já temos seus dados. Diga qual é o seu CRM e a gente avisa você primeiro.',
     },
     cta: { trialLabel: 'Escolher plano', freeLabel: 'Começar grátis', enterpriseLabel: 'Falar com vendas' },
-    title: 'Faça menos trabalho manual a partir de {basico.precio} por mês.',
-    subtitle: 'Atualize o CRM, crie acompanhamentos e receba alertas pelo WhatsApp. Teste grátis.',
+    title: 'O CRM rouba suas horas.',
+    subtitle: 'Recupere-as a partir de {basico.precio} por mês. Teste grátis.',
     planNames: { gratis: 'Grátis', basico: 'Básico', starter: 'Starter', pro: 'Pro' },
     planCrms: {
       gratis: '<b>{gratis.conexiones}</b> CRM conectado', basico: '<b>{basico.conexiones}</b> CRMs conectados',

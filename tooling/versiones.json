@@ -80,8 +80,8 @@
     "sha": "9487f74b6a3f63e4"
   },
   "css/custom.css": {
-    "v": "157",
-    "sha": "43b99a7c91d0a1a2"
+    "v": "158",
+    "sha": "b1e7abffd86101f0"
   },
   "css/legal.css": {
     "v": "1",
@@ -104,15 +104,15 @@
     "sha": "6d27ba8503cb6830"
   },
   "js/pricing.js": {
-    "v": "24",
-    "sha": "99f437437192fb21"
+    "v": "25",
+    "sha": "583e0a37a4e36a12"
   },
   "js/screens.js": {
     "v": "16",
     "sha": "2a4c11cc05f2a3b1"
   },
   "js/usecases.js": {
-    "v": "35",
-    "sha": "d9f2f3a2373feda4"
+    "v": "36",
+    "sha": "6bdc443c122e8d8c"
   }
 }

@@ -1632,14 +1632,17 @@ html { scroll-behavior: smooth; }
   margin: 0; padding: 0 0 1.15rem; list-style: none;
   animation: uc-feed-rise 26s linear infinite;
 }
-.uc-feed-col li { display: flex; align-items: center; gap: .55rem; padding: 0 .85rem; white-space: nowrap; }
+/* El logo grande arriba y el nombre debajo: en fila, «Mercado Libre» y «Google
+   Sheets» no cabían en la columna y salían cortados. Apilados, el nombre tiene
+   todo el ancho para él y el logo gana tamaño, que es lo que se reconoce. */
+.uc-feed-col li { display: flex; flex-direction: column; align-items: center; gap: .45rem; padding: 0 .5rem; white-space: nowrap; text-align: center; }
 /* El SVG entra como MÁSCARA, no como imagen: el fichero sigue siendo el blanco
    plano que comparte con la franja del héroe, y el color de marca lo pone aquí
    `background-color`. Así un mismo juego de logotipos sirve a los dos sitios
    —arriba en blanco, escaparate; aquí en color, tubería— sin duplicar assets.
    El hex viaja desde js/usecases.js en `--uc-marca`. */
 .uc-feed-logo {
-  width: 1.25rem; height: 1.25rem; flex: 0 0 auto;
+  width: 1.9rem; height: 1.9rem; flex: 0 0 auto;
   background-color: var(--uc-marca, #f2f4f8);
   -webkit-mask: var(--uc-logo) center / contain no-repeat;
   mask: var(--uc-logo) center / contain no-repeat;
@@ -1659,7 +1662,7 @@ html { scroll-behavior: smooth; }
    la última —es apoyo, no el contenido— y aquí se coloca la primera. */
 @media (min-width: 992px) {
   .uc-layout {
-    grid-template-columns: minmax(0, 8rem) minmax(0, 21rem) minmax(0, 28rem);
+    grid-template-columns: minmax(0, 9.5rem) minmax(0, 21rem) minmax(0, 28rem);
     grid-template-areas: "feed phone outcome";
     gap: 3rem 5rem;
   }

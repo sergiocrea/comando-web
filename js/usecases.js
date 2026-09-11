@@ -41,7 +41,8 @@
   // La lista se repite en el markup del héroe (index.html, .b2b-hero-band). Se
   // deja explícita en vez de clonar aquel nodo: si el héroe cambia de forma, la
   // sección no se queda muda.
-  // El tercer campo es el color de marca. Catorce logos en blanco plano se leen
+  // Meta Ads y TikTok Ads no van: tienen su propia sección justo arriba.
+  // El tercer campo es el color de marca. Doce logos en blanco plano se leen
   // como un menú desplegable: la mirada no distingue una fila de la siguiente y
   // la columna se vuelve gris. En color, cada sistema se reconoce antes de
   // leerlo, que es justo lo que tiene que pasar aquí —el mensaje es «esto viene
@@ -61,7 +62,7 @@
   const CONECTORES = [
     ['hubspot', 'HubSpot', '#ff7a59'], ['salesforce', 'Salesforce', '#00a1e0'], ['zoho', 'Zoho CRM', '#e42527'],
     ['pipedrive', 'Pipedrive', '#1fa971'], ['kommo', 'Kommo', '#3d8bfd'], ['dynamics', 'Dynamics 365', '#3b8ce8'],
-    ['meta', 'Meta Ads', '#0081fb'], ['tiktok', 'TikTok Ads', '#e7e9ec'], ['shopify', 'Shopify', '#95bf47'],
+    ['shopify', 'Shopify', '#95bf47'],
     ['woocommerce', 'WooCommerce', '#b07fa6'], ['tiendanube', 'Tiendanube', '#2c6dea'],
     ['mercadolibre', 'Mercado Libre', '#ffe600'], ['vtex', 'VTEX', '#ed125f'], ['googlesheets', 'Google Sheets', '#34a853'],
   ];
