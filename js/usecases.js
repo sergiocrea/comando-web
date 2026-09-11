@@ -99,6 +99,10 @@
       const rol = D.roles[state.rol], vertical = D.verticales[state.vertical];
       return D.casos.find((x) => x.rol === rol && x.vertical === vertical);
     }
+    // El aviso de las 7:30 es un paso más (-1): se enciende solo, como los
+    // demás. Antes no era pulsable y, al tocarlo, el paso quedaba en NaN y el
+    // teléfono se vaciaba.
+    const firstStep = (c) => (c.proactivo ? -1 : 0);
     let step = 0, timer = null, visible = false;
     function msgHtml(m, i, upTo) {
       return `<div class="uc-msg is-user${i < upTo ? ' is-in' : ''}"><div class="uc-bubble">${esc(m.u)}<span class="uc-time">${TIMES[i] || ''} <i>✓✓</i></span></div></div>
@@ -106,41 +110,29 @@
     }
     function proHtml(c) {
       if (!c.proactivo) return '';
-      return `<div class="uc-msg is-bot is-in is-proactive"><div class="uc-bubble"><b class="uc-pro-tag">${esc(T.proTag)}</b>${esc(c.proactivo)}<span class="uc-time">${PRO_TIME}</span></div></div>`;
+      return `<div class="uc-msg is-bot${step === -1 ? ' is-in' : ''} is-proactive"><div class="uc-bubble"><b class="uc-pro-tag">${esc(T.proTag)}</b>${esc(c.proactivo)}<span class="uc-time">${PRO_TIME}</span></div></div>`;
     }
     function chatHtml(c) { return proHtml(c) + c.comandos.map((m, i) => msgHtml(m, i, step + 1)).join(''); }
     function timelineHtml(c) {
-      return (c.proactivo ? `<li class="is-pro"><span class="uc-dot is-pro" aria-label="${esc(T.proAria(PRO_TIME))}"><i></i><span>${PRO_TIME}</span></span></li>` : '') + c.comandos.map((m, i) => `<li><button type="button" class="uc-dot${i === step ? ' is-on' : ''}${i < step ? ' is-past' : ''}" data-step="${i}" aria-label="${esc(T.sendAria(TIMES[i] || ''))}"><i></i><span>${TIMES[i] || ''}</span></button></li>`).join('');
+      return (c.proactivo ? `<li class="is-pro"><button type="button" class="uc-dot is-pro${step === -1 ? ' is-on' : ''}${step > -1 ? ' is-past' : ''}" data-step="-1" aria-label="${esc(T.proAria(PRO_TIME))}"><i></i><span>${PRO_TIME}</span></button></li>` : '') + c.comandos.map((m, i) => `<li><button type="button" class="uc-dot${i === step ? ' is-on' : ''}${i < step ? ' is-past' : ''}" data-step="${i}" aria-label="${esc(T.sendAria(TIMES[i] || ''))}"><i></i><span>${TIMES[i] || ''}</span></button></li>`).join('');
     }
     function outcomeHtml(c) {
       return `<div class="uc-card-meta">${esc(c.rol)} · ${esc(c.vertical)}</div><h3 class="uc-card-title">${esc(c.titulo)}</h3>
-        <ol class="uc-steps">${c.proactivo ? `<li><div class="uc-step uc-step-pro"><span class="uc-step-time">${PRO_TIME}</span><span class="uc-step-text"><b>${esc(T.proStep)}</b> ${esc(c.proactivo)}</span></div></li>` : ''}${c.comandos.map((m, i) => `<li><button type="button" class="uc-step${i === step ? ' is-on' : ''}" data-step="${i}"><span class="uc-step-time">${TIMES[i] || ''}</span><span class="uc-step-text">${esc(m.u)}</span></button></li>`).join('')}</ol>
+        <ol class="uc-steps">${c.proactivo ? `<li><button type="button" class="uc-step uc-step-pro${step === -1 ? ' is-on' : ''}" data-step="-1"><span class="uc-step-time">${PRO_TIME}</span><span class="uc-step-text"><b>${esc(T.proStep)}</b> ${esc(c.proactivo)}</span></button></li>` : ''}${c.comandos.map((m, i) => `<li><button type="button" class="uc-step${i === step ? ' is-on' : ''}" data-step="${i}"><span class="uc-step-time">${TIMES[i] || ''}</span><span class="uc-step-text">${esc(m.u)}</span></button></li>`).join('')}</ol>
         <div class="uc-result">${esc(c.resultado)}</div>
   `;
     }
     // El teléfono muestra SOLO el momento que está encendido en la línea de
-    // tiempo: la pregunta y su respuesta. Lo de las horas anteriores se borra
-    // al cambiar de paso. Acumular la conversación se leía como una pared de
-    // texto, y el ojo no sabía cuál era el mensaje «de ahora». El aviso de las
-    // 7:30 sólo acompaña al primer paso: es con lo que abre el día.
+    // tiempo: el aviso de las 7:30, o una pregunta con su respuesta. Lo de las
+    // horas anteriores se borra al cambiar de paso. Acumular la conversación
+    // se leía como una pared de texto, y el ojo no sabía cuál era el mensaje
+    // «de ahora».
     function showStep(i, fromUser) {
-      step = i;
+      step = Number.isInteger(i) ? i : firstStep(current());
       const msgs = [...root.querySelectorAll('.uc-msg:not(.is-proactive)')];
       const pro = root.querySelector('.uc-msg.is-proactive');
       msgs.forEach((m, k) => m.classList.toggle('is-in', Math.floor(k / 2) === step));
-      if (pro) {
-        pro.classList.toggle('is-in', step === 0);
-        // El chat tiene altura fija y no hace scroll: si el aviso y el primer
-        // intercambio no caben juntos (pasa en móvil con avisos largos), el
-        // aviso cede el sitio. Cortado por arriba se leía peor que ausente.
-        if (step === 0) {
-          const chatEl = root.querySelector('.uc-chat'); const cs = getComputedStyle(chatEl);
-          const avail = chatEl.clientHeight - parseFloat(cs.paddingTop) - parseFloat(cs.paddingBottom); const gap = parseFloat(cs.rowGap) || 0;
-          const shown = [pro, ...msgs.filter((m) => m.classList.contains('is-in'))];
-          const used = shown.reduce((a, m) => a + m.offsetHeight + parseFloat(getComputedStyle(m).marginTop), 0) + gap * (shown.length - 1);
-          if (used > avail + 1) pro.classList.remove('is-in');
-        }
-      }
+      if (pro) pro.classList.toggle('is-in', step === -1);
       root.querySelectorAll('.uc-step').forEach((b) => b.classList.toggle('is-on', +b.dataset.step === step));
       root.querySelectorAll('.uc-dot').forEach((b) => { const k = +b.dataset.step; b.classList.toggle('is-on', k === step); b.classList.toggle('is-past', k < step); });
 
@@ -149,7 +141,7 @@
     function restartTimer(delay) {
       clearInterval(timer); timer = null;
       if (!visible) return;
-      timer = setInterval(() => { const n = current().comandos.length; showStep((step + 1) % n, false); }, delay || 4200);
+      timer = setInterval(() => { const c = current(); showStep(step + 1 < c.comandos.length ? step + 1 : firstStep(c), false); }, delay || 4200);
     }
     function bindSteps() { root.querySelectorAll('.uc-step, .uc-dot').forEach((b) => b.addEventListener('click', () => showStep(+b.dataset.step, true))); }
     function pickersHtml() {
@@ -158,7 +150,7 @@
         <div class="uc-chips" role="group" aria-label="${esc(T.sector)}">${D.verticales.map((v, i) => `<button type="button" class="uc-chip${i === state.vertical ? ' is-on' : ''}" aria-pressed="${i === state.vertical}" data-vertical="${i}">${esc(v)}</button>`).join('')}</div>`;
     }
     function render() {
-      const c = current(); step = 0;
+      const c = current(); step = firstStep(c);
       root.innerHTML = `
         <div class="section_features-header-component"><div class="section_features-eyebrow">${esc(D.seccion.eyebrow || '')}</div>
           ${D.seccion.titulo ? `<h2 class="section_features-heading">${esc(D.seccion.titulo)}</h2>` : ''}
@@ -189,8 +181,8 @@
     function update() {
       root.querySelectorAll('[data-rol]').forEach((b) => { const on = +b.dataset.rol === state.rol; b.classList.toggle('is-on', on); b.setAttribute('aria-selected', on); if (on) b.scrollIntoView({ block: 'nearest', inline: 'center', behavior: 'smooth' }); });
       root.querySelectorAll('[data-vertical]').forEach((b) => { const on = +b.dataset.vertical === state.vertical; b.classList.toggle('is-on', on); b.setAttribute('aria-pressed', on); if (on) b.scrollIntoView({ block: 'nearest', inline: 'center', behavior: 'smooth' }); });
-      const c = current(); step = 0; const chat = root.querySelector('.uc-chat'), out = root.querySelector('.uc-outcome'), layout = root.querySelector('.uc-layout');
-      layout.classList.remove('is-in'); chat.innerHTML = chatHtml(c); out.innerHTML = outcomeHtml(c); root.querySelector('.uc-timeline').innerHTML = timelineHtml(c); bindSteps(); showStep(0, 'init');
+      const c = current(); step = firstStep(c); const chat = root.querySelector('.uc-chat'), out = root.querySelector('.uc-outcome'), layout = root.querySelector('.uc-layout');
+      layout.classList.remove('is-in'); chat.innerHTML = chatHtml(c); out.innerHTML = outcomeHtml(c); root.querySelector('.uc-timeline').innerHTML = timelineHtml(c); bindSteps(); showStep(step, 'init');
       requestAnimationFrame(() => requestAnimationFrame(() => layout.classList.add('is-in')));
       restartTimer(6000);
       if (typeof ScrollTrigger !== 'undefined') ScrollTrigger.refresh();
@@ -208,7 +200,7 @@
       D = d;
       if (Array.isArray(D.horas) && D.horas.length) TIMES = D.horas;
       if (D.proHora) PRO_TIME = D.proHora;
-      render(); showStep(0, 'init');
+      render(); showStep(step, 'init');
       requestAnimationFrame(() => root.querySelector('.uc-layout').classList.add('is-in'));
       if (typeof ScrollTrigger !== 'undefined') ScrollTrigger.refresh();
     }).catch(() => {});

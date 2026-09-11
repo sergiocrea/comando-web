@@ -1355,11 +1355,9 @@ html { scroll-behavior: smooth; }
 .uc-msg.is-proactive .uc-bubble { border-left: 3px solid #4d7cff; max-width: 92%; }
 .uc-pro-tag { display: block; margin-bottom: .2rem; font-family: "Jetbrainsmono Variable", ui-monospace, monospace; font-size: .6rem; letter-spacing: .08em; text-transform: uppercase; color: #8fb0ff; font-weight: 500; }
 .uc-msg.is-proactive + .uc-msg.is-user { margin-top: .5rem; }
-.uc-dot.is-pro { cursor: default; }
 .uc-dot.is-pro i { border-style: dashed; border-color: #4d7cff; }
-.uc-step-pro { cursor: default; border-style: dashed; }
+.uc-step-pro { border-style: dashed; text-align: left; }
 .uc-step-pro b { color: #4d7cff; font-weight: 600; }
-.uc-step-pro:hover { border-color: inherit; }
 
 /* ---------- Casos de uso: encabezado compacto también en escritorio ---------- */
 .section_usecases { padding: 3rem 0 3rem; }
@@ -1844,6 +1842,3 @@ html { scroll-behavior: smooth; }
   .section_metaads .uc-timeline li { padding-bottom: 1.6rem; }
   .section_metaads .uc-timeline { padding-top: 3.5rem; }
 }
-/* El informe de la mañana es lo que vende esta sección, y en móvil no cabía
-   junto a la primera pregunta: el chat gana altura para que se vean los dos. */
-@media (max-width: 767px) { .section_metaads .uc-chat { height: 29rem; } }
