@@ -80,8 +80,8 @@
     "sha": "9487f74b6a3f63e4"
   },
   "css/custom.css": {
-    "v": "151",
-    "sha": "2913c29612c6b123"
+    "v": "152",
+    "sha": "751673e9d3af0e83"
   },
   "css/legal.css": {
     "v": "1",
@@ -90,10 +90,6 @@
   "docs/demo-data.json": {
     "v": "2",
     "sha": "56278e0bc8807ff3"
-  },
-  "docs/usecases.json": {
-    "v": "12",
-    "sha": "4b5b44418ba555d2"
   },
   "js/demo.js": {
     "v": "4",
@@ -116,7 +112,7 @@
     "sha": "2a4c11cc05f2a3b1"
   },
   "js/usecases.js": {
-    "v": "26",
-    "sha": "d9b538f7e874f826"
+    "v": "27",
+    "sha": "9a5e7694f5ceb2a8"
   }
 }

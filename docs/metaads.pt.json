@@ -1,0 +1,46 @@
+{
+ "seccion": {
+  "eyebrow": "META ADS",
+  "titulo": "Pergunte às suas campanhas pelo WhatsApp",
+  "subtitulo": "O Comando lê sua conta do Meta Ads e conta toda manhã o que aconteceu. O resto, você pergunta.",
+  "cierre": "O relatório chega sozinho. As respostas, quando você pede.",
+  "cta": {
+   "texto": "Conectar o Meta Ads",
+   "sufijo": " em 2 minutos",
+   "href": "/app/"
+  }
+ },
+ "proHora": "7:30",
+ "horas": ["8:05", "10:20", "13:00", "16:45", "18:30"],
+ "casos": [
+  {
+   "rol": "Meta Ads",
+   "vertical": "Relatório e perguntas",
+   "titulo": "Saiba qual campanha paga sem abrir o Gerenciador de Anúncios",
+   "proactivo": "☀️ Bom dia. Ontem você investiu US$ 214 em 5 campanhas e entraram 38 leads: US$ 5,60 cada, 12 % menos que na semana passada. «Remarketing» está há 3 dias gastando sem resultado. Responda VER para o detalhe.",
+   "comandos": [
+    {
+     "u": "Qual campanha trouxe mais leads ontem e quanto me custou cada um?",
+     "r": "«Leads setembro» trouxe 21 a US$ 4,10. Depois vem «Catálogo», com 11 a US$ 7,30. As outras três somaram 6."
+    },
+    {
+     "u": "Compare esta semana com a anterior: investimento, leads e custo por lead.",
+     "r": "Investimento US$ 1.480 (+6 %), 265 leads (+19 %), custo por lead US$ 5,58 (−11 %). O salto vem de «Leads setembro»: dobrou os leads com o mesmo orçamento."
+    },
+    {
+     "u": "Qual anúncio está gastando e não traz nada?",
+     "r": "«Remarketing» já gastou US$ 96 em 3 dias sem um único lead, com frequência 4,8: o público já viu demais. Pauso?"
+    },
+    {
+     "u": "Quantos dos leads do Meta deste mês já têm consulta ou orçamento no CRM?",
+     "r": "De 612 leads do Meta, 148 têm consulta ou orçamento no HubSpot (24 %). «Leads setembro» converte 31 %; «Catálogo», 9 %."
+    },
+    {
+     "u": "Me mande toda segunda às 8 o resumo da semana com as campanhas que precisam de revisão.",
+     "r": "Pronto. Toda segunda às 8:00 você recebe investimento, leads, custo por lead e as campanhas fora da faixa. O primeiro chega na segunda, dia 15."
+    }
+   ],
+   "resultado": "Zero minutos no Gerenciador de Anúncios. Cada decisão de orçamento, com o dado na frente."
+  }
+ ]
+}

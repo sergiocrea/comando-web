@@ -1,0 +1,46 @@
+{
+ "seccion": {
+  "eyebrow": "META ADS",
+  "titulo": "Pregúntale a tus campañas por WhatsApp",
+  "subtitulo": "Comando lee tu cuenta de Meta Ads y te cuenta cada mañana qué pasó. Lo demás, lo preguntas.",
+  "cierre": "El informe llega solo. Las respuestas, cuando las pides.",
+  "cta": {
+   "texto": "Conectar Meta Ads",
+   "sufijo": " en 2 minutos",
+   "href": "/app/"
+  }
+ },
+ "proHora": "7:30",
+ "horas": ["8:05", "10:20", "13:00", "16:45", "18:30"],
+ "casos": [
+  {
+   "rol": "Meta Ads",
+   "vertical": "Informe y preguntas",
+   "titulo": "Sabes qué campaña paga sin abrir el Ads Manager",
+   "proactivo": "☀️ Buenos días. Ayer invertiste US$ 214 en 5 campañas y entraron 38 leads: US$ 5,60 cada uno, 12 % menos que la semana pasada. «Remarketing» lleva 3 días gastando sin resultados. Responde VER para el detalle.",
+   "comandos": [
+    {
+     "u": "¿Qué campaña trajo más leads ayer y cuánto me costó cada uno?",
+     "r": "«Leads septiembre» trajo 21 a US$ 4,10. Le sigue «Catálogo» con 11 a US$ 7,30. Las otras tres sumaron 6."
+    },
+    {
+     "u": "Compara esta semana con la anterior: inversión, leads y costo por lead.",
+     "r": "Inversión US$ 1.480 (+6 %), 265 leads (+19 %), costo por lead US$ 5,58 (−11 %). El salto viene de «Leads septiembre»: duplicó leads con el mismo presupuesto."
+    },
+    {
+     "u": "¿Qué anuncio está gastando y no trae nada?",
+     "r": "«Remarketing» lleva US$ 96 en 3 días sin un solo lead y una frecuencia de 4,8: la audiencia ya lo vio de más. ¿Lo pauso?"
+    },
+    {
+     "u": "¿Cuántos de los leads de Meta de este mes ya tienen cita o cotización en el CRM?",
+     "r": "De 612 leads de Meta, 148 tienen cita o cotización en HubSpot (24 %). «Leads septiembre» convierte al 31 %; «Catálogo», al 9 %."
+    },
+    {
+     "u": "Mándame cada lunes a las 8 el resumen de la semana con las campañas que hay que revisar.",
+     "r": "Listo. Cada lunes a las 8:00 recibes inversión, leads, costo por lead y las campañas fuera de rango. El primero llega el lunes 15."
+    }
+   ],
+   "resultado": "Cero minutos en el Ads Manager. Cada decisión de presupuesto, con el dato delante."
+  }
+ ]
+}

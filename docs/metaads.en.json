@@ -1,0 +1,46 @@
+{
+ "seccion": {
+  "eyebrow": "META ADS",
+  "titulo": "Ask your campaigns on WhatsApp",
+  "subtitulo": "Comando reads your Meta Ads account and tells you every morning what happened. The rest, you ask.",
+  "cierre": "The report arrives on its own. The answers, whenever you ask.",
+  "cta": {
+   "texto": "Connect Meta Ads",
+   "sufijo": " in 2 minutes",
+   "href": "/app/"
+  }
+ },
+ "proHora": "7:30",
+ "horas": ["8:05", "10:20", "13:00", "16:45", "18:30"],
+ "casos": [
+  {
+   "rol": "Meta Ads",
+   "vertical": "Report and questions",
+   "titulo": "Know which campaign pays without opening Ads Manager",
+   "proactivo": "☀️ Good morning. Yesterday you spent US$ 214 across 5 campaigns and got 38 leads: US$ 5.60 each, 12% less than last week. \"Remarketing\" has been spending for 3 days with no results. Reply VIEW for the details.",
+   "comandos": [
+    {
+     "u": "Which campaign brought the most leads yesterday, and what did each one cost me?",
+     "r": "\"September leads\" brought 21 at US$ 4.10. Next is \"Catalog\" with 11 at US$ 7.30. The other three added up to 6."
+    },
+    {
+     "u": "Compare this week with last week: spend, leads and cost per lead.",
+     "r": "Spend US$ 1,480 (+6%), 265 leads (+19%), cost per lead US$ 5.58 (−11%). The jump comes from \"September leads\": it doubled leads on the same budget."
+    },
+    {
+     "u": "Which ad is spending and bringing nothing?",
+     "r": "\"Remarketing\" has spent US$ 96 in 3 days without a single lead, at a frequency of 4.8: the audience has seen it too often. Pause it?"
+    },
+    {
+     "u": "How many of this month's Meta leads already have an appointment or quote in the CRM?",
+     "r": "Of 612 Meta leads, 148 have an appointment or quote in HubSpot (24%). \"September leads\" converts at 31%; \"Catalog\", at 9%."
+    },
+    {
+     "u": "Send me the weekly summary every Monday at 8 with the campaigns I need to review.",
+     "r": "Done. Every Monday at 8:00 you get spend, leads, cost per lead and the campaigns out of range. The first one arrives Monday the 15th."
+    }
+   ],
+   "resultado": "Zero minutes in Ads Manager. Every budget decision, with the numbers in front of you."
+  }
+ ]
+}

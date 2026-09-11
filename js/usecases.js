@@ -1,17 +1,19 @@
 /* ============================================================
-   usecases.js — "Un vendedor. Tres veces el resultado."
-   Renders docs/usecases.json: role tabs × vertical chips → one chat card
-   (3 user/Comando exchanges + result + evidence). No dependencies.
+   usecases.js — las dos secciones de «casos» del home.
+   Un solo motor para dos raíces:
+     #metaads-root  (Meta Ads: un caso fijo —informe de la mañana y preguntas—,
+                     sin pestañas ni columna de sistemas)
+     #usecases-root («Así cambia el día»: rol × sector → un caso, con la columna
+                     «De tus sistemas» subiendo pegada al teléfono)
+   Cada raíz lee su JSON del idioma y pinta teléfono + línea de tiempo + resultado.
+   Sin dependencias.
    ============================================================ */
 (function () {
-  const root = document.getElementById('usecases-root');
-  if (!root) return;
   const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
-  const TIMES = ['8:05', '11:30', '18:40'];
-  const PRO_TIME = '7:30'; // el aviso con el que Comando abre el día, antes de que nadie pregunte
+  const LANG = (document.documentElement.lang || 'es').slice(0, 2);
   // Las etiquetas de la sección: los datos vienen del fichero del idioma, pero
-  // estas cuatro palabras viven en el markup y también se leen.
-  const W = {
+  // estas palabras viven en el markup y también se leen.
+  const T = {
     es: { rol: 'Rol', sector: 'Sector', proTag: 'Comando te avisa', proStep: 'Comando te avisa.',
           proAria: (t) => `Aviso de Comando a las ${t}`, sendAria: (t) => `Enviar el mensaje de las ${t}`,
           chat: 'Conversación de WhatsApp con Comando', moments: 'Momentos del día', feed: 'De tus sistemas' },
@@ -21,8 +23,7 @@
     pt: { rol: 'Papel', sector: 'Setor', proTag: 'O Comando te avisa', proStep: 'O Comando te avisa.',
           proAria: (t) => `Aviso do Comando às ${t}`, sendAria: (t) => `Enviar a mensagem das ${t}`,
           chat: 'Conversa de WhatsApp com o Comando', moments: 'Momentos do dia', feed: 'Dos seus sistemas' },
-  }[(document.documentElement.lang || 'es').slice(0, 2)] ?? undefined;
-  const T = W ?? {
+  }[LANG] ?? {
     rol: 'Rol', sector: 'Sector', proTag: 'Comando te avisa', proStep: 'Comando te avisa.',
     proAria: (t) => `Aviso de Comando a las ${t}`, sendAria: (t) => `Enviar el mensaje de las ${t}`,
     chat: 'Conversación de WhatsApp con Comando', moments: 'Momentos del día', feed: 'De tus sistemas',
@@ -75,102 +76,146 @@
     </div>`;
   }
 
-  const state = { rol: 0, vertical: 0 };
-  let D = null;
+  /**
+   * Monta una sección sobre `root`.
+   *   data     nombre base del JSON en /docs (`usecases` → usecases.json, usecases.en.json…)
+   *   pickers  si hay pestañas de rol y chips de sector (el JSON trae roles/verticales)
+   *   feed     si lleva la columna «De tus sistemas»
+   *   anchor   id de un ancla vacía bajo el encabezado (el botón «Cómo funciona» del héroe)
+   *   version  el ?v= del JSON, para que el navegador no sirva el viejo
+   */
+  function mount(root, opts) {
+    // Las horas de la línea de tiempo. El JSON puede traer las suyas (`horas`,
+    // `proHora`); si no, las de siempre.
+    const DEFAULT_TIMES = ['8:05', '11:30', '18:40'];
+    const DEFAULT_PRO = '7:30'; // el aviso con el que Comando abre el día, antes de que nadie pregunte
+    let TIMES = DEFAULT_TIMES, PRO_TIME = DEFAULT_PRO;
 
-  function current() {
-    const rol = D.roles[state.rol], vertical = D.verticales[state.vertical];
-    return D.casos.find((x) => x.rol === rol && x.vertical === vertical);
-  }
-  let step = 0, timer = null, visible = false;
-  function msgHtml(m, i, upTo) {
-    return `<div class="uc-msg is-user${i < upTo ? ' is-in' : ''}"><div class="uc-bubble">${esc(m.u)}<span class="uc-time">${TIMES[i] || ''} <i>✓✓</i></span></div></div>
-      <div class="uc-msg is-bot${i < upTo ? ' is-in' : ''}"><div class="uc-bubble">${esc(m.r)}<span class="uc-time">${TIMES[i] || ''}</span></div></div>`;
-  }
-  function proHtml(c) {
-    if (!c.proactivo) return '';
-    return `<div class="uc-msg is-bot is-in is-proactive"><div class="uc-bubble"><b class="uc-pro-tag">${esc(T.proTag)}</b>${esc(c.proactivo)}<span class="uc-time">${PRO_TIME}</span></div></div>`;
-  }
-  function chatHtml(c) { return proHtml(c) + c.comandos.map((m, i) => msgHtml(m, i, step + 1)).join(''); }
-  function timelineHtml(c) {
-    return (c.proactivo ? `<li class="is-pro"><span class="uc-dot is-pro" aria-label="${esc(T.proAria(PRO_TIME))}"><i></i><span>${PRO_TIME}</span></span></li>` : '') + c.comandos.map((m, i) => `<li><button type="button" class="uc-dot${i === step ? ' is-on' : ''}${i < step ? ' is-past' : ''}" data-step="${i}" aria-label="${esc(T.sendAria(TIMES[i] || ''))}"><i></i><span>${TIMES[i] || ''}</span></button></li>`).join('');
-  }
-  function outcomeHtml(c) {
-    return `<div class="uc-card-meta">${esc(c.rol)} · ${esc(c.vertical)}</div><h3 class="uc-card-title">${esc(c.titulo)}</h3>
-      <ol class="uc-steps">${c.proactivo ? `<li><div class="uc-step uc-step-pro"><span class="uc-step-time">${PRO_TIME}</span><span class="uc-step-text"><b>${esc(T.proStep)}</b> ${esc(c.proactivo)}</span></div></li>` : ''}${c.comandos.map((m, i) => `<li><button type="button" class="uc-step${i === step ? ' is-on' : ''}" data-step="${i}"><span class="uc-step-time">${TIMES[i] || ''}</span><span class="uc-step-text">${esc(m.u)}</span></button></li>`).join('')}</ol>
-      <div class="uc-result">${esc(c.resultado)}</div>
-`;
-  }
-  function showStep(i, fromUser) {
-    step = i;
-    const msgs = [...root.querySelectorAll('.uc-msg:not(.is-proactive)')];
-    const pro = root.querySelector('.uc-msg.is-proactive');
-    msgs.forEach((m, k) => m.classList.toggle('is-in', Math.floor(k / 2) <= step));
-    // fixed-height chat, no scroll: drop the oldest exchanges until everything fits
-    const chatEl = root.querySelector('.uc-chat'); const cs = getComputedStyle(chatEl);
-    const avail = chatEl.clientHeight - parseFloat(cs.paddingTop) - parseFloat(cs.paddingBottom); const gap = parseFloat(cs.rowGap) || 0;
-    const used = () => { const v = msgs.filter((m) => m.classList.contains('is-in')); return (pro ? pro.offsetHeight + gap : 0) + v.reduce((a, m) => a + m.offsetHeight + parseFloat(getComputedStyle(m).marginTop), 0) + gap * (v.length - 1); };
-    for (let first = 0; first < step && used() > avail + 1; first++) {
-      msgs[first * 2].classList.remove('is-in'); msgs[first * 2 + 1].classList.remove('is-in');
+    const state = { rol: 0, vertical: 0 };
+    let D = null;
+
+    function current() {
+      if (!opts.pickers) return D.casos[0];
+      const rol = D.roles[state.rol], vertical = D.verticales[state.vertical];
+      return D.casos.find((x) => x.rol === rol && x.vertical === vertical);
     }
-    root.querySelectorAll('.uc-step').forEach((b) => b.classList.toggle('is-on', +b.dataset.step === step));
-    root.querySelectorAll('.uc-dot').forEach((b) => { const k = +b.dataset.step; b.classList.toggle('is-on', k === step); b.classList.toggle('is-past', k < step); });
+    let step = 0, timer = null, visible = false;
+    function msgHtml(m, i, upTo) {
+      return `<div class="uc-msg is-user${i < upTo ? ' is-in' : ''}"><div class="uc-bubble">${esc(m.u)}<span class="uc-time">${TIMES[i] || ''} <i>✓✓</i></span></div></div>
+        <div class="uc-msg is-bot${i < upTo ? ' is-in' : ''}"><div class="uc-bubble">${esc(m.r)}<span class="uc-time">${TIMES[i] || ''}</span></div></div>`;
+    }
+    function proHtml(c) {
+      if (!c.proactivo) return '';
+      return `<div class="uc-msg is-bot is-in is-proactive"><div class="uc-bubble"><b class="uc-pro-tag">${esc(T.proTag)}</b>${esc(c.proactivo)}<span class="uc-time">${PRO_TIME}</span></div></div>`;
+    }
+    function chatHtml(c) { return proHtml(c) + c.comandos.map((m, i) => msgHtml(m, i, step + 1)).join(''); }
+    function timelineHtml(c) {
+      return (c.proactivo ? `<li class="is-pro"><span class="uc-dot is-pro" aria-label="${esc(T.proAria(PRO_TIME))}"><i></i><span>${PRO_TIME}</span></span></li>` : '') + c.comandos.map((m, i) => `<li><button type="button" class="uc-dot${i === step ? ' is-on' : ''}${i < step ? ' is-past' : ''}" data-step="${i}" aria-label="${esc(T.sendAria(TIMES[i] || ''))}"><i></i><span>${TIMES[i] || ''}</span></button></li>`).join('');
+    }
+    function outcomeHtml(c) {
+      return `<div class="uc-card-meta">${esc(c.rol)} · ${esc(c.vertical)}</div><h3 class="uc-card-title">${esc(c.titulo)}</h3>
+        <ol class="uc-steps">${c.proactivo ? `<li><div class="uc-step uc-step-pro"><span class="uc-step-time">${PRO_TIME}</span><span class="uc-step-text"><b>${esc(T.proStep)}</b> ${esc(c.proactivo)}</span></div></li>` : ''}${c.comandos.map((m, i) => `<li><button type="button" class="uc-step${i === step ? ' is-on' : ''}" data-step="${i}"><span class="uc-step-time">${TIMES[i] || ''}</span><span class="uc-step-text">${esc(m.u)}</span></button></li>`).join('')}</ol>
+        <div class="uc-result">${esc(c.resultado)}</div>
+  `;
+    }
+    // El teléfono muestra SOLO el momento que está encendido en la línea de
+    // tiempo: la pregunta y su respuesta. Lo de las horas anteriores se borra
+    // al cambiar de paso. Acumular la conversación se leía como una pared de
+    // texto, y el ojo no sabía cuál era el mensaje «de ahora». El aviso de las
+    // 7:30 sólo acompaña al primer paso: es con lo que abre el día.
+    function showStep(i, fromUser) {
+      step = i;
+      const msgs = [...root.querySelectorAll('.uc-msg:not(.is-proactive)')];
+      const pro = root.querySelector('.uc-msg.is-proactive');
+      msgs.forEach((m, k) => m.classList.toggle('is-in', Math.floor(k / 2) === step));
+      if (pro) {
+        pro.classList.toggle('is-in', step === 0);
+        // El chat tiene altura fija y no hace scroll: si el aviso y el primer
+        // intercambio no caben juntos (pasa en móvil con avisos largos), el
+        // aviso cede el sitio. Cortado por arriba se leía peor que ausente.
+        if (step === 0) {
+          const chatEl = root.querySelector('.uc-chat'); const cs = getComputedStyle(chatEl);
+          const avail = chatEl.clientHeight - parseFloat(cs.paddingTop) - parseFloat(cs.paddingBottom); const gap = parseFloat(cs.rowGap) || 0;
+          const shown = [pro, ...msgs.filter((m) => m.classList.contains('is-in'))];
+          const used = shown.reduce((a, m) => a + m.offsetHeight + parseFloat(getComputedStyle(m).marginTop), 0) + gap * (shown.length - 1);
+          if (used > avail + 1) pro.classList.remove('is-in');
+        }
+      }
+      root.querySelectorAll('.uc-step').forEach((b) => b.classList.toggle('is-on', +b.dataset.step === step));
+      root.querySelectorAll('.uc-dot').forEach((b) => { const k = +b.dataset.step; b.classList.toggle('is-on', k === step); b.classList.toggle('is-past', k < step); });
 
-    if (fromUser === true) restartTimer(9000); else restartTimer();
-  }
-  function restartTimer(delay) {
-    clearInterval(timer); timer = null;
-    if (!visible) return;
-    timer = setInterval(() => { const n = current().comandos.length; showStep((step + 1) % n, false); }, delay || 4200);
-  }
-  function bindSteps() { root.querySelectorAll('.uc-step, .uc-dot').forEach((b) => b.addEventListener('click', () => showStep(+b.dataset.step, true))); }
-  function render() {
-    const c = current(); step = 0;
-    root.innerHTML = `
-      <div class="section_features-header-component"><div class="section_features-eyebrow">${esc(D.seccion.eyebrow || '')}</div>
-        ${D.seccion.titulo ? `<h2 class="section_features-heading">${esc(D.seccion.titulo)}</h2>` : ''}
-        <p class="uc-subtitle">${esc(D.seccion.subtitulo)}</p></div>
-      <span id="como-funciona" class="uc-anchor" aria-hidden="true"></span>
-      <div class="uc-tabs" role="tablist" aria-label="${esc(T.rol)}">${D.roles.map((r, i) => `<button type="button" role="tab" class="uc-tab${i === state.rol ? ' is-on' : ''}" aria-selected="${i === state.rol}" data-rol="${i}">${esc(r)}</button>`).join('')}</div>
-      <div class="uc-chips" role="group" aria-label="${esc(T.sector)}">${D.verticales.map((v, i) => `<button type="button" class="uc-chip${i === state.vertical ? ' is-on' : ''}" aria-pressed="${i === state.vertical}" data-vertical="${i}">${esc(v)}</button>`).join('')}</div>
-      <div class="uc-layout">
-        <div class="uc-phone" role="img" aria-label="${esc(T.chat)}">
-          <div class="uc-phone-screen">
-            <div class="uc-status"><span>9:41</span><span class="uc-status-icons">●●● ▲ ▮</span></div>
-            <div class="uc-wa-head"><span class="uc-wa-back">‹</span><img src="/assets/img/comando-mark.svg" alt="" class="uc-wa-avatar"/><div class="uc-wa-name">Comando<small>en línea</small></div><span class="uc-wa-more">⋮</span></div>
-            <div class="uc-chat" aria-live="polite">${chatHtml(c)}</div>
-            <div class="uc-wa-input"><span>Escribe un comando…</span><i>🎤</i></div>
+      if (fromUser === true) restartTimer(9000); else restartTimer();
+    }
+    function restartTimer(delay) {
+      clearInterval(timer); timer = null;
+      if (!visible) return;
+      timer = setInterval(() => { const n = current().comandos.length; showStep((step + 1) % n, false); }, delay || 4200);
+    }
+    function bindSteps() { root.querySelectorAll('.uc-step, .uc-dot').forEach((b) => b.addEventListener('click', () => showStep(+b.dataset.step, true))); }
+    function pickersHtml() {
+      if (!opts.pickers) return '';
+      return `<div class="uc-tabs" role="tablist" aria-label="${esc(T.rol)}">${D.roles.map((r, i) => `<button type="button" role="tab" class="uc-tab${i === state.rol ? ' is-on' : ''}" aria-selected="${i === state.rol}" data-rol="${i}">${esc(r)}</button>`).join('')}</div>
+        <div class="uc-chips" role="group" aria-label="${esc(T.sector)}">${D.verticales.map((v, i) => `<button type="button" class="uc-chip${i === state.vertical ? ' is-on' : ''}" aria-pressed="${i === state.vertical}" data-vertical="${i}">${esc(v)}</button>`).join('')}</div>`;
+    }
+    function render() {
+      const c = current(); step = 0;
+      root.innerHTML = `
+        <div class="section_features-header-component"><div class="section_features-eyebrow">${esc(D.seccion.eyebrow || '')}</div>
+          ${D.seccion.titulo ? `<h2 class="section_features-heading">${esc(D.seccion.titulo)}</h2>` : ''}
+          <p class="uc-subtitle">${esc(D.seccion.subtitulo)}</p></div>
+        ${opts.anchor ? `<span id="${esc(opts.anchor)}" class="uc-anchor" aria-hidden="true"></span>` : ''}
+        ${pickersHtml()}
+        <div class="uc-layout">
+          <div class="uc-phone" role="img" aria-label="${esc(T.chat)}">
+            <div class="uc-phone-screen">
+              <div class="uc-status"><span>9:41</span><span class="uc-status-icons">●●● ▲ ▮</span></div>
+              <div class="uc-wa-head"><span class="uc-wa-back">‹</span><img src="/assets/img/comando-mark.svg" alt="" class="uc-wa-avatar"/><div class="uc-wa-name">Comando<small>en línea</small></div><span class="uc-wa-more">⋮</span></div>
+              <div class="uc-chat" aria-live="polite">${chatHtml(c)}</div>
+              <div class="uc-wa-input"><span>Escribe un comando…</span><i>🎤</i></div>
+            </div>
           </div>
+          <ol class="uc-timeline" aria-label="${esc(T.moments)}">${timelineHtml(c)}</ol>
+          <div class="uc-outcome">${outcomeHtml(c)}</div>
+          ${opts.feed ? feedHtml() : ''}
         </div>
-        <ol class="uc-timeline" aria-label="${esc(T.moments)}">${timelineHtml(c)}</ol>
-        <div class="uc-outcome">${outcomeHtml(c)}</div>
-        ${feedHtml()}
-      </div>
-      <div class="uc-foot"><p class="uc-close">${esc(D.seccion.cierre)}</p><a href="${esc(D.seccion.cta.href)}" class="btn-primary uc-cta">${esc(D.seccion.cta.texto)}<span class="uc-cta-sufijo">${esc(D.seccion.cta.sufijo || '')}</span><span class="btn-arrow" aria-hidden="true">→</span></a></div>`;
-    root.querySelectorAll('[data-rol]').forEach((b) => b.addEventListener('click', () => { state.rol = +b.dataset.rol; update(); }));
-    root.querySelectorAll('[data-vertical]').forEach((b) => b.addEventListener('click', () => { state.vertical = +b.dataset.vertical; update(); }));
-    bindSteps();
-    // play only while the section is on screen
-    if ('IntersectionObserver' in window) new IntersectionObserver((es) => { visible = es[0].isIntersecting; if (visible) restartTimer(); else { clearInterval(timer); timer = null; } }, { threshold: .25 }).observe(root.querySelector('.uc-layout'));
-    else { visible = true; restartTimer(); }
+        <div class="uc-foot"><p class="uc-close">${esc(D.seccion.cierre)}</p><a href="${esc(D.seccion.cta.href)}" class="btn-primary uc-cta">${esc(D.seccion.cta.texto)}<span class="uc-cta-sufijo">${esc(D.seccion.cta.sufijo || '')}</span><span class="btn-arrow" aria-hidden="true">→</span></a></div>`;
+      root.querySelectorAll('[data-rol]').forEach((b) => b.addEventListener('click', () => { state.rol = +b.dataset.rol; update(); }));
+      root.querySelectorAll('[data-vertical]').forEach((b) => b.addEventListener('click', () => { state.vertical = +b.dataset.vertical; update(); }));
+      bindSteps();
+      // play only while the section is on screen
+      if ('IntersectionObserver' in window) new IntersectionObserver((es) => { visible = es[0].isIntersecting; if (visible) restartTimer(); else { clearInterval(timer); timer = null; } }, { threshold: .25 }).observe(root.querySelector('.uc-layout'));
+      else { visible = true; restartTimer(); }
+    }
+    function update() {
+      root.querySelectorAll('[data-rol]').forEach((b) => { const on = +b.dataset.rol === state.rol; b.classList.toggle('is-on', on); b.setAttribute('aria-selected', on); if (on) b.scrollIntoView({ block: 'nearest', inline: 'center', behavior: 'smooth' }); });
+      root.querySelectorAll('[data-vertical]').forEach((b) => { const on = +b.dataset.vertical === state.vertical; b.classList.toggle('is-on', on); b.setAttribute('aria-pressed', on); if (on) b.scrollIntoView({ block: 'nearest', inline: 'center', behavior: 'smooth' }); });
+      const c = current(); step = 0; const chat = root.querySelector('.uc-chat'), out = root.querySelector('.uc-outcome'), layout = root.querySelector('.uc-layout');
+      layout.classList.remove('is-in'); chat.innerHTML = chatHtml(c); out.innerHTML = outcomeHtml(c); root.querySelector('.uc-timeline').innerHTML = timelineHtml(c); bindSteps(); showStep(0, 'init');
+      requestAnimationFrame(() => requestAnimationFrame(() => layout.classList.add('is-in')));
+      restartTimer(6000);
+      if (typeof ScrollTrigger !== 'undefined') ScrollTrigger.refresh();
+    }
+    // Los datos van por idioma: /docs/<data>.en.json y .pt.json. Si el idioma
+    // todavía no tiene su fichero, se usa el castellano en vez de dejar la
+    // sección vacía.
+    const base = `/docs/${opts.data}`;
+    const DATA = LANG === 'es' ? `${base}.json?v=${opts.version}` : `${base}.${LANG}.json?v=${opts.version}`;
+    const loadData = () =>
+      fetch(DATA)
+        .then((r) => (r.ok ? r.json() : Promise.reject(new Error(String(r.status)))))
+        .catch(() => fetch(`${base}.json?v=${opts.version}`).then((r) => r.json()));
+    loadData().then((d) => {
+      D = d;
+      if (Array.isArray(D.horas) && D.horas.length) TIMES = D.horas;
+      if (D.proHora) PRO_TIME = D.proHora;
+      render(); showStep(0, 'init');
+      requestAnimationFrame(() => root.querySelector('.uc-layout').classList.add('is-in'));
+      if (typeof ScrollTrigger !== 'undefined') ScrollTrigger.refresh();
+    }).catch(() => {});
   }
-  function update() {
-    root.querySelectorAll('[data-rol]').forEach((b) => { const on = +b.dataset.rol === state.rol; b.classList.toggle('is-on', on); b.setAttribute('aria-selected', on); if (on) b.scrollIntoView({ block: 'nearest', inline: 'center', behavior: 'smooth' }); });
-    root.querySelectorAll('[data-vertical]').forEach((b) => { const on = +b.dataset.vertical === state.vertical; b.classList.toggle('is-on', on); b.setAttribute('aria-pressed', on); if (on) b.scrollIntoView({ block: 'nearest', inline: 'center', behavior: 'smooth' }); });
-    const c = current(); step = 0; const chat = root.querySelector('.uc-chat'), out = root.querySelector('.uc-outcome'), layout = root.querySelector('.uc-layout');
-    layout.classList.remove('is-in'); chat.innerHTML = chatHtml(c); out.innerHTML = outcomeHtml(c); root.querySelector('.uc-timeline').innerHTML = timelineHtml(c); bindSteps(); showStep(0, 'init');
-    requestAnimationFrame(() => requestAnimationFrame(() => layout.classList.add('is-in')));
-    restartTimer(6000);
-    if (typeof ScrollTrigger !== 'undefined') ScrollTrigger.refresh();
-  }
-  // Los datos van por idioma: /docs/usecases.en.json y .pt.json. Si el idioma
-  // todavía no tiene su fichero, se usa el castellano en vez de dejar la
-  // sección vacía.
-  const LANG = (document.documentElement.lang || 'es').slice(0, 2);
-  const DATA = LANG === 'es' ? '/docs/usecases.json?v=12' : `/docs/usecases.${LANG}.json?v=12`;
-  const loadData = () =>
-    fetch(DATA)
-      .then((r) => (r.ok ? r.json() : Promise.reject(new Error(String(r.status)))))
-      .catch(() => fetch('/docs/usecases.json?v=12').then((r) => r.json()));
-  loadData().then((d) => { D = d; render(); showStep(0, 'init'); requestAnimationFrame(() => root.querySelector('.uc-layout').classList.add('is-in')); if (typeof ScrollTrigger !== 'undefined') ScrollTrigger.refresh(); }).catch(() => {});
+
+  const meta = document.getElementById('metaads-root');
+  if (meta) mount(meta, { data: 'metaads', pickers: false, feed: false, version: 1 });
+  const dia = document.getElementById('usecases-root');
+  if (dia) mount(dia, { data: 'usecases', pickers: true, feed: true, anchor: 'como-funciona', version: 12 });
 })();

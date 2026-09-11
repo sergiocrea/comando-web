@@ -1806,3 +1806,44 @@ html { scroll-behavior: smooth; }
    siguen diciéndolo mejor que las líneas lisas de antes. Lo que se pierde es
    sólo el sentido de la marcha. */
 @media (prefers-reduced-motion: reduce) { .uc-wire i { animation: none; } }
+
+/* ============================================================
+   Meta Ads (#casos): la segunda sección del home
+   ------------------------------------------------------------
+   Es el mismo teléfono que «Así cambia el día», pero con un solo caso —el
+   informe de la mañana y las preguntas que le haces a Meta— y sin pestañas ni
+   columna de sistemas: aquí no hay que elegir nada, sólo mirar.
+   Las dos secciones son vecinas y comparten el crema, así que sin una costura
+   se leerían como una sola pantalla larga. La costura es un borde y el foco
+   de luz cambia de lado: azul Meta desde la izquierda, en vez del azul de la
+   casa desde la derecha.
+   ============================================================ */
+.section_metaads {
+  background-image:
+    radial-gradient(circle at 14% 42%, rgba(0, 129, 251, .16), transparent 36%),
+    linear-gradient(rgba(34, 34, 34, .055) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(34, 34, 34, .055) 1px, transparent 1px);
+  scroll-margin-top: calc(var(--nav-height, 5rem) + .5rem);
+}
+.section_dia { border-top: 1px solid rgba(21, 21, 21, .1); }
+.section_metaads .section_features-eyebrow { color: #0081fb; }
+/* Sin la columna de la izquierda, el par teléfono + resultado vuelve a
+   centrarse en dos columnas. */
+@media (min-width: 992px) {
+  .section_metaads .uc-layout {
+    grid-template-columns: minmax(0, 21rem) minmax(0, 28rem);
+    grid-template-areas: "phone outcome";
+    gap: 3rem 4rem;
+  }
+}
+@media (max-width: 991px) { .section_metaads .uc-layout { grid-template-areas: "phone" "outcome"; } }
+@media (max-width: 767px) { .section_metaads .uc-layout { grid-template-areas: "phone timeline"; } }
+/* Cinco momentos en vez de tres: los puntos de la línea de tiempo del móvil se
+   aprietan un poco para caber a la altura del teléfono. */
+@media (max-width: 767px) {
+  .section_metaads .uc-timeline li { padding-bottom: 1.6rem; }
+  .section_metaads .uc-timeline { padding-top: 3.5rem; }
+}
+/* El informe de la mañana es lo que vende esta sección, y en móvil no cabía
+   junto a la primera pregunta: el chat gana altura para que se vean los dos. */
+@media (max-width: 767px) { .section_metaads .uc-chat { height: 29rem; } }
