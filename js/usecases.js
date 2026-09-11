@@ -231,7 +231,7 @@
   }
 
   const meta = document.getElementById('metaads-root');
-  if (meta) mount(meta, { data: 'metaads', pickers: false, feed: false, ads: true, version: 7 });
+  if (meta) mount(meta, { data: 'metaads', pickers: false, feed: false, ads: true, version: 8 });
   const dia = document.getElementById('usecases-root');
-  if (dia) mount(dia, { data: 'usecases', pickers: true, feed: true, anchor: 'como-funciona', version: 17 });
+  if (dia) mount(dia, { data: 'usecases', pickers: true, feed: true, anchor: 'como-funciona', version: 18 });
 })();
