@@ -1883,3 +1883,8 @@ html { scroll-behavior: smooth; }
   .section_metaads .uc-timeline li { padding-bottom: 1.6rem; }
   .section_metaads .uc-timeline { padding-top: 3.5rem; }
 }
+
+/* El aviso de las 7:30 en la tarjeta se queda en dos líneas con puntos
+   suspensivos: entero ocupaba cinco y aplastaba las preguntas de debajo. El
+   texto completo se lee en el teléfono, que es donde vive. */
+.uc-step-pro .uc-step-text { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; line-clamp: 2; overflow: hidden; }
