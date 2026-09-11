@@ -17,20 +17,20 @@
     es: { rol: 'Rol', sector: 'Sector', proTag: 'Comando te avisa', proStep: 'Comando te avisa.',
           proAria: (t) => `Aviso de Comando a las ${t}`, sendAria: (t) => `Enviar el mensaje de las ${t}`,
           chat: 'Conversación de WhatsApp con Comando', moments: 'Momentos del día', feed: 'De tus sistemas',
-          ads: 'Tus anuncios' },
+          ads: 'Tus anuncios', commands: 'Comandos' },
     en: { rol: 'Role', sector: 'Sector', proTag: 'Comando tells you', proStep: 'Comando tells you.',
           proAria: (t) => `Comando alert at ${t}`, sendAria: (t) => `Send the ${t} message`,
           chat: 'WhatsApp conversation with Comando', moments: 'Moments of the day', feed: 'From your systems',
-          ads: 'Your ads' },
+          ads: 'Your ads', commands: 'Commands' },
     pt: { rol: 'Papel', sector: 'Setor', proTag: 'O Comando te avisa', proStep: 'O Comando te avisa.',
           proAria: (t) => `Aviso do Comando às ${t}`, sendAria: (t) => `Enviar a mensagem das ${t}`,
           chat: 'Conversa de WhatsApp com o Comando', moments: 'Momentos do dia', feed: 'Dos seus sistemas',
-          ads: 'Seus anúncios' },
+          ads: 'Seus anúncios', commands: 'Comandos' },
   }[LANG] ?? {
     rol: 'Rol', sector: 'Sector', proTag: 'Comando te avisa', proStep: 'Comando te avisa.',
     proAria: (t) => `Aviso de Comando a las ${t}`, sendAria: (t) => `Enviar el mensaje de las ${t}`,
     chat: 'Conversación de WhatsApp con Comando', moments: 'Momentos del día', feed: 'De tus sistemas',
-    ads: 'Tus anuncios',
+    ads: 'Tus anuncios', commands: 'Comandos',
   };
 
   // ---- El caudal que alimenta la conversación ----
@@ -138,8 +138,10 @@
       return (c.proactivo ? `<li class="is-pro"><button type="button" class="uc-dot is-pro${step === -1 ? ' is-on' : ''}${step > -1 ? ' is-past' : ''}" data-step="-1" aria-label="${esc(T.proAria(PRO_TIME))}"><i></i><span>${PRO_TIME}</span></button></li>` : '') + c.comandos.map((m, i) => `<li><button type="button" class="uc-dot${i === step ? ' is-on' : ''}${i < step ? ' is-past' : ''}" data-step="${i}" aria-label="${esc(T.sendAria(TIMES[i] || ''))}"><i></i><span>${TIMES[i] || ''}</span></button></li>`).join('');
     }
     function outcomeHtml(c) {
-      // `meta` sustituye a «rol · sector» cuando el caso no se elige entre varios.
-      return `<div class="uc-card-meta">${c.meta ? esc(c.meta) : `${esc(c.rol)} · ${esc(c.vertical)}`}</div>${c.titulo ? `<h3 class="uc-card-title">${esc(c.titulo)}</h3>` : ''}
+      // La ficha lleva solo «Comandos» encima de la lista: el rol y el sector ya
+      // están encendidos en las pestañas, y el título del caso repetía lo que
+      // cuentan los mensajes. `meta` del JSON manda si viene.
+      return `<div class="uc-card-meta">${esc(c.meta || T.commands)}</div>
         <ol class="uc-steps">${c.proactivo ? `<li><button type="button" class="uc-step uc-step-pro${step === -1 ? ' is-on' : ''}" data-step="-1"><span class="uc-step-time">${PRO_TIME}</span><span class="uc-step-text"><b>${esc(T.proStep)}</b> ${esc(c.proactivo)}</span></button></li>` : ''}${c.comandos.map((m, i) => `<li><button type="button" class="uc-step${i === step ? ' is-on' : ''}" data-step="${i}"><span class="uc-step-time">${TIMES[i] || ''}</span><span class="uc-step-text">${esc(m.u)}</span></button></li>`).join('')}</ol>
         <div class="uc-result">${esc(c.resultado)}</div>
   `;
@@ -231,5 +233,5 @@
   const meta = document.getElementById('metaads-root');
   if (meta) mount(meta, { data: 'metaads', pickers: false, feed: false, ads: true, version: 7 });
   const dia = document.getElementById('usecases-root');
-  if (dia) mount(dia, { data: 'usecases', pickers: true, feed: true, anchor: 'como-funciona', version: 16 });
+  if (dia) mount(dia, { data: 'usecases', pickers: true, feed: true, anchor: 'como-funciona', version: 17 });
 })();
