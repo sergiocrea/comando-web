@@ -685,7 +685,7 @@ body.sheet-open { overflow: hidden; }
   .section_usecases { padding: 2rem 0 2rem; }
   .section_usecases .section_features-header-component { grid-row-gap: .55rem; row-gap: .55rem; }
   .section_usecases .section_features-heading { font-size: clamp(1.5rem, 6.4vw, 1.9rem); }
-  .uc-subtitle { display: none; }
+  .uc-subtitle { font-size: .95rem; margin-top: .6rem; }
   .uc-tabs, .uc-chips { flex-wrap: nowrap; justify-content: flex-start; overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; margin-left: -1.25rem; margin-right: -1.25rem; padding: .25rem 1.25rem; scroll-snap-type: x proximity; }
   .uc-tabs::-webkit-scrollbar, .uc-chips::-webkit-scrollbar { display: none; }
   .uc-tab, .uc-chip { scroll-snap-align: center; flex: 0 0 auto; }
@@ -1363,8 +1363,10 @@ html { scroll-behavior: smooth; }
 .section_usecases { padding: 3rem 0 3rem; }
 .section_usecases .section_features-header-component { grid-row-gap: .6rem; row-gap: .6rem; }
 .section_usecases .section_features-heading { font-size: clamp(1.5rem, 1rem + 1.6vw, 2.35rem); }
-.uc-subtitle { display: none; }
-.uc-tabs { margin-top: 1.25rem; }
+/* El titular va en dos tiempos: el h2 dice el problema y el subtítulo la
+   solución. Antes el subtítulo iba oculto; ahora es la mitad que vende. */
+.uc-subtitle { display: block; max-width: 38rem; margin-top: .85rem; font-size: 1.05rem; line-height: 1.5; }
+.uc-tabs { margin-top: 1.5rem; }
 .uc-anchor, .section-anchor { display: block; height: 0; scroll-margin-top: calc(var(--nav-height, 5rem) + 1rem); }
 
 /* La frase de cierre de cada caso heredaba el gris claro del tema oscuro y no se leía sobre el fondo crema. */

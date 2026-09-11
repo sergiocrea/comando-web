@@ -1,8 +1,8 @@
 {
  "seccion": {
   "eyebrow": "META ADS",
-  "titulo": "Pergunte às suas campanhas pelo WhatsApp",
-  "subtitulo": "O Comando lê sua conta do Meta Ads e conta toda manhã o que aconteceu. O resto, você pergunta.",
+  "titulo": "Você gasta em anúncios sem saber qual traz clientes.",
+  "subtitulo": "O Comando lê sua conta do Meta Ads e conta toda manhã pelo WhatsApp: qual campanha paga e qual queima orçamento. O que faltar, você pergunta.",
   "cierre": "O relatório chega sozinho. As respostas, quando você pede.",
   "cta": {
    "texto": "Conectar o Meta Ads",
@@ -11,7 +11,13 @@
   }
  },
  "proHora": "7:30",
- "horas": ["8:05", "10:20", "13:00", "16:45", "18:30"],
+ "horas": [
+  "8:05",
+  "10:20",
+  "13:00",
+  "16:45",
+  "18:30"
+ ],
  "casos": [
   {
    "rol": "Meta Ads",
