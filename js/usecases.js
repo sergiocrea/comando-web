@@ -207,7 +207,7 @@
   }
 
   const meta = document.getElementById('metaads-root');
-  if (meta) mount(meta, { data: 'metaads', pickers: false, feed: false, version: 2 });
+  if (meta) mount(meta, { data: 'metaads', pickers: false, feed: false, version: 3 });
   const dia = document.getElementById('usecases-root');
-  if (dia) mount(dia, { data: 'usecases', pickers: true, feed: true, anchor: 'como-funciona', version: 13 });
+  if (dia) mount(dia, { data: 'usecases', pickers: true, feed: true, anchor: 'como-funciona', version: 14 });
 })();
