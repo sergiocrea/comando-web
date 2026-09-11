@@ -45,8 +45,8 @@ const PRICING_CONFIG = {
   billing: { annualFreeMonths: 2 },          // anual = precio mensual × 10 / 12
   featuredPlan: 'starter',
   cta: { trialBase: '/app/', trialLabel: 'Elegir plan', freeLabel: 'Empezar gratis', enterpriseHref: '#pricing-form', enterpriseLabel: 'Habla con ventas' },
-  title: 'Teclear datos no vende.',
-  subtitle: 'Recupera esas horas desde {basico.precio} al mes. Prueba gratis.',
+  title: 'Vende sin teclear.',
+  subtitle: 'Desde {basico.precio} al mes. Prueba gratis.',
   // Cada plan muestra solo 4 líneas: contactos, comandos, usuario y un diferencial.
   // Aquí va lo que es presentación; los números salen de PLAN_LADDER por `id`.
   plans: [
@@ -104,8 +104,8 @@ const PRICING_I18N = {
       formSaved: 'Done, we have your details. Tell us which CRM you use and we will let you know first.',
     },
     cta: { trialLabel: 'Choose plan', freeLabel: 'Start free', enterpriseLabel: 'Talk to sales' },
-    title: 'Typing data doesn\'t sell.',
-    subtitle: 'Get those hours back from {basico.precio} a month. Free to try.',
+    title: 'Sell, don\'t type.',
+    subtitle: 'From {basico.precio} a month. Free to try.',
     planNames: { gratis: 'Free', basico: 'Basic', starter: 'Starter', pro: 'Pro' },
     planCrms: {
       gratis: '<b>{gratis.conexiones}</b> CRM connected', basico: '<b>{basico.conexiones}</b> CRMs connected',
@@ -149,8 +149,8 @@ const PRICING_I18N = {
       formSaved: 'Pronto, já temos seus dados. Diga qual é o seu CRM e a gente avisa você primeiro.',
     },
     cta: { trialLabel: 'Escolher plano', freeLabel: 'Começar grátis', enterpriseLabel: 'Falar com vendas' },
-    title: 'Digitar dados não vende.',
-    subtitle: 'Recupere essas horas a partir de {basico.precio} por mês. Teste grátis.',
+    title: 'Venda sem digitar.',
+    subtitle: 'A partir de {basico.precio} por mês. Teste grátis.',
     planNames: { gratis: 'Grátis', basico: 'Básico', starter: 'Starter', pro: 'Pro' },
     planCrms: {
       gratis: '<b>{gratis.conexiones}</b> CRM conectado', basico: '<b>{basico.conexiones}</b> CRMs conectados',
