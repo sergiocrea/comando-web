@@ -84,7 +84,9 @@
   // Mismo sitio y mismos rieles que la columna «De tus sistemas», pero aquí
   // son dos tarjetas quietas: la sección habla de la pauta, y la pauta son
   // estas dos. Comparte la clase `uc-feed` para heredar la maqueta y la señal.
-  const ADS = [['meta', 'Meta Ads', '#0081fb'], ['tiktok', 'TikTok Ads', '#e7e9ec']];
+  // Google Ads en amarillo de marca: el logo real es tricolor y aquí va de un
+  // solo tono; el amarillo es el que lo hace reconocible sobre negro.
+  const ADS = [['meta', 'Meta Ads', '#0081fb'], ['tiktok', 'TikTok Ads', '#e7e9ec'], ['googleads', 'Google Ads', '#fbbc04']];
   function adsHtml() {
     return `<div class="uc-feed uc-ads" aria-hidden="true">
       <div class="uc-feed-label">${esc(T.ads)}</div>
@@ -225,7 +227,7 @@
   }
 
   const meta = document.getElementById('metaads-root');
-  if (meta) mount(meta, { data: 'metaads', pickers: false, feed: false, ads: true, version: 4 });
+  if (meta) mount(meta, { data: 'metaads', pickers: false, feed: false, ads: true, version: 5 });
   const dia = document.getElementById('usecases-root');
   if (dia) mount(dia, { data: 'usecases', pickers: true, feed: true, anchor: 'como-funciona', version: 16 });
 })();
