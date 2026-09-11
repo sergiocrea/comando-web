@@ -16,11 +16,11 @@
   "Atendimento e pós-venda"
  ],
  "verticales": [
+  "Loja online",
   "Imobiliária",
   "Clínica / saúde",
-  "Loja online",
-  "Educação",
-  "Automotivo"
+  "Automotivo",
+  "Academias e fitness"
  ],
  "evidencias": {
   "speed": "Responder a um lead em menos de 5 minutos multiplica por 21 a chance de qualificá-lo (Lead Response Management Study).",
@@ -231,28 +231,6 @@
   },
   {
    "rol": "Vendedor",
-   "vertical": "Educação",
-   "titulo": "Todo candidato tem resposta hoje",
-   "comandos": [
-    {
-     "u": "Quais candidatos entraram ontem à noite pela Meta e quem não entrou em contato?",
-     "r": "14 candidatos novos da campanha «Matrícula 2027»; 5 sem contato há 10 horas, 3 de Administração. Pego para você?"
-    },
-    {
-     "u": "Para quem pediu informação e não respondeu em 2 dias, prepara a mensagem com o link do curso.",
-     "r": "Pronto. Hoje são 9; te passo a primeira, Camila Ruiz (Marketing Digital): «Oi Camila, te mando a grade e as datas…». Toque para enviar."
-    },
-    {
-     "u": "Marca a Camila Ruiz como «Pré-inscrita» e anota que ela paga a matrícula na segunda.",
-     "r": "Feito no HubSpot: etapa Pré-inscrita, nota salva. Crio a tarefa de confirmar o pagamento na segunda às 10?"
-    }
-   ],
-   "resultado": "Nenhum candidato esfria antes de se matricular.",
-   "evidencia": "speed",
-   "proactivo": "☀️ Ontem à noite entraram 14 candidatos da «Matrícula 2027»; 5 seguem sem contato, 3 de Administração. Responda VER para a lista com celular."
-  },
-  {
-   "rol": "Vendedor",
    "vertical": "Automotivo",
    "titulo": "Do test drive à assinatura sem perder ninguém",
    "comandos": [
@@ -272,28 +250,6 @@
    "resultado": "Todo test drive termina em proposta com acompanhamento.",
    "evidencia": "cotizacion",
    "proactivo": "🚗 6 pessoas fizeram test drive esta semana e nenhuma tem proposta. A mais antiga: Jorge Salas (Kicks, terça). Responda VER."
-  },
-  {
-   "rol": "Gerente ou dono",
-   "vertical": "Educação",
-   "titulo": "A campanha de matrícula sob controle",
-   "comandos": [
-    {
-     "u": "Toda manhã às 7 me manda os candidatos novos por curso e os que estão há mais de 1 hora sem contato.",
-     "r": "Programado. Hoje: 62 candidatos novos (Administração 21, Marketing 18, Sistemas 23); 9 com mais de 1 hora sem contato."
-    },
-    {
-     "u": "Divide os candidatos de Sistemas entre a Rosa e o Diego; se ninguém pegar em 30 minutos, me avisa.",
-     "r": "23 atribuídos (12 Rosa, 11 Diego). Em 30 minutos te aviso dos que seguirem sem atividade."
-    },
-    {
-     "u": "Quanto custou cada matrícula por canal neste mês?",
-     "r": "Meta $38, Google $52, indicações $9, feiras $71. Indicações trouxeram 22 % das matrículas."
-    }
-   ],
-   "resultado": "Um WhatsApp no fim do dia vale mais que três painéis.",
-   "evidencia": "speed",
-   "proactivo": "📊 7:00 · 62 candidatos novos (Administração 21, Marketing 18, Sistemas 23); 9 estão há mais de 1 hora sem contato. Responda VER."
   },
   {
    "rol": "Gerente ou dono",
@@ -319,28 +275,6 @@
   },
   {
    "rol": "Atendimento e pós-venda",
-   "vertical": "Educação",
-   "titulo": "O aluno chega à aula e fica",
-   "comandos": [
-    {
-     "u": "Um dia antes do início de cada curso, me passa o lembrete para os matriculados com sala e horário.",
-     "r": "Programado. Amanhã começa Marketing Digital: 18 mensagens prontas às 17:00 com a sala 204 e o horário."
-    },
-    {
-     "u": "Se um aluno faltar às duas primeiras aulas, cria a tarefa de contato para o consultor dele e me avisa.",
-     "r": "Regra ativa sobre a presença registrada no CRM. Hoje: 3 alunos, já com tarefa atribuída."
-    },
-    {
-     "u": "Anota na ficha da Camila Ruiz que ela pediu mudança para a turma da noite e cria a tarefa de confirmar vaga.",
-     "r": "Nota salva e tarefa criada para amanhã. Preparo a mensagem de confirmação quando houver vaga?"
-    }
-   ],
-   "resultado": "Menos evasão nas primeiras semanas.",
-   "evidencia": "noshow",
-   "proactivo": "🎓 Amanhã começa Marketing Digital: 18 lembretes prontos com a sala 204 e o horário. 3 alunos faltaram às duas primeiras aulas. Responda VER."
-  },
-  {
-   "rol": "Atendimento e pós-venda",
    "vertical": "Automotivo",
    "titulo": "Da oficina de volta à loja",
    "comandos": [
@@ -360,6 +294,72 @@
    "resultado": "Clientes que voltam à oficina e à loja.",
    "evidencia": "noshow",
    "proactivo": "🔧 Amanhã há 9 revisões agendadas; às 17:00 deixo os lembretes. Hoje 4 entregas completam 5 dias: mensagens de avaliação prontas. Responda VER."
+  },
+  {
+   "rol": "Vendedor",
+   "vertical": "Academias e fitness",
+   "titulo": "Toda aula experimental termina em matrícula",
+   "comandos": [
+    {
+     "u": "Quem agendou aula experimental esta semana e ainda não veio?",
+     "r": "9 pessoas com teste agendado e sem visita: 4 para hoje, 5 para amanhã. A mais antiga, Karla Ruiz, agendou há 6 dias. Mando o lembrete?"
+    },
+    {
+     "u": "Para quem terminou o teste e não comprou, mande a oferta de matrícula grátis antes de domingo.",
+     "r": "Pronto. São 11. Te passo o primeiro, Jorge Salas: «Oi Jorge, sua semana na FitClub terminou ontem. Até domingo a matrícula sai grátis com o plano anual…». Toque para enviar."
+    },
+    {
+     "u": "Marque Karla Ruiz como matriculada no plano anual e crie o lembrete da renovação dela.",
+     "r": "Feito no HubSpot: Karla em «Membro ativo», plano anual. Lembrete criado para 30 dias antes da renovação. Envio as boas-vindas?"
+    }
+   ],
+   "resultado": "Nenhuma aula experimental se perde por falta de acompanhamento.",
+   "evidencia": "speed",
+   "proactivo": "☀️ Bom dia. Ontem à noite entraram 14 leads do anúncio «Passe de 7 dias»; 5 seguem sem ligação. Hoje vencem 3 períodos de teste sem plano escolhido. Responda VER para a lista."
+  },
+  {
+   "rol": "Gerente ou dono",
+   "vertical": "Academias e fitness",
+   "titulo": "Sei qual anúncio enche a academia",
+   "comandos": [
+    {
+     "u": "Toda segunda às 8 me mande os leads por canal, os testes agendados e as matrículas fechadas por unidade.",
+     "r": "Programado. Toda segunda às 8:00 você recebe leads por canal, testes e matrículas por unidade, com a conversão de cada uma."
+    },
+    {
+     "u": "Se um lead do anúncio ficar 30 minutos sem ligação, avise o consultor da unidade e a mim.",
+     "r": "Regra criada: lead sem contato em 30 minutos → aviso ao consultor da unidade e cópia para você. Vale para os leads do Meta e do Google."
+    },
+    {
+     "u": "Quanto nos custou cada matrícula nova por canal este mês?",
+     "r": "Meta: $38 por matrícula (19 fechadas). Google: $61 (7 fechadas). Indicações: $0 (6). O Meta traz 60 % das matrículas com 55 % do gasto."
+    }
+   ],
+   "resultado": "Você decide onde colocar a verba com o dado do dia.",
+   "evidencia": "speed",
+   "proactivo": "📊 Segunda 8:00 · 86 leads na semana passada (Meta 61, Google 25), 23 testes agendados, 9 matrículas novas. A unidade Norte converte 6 %; Centro, 14 %. Responda VER para o detalhe."
+  },
+  {
+   "rol": "Atendimento e pós-venda",
+   "vertical": "Academias e fitness",
+   "titulo": "Os alunos ficam",
+   "comandos": [
+    {
+     "u": "Quais alunos não vêm há mais de 3 semanas e ainda têm plano ativo?",
+     "r": "12 alunos: 7 do plano mensal, 5 do anual. Três deles vencem esta semana. Mando a mensagem de «sentimos sua falta» com a aula grátis?"
+    },
+    {
+     "u": "Para quem vence em 7 dias e não renovou, mande o lembrete com o desconto por renovação antecipada.",
+     "r": "Pronto. Hoje são 4: te passo a primeira, Andrea Mora: «Oi Andrea, seu plano vence dia 18. Renovando antes, o mês fica em $29 em vez de $35…». Toque para enviar."
+    },
+    {
+     "u": "Registre que Andrea Mora renovou 6 meses e anote que pediu para mudar para o horário da manhã.",
+     "r": "Feito no CRM: Andrea renovou 6 meses, nota salva sobre o horário. Aviso a recepção da troca de turno?"
+    }
+   ],
+   "resultado": "Menos cancelamentos silenciosos. Cada vencimento com uma mensagem na hora.",
+   "evidencia": "toques",
+   "proactivo": "⏰ 27 planos vencem nos próximos 7 dias; 12 alunos não aparecem há 3 semanas. Responda VER e te passo as mensagens prontas."
   }
  ]
 }

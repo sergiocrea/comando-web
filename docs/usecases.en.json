@@ -16,11 +16,11 @@
   "Support and after-sales"
  ],
  "verticales": [
+  "Online store",
   "Real estate",
   "Clinic / health",
-  "Online store",
-  "Education",
-  "Automotive"
+  "Automotive",
+  "Gyms and fitness"
  ],
  "evidencias": {
   "speed": "Answering a lead in under 5 minutes multiplies the odds of qualifying it by 21 (Lead Response Management Study).",
@@ -231,28 +231,6 @@
   },
   {
    "rol": "Sales rep",
-   "vertical": "Education",
-   "titulo": "Every applicant gets an answer today",
-   "comandos": [
-    {
-     "u": "Which applicants came in last night from Meta and who has not contacted them?",
-     "r": "14 new applicants from the “Enrolment 2027” campaign; 5 with no contact for 10 hours, 3 of them for Business. Shall I take them for you?"
-    },
-    {
-     "u": "For the ones who asked for information and did not reply within 2 days, prepare the message with the programme link.",
-     "r": "Done. 9 are due today; here is the first, Camila Ruiz (Digital Marketing): “Hi Camila, here is the syllabus and the dates…”. Tap to send it."
-    },
-    {
-     "u": "Mark Camila Ruiz as “Pre-enrolled” and note that she pays the enrolment on Monday.",
-     "r": "Done in HubSpot: stage Pre-enrolled, note saved. Shall I create the task to confirm payment on Monday at 10?"
-    }
-   ],
-   "resultado": "No applicant goes cold before enrolling.",
-   "evidencia": "speed",
-   "proactivo": "☀️ 14 applicants came in last night from “Enrolment 2027”; 5 still have no contact, 3 of them for Business. Answer SEE for the list with phone numbers."
-  },
-  {
-   "rol": "Sales rep",
    "vertical": "Automotive",
    "titulo": "From the test drive to the signature without losing anyone",
    "comandos": [
@@ -272,28 +250,6 @@
    "resultado": "Every test drive ends in a quote with a follow-up.",
    "evidencia": "cotizacion",
    "proactivo": "🚗 6 people took a test drive this week and none has a quote. The oldest: Jorge Salas (Kicks, Tuesday). Answer SEE."
-  },
-  {
-   "rol": "Sales manager or owner",
-   "vertical": "Education",
-   "titulo": "The enrolment campaign under control",
-   "comandos": [
-    {
-     "u": "Every morning at 7 send me the new applicants by programme and the ones over 1 hour with no contact.",
-     "r": "Scheduled. Today: 62 new applicants (Business 21, Marketing 18, Systems 23); 9 over 1 hour with no contact."
-    },
-    {
-     "u": "Split the Systems applicants between Rosa and Diego; if nobody takes them within 30 minutes, tell me.",
-     "r": "23 assigned (12 Rosa, 11 Diego). I will tell you in 30 minutes about any still with no activity."
-    },
-    {
-     "u": "How much did each enrolment cost by channel this month?",
-     "r": "Meta $38, Google $52, referrals $9, fairs $71. Referrals brought 22 % of the enrolments."
-    }
-   ],
-   "resultado": "One WhatsApp at the end of the day beats three dashboards.",
-   "evidencia": "speed",
-   "proactivo": "📊 7:00 · 62 new applicants (Business 21, Marketing 18, Systems 23); 9 have gone more than 1 hour with no contact. Answer SEE."
   },
   {
    "rol": "Sales manager or owner",
@@ -319,28 +275,6 @@
   },
   {
    "rol": "Support and after-sales",
-   "vertical": "Education",
-   "titulo": "The student turns up to class and stays",
-   "comandos": [
-    {
-     "u": "The day before each course starts, hand me the reminder for the enrolled students with room and schedule.",
-     "r": "Scheduled. Digital Marketing starts tomorrow: 18 messages ready at 17:00 with room 204 and the schedule."
-    },
-    {
-     "u": "If a student misses the first two classes, create the contact task for their adviser and tell me.",
-     "r": "Rule active on the attendance recorded in the CRM. Today: 3 students, already with a task assigned."
-    },
-    {
-     "u": "Note on Camila Ruiz's record that she asked to move to the evening group and create me the task to confirm a place.",
-     "r": "Note saved and task created for tomorrow. Shall I prepare her confirmation message once there is a place?"
-    }
-   ],
-   "resultado": "Less drop-out in the first weeks.",
-   "evidencia": "noshow",
-   "proactivo": "🎓 Digital Marketing starts tomorrow: 18 reminders ready with room 204 and the schedule. 3 students missed their first two classes. Answer SEE."
-  },
-  {
-   "rol": "Support and after-sales",
    "vertical": "Automotive",
    "titulo": "From the workshop back to the showroom",
    "comandos": [
@@ -360,6 +294,72 @@
    "resultado": "Customers who come back to the workshop and to the showroom.",
    "evidencia": "noshow",
    "proactivo": "🔧 There are 9 service appointments tomorrow; at 17:00 I will leave the reminders. Today 4 handovers hit 5 days: review messages ready. Answer SEE."
+  },
+  {
+   "rol": "Sales rep",
+   "vertical": "Gyms and fitness",
+   "titulo": "Every free trial ends in a membership",
+   "comandos": [
+    {
+     "u": "Who booked a free trial this week and still hasn't come in?",
+     "r": "9 people with a trial booked and no visit: 4 for today, 5 for tomorrow. The oldest, Karla Ruiz, booked 6 days ago. Shall I send them the reminder?"
+    },
+    {
+     "u": "For those who finished the trial and didn't buy, send the free-enrollment offer before Sunday.",
+     "r": "Done. There are 11. Here's the first, Jorge Salas: \"Hi Jorge, your week at FitClub ended yesterday. Until Sunday, enrollment is free with the annual plan…\". Tap to send."
+    },
+    {
+     "u": "Mark Karla Ruiz as enrolled in the annual plan and create the reminder for her renewal.",
+     "r": "Done in HubSpot: Karla in \"Active member\", annual plan. Reminder set for 30 days before renewal. Shall I send her the welcome message?"
+    }
+   ],
+   "resultado": "No free trial is lost for lack of follow-up.",
+   "evidencia": "speed",
+   "proactivo": "☀️ Good morning. 14 leads came in overnight from the \"7-day pass\" ad; 5 still have no call. 3 free trials end today with no plan chosen. Reply VIEW for the list."
+  },
+  {
+   "rol": "Sales manager or owner",
+   "vertical": "Gyms and fitness",
+   "titulo": "Know which ad fills the gym",
+   "comandos": [
+    {
+     "u": "Every Monday at 8, send me leads by channel, trials booked and memberships closed by branch.",
+     "r": "Scheduled. Every Monday at 8:00 you get leads by channel, trials and memberships by branch, with each one's conversion rate."
+    },
+    {
+     "u": "If a lead from the ad goes 30 minutes without a call, alert the branch advisor and me.",
+     "r": "Rule created: lead with no contact in 30 minutes → alert to the branch advisor, copy to you. Applies to Meta and Google leads."
+    },
+    {
+     "u": "How much did each new membership cost us per channel this month?",
+     "r": "Meta: $38 per membership (19 closed). Google: $61 (7 closed). Referrals: $0 (6). Meta brings 60% of sign-ups with 55% of the spend."
+    }
+   ],
+   "resultado": "You decide where to put the budget with today's numbers.",
+   "evidencia": "speed",
+   "proactivo": "📊 Monday 8:00 · 86 leads last week (Meta 61, Google 25), 23 trials booked, 9 new memberships. North branch converts at 6%; Downtown, at 14%. Reply VIEW for the details."
+  },
+  {
+   "rol": "Support and after-sales",
+   "vertical": "Gyms and fitness",
+   "titulo": "Members stay",
+   "comandos": [
+    {
+     "u": "Which members haven't come in for over 3 weeks and still have an active membership?",
+     "r": "12 members: 7 on the monthly plan, 5 on the annual. Three of them expire this week. Shall I send them the \"we miss you\" message with a free class?"
+    },
+    {
+     "u": "For anyone expiring in 7 days who hasn't renewed, send the reminder with the early-renewal discount.",
+     "r": "Done. 4 are due today: here's the first, Andrea Mora: \"Hi Andrea, your plan expires on the 18th. Renew early and the month drops to $29 instead of $35…\". Tap to send."
+    },
+    {
+     "u": "Record that Andrea Mora renewed for 6 months and note that she asked to switch to the morning slot.",
+     "r": "Done in the CRM: Andrea renewed for 6 months, note saved about the schedule. Shall I tell the front desk about the change?"
+    }
+   ],
+   "resultado": "Fewer silent cancellations. Every expiry gets a message in time.",
+   "evidencia": "toques",
+   "proactivo": "⏰ 27 memberships expire in the next 7 days; 12 members haven't come in for 3 weeks. Reply VIEW and I'll send you the ready-made messages."
   }
  ]
 }

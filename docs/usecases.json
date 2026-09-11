@@ -16,11 +16,11 @@
   "Atención y postventa"
  ],
  "verticales": [
+  "Tienda online",
   "Inmobiliaria",
   "Clínica / salud",
-  "Tienda online",
-  "Educación",
-  "Automotriz"
+  "Automotriz",
+  "Gimnasios y fitness"
  ],
  "evidencias": {
   "speed": "Responder a un lead en menos de 5 minutos multiplica por 21 la probabilidad de calificarlo (Lead Response Management Study).",
@@ -231,28 +231,6 @@
   },
   {
    "rol": "Vendedor",
-   "vertical": "Educación",
-   "titulo": "Cada postulante tiene respuesta hoy",
-   "comandos": [
-    {
-     "u": "¿Qué postulantes entraron anoche de Meta y quién no los ha contactado?",
-     "r": "14 postulantes nuevos de la campaña «Matrícula 2027»; 5 sin contacto desde hace 10 horas, 3 de Administración. ¿Los tomo para ti?"
-    },
-    {
-     "u": "A los que pidieron información y no respondieron en 2 días, prepárame el mensaje con el enlace del programa.",
-     "r": "Listo. Hoy tocan 9; te paso el primero, Camila Ruiz (Marketing Digital): «Hola Camila, te comparto el plan de estudios y las fechas…». Toca para enviarlo."
-    },
-    {
-     "u": "Marca a Camila Ruiz como «Preinscrita» y anota que paga la matrícula el lunes.",
-     "r": "Hecho en HubSpot: etapa Preinscrita, nota guardada. ¿Creo la tarea de confirmar el pago el lunes a las 10?"
-    }
-   ],
-   "resultado": "Ningún postulante se enfría antes de matricularse.",
-   "evidencia": "speed",
-   "proactivo": "☀️ Anoche entraron 14 postulantes de «Matrícula 2027»; 5 siguen sin contacto, 3 de Administración. Responde VER para la lista con celular."
-  },
-  {
-   "rol": "Vendedor",
    "vertical": "Automotriz",
    "titulo": "Del test drive a la firma sin perder a nadie",
    "comandos": [
@@ -272,28 +250,6 @@
    "resultado": "Cada test drive termina en una cotización con seguimiento.",
    "evidencia": "cotizacion",
    "proactivo": "🚗 6 personas hicieron test drive esta semana y ninguna tiene cotización. La más antigua: Jorge Salas (Kicks, martes). Responde VER."
-  },
-  {
-   "rol": "Jefe de ventas o dueño",
-   "vertical": "Educación",
-   "titulo": "La campaña de matrícula bajo control",
-   "comandos": [
-    {
-     "u": "Cada mañana a las 7 envíame los postulantes nuevos por programa y los que llevan más de 1 hora sin contacto.",
-     "r": "Programado. Hoy: 62 postulantes nuevos (Administración 21, Marketing 18, Sistemas 23); 9 con más de 1 hora sin contacto."
-    },
-    {
-     "u": "Reparte los postulantes de Sistemas entre Rosa y Diego; si nadie los toma en 30 minutos, dímelo.",
-     "r": "Asignados 23 (12 Rosa, 11 Diego). Te aviso a las 30 minutos con los que sigan sin actividad."
-    },
-    {
-     "u": "¿Cuánto costó cada matrícula por canal este mes?",
-     "r": "Meta $38, Google $52, referidos $9, ferias $71. Referidos aportó el 22 % de las matrículas."
-    }
-   ],
-   "resultado": "Un WhatsApp al final del día vale más que tres dashboards.",
-   "evidencia": "speed",
-   "proactivo": "📊 7:00 · 62 postulantes nuevos (Administración 21, Marketing 18, Sistemas 23); 9 llevan más de 1 hora sin contacto. Responde VER."
   },
   {
    "rol": "Jefe de ventas o dueño",
@@ -319,28 +275,6 @@
   },
   {
    "rol": "Atención y postventa",
-   "vertical": "Educación",
-   "titulo": "El alumno llega a clase y se queda",
-   "comandos": [
-    {
-     "u": "Un día antes del inicio de cada curso, pásame el recordatorio para los matriculados con aula y horario.",
-     "r": "Programado. Mañana inicia Marketing Digital: 18 mensajes listos a las 17:00 con aula 204 y horario."
-    },
-    {
-     "u": "Si un alumno falta a las dos primeras clases, créale la tarea de contacto a su asesor y avísame.",
-     "r": "Regla activa sobre la asistencia registrada en el CRM. Hoy: 3 alumnos, ya con tarea asignada."
-    },
-    {
-     "u": "Anota en la ficha de Camila Ruiz que pidió cambio al turno noche y créame la tarea de confirmar cupo.",
-     "r": "Nota guardada y tarea creada para mañana. ¿Le preparo el mensaje de confirmación cuando tenga el cupo?"
-    }
-   ],
-   "resultado": "Menos deserción en las primeras semanas.",
-   "evidencia": "noshow",
-   "proactivo": "🎓 Mañana inicia Marketing Digital: 18 recordatorios listos con aula 204 y horario. 3 alumnos faltaron a sus dos primeras clases. Responde VER."
-  },
-  {
-   "rol": "Atención y postventa",
    "vertical": "Automotriz",
    "titulo": "Del taller a la recompra",
    "comandos": [
@@ -360,6 +294,72 @@
    "resultado": "Clientes que vuelven al taller y a la sala de ventas.",
    "evidencia": "noshow",
    "proactivo": "🔧 Mañana hay 9 citas de mantenimiento; a las 17:00 te dejo los recordatorios. Hoy 4 entregas cumplen 5 días: mensajes de reseña listos. Responde VER."
+  },
+  {
+   "rol": "Vendedor",
+   "vertical": "Gimnasios y fitness",
+   "titulo": "Cada prueba gratis termina en membresía",
+   "comandos": [
+    {
+     "u": "¿Quiénes agendaron prueba gratis esta semana y todavía no vinieron?",
+     "r": "9 personas con prueba agendada y sin visita: 4 para hoy, 5 para mañana. La más antigua, Karla Ruiz, la agendó hace 6 días. ¿Les mando el recordatorio?"
+    },
+    {
+     "u": "A los que terminaron la prueba y no compraron, mándales la oferta de matrícula gratis antes del domingo.",
+     "r": "Listo. Son 11. Te paso el primero, Jorge Salas: «Hola Jorge, tu semana en FitClub terminó ayer. Hasta el domingo la matrícula va gratis con el plan anual…». Toca para enviarlo."
+    },
+    {
+     "u": "Marca a Karla Ruiz como inscrita en el plan anual y créame el recordatorio de su renovación.",
+     "r": "Hecho en HubSpot: Karla en «Miembro activo», plan anual. Recordatorio creado para 30 días antes de la renovación. ¿Le envío la bienvenida?"
+    }
+   ],
+   "resultado": "Ninguna prueba gratis se pierde por falta de seguimiento.",
+   "evidencia": "speed",
+   "proactivo": "☀️ Buenos días. Anoche entraron 14 leads del anuncio «Pase de 7 días»; 5 siguen sin llamada. Hoy vencen 3 pruebas gratis sin plan elegido. Responde VER para la lista."
+  },
+  {
+   "rol": "Jefe de ventas o dueño",
+   "vertical": "Gimnasios y fitness",
+   "titulo": "Sé qué anuncio llena el gimnasio",
+   "comandos": [
+    {
+     "u": "Cada lunes a las 8 envíame los leads por canal, las pruebas agendadas y las membresías cerradas por sede.",
+     "r": "Programado. Cada lunes a las 8:00 recibes leads por canal, pruebas y membresías por sede, con la conversión de cada una."
+    },
+    {
+     "u": "Si un lead del anuncio lleva 30 minutos sin llamada, avisa al asesor de la sede y a mí.",
+     "r": "Regla creada: lead sin contacto en 30 minutos → aviso al asesor de la sede y copia a ti. Aplica a los leads de Meta y Google."
+    },
+    {
+     "u": "¿Cuánto nos costó cada membresía nueva por canal este mes?",
+     "r": "Meta: $38 por membresía (19 cerradas). Google: $61 (7 cerradas). Referidos: $0 (6). Meta trae el 60 % de las altas con el 55 % del gasto."
+    }
+   ],
+   "resultado": "Decides dónde poner la pauta con el dato del día.",
+   "evidencia": "speed",
+   "proactivo": "📊 Lunes 8:00 · 86 leads la semana pasada (Meta 61, Google 25), 23 pruebas agendadas, 9 membresías nuevas. La sede Norte convierte al 6 %; Centro, al 14 %. Responde VER para el detalle."
+  },
+  {
+   "rol": "Atención y postventa",
+   "vertical": "Gimnasios y fitness",
+   "titulo": "Los socios se quedan",
+   "comandos": [
+    {
+     "u": "¿Qué socios no han venido en más de 3 semanas y tienen la membresía activa?",
+     "r": "12 socios: 7 del plan mensual, 5 del anual. Tres de ellos vencen esta semana. ¿Les mando el mensaje de «te extrañamos» con la clase gratis?"
+    },
+    {
+     "u": "Al que venza en 7 días y no haya renovado, mándale el recordatorio con el descuento por renovación anticipada.",
+     "r": "Listo. Hoy tocan 4: te paso el primero, Andrea Mora: «Hola Andrea, tu plan vence el 18. Si renuevas antes, el mes te queda en $29 en vez de $35…». Toca para enviarlo."
+    },
+    {
+     "u": "Registra que Andrea Mora renovó 6 meses y anota que pidió cambiar al horario de la mañana.",
+     "r": "Hecho en el CRM: Andrea renovó 6 meses, nota guardada sobre el horario. ¿Aviso a recepción del cambio de turno?"
+    }
+   ],
+   "resultado": "Menos bajas silenciosas. Cada vencimiento con un mensaje a tiempo.",
+   "evidencia": "toques",
+   "proactivo": "⏰ 27 membresías vencen en los próximos 7 días; 12 socios no han venido en 3 semanas. Responde VER y te paso los mensajes listos."
   }
  ]
 }
