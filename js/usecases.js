@@ -16,17 +16,21 @@
   const T = {
     es: { rol: 'Rol', sector: 'Sector', proTag: 'Comando te avisa', proStep: 'Comando te avisa.',
           proAria: (t) => `Aviso de Comando a las ${t}`, sendAria: (t) => `Enviar el mensaje de las ${t}`,
-          chat: 'Conversación de WhatsApp con Comando', moments: 'Momentos del día', feed: 'De tus sistemas' },
+          chat: 'Conversación de WhatsApp con Comando', moments: 'Momentos del día', feed: 'De tus sistemas',
+          ads: 'Tus anuncios', adsHint: 'gasto · leads · costo por lead' },
     en: { rol: 'Role', sector: 'Sector', proTag: 'Comando tells you', proStep: 'Comando tells you.',
           proAria: (t) => `Comando alert at ${t}`, sendAria: (t) => `Send the ${t} message`,
-          chat: 'WhatsApp conversation with Comando', moments: 'Moments of the day', feed: 'From your systems' },
+          chat: 'WhatsApp conversation with Comando', moments: 'Moments of the day', feed: 'From your systems',
+          ads: 'Your ads', adsHint: 'spend · leads · cost per lead' },
     pt: { rol: 'Papel', sector: 'Setor', proTag: 'O Comando te avisa', proStep: 'O Comando te avisa.',
           proAria: (t) => `Aviso do Comando às ${t}`, sendAria: (t) => `Enviar a mensagem das ${t}`,
-          chat: 'Conversa de WhatsApp com o Comando', moments: 'Momentos do dia', feed: 'Dos seus sistemas' },
+          chat: 'Conversa de WhatsApp com o Comando', moments: 'Momentos do dia', feed: 'Dos seus sistemas',
+          ads: 'Seus anúncios', adsHint: 'gasto · leads · custo por lead' },
   }[LANG] ?? {
     rol: 'Rol', sector: 'Sector', proTag: 'Comando te avisa', proStep: 'Comando te avisa.',
     proAria: (t) => `Aviso de Comando a las ${t}`, sendAria: (t) => `Enviar el mensaje de las ${t}`,
     chat: 'Conversación de WhatsApp con Comando', moments: 'Momentos del día', feed: 'De tus sistemas',
+    ads: 'Tus anuncios', adsHint: 'gasto · leads · costo por lead',
   };
 
   // ---- El caudal que alimenta la conversación ----
@@ -76,11 +80,25 @@
     </div>`;
   }
 
+  // ---- Las plataformas de pauta (sección Meta Ads) ----
+  // Mismo sitio y mismos rieles que la columna «De tus sistemas», pero aquí
+  // son dos tarjetas quietas: la sección habla de la pauta, y la pauta son
+  // estas dos. Comparte la clase `uc-feed` para heredar la maqueta y la señal.
+  const ADS = [['meta', 'Meta Ads', '#0081fb'], ['tiktok', 'TikTok Ads', '#e7e9ec']];
+  function adsHtml() {
+    return `<div class="uc-feed uc-ads" aria-hidden="true">
+      <div class="uc-feed-label">${esc(T.ads)}</div>
+      <ul class="uc-ads-cards">${ADS.map(([f, n, c]) => `<li><i class="uc-feed-logo" style="--uc-marca:${c};--uc-logo:url(/assets/img/logos/${f}.svg)"></i><span>${esc(n)}<small>${esc(T.adsHint)}</small></span></li>`).join('')}</ul>
+      <div class="uc-wire"><i></i><i></i><i></i></div>
+    </div>`;
+  }
+
   /**
    * Monta una sección sobre `root`.
    *   data     nombre base del JSON en /docs (`usecases` → usecases.json, usecases.en.json…)
    *   pickers  si hay pestañas de rol y chips de sector (el JSON trae roles/verticales)
    *   feed     si lleva la columna «De tus sistemas»
+   *   ads      si lleva las tarjetas de Meta Ads y TikTok Ads en ese mismo sitio
    *   anchor   id de un ancla vacía bajo el encabezado (el botón «Cómo funciona» del héroe)
    *   version  el ?v= del JSON, para que el navegador no sirva el viejo
    */
@@ -168,7 +186,7 @@
           </div>
           <ol class="uc-timeline" aria-label="${esc(T.moments)}">${timelineHtml(c)}</ol>
           <div class="uc-outcome">${outcomeHtml(c)}</div>
-          ${opts.feed ? feedHtml() : ''}
+          ${opts.feed ? feedHtml() : opts.ads ? adsHtml() : ''}
         </div>
         <div class="uc-foot"><p class="uc-close">${esc(D.seccion.cierre)}</p><a href="${esc(D.seccion.cta.href)}" class="btn-primary uc-cta">${esc(D.seccion.cta.texto)}<span class="uc-cta-sufijo">${esc(D.seccion.cta.sufijo || '')}</span><span class="btn-arrow" aria-hidden="true">→</span></a></div>`;
       root.querySelectorAll('[data-rol]').forEach((b) => b.addEventListener('click', () => { state.rol = +b.dataset.rol; update(); }));
@@ -207,7 +225,7 @@
   }
 
   const meta = document.getElementById('metaads-root');
-  if (meta) mount(meta, { data: 'metaads', pickers: false, feed: false, version: 3 });
+  if (meta) mount(meta, { data: 'metaads', pickers: false, feed: false, ads: true, version: 4 });
   const dia = document.getElementById('usecases-root');
   if (dia) mount(dia, { data: 'usecases', pickers: true, feed: true, anchor: 'como-funciona', version: 16 });
 })();

@@ -1810,39 +1810,76 @@ html { scroll-behavior: smooth; }
 @media (prefers-reduced-motion: reduce) { .uc-wire i { animation: none; } }
 
 /* ============================================================
-   Meta Ads (#casos): la segunda sección del home
+   Meta Ads (#casos): la segunda sección del home, en negro
    ------------------------------------------------------------
-   Es el mismo teléfono que «Así cambia el día», pero con un solo caso —el
-   informe de la mañana y las preguntas que le haces a Meta— y sin pestañas ni
-   columna de sistemas: aquí no hay que elegir nada, sólo mirar.
-   Las dos secciones son vecinas y comparten el crema, así que sin una costura
-   se leerían como una sola pantalla larga. La costura es un borde y el foco
-   de luz cambia de lado: azul Meta desde la izquierda, en vez del azul de la
-   casa desde la derecha.
+   Es el mismo teléfono que «Así cambia el día», con un solo caso —el informe
+   de la mañana y las preguntas que le haces a la pauta— y sin pestañas. Va en
+   negro para que no se confunda con la tercera, que es crema: dos secciones
+   vecinas con la misma piel se leían como una sola pantalla larga.
+   A la izquierda del teléfono, donde la tercera pone la columna de sistemas,
+   aquí van dos tarjetas quietas: Meta Ads y TikTok Ads. Los mismos rieles
+   guionados entran de ellas al teléfono.
    ============================================================ */
 .section_metaads {
+  color: #fff;
+  background-color: #0a0a0a;
   background-image:
-    radial-gradient(circle at 14% 42%, rgba(0, 129, 251, .16), transparent 36%),
-    linear-gradient(rgba(34, 34, 34, .055) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(34, 34, 34, .055) 1px, transparent 1px);
+    radial-gradient(circle at 18% 45%, rgba(0, 129, 251, .18), transparent 38%),
+    linear-gradient(rgba(255, 255, 255, .045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, .045) 1px, transparent 1px);
   scroll-margin-top: calc(var(--nav-height, 5rem) + .5rem);
 }
-.section_dia { border-top: 1px solid rgba(21, 21, 21, .1); }
-.section_metaads .section_features-eyebrow { color: #0081fb; }
-/* Sin la columna de la izquierda, el par teléfono + resultado vuelve a
-   centrarse en dos columnas. */
-@media (min-width: 992px) {
-  .section_metaads .uc-layout {
-    grid-template-columns: minmax(0, 21rem) minmax(0, 28rem);
-    grid-template-areas: "phone outcome";
-    gap: 3rem 4rem;
-  }
+.section_metaads .section_features-heading { color: #fff; }
+.section_metaads .uc-subtitle { color: #6b93ff; }
+.section_metaads .uc-card-meta, .section_metaads .uc-step-time { color: #6b93ff; }
+.section_metaads .uc-card-title, .section_metaads .uc-close { color: #fff; }
+.section_metaads .uc-step { border-color: rgba(255, 255, 255, .12); color: #a3a6a3; background: rgba(255, 255, 255, .04); }
+.section_metaads .uc-step:hover { border-color: rgba(255, 255, 255, .24); color: #e6e6e6; }
+.section_metaads .uc-step.is-on { border-color: rgba(107, 147, 255, .6); background: rgba(77, 124, 255, .12); color: #fff; }
+.section_metaads .uc-result { color: #e6e6e6; }
+.section_metaads .uc-phone { box-shadow: 0 0 0 1px rgba(255, 255, 255, .06), 0 34px 70px -30px rgba(0, 129, 251, .45); }
+.section_metaads .btn-primary { color: #fff; background: #315fef; box-shadow: 0 12px 30px rgba(49, 95, 239, .35); }
+.section_metaads .btn-primary:hover { background: #fff; color: #0a0a0a; }
+/* Línea de tiempo del móvil sobre negro */
+.section_metaads .uc-timeline li:not(:last-child)::before { background: rgba(255, 255, 255, .16); }
+.section_metaads .uc-dot { color: #7a7d7a; }
+.section_metaads .uc-dot i { border-color: rgba(255, 255, 255, .28); background: #0a0a0a; }
+.section_metaads .uc-dot.is-past i, .section_metaads .uc-dot.is-pro i { border-color: #6b93ff; }
+.section_metaads .uc-dot.is-past { color: #a3a6a3; }
+.section_metaads .uc-dot.is-on i { border-color: #6b93ff; background: #6b93ff; box-shadow: 0 0 0 4px rgba(107, 147, 255, .25); }
+.section_metaads .uc-dot.is-on { color: #fff; }
+/* Las dos tarjetas de pauta. Ocupan el hueco de la columna de sistemas y
+   heredan su sitio en la maqueta y sus rieles por la clase `uc-feed`. */
+.uc-ads .uc-feed-label { color: #7a7d7a; }
+.uc-ads-cards { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: .7rem; }
+.uc-ads-cards li {
+  display: flex; align-items: center; gap: .7rem;
+  padding: .8rem .95rem; border-radius: .85rem;
+  background: #131316; border: 1px solid rgba(255, 255, 255, .14);
+  box-shadow: 0 18px 40px -28px rgba(0, 0, 0, .9);
 }
-@media (max-width: 991px) { .section_metaads .uc-layout { grid-template-areas: "phone" "outcome"; } }
-@media (max-width: 767px) { .section_metaads .uc-layout { grid-template-areas: "phone timeline"; } }
-/* Cinco momentos en vez de tres: los puntos de la línea de tiempo del móvil se
-   aprietan un poco para caber a la altura del teléfono. */
+.uc-ads-cards li:first-child { border-color: rgba(0, 129, 251, .55); box-shadow: 0 0 0 1px rgba(0, 129, 251, .15), 0 18px 40px -28px rgba(0, 129, 251, .6); }
+.uc-ads-cards .uc-feed-logo { width: 1.45rem; height: 1.45rem; }
+.uc-ads-cards span {
+  display: flex; flex-direction: column; gap: .15rem; min-width: 0;
+  font-family: "Jetbrainsmono Variable", ui-monospace, monospace;
+  font-size: .72rem; font-weight: 500; letter-spacing: .06em; text-transform: uppercase; color: #f2f4f8; white-space: nowrap;
+}
+.uc-ads-cards small { font-size: .58rem; letter-spacing: .04em; text-transform: none; color: #8a8d8a; white-space: normal; line-height: 1.35; }
+@media (min-width: 992px) {
+  /* La columna de tarjetas es más ancha que la de sistemas: cabe el nombre y
+     la pista de lo que se lee de cada una. */
+  .section_metaads .uc-layout { grid-template-columns: minmax(0, 11.5rem) minmax(0, 21rem) minmax(0, 28rem); gap: 3rem 4.5rem; }
+  .uc-ads { align-self: center; }
+  .uc-ads .uc-wire { width: 8rem; }
+}
+@media (max-width: 991px) {
+  .uc-ads-cards { flex-direction: row; justify-content: center; flex-wrap: wrap; }
+}
 @media (max-width: 767px) {
+  .uc-ads .uc-feed-label { margin-top: .7rem; }
+  /* Cinco momentos en vez de tres: los puntos de la línea de tiempo del móvil
+     se aprietan un poco para caber a la altura del teléfono. */
   .section_metaads .uc-timeline li { padding-bottom: 1.6rem; }
   .section_metaads .uc-timeline { padding-top: 3.5rem; }
 }
