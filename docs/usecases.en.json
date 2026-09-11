@@ -12,8 +12,7 @@
  },
  "roles": [
   "Sales rep",
-  "Sales manager",
-  "Business owner",
+  "Sales manager or owner",
   "Support and after-sales"
  ],
  "verticales": [
@@ -99,7 +98,7 @@
    "proactivo": "🛒 5 carts over $200 were abandoned today; the largest is Andrea Gómez's ($480). Answer SEE and I will leave the recovery messages ready."
   },
   {
-   "rol": "Sales manager",
+   "rol": "Sales manager or owner",
    "vertical": "Real estate",
    "titulo": "I see the pipeline without asking for reports",
    "comandos": [
@@ -108,20 +107,20 @@
      "r": "Scheduled. This Monday: 38 active deals, 6 stalled (4 of them Luis's). I will send it at 8:00."
     },
     {
-     "u": "If a lead goes 15 minutes with no contact, alert the supervisor on duty.",
-     "r": "Rule active from 9:00 to 20:00. The supervisor on duty is taken from the shift calendar."
-    },
-    {
      "u": "Split the north-zone leads between Ana and Luis; if nobody takes them within 1 hour, tell me.",
      "r": "11 leads assigned (6 Ana, 5 Luis). I will tell you in an hour about any still with no activity."
+    },
+    {
+     "u": "How many viewings did we close this month compared with last month?",
+     "r": "August: 31 % of viewings ended in a deposit against 24 % in July. Up 7 points."
     }
    ],
-   "resultado": "Every lead has an owner in minutes, not days.",
+   "resultado": "One WhatsApp at the end of the day beats three dashboards.",
    "evidencia": "speed",
    "proactivo": "📊 Monday 8:00 · 38 active deals, 6 stalled more than 10 days (4 of them Luis's). Answer SEE for the breakdown by rep."
   },
   {
-   "rol": "Sales manager",
+   "rol": "Sales manager or owner",
    "vertical": "Clinic / health",
    "titulo": "A full calendar, with no no-shows",
    "comandos": [
@@ -130,74 +129,8 @@
      "r": "14 of 41 unconfirmed. 5 are first consultations."
     },
     {
-     "u": "For the ones that do not confirm by 18:00 today, hand each adviser the reminder with the message ready.",
-     "r": "Scheduled. At 18:00 each adviser gets their pending appointments with the reminder to send."
-    },
-    {
      "u": "If a patient misses the appointment, create the rebooking task for their adviser the same day.",
      "r": "Rule active. No-shows are marked from the calendar and the task is created instantly."
-    }
-   ],
-   "resultado": "Fewer empty chairs, more treatments started.",
-   "evidencia": "noshow",
-   "proactivo": "📅 There are 41 appointments tomorrow and 14 are still unconfirmed, 5 of them first consultations. Answer SEE to hand them out to the advisers."
-  },
-  {
-   "rol": "Sales manager",
-   "vertical": "Online store",
-   "titulo": "Operations reports to me",
-   "comandos": [
-    {
-     "u": "Tell me if an order over $500 sits in “Payment pending” for more than 24 hours.",
-     "r": "Rule active. Right now there are 2: orders 1031 ($640) and 1037 ($512)."
-    },
-    {
-     "u": "Every morning tell me how many orders are waiting to ship and which ones are over 48 hours.",
-     "r": "Scheduled for 8:00. Today: 27 to ship, 4 over 48 h."
-    },
-    {
-     "u": "If a product runs out of stock and has pending orders, tell purchasing and me.",
-     "r": "Rule active on the Shopify inventory. Purchasing gets it on WhatsApp, and so do you."
-    }
-   ],
-   "resultado": "Zero forgotten orders, zero customers asking “where is my order?”.",
-   "evidencia": "carrito",
-   "proactivo": "⚠️ 2 orders over $500 have been in “Payment pending” for 24 h: 1031 ($640) and 1037 ($512). Answer SEE or LATER."
-  },
-  {
-   "rol": "Business owner",
-   "vertical": "Real estate",
-   "titulo": "I know what is going on without opening anything",
-   "comandos": [
-    {
-     "u": "Tell me if a deal over $80,000 is lost, with the reason.",
-     "r": "Rule active. Last loss: Torre Norte 1203, $95,000, reason “financing not approved”."
-    },
-    {
-     "u": "Every Friday: sales for the week, conversion by portal and the top 3 advisers.",
-     "r": "Scheduled. This week: 4 deposits, portal A converting 3.1 % against portal B at 1.8 %; top: Ana, Luis, Marco."
-    },
-    {
-     "u": "How many viewings did we close this month compared with last month?",
-     "r": "August: 31 % of viewings ended in a deposit against 24 % in July. Up 7 points."
-    }
-   ],
-   "resultado": "One WhatsApp at the end of the day beats three dashboards.",
-   "evidencia": "estancados",
-   "proactivo": "🔴 Torre Norte 1203 was lost ($95,000). Reason: financing not approved. That makes 4 deposits this week. Answer WHY for the detail."
-  },
-  {
-   "rol": "Business owner",
-   "vertical": "Clinic / health",
-   "titulo": "My clinic reports on its own",
-   "comandos": [
-    {
-     "u": "Every Monday send me new patients, accepted quotes and the week's no-show rate.",
-     "r": "Scheduled. Last week: 46 new patients, 19 accepted quotes ($38,000), no-shows 9 %."
-    },
-    {
-     "u": "Tell me if a day's no-show rate goes over 15 %.",
-     "r": "Rule active. It is worked out at the close of each day from the CRM calendar."
     },
     {
      "u": "Which treatments brought in the most revenue this quarter?",
@@ -206,20 +139,20 @@
    ],
    "resultado": "Clear numbers, without waiting for the accountant.",
    "evidencia": "noshow",
-   "proactivo": "📊 Last week: 46 new patients, 19 accepted quotes ($38,000), no-shows 9 %. Answer SEE for the breakdown by treatment."
+   "proactivo": "📅 There are 41 appointments tomorrow and 14 are still unconfirmed, 5 of them first consultations. Answer SEE to hand them out to the advisers."
   },
   {
-   "rol": "Business owner",
+   "rol": "Sales manager or owner",
    "vertical": "Online store",
-   "titulo": "My store writes to me",
+   "titulo": "Operations reports to me",
    "comandos": [
     {
-     "u": "Every morning send me yesterday's sales, the average ticket and the best-selling product.",
-     "r": "Scheduled for 8:00. Yesterday: $6,420 across 38 orders, ticket $169, best seller: the Runner sneaker."
+     "u": "Tell me if an order over $500 sits in “Payment pending” for more than 24 hours.",
+     "r": "Rule active. Right now there are 2: orders 1031 ($640) and 1037 ($512)."
     },
     {
-     "u": "Tell me if the day's sales drop more than 30 % against the last 7 days' average.",
-     "r": "Rule active. Current average: $5,900/day; I will tell you if a day closes below $4,130."
+     "u": "If a product runs out of stock and has pending orders, tell purchasing and me.",
+     "r": "Rule active on the Shopify inventory. Purchasing gets it on WhatsApp, and so do you."
     },
     {
      "u": "How much did we sell on the marketplace against our own store this month?",
@@ -228,7 +161,7 @@
    ],
    "resultado": "You decide on today's number, from your phone.",
    "evidencia": "carrito",
-   "proactivo": "☀️ Yesterday: $6,420 across 38 orders, ticket $169; best seller: the Runner sneaker. Answer SEE for the breakdown by channel."
+   "proactivo": "⚠️ 2 orders over $500 have been in “Payment pending” for 24 h: 1031 ($640) and 1037 ($512). Answer SEE or LATER."
   },
   {
    "rol": "Support and after-sales",
@@ -341,7 +274,7 @@
    "proactivo": "🚗 6 people took a test drive this week and none has a quote. The oldest: Jorge Salas (Kicks, Tuesday). Answer SEE."
   },
   {
-   "rol": "Sales manager",
+   "rol": "Sales manager or owner",
    "vertical": "Education",
    "titulo": "The enrolment campaign under control",
    "comandos": [
@@ -350,52 +283,8 @@
      "r": "Scheduled. Today: 62 new applicants (Business 21, Marketing 18, Systems 23); 9 over 1 hour with no contact."
     },
     {
-     "u": "If an applicant goes 15 minutes with no contact during campaign hours, alert the adviser on duty.",
-     "r": "Rule active from 8:00 to 21:00 using the shift calendar in the CRM."
-    },
-    {
      "u": "Split the Systems applicants between Rosa and Diego; if nobody takes them within 30 minutes, tell me.",
      "r": "23 assigned (12 Rosa, 11 Diego). I will tell you in 30 minutes about any still with no activity."
-    }
-   ],
-   "resultado": "Every applicant has an adviser in minutes, not days.",
-   "evidencia": "speed",
-   "proactivo": "📊 7:00 · 62 new applicants (Business 21, Marketing 18, Systems 23); 9 have gone more than 1 hour with no contact. Answer SEE."
-  },
-  {
-   "rol": "Sales manager",
-   "vertical": "Automotive",
-   "titulo": "I see the dealership funnel without asking for reports",
-   "comandos": [
-    {
-     "u": "Every Monday send me quotes by rep and the prospects stalled more than 7 days.",
-     "r": "Scheduled. This week: 48 quotes (Marco 14, Lucía 12, Pedro 11, Ana 11); 9 stalled prospects, 5 in Financing."
-    },
-    {
-     "u": "If a lead from the portal or from Meta goes 10 minutes with no contact, tell me and the rep on duty.",
-     "r": "Rule active. Double alert: the rep on duty and you, with the model they are interested in."
-    },
-    {
-     "u": "How many test drives turned into a sale this month, by rep?",
-     "r": "Marco 6 of 15 (40 %), Lucía 5 of 14 (36 %), Pedro 3 of 13 (23 %), Ana 4 of 10 (40 %). Month average: 35 %."
-    }
-   ],
-   "resultado": "Decisions on today's data, not on the month-end close.",
-   "evidencia": "estancados",
-   "proactivo": "📊 Monday · 48 quotes this week (Marco 14, Lucía 12); 9 prospects stalled more than 7 days. Answer SEE by rep."
-  },
-  {
-   "rol": "Business owner",
-   "vertical": "Education",
-   "titulo": "Enrolment reports on its own",
-   "comandos": [
-    {
-     "u": "Every Friday send me applicants, pre-enrolled and enrolled for the week by programme.",
-     "r": "Scheduled. This week: 310 applicants, 84 pre-enrolled, 37 enrolled. Systems leads with 14 enrolments."
-    },
-    {
-     "u": "Tell me if a campaign's applicant-to-enrolled conversion drops below 8 %.",
-     "r": "Rule active. It is worked out each night by campaign. Today: “Enrolment 2027” at 11.9 %."
     },
     {
      "u": "How much did each enrolment cost by channel this month?",
@@ -404,20 +293,20 @@
    ],
    "resultado": "One WhatsApp at the end of the day beats three dashboards.",
    "evidencia": "speed",
-   "proactivo": "📊 Friday · 310 applicants, 84 pre-enrolled, 37 enrolled this week. “Enrolment 2027” converts at 11.9 %. Answer SEE by programme."
+   "proactivo": "📊 7:00 · 62 new applicants (Business 21, Marketing 18, Systems 23); 9 have gone more than 1 hour with no contact. Answer SEE."
   },
   {
-   "rol": "Business owner",
+   "rol": "Sales manager or owner",
    "vertical": "Automotive",
-   "titulo": "I know how many cars go out without visiting the showroom",
+   "titulo": "I see the dealership funnel without asking for reports",
    "comandos": [
     {
-     "u": "Every Saturday send me units sold, average margin and the top 3 reps.",
-     "r": "Scheduled. This week: 11 units, margin 7.4 %; top: Marco, Ana, Lucía."
+     "u": "Every Monday send me quotes by rep and the prospects stalled more than 7 days.",
+     "r": "Scheduled. This week: 48 quotes (Marco 14, Lucía 12, Pedro 11, Ana 11); 9 stalled prospects, 5 in Financing."
     },
     {
-     "u": "Tell me if a prospect with a quote over $30,000 is lost, and the reason.",
-     "r": "Rule active. Last loss: a Hilux pickup, $38,000, reason “financing not approved”."
+     "u": "How many test drives turned into a sale this month, by rep?",
+     "r": "Marco 6 of 15 (40 %), Lucía 5 of 14 (36 %), Pedro 3 of 13 (23 %), Ana 4 of 10 (40 %). Month average: 35 %."
     },
     {
      "u": "Which model got the most quotes this month and how many closed?",
@@ -426,7 +315,7 @@
    ],
    "resultado": "You decide on today's number, from your phone.",
    "evidencia": "estancados",
-   "proactivo": "🔴 A Hilux quoted at $38,000 was lost. Reason: financing not approved. That makes 11 units this week. Answer WHY."
+   "proactivo": "📊 Monday · 48 quotes this week (Marco 14, Lucía 12); 9 prospects stalled more than 7 days. Answer SEE by rep."
   },
   {
    "rol": "Support and after-sales",

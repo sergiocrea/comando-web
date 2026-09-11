@@ -12,8 +12,7 @@
  },
  "roles": [
   "Vendedor",
-  "Jefe de ventas",
-  "Dueño del negocio",
+  "Jefe de ventas o dueño",
   "Atención y postventa"
  ],
  "verticales": [
@@ -99,7 +98,7 @@
    "proactivo": "🛒 Hoy se abandonaron 5 carritos de más de $200; el mayor es de Andrea Gómez ($480). Responde VER y te dejo los mensajes de recuperación listos."
   },
   {
-   "rol": "Jefe de ventas",
+   "rol": "Jefe de ventas o dueño",
    "vertical": "Inmobiliaria",
    "titulo": "Veo el pipeline sin pedir reportes",
    "comandos": [
@@ -108,20 +107,20 @@
      "r": "Programado. Este lunes: 38 deals activos, 6 estancados (4 de Luis). Te lo mando a las 8:00."
     },
     {
-     "u": "Si un lead lleva 15 minutos sin contacto, avisa al supervisor de turno.",
-     "r": "Regla activa de 9:00 a 20:00. El supervisor de turno se toma del calendario de guardias."
-    },
-    {
      "u": "Reparte los leads de la zona norte entre Ana y Luis; si nadie los toma en 1 hora, dímelo.",
      "r": "Asignados 11 leads (6 Ana, 5 Luis). Te aviso a la hora con los que sigan sin actividad."
+    },
+    {
+     "u": "¿Cuántas visitas cerramos este mes comparado con el mes pasado?",
+     "r": "Agosto: 31 % de visitas con separación vs 24 % en julio. Subió 7 puntos."
     }
    ],
-   "resultado": "Cada lead tiene dueño en minutos, no en días.",
+   "resultado": "Un WhatsApp al final del día vale más que tres dashboards.",
    "evidencia": "speed",
    "proactivo": "📊 Lunes 8:00 · 38 deals activos, 6 estancados más de 10 días (4 de Luis). Responde VER para el detalle por vendedor."
   },
   {
-   "rol": "Jefe de ventas",
+   "rol": "Jefe de ventas o dueño",
    "vertical": "Clínica / salud",
    "titulo": "Agenda llena, sin ausencias",
    "comandos": [
@@ -130,74 +129,8 @@
      "r": "14 de 41 sin confirmar. 5 son de primera consulta."
     },
     {
-     "u": "Para las que no confirmen hoy a las 18:00, pásale el recordatorio a cada asesora con el mensaje listo.",
-     "r": "Programado. A las 18:00 cada asesora recibe sus citas pendientes con el recordatorio para enviar."
-    },
-    {
      "u": "Si un paciente falta a la cita, créale la tarea de reagendar a su asesora ese mismo día.",
      "r": "Regla activa. Las ausencias se marcan desde la agenda y la tarea se crea al instante."
-    }
-   ],
-   "resultado": "Menos sillas vacías, más tratamientos iniciados.",
-   "evidencia": "noshow",
-   "proactivo": "📅 Mañana hay 41 citas y 14 siguen sin confirmar, 5 de primera consulta. Responde VER para repartirlas a las asesoras."
-  },
-  {
-   "rol": "Jefe de ventas",
-   "vertical": "Tienda online",
-   "titulo": "La operación me avisa a mí",
-   "comandos": [
-    {
-     "u": "Avísame si una orden de más de $500 se queda en «Pendiente de pago» más de 24 horas.",
-     "r": "Regla activa. Ahora mismo hay 2: pedidos 1031 ($640) y 1037 ($512)."
-    },
-    {
-     "u": "Cada mañana dime cuántos pedidos hay por despachar y cuáles llevan más de 48 horas.",
-     "r": "Programado a las 8:00. Hoy: 27 por despachar, 4 con más de 48 h."
-    },
-    {
-     "u": "Si un producto se queda sin stock y tiene pedidos pendientes, avisa a compras y a mí.",
-     "r": "Regla activa sobre el inventario de Shopify. Aviso a compras por WhatsApp y a ti."
-    }
-   ],
-   "resultado": "Cero pedidos olvidados, cero clientes preguntando «¿y mi pedido?».",
-   "evidencia": "carrito",
-   "proactivo": "⚠️ 2 pedidos de más de $500 llevan 24 h en «Pendiente de pago»: 1031 ($640) y 1037 ($512). Responde VER o LUEGO."
-  },
-  {
-   "rol": "Dueño del negocio",
-   "vertical": "Inmobiliaria",
-   "titulo": "Sé lo que pasa sin entrar a nada",
-   "comandos": [
-    {
-     "u": "Avísame si se pierde un deal de más de $80,000 con el motivo.",
-     "r": "Regla activa. Última pérdida: Torre Norte 1203, $95,000, motivo «financiamiento no aprobado»."
-    },
-    {
-     "u": "Cada viernes: ventas de la semana, conversión por portal y los 3 mejores asesores.",
-     "r": "Programado. Esta semana: 4 separaciones, conversión portal A 3,1 % vs portal B 1,8 %; top: Ana, Luis, Marco."
-    },
-    {
-     "u": "¿Cuántas visitas cerramos este mes comparado con el mes pasado?",
-     "r": "Agosto: 31 % de visitas con separación vs 24 % en julio. Subió 7 puntos."
-    }
-   ],
-   "resultado": "Un WhatsApp al final del día vale más que tres dashboards.",
-   "evidencia": "estancados",
-   "proactivo": "🔴 Se perdió Torre Norte 1203 ($95,000). Motivo: financiamiento no aprobado. Esta semana van 4 separaciones. Responde POR QUÉ para el detalle."
-  },
-  {
-   "rol": "Dueño del negocio",
-   "vertical": "Clínica / salud",
-   "titulo": "Mi clínica me reporta sola",
-   "comandos": [
-    {
-     "u": "Cada lunes envíame pacientes nuevos, presupuestos aceptados y tasa de ausencias de la semana.",
-     "r": "Programado. Semana pasada: 46 pacientes nuevos, 19 presupuestos aceptados ($38,000), ausencias 9 %."
-    },
-    {
-     "u": "Avísame si la tasa de ausencias de un día supera el 15 %.",
-     "r": "Regla activa. Se calcula al cierre de cada día con la agenda del CRM."
     },
     {
      "u": "¿Qué tratamientos generaron más ingresos este trimestre?",
@@ -206,20 +139,20 @@
    ],
    "resultado": "Números claros, sin esperar al contador.",
    "evidencia": "noshow",
-   "proactivo": "📊 Semana pasada: 46 pacientes nuevos, 19 presupuestos aceptados ($38,000), ausencias 9 %. Responde VER para el detalle por tratamiento."
+   "proactivo": "📅 Mañana hay 41 citas y 14 siguen sin confirmar, 5 de primera consulta. Responde VER para repartirlas a las asesoras."
   },
   {
-   "rol": "Dueño del negocio",
+   "rol": "Jefe de ventas o dueño",
    "vertical": "Tienda online",
-   "titulo": "Mi tienda me escribe a mí",
+   "titulo": "La operación me avisa a mí",
    "comandos": [
     {
-     "u": "Cada mañana envíame las ventas de ayer, el ticket promedio y el producto más vendido.",
-     "r": "Programado a las 8:00. Ayer: $6,420 en 38 pedidos, ticket $169, más vendido: zapatilla Runner."
+     "u": "Avísame si una orden de más de $500 se queda en «Pendiente de pago» más de 24 horas.",
+     "r": "Regla activa. Ahora mismo hay 2: pedidos 1031 ($640) y 1037 ($512)."
     },
     {
-     "u": "Avísame si las ventas del día caen más de 30 % frente al promedio de los últimos 7 días.",
-     "r": "Regla activa. Promedio actual: $5,900/día; te aviso si un día cierra por debajo de $4,130."
+     "u": "Si un producto se queda sin stock y tiene pedidos pendientes, avisa a compras y a mí.",
+     "r": "Regla activa sobre el inventario de Shopify. Aviso a compras por WhatsApp y a ti."
     },
     {
      "u": "¿Cuánto vendimos por Mercado Libre vs la tienda propia este mes?",
@@ -228,7 +161,7 @@
    ],
    "resultado": "Decides con el dato del día, desde el celular.",
    "evidencia": "carrito",
-   "proactivo": "☀️ Ayer: $6,420 en 38 pedidos, ticket $169; más vendido: zapatilla Runner. Responde VER para el desglose por canal."
+   "proactivo": "⚠️ 2 pedidos de más de $500 llevan 24 h en «Pendiente de pago»: 1031 ($640) y 1037 ($512). Responde VER o LUEGO."
   },
   {
    "rol": "Atención y postventa",
@@ -341,7 +274,7 @@
    "proactivo": "🚗 6 personas hicieron test drive esta semana y ninguna tiene cotización. La más antigua: Jorge Salas (Kicks, martes). Responde VER."
   },
   {
-   "rol": "Jefe de ventas",
+   "rol": "Jefe de ventas o dueño",
    "vertical": "Educación",
    "titulo": "La campaña de matrícula bajo control",
    "comandos": [
@@ -350,52 +283,8 @@
      "r": "Programado. Hoy: 62 postulantes nuevos (Administración 21, Marketing 18, Sistemas 23); 9 con más de 1 hora sin contacto."
     },
     {
-     "u": "Si un postulante lleva 15 minutos sin contacto en horario de campaña, avisa al asesor de turno.",
-     "r": "Regla activa de 8:00 a 21:00 con el calendario de turnos del CRM."
-    },
-    {
      "u": "Reparte los postulantes de Sistemas entre Rosa y Diego; si nadie los toma en 30 minutos, dímelo.",
      "r": "Asignados 23 (12 Rosa, 11 Diego). Te aviso a las 30 minutos con los que sigan sin actividad."
-    }
-   ],
-   "resultado": "Cada postulante tiene asesor en minutos, no en días.",
-   "evidencia": "speed",
-   "proactivo": "📊 7:00 · 62 postulantes nuevos (Administración 21, Marketing 18, Sistemas 23); 9 llevan más de 1 hora sin contacto. Responde VER."
-  },
-  {
-   "rol": "Jefe de ventas",
-   "vertical": "Automotriz",
-   "titulo": "Veo el embudo de la concesionaria sin pedir reportes",
-   "comandos": [
-    {
-     "u": "Cada lunes envíame cotizaciones por vendedor y los prospectos estancados más de 7 días.",
-     "r": "Programado. Esta semana: 48 cotizaciones (Marco 14, Lucía 12, Pedro 11, Ana 11); 9 prospectos estancados, 5 en Financiamiento."
-    },
-    {
-     "u": "Si un lead del portal o de Meta lleva 10 minutos sin contacto, avísame y al vendedor de turno.",
-     "r": "Regla activa. Aviso doble: vendedor de turno y tú, con el modelo de interés."
-    },
-    {
-     "u": "¿Cuántos test drives se convirtieron en venta este mes por vendedor?",
-     "r": "Marco 6 de 15 (40 %), Lucía 5 de 14 (36 %), Pedro 3 de 13 (23 %), Ana 4 de 10 (40 %). Promedio del mes: 35 %."
-    }
-   ],
-   "resultado": "Decisiones con datos del día, no del cierre de mes.",
-   "evidencia": "estancados",
-   "proactivo": "📊 Lunes · 48 cotizaciones esta semana (Marco 14, Lucía 12); 9 prospectos estancados más de 7 días. Responde VER por vendedor."
-  },
-  {
-   "rol": "Dueño del negocio",
-   "vertical": "Educación",
-   "titulo": "La matrícula me reporta sola",
-   "comandos": [
-    {
-     "u": "Cada viernes envíame postulantes, preinscritos y matriculados de la semana por programa.",
-     "r": "Programado. Esta semana: 310 postulantes, 84 preinscritos, 37 matriculados. Sistemas lidera con 14 matrículas."
-    },
-    {
-     "u": "Avísame si la conversión de postulante a matriculado de una campaña baja del 8 %.",
-     "r": "Regla activa. Se calcula cada noche por campaña. Hoy: «Matrícula 2027» al 11,9 %."
     },
     {
      "u": "¿Cuánto costó cada matrícula por canal este mes?",
@@ -404,20 +293,20 @@
    ],
    "resultado": "Un WhatsApp al final del día vale más que tres dashboards.",
    "evidencia": "speed",
-   "proactivo": "📊 Viernes · 310 postulantes, 84 preinscritos, 37 matriculados esta semana. «Matrícula 2027» convierte al 11,9 %. Responde VER por programa."
+   "proactivo": "📊 7:00 · 62 postulantes nuevos (Administración 21, Marketing 18, Sistemas 23); 9 llevan más de 1 hora sin contacto. Responde VER."
   },
   {
-   "rol": "Dueño del negocio",
+   "rol": "Jefe de ventas o dueño",
    "vertical": "Automotriz",
-   "titulo": "Sé cuántos autos salen sin ir al showroom",
+   "titulo": "Veo el embudo de la concesionaria sin pedir reportes",
    "comandos": [
     {
-     "u": "Cada sábado envíame unidades vendidas, margen promedio y los 3 mejores vendedores.",
-     "r": "Programado. Esta semana: 11 unidades, margen 7,4 %; top: Marco, Ana, Lucía."
+     "u": "Cada lunes envíame cotizaciones por vendedor y los prospectos estancados más de 7 días.",
+     "r": "Programado. Esta semana: 48 cotizaciones (Marco 14, Lucía 12, Pedro 11, Ana 11); 9 prospectos estancados, 5 en Financiamiento."
     },
     {
-     "u": "Avísame si se pierde un prospecto con cotización mayor a $30,000 y el motivo.",
-     "r": "Regla activa. Última pérdida: camioneta Hilux, $38,000, motivo «financiamiento no aprobado»."
+     "u": "¿Cuántos test drives se convirtieron en venta este mes por vendedor?",
+     "r": "Marco 6 de 15 (40 %), Lucía 5 de 14 (36 %), Pedro 3 de 13 (23 %), Ana 4 de 10 (40 %). Promedio del mes: 35 %."
     },
     {
      "u": "¿Qué modelo tuvo más cotizaciones este mes y cuántas cerraron?",
@@ -426,7 +315,7 @@
    ],
    "resultado": "Decides con el dato del día, desde el celular.",
    "evidencia": "estancados",
-   "proactivo": "🔴 Se perdió una Hilux cotizada en $38,000. Motivo: financiamiento no aprobado. Esta semana van 11 unidades. Responde POR QUÉ."
+   "proactivo": "📊 Lunes · 48 cotizaciones esta semana (Marco 14, Lucía 12); 9 prospectos estancados más de 7 días. Responde VER por vendedor."
   },
   {
    "rol": "Atención y postventa",
