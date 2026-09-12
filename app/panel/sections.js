@@ -7,13 +7,13 @@
    - una sola acción principal por fila; lo demás va dentro de «más»;
    - vocabulario del operador (plata en juego, parado, sin dueño, repetidos), nunca del sistema. */
 
-import { isPending } from './api.js?v=14';
-import { crmBlock, crmActions, whatsappStep, NAMES as PROVIDER_NAMES } from './setup.js?v=10';
+import { isPending } from './api.js?v=15';
+import { crmBlock, crmActions, whatsappStep, NAMES as PROVIDER_NAMES } from './setup.js?v=11';
 import {
   esc, num, money, pct, fmtTime, fmtDate, fmtDateTime, monthName, dayLabel, sameDay, rel, isToday, isPast, isoDay,
   wa, waBtn, waLink, askLine, chip, statusChip, bar, spark, kpi, card, row, moreBox, empty, soon, skeleton, toast, ICON, SIGNAL_PHRASE,
   personName, personEmail, highValueAmount, SYMBOL, setAccountCurrency,
-} from './ui.js?v=10';
+} from './ui.js?v=11';
 import { t, tn, localeTag } from '../i18n.js?v=1';
 import { chatActions, awaitsWord } from './chat.js?v=1';
 import { hoja } from './hoja.js?v=1';
@@ -1324,7 +1324,7 @@ const cuenta = {
       ${row({ ico: ICON.wa, title: `WhatsApp ${me.whatsapp ? statusChip(me.whatsapp.status) : ''}`, sub: `${esc(me.whatsapp?.phone || t('cuenta.notLinked'))}${me.comandoNumber ? ` · ${esc(t('cuenta.youWriteTo', { number: me.comandoNumber }))}` : ''}`, primary: `<button class="btn sm ghost" data-act="wa:change">${esc(t('cuenta.changeNumber'))}</button>` })}
       <div id="wa-change-box"></div>
       ${currencyRow(me, active)}
-      <div class="row"><div class="row-ico">💳</div><div class="row-body">${plan}${usage}</div><div class="row-actions"><a class="btn sm" href="../../#precios">${esc(t('cuenta.changePlan'))}</a></div></div>
+      <div class="row"><div class="row-ico">💳</div><div class="row-body">${plan}${usage}</div>${canSetCurrency(me) ? `<div class="row-actions"><a class="btn sm" href="../../#precios">${esc(t('cuenta.changePlan'))}</a></div>` : ''}</div>
     </div>`);
 
     const h = val(d.health, null);
@@ -1352,7 +1352,7 @@ const cuenta = {
       return `<div class="list">${team.people.map((p) => row({ ico: `<span class="avatar">${esc(p.name.split(' ').map((x) => x[0]).join('').slice(0, 2))}</span>`, title: `${esc(p.name)} ${chip(p.role in ROLE_KIND ? t('role.' + p.role) : p.role, ROLE_KIND[p.role] || '')}`, sub: `${esc(p.team || '')}${p.whatsapp !== 'verified' ? ` · <span class="sev-warning">${esc(t('cuenta.waUnverified'))}</span>` : ''}`, primary: waBtn(t('wa.changeRole', { name: p.name }), t('cuenta.changeRole'), 'btn sm ghost') })).join('')}</div>
         ${owners.crmOwners <= 1 && owners.comandoPeople > 1 ? `<p class="note warn" style="margin-top:12px">${t('cuenta.ownersNote', { crmOwners: num(owners.crmOwners), people: num(owners.comandoPeople) })}</p>` : ''}`; },
       { what: t('cuenta.teamWhat'), phrase: t('wa.whoUses'), extra: t('cuenta.teamExtra') }),
-      { sub: t('cuenta.teamSub'), right: `<button class="btn sm" data-act="team:invite">${esc(t('cuenta.invite'))}</button>` });
+      { sub: t('cuenta.teamSub'), right: canSetCurrency(me) ? `<button class="btn sm" data-act="team:invite">${esc(t('cuenta.invite'))}</button>` : '' });
 
     const sabe = card(t('cuenta.knows'), part(d.agent, (a) => list(a.memories || [], (m) => row({ ico: '🧠', title: esc(m.content), sub: esc(fmtDate(m.createdAt, true)), primary: waBtn(t('wa.forget', { what: m.content }), t('cuenta.forget'), 'btn sm ghost') }), t('cuenta.knowsNothing')),
       { what: t('cuenta.knows'), phrase: t('wa.teachExample') }),

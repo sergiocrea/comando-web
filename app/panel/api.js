@@ -233,6 +233,9 @@ export function createMockApi() {
        forma de revisar los casos que importan antes de desplegar. */
     marketing: () => wait(marketingOverview(params.get('mk'))),
     marketingRefresh: () => wait(marketingRefresh(params.get('mk'))),
+    marketingOverviewBetween: () => wait(marketingOverview(params.get('mk'))),
+    marketingImportHistory: () => log('POST /marketing/import-history').then(() => marketingRefresh(params.get('mk'))),
+    marketingTarget: (body) => log('PUT /marketing/targets', body).then(() => ({ targets: body, overview: marketingOverview(params.get('mk')) })),
     playbooks: () => wait(MOCK.playbooks),
     metaStatus: () => wait(metaStatus(params.get('mk'))),
     metaConnect: () => log('POST /integrations/meta/connect'),

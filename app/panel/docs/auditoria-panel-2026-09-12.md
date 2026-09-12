@@ -43,7 +43,8 @@ respetado; la vista Mes de Agenda es correcta.
 
 ¹ Botones, enlaces-botón, `data-act`, pestañas y `summary`, contando los plegados en «más».
 De los 283: **141 son `cmd:run`** (mandan una frase a la consola), **49 son «más»**
-(`<details>`) que esconden otras 100 acciones, 12 van a `wa.me`.
+(`<details>`) que esconden otras 100 acciones, **8 van a `wa.me`** (4 en Hoy, 1 en Resumen,
+Agenda, Automatizaciones y Marketing) más el «Escribir a Comando» fijo de la cabecera.
 
 ### 1.2 Pantallas y estados que hay que aprender
 
@@ -259,7 +260,7 @@ y que no compite con la hoja).
 - Con una fila elegida en la hoja, el input muestra el registro como chip («Torres del Parque
   402 ×») para que «recuérdame llamarlo mañana» no tenga que nombrarlo.
 - Un enlace secundario «seguir en WhatsApp» (`wa.me` con la frase) en el pie del chat
-  sustituye a los 12 enlaces `wa.me` repartidos hoy por el panel.
+  sustituye a los 9 enlaces `wa.me` repartidos hoy por el panel.
 - Historial: el mismo `GET /operator/commands`; «Lo último que pediste» y «Deshacer» son el
   propio scroll del chat.
 

@@ -8,8 +8,8 @@
    - `crmActions`: los manejadores de esos botones (OAuth por Nango en ventana emergente,
      confirmación por sondeo, selector de hojas de Google). */
 
-import { esc, toast, ICON, fmtDate } from './ui.js?v=10';
-import { t } from '../i18n.js?v=1';
+import { esc, toast, ICON, fmtDate } from './ui.js?v=11';
+import { t, tn } from '../i18n.js?v=1';
 
 const cfg = () => window.COMANDO_CONFIG || {};
 /* Exportado porque no solo lo usa la rejilla: la tarjeta de Cuenta necesita
@@ -129,7 +129,11 @@ export function crmBlock(ctx, connections, sheets) {
       <div class="inline-list" style="margin-top:10px"><button type="button" class="btn sm primary" data-act="crm:recover" data-id="${esc(recoverable.id)}" data-provider="${esc(recoverable.provider)}">${esc(t('crm.relink'))}</button><button type="button" class="btn sm danger" data-act="crm:purge" data-id="${esc(recoverable.id)}" data-provider="${esc(recoverable.provider)}">${esc(t('crm.purgeNow'))}</button></div></div>` : '';
   const sheetList = Array.isArray(sheets) && sheets.length ? `<ul class="sheet-list">${sheets.map((s) => `<li>${logo('google-sheets')}<b>${esc(s.displayName || s.spreadsheetId)}</b><span>${esc(s.sheetTitle)}</span></li>`).join('')}</ul>` : '';
   const foot = active ? `<div class="inline-list" style="margin-top:12px"><a class="btn sm" href="../dashboard/">${esc(t('crm.whatCanSee'))}</a><button type="button" class="btn sm danger" data-act="crm:disconnect" data-id="${esc(active.id)}" data-provider="${esc(active.provider)}">${esc(t('crm.disconnect', { name: NAMES[active.provider] || '' }))}</button></div>` : '';
-  return `<div class="crm-grid" role="list">${[...READY, ...SOON].map(cardFor).join('')}</div>${sheetList}<p class="hint crm-status" id="crm-status" style="margin-top:10px">${status}</p>${recovery}${foot}`;
+  /* Los que todavía no se pueden conectar van plegados: once fichas con nueve
+     apagadas eran pantalla y media en móvil y prometían un catálogo que el
+     panel decidió no enseñar (auditoría del 12-sep-2026). */
+  const proximos = SOON.length ? `<details class="crm-more"><summary>${esc(tn('crm.moreSoon', SOON.length))}</summary><div class="crm-grid" role="list">${SOON.map(cardFor).join('')}</div></details>` : '';
+  return `<div class="crm-grid" role="list">${READY.map(cardFor).join('')}</div>${proximos}${sheetList}<p class="hint crm-status" id="crm-status" style="margin-top:10px">${status}</p>${recovery}${foot}`;
 }
 
 const status = (msg) => { const el = document.getElementById('crm-status'); if (el) el.textContent = msg; };

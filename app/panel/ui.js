@@ -104,7 +104,12 @@ export const wa = (phrase) => waBase + (phrase ? '?text=' + encodeURIComponent(p
  */
 export function waBtn(phrase, label, cls = 'btn sm ghost') {
   label = label ?? t('common.run');
-  return `<button class="${cls}" data-act="cmd:run" data-phrase="${esc(phrase)}" title="${esc(phrase)}">${esc(label)}</button>`;
+  /* Una frase que acaba en espacio o en dos puntos está incompleta a propósito
+     («avísame cuando », «cambia el rol de … a »): se escribe en el chat para
+     que el operador la termine. Mandarla tal cual gastaba un comando y
+     forzaba una aclaración (auditoría del 12-sep-2026: 29 botones así). */
+  const partial = /[\s:]$/.test(String(phrase));
+  return `<button class="${cls}" data-act="${partial ? 'cmd:fill' : 'cmd:run'}" data-phrase="${esc(phrase)}" title="${esc(phrase)}">${esc(label)}${partial ? '…' : ''}</button>`;
 }
 
 /**

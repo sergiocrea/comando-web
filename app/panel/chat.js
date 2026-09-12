@@ -13,8 +13,8 @@
    manda la respuesta por WhatsApp: esta columna es el único sitio donde
    aparece, y por eso se queda mirando. */
 
-import { isPending } from './api.js?v=14';
-import { esc, rel, fmtTime, askLine, toast } from './ui.js?v=10';
+import { isPending } from './api.js?v=15';
+import { esc, rel, fmtTime, askLine, toast } from './ui.js?v=11';
 import { t, tn } from '../i18n.js?v=1';
 
 const POLL_MS = 1500;

@@ -9,8 +9,8 @@
    enseñar SOLO los registros sobre los que cayó un turno del chat («ver en la
    hoja»). Nada de esto escribe en el CRM. */
 
-import { isPending } from './api.js?v=14';
-import { esc, num, money, fmtDate, rel, toast, ICON } from './ui.js?v=10';
+import { isPending } from './api.js?v=15';
+import { esc, num, money, fmtDate, rel, toast, ICON } from './ui.js?v=11';
 import { t, tn } from '../i18n.js?v=1';
 
 export const OBJECT_TYPES = ['contact', 'deal', 'company', 'task'];

@@ -152,7 +152,9 @@ q { quotes: "“" "”"; }
 /* ---------- botones ---------- */
 .btn { display: inline-flex; align-items: center; gap: 6px; border: 1px solid rgba(145, 158, 171, .32); background: transparent; color: var(--g800); border-radius: 8px; padding: 6px 12px; font-size: 13px; font-weight: 700; cursor: pointer; text-decoration: none; white-space: nowrap; line-height: 1.7; }
 .btn:hover { background: rgba(145, 158, 171, .08); border-color: var(--g800); }
-.btn.primary { background: var(--primary); color: #fff; border-color: var(--primary); }
+/* Verde oscuro, no el de marca: blanco sobre #00A76F da 3,1:1 y no pasa AA en
+   13 px; sobre #007867 da 4,7:1 (auditoría del 12-sep-2026). */
+.btn.primary { background: var(--primary-dark); color: #fff; border-color: var(--primary-dark); }
 .btn.primary:hover { background: var(--primary-dark); border-color: var(--primary-dark); }
 .btn.ghost { border-color: transparent; color: var(--g600); }
 .btn.ghost:hover { color: var(--g800); background: rgba(145, 158, 171, .08); border-color: transparent; }
@@ -635,9 +637,9 @@ details.q3-camp details.more { margin: 0 0 14px; }
 .bub.bot.is-plan .bub-body { border: 1px solid rgba(0, 167, 111, .35); }
 .bub.bot.is-bad .bub-body { border: 1px solid rgba(255, 86, 48, .4); background: #FFF3F0; }
 .bub.bot.is-thinking .bub-body { color: var(--g600); }
-.bub-time { font-size: 11px; color: var(--g500); margin-top: 2px; padding: 0 4px; }
+.bub-time { font-size: 11px; color: var(--g600); margin-top: 2px; padding: 0 4px; }
 .bub-said { white-space: pre-wrap; }
-.bub-meta { font-size: 12px; color: var(--g500); margin-top: 6px; }
+.bub-meta { font-size: 12px; color: var(--g600); margin-top: 6px; }
 .bub-note { font-size: 13px; color: var(--warning-ink); background: var(--warning-soft); border-radius: 8px; padding: 6px 10px; margin-top: 8px; }
 .bub-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 8px; }
 .bub .wa-preview { margin-top: 8px; box-shadow: none; padding: 10px 12px; }
@@ -709,7 +711,7 @@ details.q3-camp details.more { margin: 0 0 14px; }
 .sheet-table th.is-sorted { color: var(--primary-dark); background: var(--primary-soft); }
 .th-sort { font: inherit; text-transform: inherit; letter-spacing: inherit; color: inherit; background: none; border: none; padding: 0; cursor: pointer; white-space: nowrap; }
 .th-sort:hover { color: var(--g800); }
-.sheet-table .is-n { width: 44px; min-width: 44px; color: var(--g500); text-align: right; background: var(--g100); position: sticky; left: 0; z-index: 1; font-size: 12px; }
+.sheet-table .is-n { width: 44px; min-width: 44px; color: var(--g600); text-align: right; background: var(--g100); position: sticky; left: 0; z-index: 1; font-size: 12px; }
 .sheet-table thead .is-n { z-index: 3; }
 .sheet-table tbody tr { cursor: pointer; }
 .sheet-table tbody tr:hover td { background: #F7FBF9; }
@@ -731,7 +733,7 @@ details.q3-camp details.more { margin: 0 0 14px; }
 .columnas-lista { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 4px 12px; margin: 12px 0; max-height: 50vh; overflow-y: auto; }
 .columnas-item { display: flex; align-items: center; gap: 8px; font-size: 14px; padding: 6px 4px; border-radius: 6px; }
 .columnas-item:hover { background: var(--g100); }
-.columnas-item small { color: var(--g500); font-size: 11px; margin-left: auto; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+.columnas-item small { color: var(--g600); font-size: 11px; margin-left: auto; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
 .columnas-item.is-canonical { font-weight: 600; }
 .columnas-pie { display: flex; justify-content: space-between; gap: 8px; margin-top: 8px; }
 .modal.columnas, #hoja-columnas { max-width: min(600px, calc(100vw - 32px)); }
@@ -746,6 +748,17 @@ details.q3-camp details.more { margin: 0 0 14px; }
 .usage-list { list-style: none; margin: 8px 0 0; padding: 0; display: grid; gap: 4px; max-height: 320px; overflow-y: auto; }
 .usage-row { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; font-size: 13px; padding: 6px 8px; border-radius: 8px; background: var(--g100); }
 .usage-row q { font-style: normal; quotes: "«" "»"; color: var(--g800); flex: 1 1 200px; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.usage-when { color: var(--g500); font-variant-numeric: tabular-nums; min-width: 52px; }
-.usage-row small { color: var(--g500); }
+.usage-when { color: var(--g600); font-variant-numeric: tabular-nums; min-width: 52px; }
+.usage-row small { color: var(--g600); }
 .usage-empty { font-size: 13px; color: var(--g600); margin-top: 8px; }
+
+/* ---- auditoría del 12-sep: en móvil los desplegables no se salen ---- */
+.crm-more { margin-top: 10px; }
+.crm-more > summary { cursor: pointer; font-size: 13px; font-weight: 600; color: var(--g600); list-style: none; padding: 6px 0; }
+.crm-more > summary::-webkit-details-marker { display: none; }
+.crm-more > summary::before { content: "▸ "; }
+.crm-more[open] > summary::before { content: "▾ "; }
+.crm-more .crm-grid { margin-top: 8px; }
+@media (max-width: 639px) {
+  .filtro-panel { position: fixed; left: 12px; right: 12px; top: auto; bottom: 76px; width: auto; max-width: none; max-height: 60vh; overflow-y: auto; z-index: 55; }
+}
