@@ -736,3 +736,16 @@ details.q3-camp details.more { margin: 0 0 14px; }
 .columnas-pie { display: flex; justify-content: space-between; gap: 8px; margin-top: 8px; }
 .modal.columnas, #hoja-columnas { max-width: min(600px, calc(100vw - 32px)); }
 .is-booting .chat { visibility: hidden; }
+
+/* ---- Cuenta: en qué se fueron los comandos ---- */
+.usage { margin-top: 10px; }
+.usage > summary { cursor: pointer; font-size: 13px; font-weight: 700; color: var(--primary-dark); list-style: none; }
+.usage > summary::-webkit-details-marker { display: none; }
+.usage > summary::before { content: "▸ "; }
+.usage[open] > summary::before { content: "▾ "; }
+.usage-list { list-style: none; margin: 8px 0 0; padding: 0; display: grid; gap: 4px; max-height: 320px; overflow-y: auto; }
+.usage-row { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; font-size: 13px; padding: 6px 8px; border-radius: 8px; background: var(--g100); }
+.usage-row q { font-style: normal; quotes: "«" "»"; color: var(--g800); flex: 1 1 200px; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.usage-when { color: var(--g500); font-variant-numeric: tabular-nums; min-width: 52px; }
+.usage-row small { color: var(--g500); }
+.usage-empty { font-size: 13px; color: var(--g600); margin-top: 8px; }

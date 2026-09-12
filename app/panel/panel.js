@@ -6,12 +6,12 @@
      aún no exista en el engine no tumba la página.
    - Tres piezas fijas: el menú arriba, la página en el centro y el chat con
      Comando a la derecha (en móvil, un cajón que se abre desde la barra de abajo). */
-import { createApi, createMockApi } from './api.js?v=13';
-import { SECTIONS, globalActions } from './sections.js?v=22';
+import { createApi, createMockApi } from './api.js?v=14';
+import { SECTIONS, globalActions } from './sections.js?v=23';
 import { chatView, paintChat, loadHistory, openChat, closeChat, chatPreference } from './chat.js?v=1';
 import { whatsappStep, resumePendingConnection } from './setup.js?v=10';
 import { esc, setWaBase, setAccountCurrency, wa, skeleton, toast, ICON, personName, isToday, isPast } from './ui.js?v=10';
-import '../strings.js?v=15';
+import '../strings.js?v=16';
 import { initLocale, adoptAccountLocale, mountLanguagePicker, onLocaleChange, locale, t } from '../i18n.js?v=1';
 
 initLocale();
@@ -227,6 +227,35 @@ async function start() {
     clean.searchParams.delete('meta'); clean.searchParams.delete('reason');
     history.replaceState(null, '', clean.toString());
     if (!location.hash) location.hash = '#/marketing';
+  }
+  // Llegó desde el landing con un plan elegido: se abre el pago sin más
+  // pantallas. Solo planes de pago; el gratuito ya lo tiene. Si la pasarela no
+  // está lista (503) o el plan no tiene precio (409), se dice y se queda en
+  // Cuenta, que es donde se ve el plan actual.
+  const planElegido = params.get('plan');
+  if (planElegido && !/^(free|gratis)$/i.test(planElegido)) {
+    const intervalo = params.get('interval') === 'annual' ? 'annual' : 'monthly';
+    const clean = new URL(location.href);
+    clean.searchParams.delete('plan'); clean.searchParams.delete('interval');
+    history.replaceState(null, '', clean.toString());
+    location.hash = '#/cuenta';
+    ctx.api.checkout(planElegido, intervalo)
+      .then((r) => { if (r && r.url) location.assign(r.url); else toast(t('pago.noDisponible'), 'bad'); })
+      .catch((e) => {
+        if (e.status === 503) toast(t('pago.noDisponible'));
+        else if (e.status === 409) toast(t('pago.sinPrecio'));
+        else if (e.status === 403) toast(t('pago.soloDueno'), 'bad');
+        else toast(e.message || t('common.failed'), 'bad');
+      });
+  }
+  // La vuelta del pago: la pasarela redirige aquí con ?checkout=ok|cancel.
+  const vueltaPago = params.get('checkout');
+  if (vueltaPago) {
+    toast(vueltaPago === 'ok' ? t('pago.gracias') : t('pago.cancelado'), vueltaPago === 'ok' ? 'ok' : '');
+    const clean = new URL(location.href);
+    clean.searchParams.delete('checkout');
+    history.replaceState(null, '', clean.toString());
+    if (!location.hash) location.hash = '#/cuenta';
   }
   // Insignia de Hoy: cuántas cosas esperan al operador (sin bloquear la carga).
   Promise.allSettled([ctx.api.tasks(), ctx.api.approvals(), ctx.api.recommendations(), ctx.api.history()]).then(([tk, a, r, h]) => {

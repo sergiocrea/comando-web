@@ -100,6 +100,10 @@ export function createApi(cfg, getToken) {
     eventRules: () => optional(() => call('/automation-rules'), 'eventRules'),
     policy: () => optional(() => call('/sales-intelligence/policy'), 'policy'),
     quota: () => optional(() => call('/billing/quota'), 'quota'),
+    /* Pagar un plan: el motor abre la sesión en la pasarela y devuelve a
+       dónde mandar al cliente. 503 mientras la pasarela no esté configurada
+       (se enseña como «pronto»); 409 si el plan no tiene precio en línea. */
+    checkout: (planCode, interval) => mutate('/billing/checkout', 'POST', { planCode, interval: interval || 'monthly' }),
     team: () => optional(() => call('/team'), 'team'),
     /* Las métricas de Meta (plan 16 §6): `{connection, period, totals[],
        campaigns[], accounts[], freshness, refresh}`. `totals` es una lista con
@@ -220,6 +224,7 @@ export function createMockApi() {
     eventRules: () => wait(a.eventRules),
     policy: () => wait(a.policy),
     quota: () => wait(MOCK.quota),
+    checkout: (planCode, interval) => log('POST /billing/checkout', { planCode, interval }).then(() => ({ provider: 'stripe', url: location.href.split('?')[0] + '?mock=1&checkout=ok#/cuenta', expiresAt: new Date(Date.now() + 18e5).toISOString(), planCode, interval })),
     team: () => wait(MOCK.team),
     /* El caso que se quiere mirar va en la URL: `?mock=1&mk=limitado` (el
        botón dentro de los cinco minutos), `&mk=marcada` (Facebook retiró el

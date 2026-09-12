@@ -289,8 +289,11 @@ const PRICING_I18N = {
     const priceHtml = free ? `<div class="price-amount">US$ 0</div>`
       : `<div class="price-amount">${money(m)}<span>${esc(W.perMonth)}</span>${list ? `<s>${money(list)}</s>` : ''}</div>${off ? `<div class="price-off">${esc(W.off(off))}</div>` : ''}${state.annual ? `<div class="price-annual">${esc(W.perYear(money(m * 12)))}</div>` : ''}`;
     const lines = [p.contacts == null ? W.contactsByPlan : W.contactsInReach(fmtN(p.contacts)), free ? W.commandsToTry(fmtN(p.commands)) : W.commandsPerMonth(fmtN(p.commands)), W.individualPlan, p.crms, p.ads].filter(Boolean);
-    const cta = free ? `<a href="${C.cta.trialBase}?plan=${p.id}" class="price-cta">${esc(C.cta.freeLabel)}</a>`
-      : `<a href="${C.cta.trialBase}?plan=${p.id}" class="price-cta">${esc(C.cta.trialLabel)}</a>`;
+    /* El enlace lleva el CÓDIGO del plan (el que cobra el motor) y el
+       intervalo que se está viendo: al entrar, el panel abre el pago de ese
+       plan. El gratuito solo registra. */
+    const cta = free ? `<a href="${C.cta.trialBase}?plan=${p.code}" class="price-cta">${esc(C.cta.freeLabel)}</a>`
+      : `<a href="${C.cta.trialBase}?plan=${p.code}&interval=${state.annual ? 'annual' : 'monthly'}" class="price-cta">${esc(C.cta.trialLabel)}</a>`;
     return `<div class="price-card${featured ? ' is-featured' : ''}${free ? ' is-free' : ''}" data-plan="${p.id}">
       <div class="price-name">${esc(p.name)}</div>${priceHtml}
       <ul class="price-list">${lines.map((l) => `<li>${l}</li>`).join('')}</ul>${p.note ? `<div class="price-note">${esc(p.note)}</div>` : ''}${cta}</div>`;

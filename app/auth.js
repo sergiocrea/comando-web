@@ -1,7 +1,7 @@
 /* Acceso a Comando (/app/): iniciar sesión o crear cuenta con Clerk y pasar al panel.
    Los pasos siguientes (vincular WhatsApp, conectar el CRM) viven dentro de /app/panel/.
    Sin build: ClerkJS se carga desde el Frontend API de la instancia. */
-import './strings.js?v=15';
+import './strings.js?v=16';
 import { initLocale, mountLanguagePicker, onLocaleChange, locale, t } from './i18n.js?v=1';
 
 initLocale();
@@ -55,10 +55,12 @@ async function freeCommandLimit(engineUrl) {
   const $ = (id) => document.getElementById(id);
   const params = new URLSearchParams(location.search);
   const plan = params.get('plan');
+  const interval = params.get('interval');
   const mode = params.get('mode') || (plan ? 'signup' : 'signin');
   const dest = new URL('panel/', location.href);
   if (plan) dest.searchParams.set('plan', plan);
-  const planQ = plan ? '&plan=' + encodeURIComponent(plan) : '';
+  if (plan && interval) dest.searchParams.set('interval', interval);
+  const planQ = plan ? '&plan=' + encodeURIComponent(plan) + (interval ? '&interval=' + encodeURIComponent(interval) : '') : '';
 
   function fatal(msg) { const el = $('auth-error'); el.textContent = msg; el.hidden = false; $('auth-loading').hidden = true; }
 

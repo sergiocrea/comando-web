@@ -7,7 +7,7 @@
    - una sola acción principal por fila; lo demás va dentro de «más»;
    - vocabulario del operador (plata en juego, parado, sin dueño, repetidos), nunca del sistema. */
 
-import { isPending } from './api.js?v=13';
+import { isPending } from './api.js?v=14';
 import { crmBlock, crmActions, whatsappStep, NAMES as PROVIDER_NAMES } from './setup.js?v=10';
 import {
   esc, num, money, pct, fmtTime, fmtDate, fmtDateTime, monthName, dayLabel, sameDay, rel, isToday, isPast, isoDay,
@@ -1289,7 +1289,7 @@ function currencyRow(me, active) {
 /* ==================================================================== CUENTA */
 const cuenta = {
   id: 'cuenta', get title() { return t('nav.cuenta'); }, get sub() { return t('sub.cuenta'); }, icon: 'user',
-  load: (api) => ({ me: api.me(), quota: api.quota(), connections: api.connections(), sheets: api.sheets(), meta: api.metaStatus(), team: api.team(), agent: api.agent(), health: api.health() }),
+  load: (api) => ({ me: api.me(), quota: api.quota(), connections: api.connections(), sheets: api.sheets(), meta: api.metaStatus(), team: api.team(), agent: api.agent(), health: api.health(), history: api.history() }),
   view(d, ctx) {
     const me = val(d.me, {});
     const PLAN = { gratis: 'plan.gratis', free: 'plan.gratis', basico: 'plan.basico', starter: 'plan.starter', pro: 'plan.pro', enterprise: 'plan.enterprise' };
@@ -1300,6 +1300,19 @@ const cuenta = {
        currency}`), o `null` en el plan gratuito; el contrato viejo (`priceUsd`)
        pintaba «US$ undefined/año» en cuanto el plan tenía precio de verdad. */
     const planPrice = (pl) => (pl && pl.price && pl.price.amountMinor != null ? money(pl.price.amountMinor / 100, pl.price.currency) : '');
+    /* En qué se fueron los comandos: los turnos del periodo en curso, del más
+       nuevo al más viejo. El cupo cuenta comandos ejecutados, no frases: una
+       pregunta que se contestó sola también gasta uno; un plan cancelado, no.
+       Se enseña como lista plegada para que el número de arriba tenga detrás
+       algo que se pueda mirar. */
+    const usage = part(d.history, (hs) => {
+      const q = val(d.quota, null);
+      const since = q && q.period && q.period.startedAt ? new Date(q.period.startedAt) : new Date(new Date().getFullYear(), new Date().getMonth(), 1);
+      const turns = hs.filter((h) => h.utterance && new Date(h.at) >= since);
+      if (!turns.length) return `<div class="usage-empty">${esc(t('cuenta.usageNone'))}</div>`;
+      const rows = turns.slice(0, 50).map((h) => `<li class="usage-row"><span class="usage-when">${esc(fmtDate(h.at))}</span><q>${esc(h.utterance)}</q>${statusChip(h.status)}${h.records ? `<small>${esc(tn('chat.records', h.records))}</small>` : ''}</li>`).join('');
+      return `<details class="usage"><summary>${esc(tn('cuenta.usageTurns', turns.length))}</summary><ul class="usage-list">${rows}</ul></details>`;
+    }, { what: t('cuenta.usageWhat'), phrase: t('wa.lastThing') });
     const plan = part(d.quota, (q) => { const total = q.commands.allowance + q.commands.addons + q.commands.adjustments; const share = total ? q.commands.used / total : 0; const cls = share >= 1 ? 'bad' : share >= 0.8 ? 'warn' : '';
       return `<div class="kpi"><div class="kpi-label">${esc(planPrice(q.plan) ? t('cuenta.plan', { name: q.plan.name, price: planPrice(q.plan), interval: t(q.plan.interval === 'monthly' || q.plan.interval === 'month' ? 'cuenta.month' : q.plan.interval === 'none' ? 'cuenta.forever' : 'cuenta.year') }) : t('cuenta.planFree', { name: q.plan.name }))}</div><div class="kpi-value">${num(q.commands.used)}<small>${esc(t('cuenta.ofCommands', { n: num(total) }))}</small></div><div class="progress ${cls}"><i style="width:${Math.min(100, Math.round(share * 100))}%"></i></div><div class="kpi-sub">${share >= 0.8 ? `<span class="sev-warning">${esc(t('cuenta.over80'))}</span> ` : ''}${esc(t('cuenta.renews', { date: fmtDate(q.period.resetAt) }))}${q.blockedReason ? ` · <span class="sev-warning">${esc(q.blockedReason)}</span>` : ''}</div></div>`; },
       { what: t('cuenta.usageWhat'), phrase: t('wa.commandsLeft'), extra: t('cuenta.yourPlan', { plan: planName(me.plan) }) });
@@ -1311,7 +1324,7 @@ const cuenta = {
       ${row({ ico: ICON.wa, title: `WhatsApp ${me.whatsapp ? statusChip(me.whatsapp.status) : ''}`, sub: `${esc(me.whatsapp?.phone || t('cuenta.notLinked'))}${me.comandoNumber ? ` · ${esc(t('cuenta.youWriteTo', { number: me.comandoNumber }))}` : ''}`, primary: `<button class="btn sm ghost" data-act="wa:change">${esc(t('cuenta.changeNumber'))}</button>` })}
       <div id="wa-change-box"></div>
       ${currencyRow(me, active)}
-      <div class="row"><div class="row-ico">💳</div><div class="row-body">${plan}</div><div class="row-actions"><a class="btn sm" href="../../#precios">${esc(t('cuenta.changePlan'))}</a></div></div>
+      <div class="row"><div class="row-ico">💳</div><div class="row-body">${plan}${usage}</div><div class="row-actions"><a class="btn sm" href="../../#precios">${esc(t('cuenta.changePlan'))}</a></div></div>
     </div>`);
 
     const h = val(d.health, null);
