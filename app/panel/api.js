@@ -7,7 +7,7 @@
      equivalente para pedirlo por WhatsApp. Ver README.md: tabla de endpoints.
    - `createMockApi()` sirve los datos de mock-data.js con una pequeña latencia. */
 
-import { MOCK, MOCK_DELAY_MS, marketingOverview, marketingRefresh, metaStatus } from './mock-data.js?v=8';
+import { MOCK, MOCK_DELAY_MS, marketingOverview, marketingRefresh, metaStatus } from './mock-data.js?v=9';
 
 const PENDING = (reason) => ({ pending: true, reason });
 
@@ -108,6 +108,10 @@ export function createApi(cfg, getToken) {
     // horario una vez por cuenta; el botón existe porque quien acaba de
     // conectar quiere ver sus números ahora, no dentro de una hora.
     marketingImportHistory: () => optional(() => mutate('/marketing/import-history', 'POST'), 'marketing'),
+    /* El objetivo del negocio para las 3 Q's (plan 16 §6, adenda): `{kind,
+       currency, targetCost, targetRoas}`; las dos cifras en `null` lo borran.
+       Devuelve `{targets, overview}`, la foto ya con semáforo. */
+    marketingTarget: (body) => optional(() => mutate('/marketing/targets', 'PUT', body), 'marketing'),
     playbooks: () => optional(() => call('/automation-rules/playbooks'), 'playbooks'),
     /* ---- Meta Ads: la conexión, no las campañas (plan 14) ---- */
     metaStatus: () => optional(() => call('/integrations/meta/status'), 'meta'),

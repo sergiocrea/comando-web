@@ -265,6 +265,29 @@ vista previa y `CONFIRMAR`, y todavía no existen—, el estado y el presupuesto
 el desglose por plataforma, la atribución al CRM (`crmQualified`, `crmWon`, el embudo
 anuncio→venta), el analista humano y los reportes, y TikTok y Google Ads.
 
+### 5.0 Las 3 Q's y el objetivo del negocio (12-sep-2026)
+
+`GET /marketing/overview` trae desde el 12-sep tres claves más (plan 16 §6, adenda):
+`plan` (`{code, analysisPolicy:'numbers'|'diagnosis'}`), `targets` (los objetivos guardados)
+y `analysis` (las 3 Q's de Felipe Vergara calculadas por el motor, con etiquetas en los tres
+idiomas dentro del JSON: el panel pinta `label[idioma]` y no traduce nada).
+
+- **Tarjeta «Diagnóstico 3 Q's»**, entre los totales y las campañas. Tres estados:
+  `analysis.available:false, reason:'plan'` → una nota con el plan que lo trae (los números
+  siguen arriba, como en todo plan); `reason:'sin_campanas'` → vacío honesto;
+  `reason:'sin_conexion'` → no se pinta. Con datos: una campaña por bloque plegable (la de
+  más gasto abierta), semáforo global, tipo de campaña, el objetivo usado, y las tres
+  preguntas en columnas; la **tabla exacta de la metodología** va plegada en «Ver la tabla
+  de métricas». Una fila `status:'sin_dato'` se pinta con «—» y su `hint` (entrega,
+  presupuesto, calidad: cosas que Meta no da por campaña), nunca vacía ni inventada.
+- **Tarjeta «Tu objetivo»** debajo: tipo de resultado (los que hay en pantalla), moneda (las
+  de los totales), costo objetivo y/o ROAS objetivo → `PUT /marketing/targets`. La respuesta
+  trae `overview` con el semáforo ya calculado y se repinta con eso, sin pedirlo otra vez.
+  «Quitar» manda las dos cifras en `null`. Sin objetivo, la fila principal de cada campaña
+  lo dice («define tu objetivo») en vez de inventarse un umbral.
+- Los `key` de filas, hallazgos y acciones son estables (`ctr`, `weakest_step`,
+  `message_cta`…) por si algún día llevan icono o enlace.
+
 ### 5.1 Meta Ads: la conexión (plan 14 de `comando-pro`)
 
 Esto SÍ existe en el engine. Es la fontanería de la conexión, no los verbos de campaña.

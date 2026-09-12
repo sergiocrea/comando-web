@@ -40,24 +40,24 @@
     "sha": "91b5ec1923dcccbf"
   },
   "app/panel/api.js": {
-    "v": "11",
-    "sha": "d754c4940e9b1659"
+    "v": "12",
+    "sha": "e7838d6ac7a41aac"
   },
   "app/panel/mock-data.js": {
-    "v": "8",
-    "sha": "25928c43a50e5403"
+    "v": "9",
+    "sha": "6abceae84f870d44"
   },
   "app/panel/panel.css": {
-    "v": "14",
-    "sha": "3df3d78ce6b32df5"
+    "v": "15",
+    "sha": "04750d90e9603dcc"
   },
   "app/panel/panel.js": {
-    "v": "22",
-    "sha": "c23fbad164bbfdb0"
+    "v": "23",
+    "sha": "30ac79da57c8b43a"
   },
   "app/panel/sections.js": {
-    "v": "20",
-    "sha": "fe39d9b1e508dc50"
+    "v": "21",
+    "sha": "f0a699e4d7f0bf42"
   },
   "app/panel/setup.js": {
     "v": "9",
@@ -72,8 +72,8 @@
     "sha": "643bc4a65b2bd765"
   },
   "app/strings.js": {
-    "v": "13",
-    "sha": "c91ae25449dc7a50"
+    "v": "14",
+    "sha": "75ea5bd6b42c78b1"
   },
   "assets/img/og-image.jpg": {
     "v": "4",

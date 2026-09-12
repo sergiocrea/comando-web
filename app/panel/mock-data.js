@@ -428,12 +428,23 @@ export function marketingOverview(scenario) {
     // falló), no la del más reciente: eso la haría parecer más fresca.
     freshness: { refreshedAt: ago(0.7), ageSeconds: 42 * MIN, stale: false, pending: 0, failing: 1 },
     refresh: { allowed: true, retryAfterSeconds: 0, nextAllowedAt: null },
+    plan: { code: 'pro', analysisPolicy: 'diagnosis' },
+    targets: structuredClone(MK_TARGETS),
+    analysis: structuredClone(MK_ANALYSIS),
   };
   if (scenario === 'sin') {
     return { connection: { status: 'disconnected', connectedAt: null, lastErrorCode: null }, period: mkPeriod(),
       totals: [], campaigns: [], accounts: [],
       freshness: { refreshedAt: null, ageSeconds: null, stale: false, pending: 0, failing: 0 },
-      refresh: { allowed: false, retryAfterSeconds: 0, nextAllowedAt: null } };
+      refresh: { allowed: false, retryAfterSeconds: 0, nextAllowedAt: null },
+      plan: { code: null, analysisPolicy: 'numbers' }, targets: [],
+      analysis: { available: false, reason: 'sin_conexion', methodology: '3qs-felipe-vergara' } };
+  }
+  if (scenario === 'bloqueado') {
+    // Un plan sin diagnóstico: los números se ven igual; el porqué no.
+    base.plan = { code: 'starter', analysisPolicy: 'numbers' };
+    base.analysis = { available: false, reason: 'plan', policy: 'numbers', requiredPlan: 'pro', planCode: 'starter', methodology: '3qs-felipe-vergara' };
+    return base;
   }
   if (scenario === 'primera') {
     // Todavía trayendo la primera copia: no hay edad, y eso NO es un error.
@@ -456,6 +467,83 @@ export function marketingOverview(scenario) {
   }
   return base;
 }
+
+/* El objetivo del negocio y las 3 Q's (plan 16 §10) sobre las campañas de arriba.
+   Las etiquetas vienen en los tres idiomas dentro del JSON, como del motor. */
+const L3 = (es, en, pt) => ({ es, en, pt });
+const MK_TARGETS = [
+  { kind: 'lead', currency: 'PEN', targetCost: 25, targetRoas: null, updatedAt: ago(48) },
+  { kind: 'compra', currency: '*', targetCost: null, targetRoas: 4, updatedAt: ago(48) },
+];
+const q3row = (key, label, value, unit, benchmark, status, hint) => ({ key, label, value, unit, benchmark, status, ...(hint ? { hint } : {}) });
+const MK_ANALYSIS = {
+  available: true,
+  methodology: '3qs-felipe-vergara',
+  period: { days: 30, since: mkPeriod().since, until: mkPeriod().until },
+  campaigns: [
+    {
+      id: '23853', name: 'Surco Garden · Últimas unidades', currency: 'PEN', kind: 'cp_formularios',
+      kindLabel: L3('Clientes potenciales · formularios', 'Leads · instant forms', 'Leads · formulários'),
+      objective: 'OUTCOME_LEADS', target: { metric: 'cost_per_result', value: 25, currency: 'PEN' }, overall: 'rojo',
+      table: [
+        q3row('delivery', L3('Entrega', 'Delivery', 'Entrega'), null, 'count', 'ACTIVE', 'sin_dato', L3('Comando no copia este dato de Meta (plan 16 §8).', 'Comando does not copy this from Meta (plan 16 §8).', 'O Comando não copia esse dado do Meta (plano 16 §8).')),
+        q3row('spend', L3('Importe gastado', 'Amount spent', 'Valor gasto'), 1949.42, 'money', null, 'sin_dato'),
+        q3row('leads', L3('Leads obtenidos', 'Leads', 'Leads obtidos'), 0, 'count', null, 'sin_dato'),
+        q3row('cost_per_result', L3('Costo por lead (CPL)', 'Cost per lead (CPL)', 'Custo por lead (CPL)'), null, 'money', '≤ PEN 25', 'sin_dato'),
+        q3row('leads_per_click', L3('Tasa de conversión (leads / clics)', 'Conversion rate (leads / clicks)', 'Taxa de conversão (leads / cliques)'), 0, 'percent', '🔴 <20% / 🟡 20-30% / 🟢 >30%', 'rojo'),
+        q3row('ctr', L3('CTR (enlace)', 'CTR (link)', 'CTR (link)'), 1.23, 'percent', '🔴 <1% / 🟡 1-2% / 🟢 >2%', 'amarillo'),
+        q3row('frequency_7d', L3('Frecuencia (últimos 7 días)', 'Frequency (last 7 days)', 'Frequência (últimos 7 dias)'), 5.4, 'ratio', '<3 ideal / >5 saturado', 'rojo'),
+      ],
+      whatHappened: [
+        { key: 'spend', status: 'sin_dato', text: L3('Gastaste PEN 1,949.42.', 'You spent PEN 1,949.42.', 'Você gastou PEN 1,949.42.') },
+        { key: 'cost_per_result', status: 'rojo', text: L3('Corrió y no consiguió ningún resultado.', 'It ran and got no results.', 'Rodou e não conseguiu nenhum resultado.') },
+      ],
+      why: [
+        { key: 'weakest_step', status: 'rojo', text: L3('Donde más audiencia se pierde: Tasa de conversión (leads / clics) (0%).', 'Where most audience is lost: Conversion rate (leads / clicks) (0%).', 'Onde mais público se perde: Taxa de conversão (leads / cliques) (0%).') },
+        { key: 'frequency_7d', status: 'rojo', text: L3('Frecuencia (últimos 7 días): 5.40 (<3 ideal / >5 saturado). Audiencia saturada.', 'Frequency (last 7 days): 5.40 (<3 ideal / >5 saturated). Audience saturated.', 'Frequência (últimos 7 dias): 5.40. Público saturado.') },
+      ],
+      weakestStep: 'leads_per_click',
+      actions: [
+        { key: 'form_conversion', priority: 'urgente', problem: L3('Tasa de conversión del formulario baja', 'Low form conversion rate', 'Taxa de conversão do formulário baixa'), action: L3('Simplificar el formulario de Meta: menos campos, mejor oferta.', 'Simplify the Meta form: fewer fields, better offer.', 'Simplificar o formulário do Meta: menos campos, melhor oferta.') },
+        { key: 'frequency_high', priority: 'urgente', problem: L3('Frecuencia alta', 'High frequency', 'Frequência alta'), action: L3('Ampliar audiencia o rotar creativos.', 'Widen the audience or rotate creatives.', 'Ampliar o público ou rodar criativos.') },
+        { key: 'creative_ctr', priority: 'pronto', problem: L3('CTR bajo', 'Low CTR', 'CTR baixo'), action: L3('Testear nuevos creativos: otro gancho, oferta más clara.', 'Test new creatives: a different hook, a clearer offer.', 'Testar novos criativos: outro gancho, oferta mais clara.') },
+      ],
+    },
+    {
+      id: '23851', name: 'Torres del Parque · Lanzamiento', currency: 'PEN', kind: 'cp_formularios',
+      kindLabel: L3('Clientes potenciales · formularios', 'Leads · instant forms', 'Leads · formulários'),
+      objective: 'OUTCOME_LEADS', target: { metric: 'cost_per_result', value: 25, currency: 'PEN' }, overall: 'amarillo',
+      table: [
+        q3row('spend', L3('Importe gastado', 'Amount spent', 'Valor gasto'), 1720.5, 'money', null, 'sin_dato'),
+        q3row('leads', L3('Leads obtenidos', 'Leads', 'Leads obtidos'), 58, 'count', null, 'sin_dato'),
+        q3row('cost_per_result', L3('Costo por lead (CPL)', 'Cost per lead (CPL)', 'Custo por lead (CPL)'), 29.66, 'money', '≤ PEN 25', 'amarillo'),
+        q3row('leads_per_click', L3('Tasa de conversión (leads / clics)', 'Conversion rate (leads / clicks)', 'Taxa de conversão (leads / cliques)'), 1.46, 'percent', '🔴 <20% / 🟡 20-30% / 🟢 >30%', 'rojo'),
+        q3row('ctr', L3('CTR (enlace)', 'CTR (link)', 'CTR (link)'), 1.83, 'percent', '🔴 <1% / 🟡 1-2% / 🟢 >2%', 'amarillo'),
+      ],
+      whatHappened: [
+        { key: 'spend', status: 'sin_dato', text: L3('Gastaste PEN 1,720.5.', 'You spent PEN 1,720.5.', 'Você gastou PEN 1,720.5.') },
+        { key: 'results', status: 'sin_dato', text: L3('58 resultados (lead).', '58 results (lead).', '58 resultados (lead).') },
+        { key: 'cost_per_result', status: 'amarillo', text: L3('Costo por resultado PEN 29.66 vs objetivo PEN 25 → 19% por encima.', 'Cost per result PEN 29.66 vs target PEN 25 → 19% above.', 'Custo por resultado PEN 29.66 vs objetivo PEN 25 → 19% acima.') },
+      ],
+      why: [
+        { key: 'weakest_step', status: 'rojo', text: L3('Donde más audiencia se pierde: Tasa de conversión (leads / clics) (1.46%).', 'Where most audience is lost: Conversion rate (leads / clicks) (1.46%).', 'Onde mais público se perde: Taxa de conversão (leads / cliques) (1.46%).') },
+      ],
+      weakestStep: 'leads_per_click',
+      actions: [
+        { key: 'cost_near_target', priority: 'pronto', problem: L3('Costo por resultado hasta un 20 % por encima del objetivo', 'Cost per result up to 20% above target', 'Custo por resultado até 20% acima do objetivo'), action: L3('Optimizar el paso del embudo con menor %; no pausar.', 'Optimize the weakest funnel step; do not pause.', 'Otimizar a etapa do funil com menor %; não pausar.') },
+        { key: 'form_conversion', priority: 'urgente', problem: L3('Tasa de conversión del formulario baja', 'Low form conversion rate', 'Taxa de conversão do formulário baixa'), action: L3('Simplificar el formulario de Meta: menos campos, mejor oferta.', 'Simplify the Meta form: fewer fields, better offer.', 'Simplificar o formulário do Meta: menos campos, melhor oferta.') },
+      ],
+    },
+  ],
+  gaps: [
+    L3('Entrega y presupuesto: no vienen en Insights (plan 16 §8.2).', 'Delivery and budget: not in Insights (plan 16 §8.2).', 'Entrega e orçamento: não vêm no Insights (plano 16 §8.2).'),
+    L3('Conjuntos y anuncios: el espejo va a nivel de campaña; para bajar de nivel, exporta desde Ads Manager.', 'Ad sets and ads: the mirror is campaign-level; export from Ads Manager to go deeper.', 'Conjuntos e anúncios: o espelho é por campanha; para descer de nível, exporte do Ads Manager.'),
+  ],
+  guardrails: [
+    L3('Se evalúa a nivel de campaña: Meta reparte el presupuesto entre anuncios y ubicaciones por rendimiento proyectado (efecto desglose); no apagues un anuncio por su CPA puntual.', 'Evaluated at campaign level: Meta shifts budget across ads and placements by projected performance (breakdown effect); do not switch off an ad for its momentary CPA.', 'Avaliado por campanha: o Meta distribui o orçamento entre anúncios e posicionamentos pelo desempenho projetado (efeito desdobramento); não desligue um anúncio pelo CPA pontual.'),
+    L3('Un cambio a la vez, y nunca pausar con menos de 7 días de datos ni en fase de aprendizaje.', 'One change at a time, and never pause with fewer than 7 days of data or during learning.', 'Uma mudança por vez, e nunca pausar com menos de 7 dias de dados nem em fase de aprendizado.'),
+  ],
+};
 
 /** La respuesta del botón. Siempre 200, también cuando toca esperar. */
 export function marketingRefresh(scenario) {

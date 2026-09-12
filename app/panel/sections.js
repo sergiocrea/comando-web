@@ -7,7 +7,7 @@
    - una sola acción principal por fila; lo demás va dentro de «más»;
    - vocabulario del operador (plata en juego, parado, sin dueño, repetidos), nunca del sistema. */
 
-import { isPending } from './api.js?v=11';
+import { isPending } from './api.js?v=12';
 import { crmBlock, crmActions, whatsappStep, NAMES as PROVIDER_NAMES } from './setup.js?v=9';
 import {
   esc, num, money, pct, fmtTime, fmtDate, fmtDateTime, monthName, dayLabel, sameDay, rel, isToday, isPast, isoDay,
@@ -1044,6 +1044,118 @@ function refreshMessage(r) {
   return parts.length ? parts.join(' · ') : t('mk.refreshNothing');
 }
 
+/* ------------------------------------------------------------ las 3 Q's */
+/* El idioma en que se leen las etiquetas que el motor manda en tres idiomas
+   (`{es,en,pt}`): el del panel, y castellano si alguna vez faltara. */
+const L = (x) => (x && typeof x === 'object' ? (x[localeTag().slice(0, 2)] || x.es || '') : String(x ?? ''));
+const Q3_DOT = { verde: 'ok', amarillo: 'warn', rojo: 'bad', sin_dato: '' };
+const q3dot = (status) => `<span class="q3-dot ${Q3_DOT[status] || ''}" title="${esc(t('mk.q3.status.' + (status in Q3_DOT ? status : 'sin_dato')))}"></span>`;
+/** Un valor de la tabla con su unidad, o el guion. */
+function q3value(r, currency) {
+  if (r.value == null) return t('common.dash');
+  switch (r.unit) {
+    case 'money': return moneyExact(r.value, currency);
+    case 'percent': return `${num(r.value)} %`;
+    case 'seconds': return `${num(r.value)} s`;
+    case 'multiple': return t('mk.roasValue', { x: num(Math.round(r.value * 100) / 100) });
+    default: return num(r.value);
+  }
+}
+/** La tabla EXACTA de la metodología para ese tipo de campaña, con semáforo. */
+function q3table(c) {
+  const rows = (c.table || []).map((r) => `<tr class="${r.status === 'sin_dato' ? 'is-muted' : ''}">
+    <td>${esc(L(r.label))}${r.hint ? `<div class="hint">${esc(L(r.hint))}</div>` : ''}</td>
+    <td class="num">${esc(q3value(r, c.currency))}</td>
+    <td class="hint">${esc(r.benchmark || '—')}</td>
+    <td>${q3dot(r.status)} ${esc(t('mk.q3.status.' + (r.status in Q3_DOT ? r.status : 'sin_dato')))}</td>
+  </tr>`).join('');
+  return `<div class="tbl-wrap"><table class="tbl q3-tbl"><thead><tr>
+    <th>${esc(t('mk.q3.metric'))}</th><th class="num">${esc(t('mk.q3.value'))}</th><th>${esc(t('mk.q3.benchmark'))}</th><th>${esc(t('mk.q3.status'))}</th>
+  </tr></thead><tbody>${rows}</tbody></table></div>`;
+}
+const q3target = (c) => {
+  if (!c.target) return `<span class="hint">${esc(t('mk.q3.noTarget'))}</span>`;
+  const text = c.target.metric === 'roas'
+    ? t('mk.roasValue', { x: num(c.target.value) })
+    : moneyExact(c.target.value, c.target.currency || c.currency);
+  return `<span class="hint">${esc(t('mk.q3.targetUsed', { target: text }))}</span>`;
+};
+/** Una campaña: semáforo global, tipo, las tres preguntas y la tabla plegada. */
+function q3campaign(c, open) {
+  const findings = (items) => (items || []).length
+    ? `<ul class="q3-list">${items.map((f) => `<li>${q3dot(f.status)}<span>${esc(L(f.text))}</span></li>`).join('')}</ul>`
+    : `<p class="hint">${esc(t('common.dash'))}</p>`;
+  const actions = (c.actions || []).length
+    ? `<ul class="q3-list">${c.actions.map((a) => `<li>${chip(t('mk.q3.priority.' + (a.priority || 'pronto')), a.priority === 'urgente' ? 'bad' : a.priority === 'pronto' ? 'warn' : 'ok')}<span><b>${esc(L(a.problem))}</b> · ${esc(L(a.action))}</span></li>`).join('')}</ul>`
+    : `<p class="hint">${esc(t('common.dash'))}</p>`;
+  return `<details class="q3-camp"${open ? ' open' : ''}>
+    <summary>${q3dot(c.overall)}<b>${esc(c.name)}</b><span class="hint">${esc(L(c.kindLabel))}</span>${q3target(c)}</summary>
+    <div class="q3-cols">
+      <div><h4>${esc(t('mk.q3.what'))}</h4>${findings(c.whatHappened)}</div>
+      <div><h4>${esc(t('mk.q3.why'))}</h4>${findings(c.why)}</div>
+      <div><h4>${esc(t('mk.q3.do'))}</h4>${actions}</div>
+    </div>
+    <details class="more"><summary>${esc(t('mk.q3.table'))}</summary><div class="more-body">${q3table(c)}</div></details>
+  </details>`;
+}
+/**
+ * La tarjeta del diagnóstico.
+ *
+ * Tres estados y ninguno se calla: sin la política del plan se dice qué plan
+ * lo trae (los números siguen arriba, como en todo plan); sin campañas con
+ * gasto no hay nada que diagnosticar; y con datos, una campaña por bloque,
+ * la de más gasto abierta y las demás plegadas.
+ */
+function q3card(m) {
+  const a = m.analysis;
+  if (!a) return '';
+  let body;
+  if (a.available === false && a.reason === 'plan') {
+    body = `<p class="note accent">${esc(t('mk.q3.locked', { plan: a.requiredPlan === 'pro' ? 'Pro' : String(a.requiredPlan || 'Pro') }))}</p>`;
+  } else if (a.available === false) {
+    if (a.reason === 'sin_conexion') return '';
+    body = empty(t('mk.q3.noCampaigns'), '');
+  } else {
+    body = `${(a.campaigns || []).map((c, i) => q3campaign(c, i === 0)).join('')}
+      ${(a.guardrails || []).length ? `<p class="note"><b>${esc(t('mk.q3.guardrails'))}</b><br>${a.guardrails.map((g) => esc(L(g))).join('<br>')}</p>` : ''}
+      ${(a.gaps || []).length ? `<p class="hint q3-gaps"><b>${esc(t('mk.q3.gaps'))}:</b> ${a.gaps.map((g) => esc(L(g))).join(' ')}</p>` : ''}`;
+  }
+  return card(t('mk.q3.title'), body, { sub: t('mk.q3.sub') });
+}
+/**
+ * El objetivo del negocio (fase 3 de la metodología).
+ *
+ * Los tipos de resultado y las monedas del desplegable salen de lo que hay
+ * en pantalla: no tiene sentido ofrecer «compras» a una inmobiliaria. Guardar
+ * es un botón porque aquí sí hay dos campos que rellenar; y quitar uno
+ * existente es otra fila, no un checkbox escondido.
+ */
+function targetCard(m) {
+  const kinds = [...new Set((m.campaigns || []).map((c) => c.result && c.result.kind).filter(Boolean))];
+  const currencies = [...new Set((m.totals || []).map((x) => x.currency).filter(Boolean))];
+  const opt = (v, label, sel) => `<option value="${esc(v)}"${sel ? ' selected' : ''}>${esc(label)}</option>`;
+  const saved = (m.targets || []).length
+    ? `<div class="list">${m.targets.map((x) => row({
+      ico: '🎯',
+      title: `${x.targetCost != null ? esc(t('mk.target.costIs', { amount: moneyExact(x.targetCost, x.currency === '*' ? '' : x.currency), kind: x.kind === '*' ? t('mk.target.any').toLowerCase() : resultLabel(x.kind, 1) })) : ''}${x.targetCost != null && x.targetRoas != null ? ' · ' : ''}${x.targetRoas != null ? esc(t('mk.target.roasIs', { x: num(x.targetRoas) })) : ''}`,
+      sub: esc(`${x.kind === '*' ? t('mk.target.any') : resultLabel(x.kind, 2)} · ${x.currency === '*' ? t('mk.target.anyCurrency') : x.currency}`),
+      primary: `<button class="btn sm ghost" data-act="mk:targetClear" data-kind="${esc(x.kind)}" data-currency="${esc(x.currency)}">${esc(t('mk.target.clear'))}</button>`,
+    })).join('')}</div>`
+    : `<p class="hint">${esc(t('mk.target.none'))}</p>`;
+  const form = `<div class="form mk-objetivo">
+    <div class="inline">
+      <label>${esc(t('mk.target.kind'))}<select data-campo="kind">${opt('*', t('mk.target.any'), true)}${kinds.map((k) => opt(k, resultLabel(k, 2), false)).join('')}</select></label>
+      <label>${esc(t('mk.target.currency'))}<select data-campo="currency">${opt('*', t('mk.target.anyCurrency'), currencies.length !== 1)}${currencies.map((c) => opt(c, c, currencies.length === 1)).join('')}</select></label>
+    </div>
+    <div class="inline">
+      <label>${esc(t('mk.target.cost'))}<input type="number" min="0" step="0.01" inputmode="decimal" data-campo="targetCost" placeholder="25"></label>
+      <label>${esc(t('mk.target.roas'))}<input type="number" min="0" step="0.1" inputmode="decimal" data-campo="targetRoas" placeholder="4"></label>
+    </div>
+    <div class="form-foot"><button class="btn primary sm" data-act="mk:target">${esc(t('mk.target.save'))}</button></div>
+  </div>`;
+  return card(t('mk.target.title'), `${form}<h4 class="q3-h4">${esc(t('mk.target.current'))}</h4>${saved}`, { sub: t('mk.target.sub') });
+}
+
 const marketing = {
   id: 'marketing', get title() { return t('nav.marketing'); }, get sub() { return t('sub.marketing'); }, icon: 'mega',
   /* El periodo elegido sobrevive a un `reload()`.
@@ -1102,8 +1214,12 @@ const marketing = {
       // `mk-cuerpo` es lo que se atenúa mientras se cargan otros filtros: sin
       // marcarlo, cambiar de periodo deja los números VIEJOS en pantalla unos
       // segundos y se leen como los nuevos.
+      // Las 3 Q's van entre los totales y las campañas: primero cuánto, luego
+      // por qué, luego el detalle. El objetivo va justo debajo del diagnóstico,
+      // que es donde se echa en falta.
       return `${marked}${filterBar(m, cuentasDe(d.meta), ctx)}
         <div id="mk-cuerpo"><div class="page-head" style="margin:0"><div><h2>${esc(t('mk.totals'))}</h2><p>${esc(periodLabel)} ${range}</p></div></div>${totals}${noSum}
+        ${q3card(m)}${m.analysis ? targetCard(m) : ''}
         ${card(t('mk.campaigns'), camps + roasNote, { sub: t('mk.campaignsSub') })}${accounts}</div>`;
     }, { what: t('mk.what'), phrase: t('wa.connectAds'), extra: t('mk.extra') });
     /* La tarjeta de Meta Ads (plan 14) va DEBAJO cuando hay números que
@@ -1242,6 +1358,49 @@ const marketing = {
       } catch (e) {
         toast(e.message, 'bad');
       } finally { if (el) el.disabled = false; }
+    },
+    /**
+     * Guardar el objetivo. Un costo, un ROAS o los dos; nada de los dos es un
+     * error que se dice antes de llamar. La respuesta trae el overview con el
+     * semáforo ya calculado, así que se repinta con lo que vino.
+     */
+    'mk:target': async (el, ctx, d, reload, rerender) => {
+      const caja = el.closest('.mk-objetivo');
+      const campo = (name) => caja?.querySelector(`[data-campo="${name}"]`)?.value ?? '';
+      const cost = Number(campo('targetCost'));
+      const roas = Number(campo('targetRoas'));
+      const body = {
+        kind: campo('kind') || '*',
+        ...(campo('currency') && campo('currency') !== '*' ? { currency: campo('currency') } : {}),
+        targetCost: cost > 0 ? cost : null,
+        targetRoas: roas > 0 ? roas : null,
+      };
+      if (body.targetCost === null && body.targetRoas === null) { toast(t('mk.target.invalid'), 'bad'); return; }
+      if (el) el.disabled = true;
+      cargando(true);
+      try {
+        const r = await ctx.api.marketingTarget(body);
+        if (isPending(r)) { toast(t('common.comingSoon', { what: t('mk.what') })); return; }
+        if (r && r.overview) { d.mk = r.overview; rerender(); }
+        toast(t('mk.target.saved'), 'ok');
+      } catch (e) {
+        toast(e.message, 'bad');
+      } finally { cargando(false); if (el) el.disabled = false; }
+    },
+    'mk:targetClear': async (el, ctx, d, reload, rerender) => {
+      if (el) el.disabled = true;
+      cargando(true);
+      try {
+        const r = await ctx.api.marketingTarget({
+          kind: el.dataset.kind || '*',
+          ...(el.dataset.currency && el.dataset.currency !== '*' ? { currency: el.dataset.currency } : {}),
+          targetCost: null, targetRoas: null,
+        });
+        if (r && r.overview) { d.mk = r.overview; rerender(); }
+        toast(t('mk.target.cleared'), 'ok');
+      } catch (e) {
+        toast(e.message, 'bad');
+      } finally { cargando(false); if (el) el.disabled = false; }
     },
     'meta:refresh': async (el, ctx, d, reload) => {
       el.disabled = true;

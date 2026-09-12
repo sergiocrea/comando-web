@@ -554,3 +554,25 @@ ul.plain { margin: 0; padding-left: 18px; color: var(--g600); line-height: 1.7; 
   .console-form { flex-wrap: wrap; }
   .console-form .btn.primary { flex: 1 0 100%; justify-content: center; }
 }
+
+/* ---- Marketing · las 3 Q's ---- */
+.q3-dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; background: var(--g400); vertical-align: middle; margin-right: 8px; flex: none; }
+.q3-dot.ok { background: var(--success); } .q3-dot.warn { background: var(--warning); } .q3-dot.bad { background: var(--error); }
+details.q3-camp { border: 1px solid var(--g300); border-radius: 10px; padding: 0 14px; margin-bottom: 10px; }
+details.q3-camp > summary { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; padding: 14px 0; cursor: pointer; list-style: none; font-size: 15px; }
+details.q3-camp > summary::-webkit-details-marker { display: none; }
+details.q3-camp > summary > b { font-weight: 600; }
+details.q3-camp[open] > summary { border-bottom: 1px solid var(--g300); }
+.q3-cols { display: grid; gap: 20px; grid-template-columns: 1fr; padding: 16px 0; }
+.q3-cols h4, .q3-h4 { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; color: var(--g600); margin: 0 0 8px; }
+.q3-h4 { margin-top: 20px; }
+.q3-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; font-size: 14px; line-height: 1.45; }
+.q3-list li { display: flex; align-items: flex-start; gap: 8px; }
+.q3-list li .q3-dot { margin-top: 5px; }
+.q3-list li .chip { flex: none; margin-top: 1px; }
+details.q3-camp details.more { margin: 0 0 14px; }
+.q3-tbl td.num, .q3-tbl th.num { text-align: right; white-space: nowrap; }
+.q3-tbl tr.is-muted td { color: var(--g500); }
+.q3-tbl td .hint { font-size: 12px; margin-top: 2px; }
+.q3-gaps { margin-top: 12px; }
+@media (min-width: 900px) { .q3-cols { grid-template-columns: 1fr 1fr 1fr; } }
