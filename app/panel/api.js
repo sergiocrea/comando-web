@@ -7,7 +7,7 @@
      equivalente para pedirlo por WhatsApp. Ver README.md: tabla de endpoints.
    - `createMockApi()` sirve los datos de mock-data.js con una pequeña latencia. */
 
-import { MOCK, MOCK_DELAY_MS, marketingOverview, marketingRefresh, metaStatus } from './mock-data.js?v=9';
+import { MOCK, MOCK_DELAY_MS, marketingOverview, marketingRefresh, metaStatus, mockSheet, mockCommandRecords } from './mock-data.js?v=10';
 
 const PENDING = (reason) => ({ pending: true, reason });
 
@@ -80,6 +80,16 @@ export function createApi(cfg, getToken) {
     health: () => optional(() => call('/crm/health'), 'health'),
     pipeline: () => optional(() => call('/crm/pipeline/summary'), 'pipeline'),
     history: () => optional(() => call('/operator/commands?limit=50'), 'history'),
+    /* La hoja: una página de registros del espejo, con columnas. `q`, `ids`,
+       `sort`, `dir`, `offset` y `limit` van en la URL; el engine recorta y
+       valida. 404 mientras la ruta no esté publicada: «se activa pronto». */
+    records: (params = {}) => {
+      const query = new URLSearchParams();
+      for (const [k, v] of Object.entries(params)) if (v != null && v !== '') query.set(k, Array.isArray(v) ? v.join(',') : String(v));
+      return optional(() => call('/crm/records?' + query.toString()), 'records');
+    },
+    /* Los registros sobre los que cayó un turno del chat (ids), para verlos en la hoja. */
+    commandRecords: (id) => optional(() => call('/operator/commands/' + encodeURIComponent(id) + '/records'), 'records'),
     /* La consola (plan 15): el panel ENCOLA por la misma puerta que WhatsApp y
        después consulta el diálogo. No ejecuta: si ejecutara por su cuenta, la
        vista previa, el CONFIRMAR, el cupo y el historial tendrían dos caminos
@@ -202,6 +212,8 @@ export function createMockApi() {
     health: () => wait(MOCK.health),
     pipeline: () => wait(MOCK.pipeline),
     history: () => wait(feed),
+    records: (params) => wait(mockSheet(params)),
+    commandRecords: (id) => wait(mockCommandRecords(id)),
     sendCommand: (utterance) => wait({ id: mockEnqueue(utterance), status: 'accepted' }),
     commands: () => wait(feed),
     approvals: () => wait(MOCK.approvals),

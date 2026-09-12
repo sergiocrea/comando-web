@@ -4,8 +4,8 @@
     "sha": "5c5fb97213bddd5f"
   },
   "app/auth.js": {
-    "v": "13",
-    "sha": "13a6a29955d0df12"
+    "v": "14",
+    "sha": "d6af6e78f7baab20"
   },
   "app/dashboard/dashboard.css": {
     "v": "1",
@@ -40,40 +40,48 @@
     "sha": "91b5ec1923dcccbf"
   },
   "app/panel/api.js": {
-    "v": "12",
-    "sha": "e7838d6ac7a41aac"
+    "v": "13",
+    "sha": "e35f07342bdb4b3f"
+  },
+  "app/panel/chat.js": {
+    "v": "1",
+    "sha": "0baaed48994412d7"
+  },
+  "app/panel/hoja.js": {
+    "v": "1",
+    "sha": "80a897b3c6342e57"
   },
   "app/panel/mock-data.js": {
-    "v": "9",
-    "sha": "6abceae84f870d44"
+    "v": "10",
+    "sha": "48a867c47d86a7b2"
   },
   "app/panel/panel.css": {
-    "v": "15",
-    "sha": "04750d90e9603dcc"
+    "v": "16",
+    "sha": "f192646ec11ea978"
   },
   "app/panel/panel.js": {
-    "v": "23",
-    "sha": "30ac79da57c8b43a"
+    "v": "24",
+    "sha": "540c0158f31fee8c"
   },
   "app/panel/sections.js": {
-    "v": "21",
-    "sha": "f0a699e4d7f0bf42"
+    "v": "22",
+    "sha": "885d2fe5a2c35226"
   },
   "app/panel/setup.js": {
-    "v": "9",
-    "sha": "6eb3b43c4d1d308c"
+    "v": "10",
+    "sha": "8a25893e69166350"
   },
   "app/panel/ui.js": {
-    "v": "9",
-    "sha": "48cbe21c53623b2a"
+    "v": "10",
+    "sha": "e5258dfbdf3a0c1b"
   },
   "app/phone-picker.js": {
     "v": "4",
     "sha": "643bc4a65b2bd765"
   },
   "app/strings.js": {
-    "v": "14",
-    "sha": "75ea5bd6b42c78b1"
+    "v": "15",
+    "sha": "b9e548bd5d2689cc"
   },
   "assets/img/og-image.jpg": {
     "v": "4",

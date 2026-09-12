@@ -34,7 +34,7 @@ const mock = await import('../app/panel/mock-data.js');
 const VACIO = {
   me: { status: 'ok' }, quota: null, connections: [], sheets: [], mk: null, team: null,
   agent: null, health: null, tasks: [], cal: [], recs: [], pipeline: null, history: [],
-  approvals: [], eventRules: [], policy: null, playbooks: [],
+  approvals: [], eventRules: [], policy: null, playbooks: [], sheet: null,
 };
 
 /* Y datos LLENOS, que hasta hoy no pintaba nadie.
@@ -49,6 +49,7 @@ const LLENO = {
   ...mock.MOCK,
   mk: mock.marketingOverview(),
   meta: mock.metaStatus(),
+  sheet: mock.mockSheet({ objectType: 'contact' }),
 };
 
 let bad = 0;
@@ -65,5 +66,5 @@ for (const lang of i18n.LOCALES) {
   }
   console.log(`${lang}: ${SECTIONS.map((s) => s.title).join(' · ')}`);
 }
-console.log(bad ? '\nPANEL INCOMPLETO' : '\nOK · las seis secciones pintan en los tres idiomas, vacías y con datos');
+console.log(bad ? '\nPANEL INCOMPLETO' : '\nOK · las siete secciones pintan en los tres idiomas, vacías y con datos');
 process.exit(bad);

@@ -46,6 +46,7 @@ qué se eliminó y por qué) está en [`docs/rediseno-2026-09-05.md`](docs/redis
 
 | Ruta | Sección | La pregunta que responde | Qué muestra | De dónde sale |
 |---|---|---|---|---|
+| `#/hoja` | **Hoja** (portada) | ¿Qué hay en mi CRM? | Los registros del espejo como una tabla con pestañas abajo (Contactos · Negocios · Empresas · Tareas): buscar, ordenar por columna, elegir columnas (las canónicas más las del catálogo), cargar más, y «ver en la hoja» los registros sobre los que cayó un turno del chat. Una fila elegida ofrece «Preguntar a Comando» (llena el chat) y escribir al contacto por WhatsApp. Nada escribe en el CRM. | `GET /crm/records`, `GET /operator/commands/:id/records` |
 | `#/hoy` | **Hoy** | ¿Qué hago ahora? | Saludo; 3 números (plata en juego, para hoy, te esperan); **la consola** (escribir una frase, «pensando…», CONFIRMAR como botón, y el catálogo de skills plegado); **la bandeja**: una sola lista ordenada por urgencia —plan esperando `CONFIRMAR`, aprobaciones pendientes (dueño), tareas vencidas, tareas de hoy, lo que merece atención (tarjetas del briefing), planes esperando al dueño— con una acción principal por fila y lo demás en «más»; «Qué revisar en tu CRM» (3 barras); «Lo último que pediste» (5 filas, «Deshacer») | tareas, approvals, recomendaciones, `daily_briefing`, pipeline, salud, historial |
 | `#/crm` | **Resumen** | ¿Cuánta plata hay y qué está mal? | «Plata en juego»: 3 números (abierta, ganado, perdido), por etapa, por campo propio. «Qué revisar»: estado del CRM en una línea («al día · hace 6 h»), aviso de dueños (D5) solo si aplica, 12 filas (viejo, vacío, repetido, sin dueño) con «Ver la lista» y, en «más», «Avisarme cada semana» y «cómo lo sacas en tu CRM» | `GET /crm/pipeline/summary`, `GET /crm/health` |
 | `#/agenda` | **Agenda** | ¿Qué tengo esta semana? | Lista por día (Vencidas · Hoy · Mañana · Esta semana · Más adelante; Hechas plegadas) con «Hecha» como acción principal; vista de mes opcional. Solo lo del vendedor: recordatorios, visitas, reuniones y cierres esperados. Nada del sistema. | `operator_task`, `expectedCloseDate`, meetings del CRM |
@@ -70,14 +71,18 @@ Cuenta. La lista completa de eliminaciones con su motivo está en `docs/rediseno
 
 | archivo | qué es |
 |---|---|
-| `index.html` | shell: barra lateral (escritorio), barra inferior (móvil), cabecera con el botón de WhatsApp y la cuenta, `COMANDO_CONFIG` |
+| `index.html` | shell (12-sep-2026): el menú ARRIBA (todas las secciones), la página en el centro y el chat con Comando a la derecha; en móvil, barra inferior con Hoja · Hoy · Comando · Más y el chat como cajón; `COMANDO_CONFIG` |
+| `chat.js` | el chat con Comando: encola por `POST /operator/commands` y sondea `GET /operator/commands` hasta que el turno tiene algo que enseñar (burbujas, CONFIRMAR, código, aclaraciones, «ver en la hoja»); carga el historial al abrir; acciones `cmd:*` y `chat:*` válidas desde cualquier sección |
+| `hoja.js` | la hoja: estado (pestaña, orden, búsqueda, columnas elegidas —en `localStorage`—, filtro del chat), la tabla, el diálogo de columnas y las acciones `hoja:*` |
 | `panel.js` | sesión de Clerk (misma que `/app/`), rutas por hash, carga con `Promise.allSettled`, delegación de clics y formularios, insignia de Hoy (cuántas cosas esperan) |
-| `sections.js` | las 6 secciones: `load` (qué pide), `view` (cómo se ve), `act` (clics), `forms` (envíos) |
+| `sections.js` | las secciones Hoy, Resumen, Agenda, Automatizaciones, Marketing y Cuenta: `load` (qué pide), `view` (cómo se ve), `act` (clics), `forms` (envíos); exporta `SECTIONS` (con la hoja delante) y `globalActions` (las del chat) |
 | `setup.js` | puesta en marcha dentro del panel: vincular WhatsApp (número → código VERIFICAR → sondeo) y conectar el CRM (HubSpot/Salesforce por Nango, Google Sheets con el selector de Google, desconectar, recuperar, purgar). Antes era el onboarding de `/app/`; ahora `/app/` solo es el acceso con Clerk |
 | `api.js` | cliente del engine (Bearer, reintento si el JWT venció, `x-request-id`); cada método devuelve datos o `{pending:true}` si el endpoint aún no existe (404/501); `createMockApi` para `?mock=1` |
 | `mock-data.js` | fixtures de un tenant inmobiliario con el vocabulario del portal de pruebas |
 | `ui.js` | escape, formatos LatAm (`S/ 9.870.000`), chips, `row()` (una acción principal + «más»), `wa()` con la frase, frases «te avisa cuando…» por señal, toasts, iconos |
-| `panel.css` | tema claro estilo Minimals (tokens, sombras, Public Sans), barra lateral ≥ 1200 px y barra inferior debajo, componentes |
+| `panel.css` | tema claro estilo Minimals (tokens, sombras, Public Sans), componentes; al final, el rediseño del 12-sep: menú arriba, columna del chat ≥ 1100 px (plegable) o cajón, la hoja (tabla densa con cabecera y columna «#» fijas, pestañas abajo) |
+| `docs/rediseno-2026-09-12.md` | por qué el panel es ahora una hoja con un chat al lado, qué se movió y qué se quitó |
+| `docs/auditoria-panel-2026-09-12.md` | auditoría con navegador del panel anterior (hallazgos numerados por severidad) |
 | `docs/rediseno-2026-09-05.md` | diagnóstico del panel anterior, propuesta, qué se eliminó, fusionó y renombró, dudas para el dueño |
 
 Sin build ni dependencias: módulos ES nativos. Servir por HTTP:
@@ -143,6 +148,8 @@ Todos bajo la misma auth. Formas mínimas que el panel espera; se pueden extende
 | `GET /billing/quota` | Cuenta | `{plan:{code,name,interval:'none'|'monthly'|'annual',price:{amountMinor,currency,source:'subscription'|'catalog'}|null}, period:{key,kind:'lifetime'|'monthly',start,end|null,resetAt|null}, commands:{allowance|null,addons,adjustments,used,balance|null}, contacts:{used|null,limit|null}, connections:{used,limit|null}, audioShare:null, blockedReason:'command_quota_exhausted'|null, billingVisible, invoices:[{id,date,periodEnd,amountMinor,currency,status,hostedUrl|null}]}`. **Ya no hay `priceUsd`** ni `amount` a secas: ver §4.4. Mientras la rama del engine no esté publicada devuelve 404 y la tarjeta de plan muestra «se activa pronto» | `resolve_command_balance` (000114) + `tenant_command_usage`, `command_quota_adjustment`, `tenant_entitlement_snapshot`, `commercial_plan*`, `billing_invoice`. Es la MISMA fuente que descuenta el cupo |
 | `GET /team` | Cuenta (sin mostrar `commandsMonth`: política anti-vigilancia) | `{people:[{id,name,role,whatsapp:'verified'|'pending',team,crmOwner|null,commandsMonth,lastActive}],roles:{owner,admin,supervisor,agent,analyst},crmOwners,limits:{assignMax,broadcastMaxCost,discountMaxPct,stepUpAbove}}` | `operator_identity`, `resolve_operator_crm_owner`, policy por rol |
 | `GET /marketing/overview` | Marketing | ver §5 | plan 16 de `comando-pro`; **ya desplegado** |
+| `GET /crm/records?objectType=contact\|deal\|company\|task&limit=&offset=&q=&sort=&dir=&ids=` | Hoja | `{objectType, computedAt, columns:[{name,label,type,options?}], rows:[{id,externalId,name,phone,email,stage,stageRef,pipeline,owner,amount:{amountMinor,currency}\|null,closeDate,source,createdAt,lastActivityAt,updatedAt,fields}], total, offset, limit, next}`; `sort` ∈ name, updatedAt, lastActivityAt, createdAt, amount, stage, closeDate; misma visibilidad que un comando (alcance del operador) | `CrmRecordsService` en `engine-intelligence`; **ya desplegado** (12-sep) |
+| `GET /operator/commands/:id/records` | Hoja («ver en la hoja» desde el chat) | `{commandId, planId, objectType, ids, count, truncated}`; 404 si el turno no es del operador o no llegó a ser un plan | `plan_target_snapshot`; **ya desplegado** (12-sep) |
 | `POST /marketing/refresh` | Marketing (el botón «Actualizar») | ver §5; **siempre 200**, también cuando el límite lo deja fuera | ídem |
 
 ### 4.3 Reglas para el backend

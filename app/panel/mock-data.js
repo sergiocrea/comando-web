@@ -566,3 +566,65 @@ export function metaStatus(scenario) {
   if (scenario === 'marcada') return { ...structuredClone(MOCK.meta), status: 'error', lastErrorCode: 'META_190' };
   return structuredClone(MOCK.meta);
 }
+
+/* ------------------------------------------------------------------ la hoja
+   Registros de ejemplo con la forma que devuelve `GET /crm/records`: unas
+   columnas canónicas resueltas (nombre, teléfono, etapa, dueño…) y `fields`
+   con las propiedades del CRM tal cual. Deterministas: la misma fila siempre
+   se llama igual, para que una captura de hoy y otra de mañana se comparen. */
+const FIRST = ['Pablo', 'Lucía', 'Andrés', 'Camila', 'Jorge', 'Valeria', 'Diego', 'Rosa', 'Martín', 'Ana', 'Sebastián', 'Carla'];
+const LAST = ['Mendoza', 'Rojas', 'Quispe', 'Torres', 'Huamán', 'Castillo', 'Vega', 'Paredes', 'Flores', 'Chávez'];
+const DISTRICTS = ['Surco', 'Miraflores', 'San Isidro', 'La Molina', 'Barranco', 'Jesús María', 'Pueblo Libre'];
+const SOURCES = ['Meta Ads', 'Adondevivir', 'Urbania', 'Referido', 'Web'];
+const OWNERS = ['Sergio Saavedra', 'Adrián Ruiz', null];
+const STAGES = ['Lead nuevo', 'Visita agendada', 'Cotización enviada', 'Negociación', 'Separación', 'Cerrado ganado', 'Cerrado perdido'];
+const PROJECTS = ['Torres del Parque', 'Edificio Barranco 21', 'Residencial Los Álamos', 'Mirador de la Molina'];
+const seeded = (n) => { let x = (n * 9301 + 49297) % 233280; return () => { x = (x * 9301 + 49297) % 233280; return x / 233280; }; };
+const pick = (rnd, list) => list[Math.floor(rnd() * list.length)];
+const daysAgo = (n) => new Date(Date.now() - n * 864e5).toISOString();
+
+function mockRows(objectType) {
+  const rnd = seeded({ contact: 11, deal: 23, company: 37, task: 41 }[objectType] || 1);
+  const n = { contact: 48, deal: 30, company: 12, task: 15 }[objectType] || 10;
+  const rows = [];
+  for (let i = 0; i < n; i += 1) {
+    const first = pick(rnd, FIRST); const last = pick(rnd, LAST);
+    const owner = pick(rnd, OWNERS); const district = pick(rnd, DISTRICTS); const source = pick(rnd, SOURCES);
+    const created = daysAgo(Math.floor(rnd() * 120)); const activity = daysAgo(Math.floor(rnd() * 20)); const updated = daysAgo(Math.floor(rnd() * 5));
+    const id = `${objectType}-${String(i + 1).padStart(3, '0')}-0000-4000-8000-000000000000`.slice(0, 36);
+    const base = { id, externalId: String(9000 + i), phone: null, email: null, stage: null, stageRef: null, pipeline: null, owner, amount: null, closeDate: null, source: null, createdAt: created, lastActivityAt: activity, updatedAt: updated };
+    if (objectType === 'contact') rows.push({ ...base, name: `${first} ${last}`, phone: `+51 9${String(10000000 + Math.floor(rnd() * 89999999))}`, email: `${first}.${last}@example.com`.toLowerCase(), source, fields: { firstname: first, lastname: last, distrito: district, fuente_lead: source, lifecyclestage: pick(rnd, ['lead', 'opportunity', 'customer']), estado_matricula: pick(rnd, ['—', 'En trámite', 'Inscrita']) } });
+    else if (objectType === 'deal') { const stage = pick(rnd, STAGES); const project = pick(rnd, PROJECTS); const amount = 60000 + Math.floor(rnd() * 240000); rows.push({ ...base, name: `${project} ${100 + Math.floor(rnd() * 1500)}`, stage, stageRef: String(STAGES.indexOf(stage)), pipeline: 'Ventas', amount: { amountMinor: amount * 100, currency: 'USD' }, closeDate: daysAgo(-Math.floor(rnd() * 90)).slice(0, 10), fields: { proyecto: project, tipo_inmueble: pick(rnd, ['Departamento', 'Casa', 'Oficina']), hs_next_step: pick(rnd, ['Llamar', 'Enviar cotización', 'Visita', '']) } }); }
+    else if (objectType === 'company') rows.push({ ...base, name: `${pick(rnd, ['Inmobiliaria', 'Constructora', 'Grupo'])} ${last}`, fields: { domain: `${last}.com.pe`.toLowerCase(), city: district, industry: 'Inmobiliaria' } });
+    else rows.push({ ...base, name: `${pick(rnd, ['Llamar a', 'Visita con', 'Enviar cotización a'])} ${first} ${last}`, fields: { hs_task_status: pick(rnd, ['NOT_STARTED', 'COMPLETED']), hs_task_priority: pick(rnd, ['HIGH', 'MEDIUM', 'LOW']), hs_timestamp: daysAgo(-Math.floor(rnd() * 10)) } });
+  }
+  return rows;
+}
+const COLUMNS = {
+  contact: [{ name: 'distrito', label: 'Distrito', type: 'enumeration' }, { name: 'estado_matricula', label: 'Estado matrícula', type: 'string' }, { name: 'firstname', label: 'Nombre', type: 'string' }, { name: 'fuente_lead', label: 'Fuente del lead', type: 'enumeration', options: SOURCES.map((s) => ({ value: s, label: s })) }, { name: 'lastname', label: 'Apellido', type: 'string' }, { name: 'lifecyclestage', label: 'Etapa del ciclo', type: 'enumeration', options: [{ value: 'lead', label: 'Lead' }, { value: 'opportunity', label: 'Oportunidad' }, { value: 'customer', label: 'Cliente' }] }],
+  deal: [{ name: 'hs_next_step', label: 'Próximo paso', type: 'string' }, { name: 'proyecto', label: 'Proyecto', type: 'enumeration', options: PROJECTS.map((s) => ({ value: s, label: s })) }, { name: 'tipo_inmueble', label: 'Tipo de inmueble', type: 'enumeration' }],
+  company: [{ name: 'city', label: 'Ciudad', type: 'string' }, { name: 'domain', label: 'Dominio', type: 'string' }, { name: 'industry', label: 'Rubro', type: 'string' }],
+  task: [{ name: 'hs_task_priority', label: 'Prioridad', type: 'enumeration' }, { name: 'hs_task_status', label: 'Estado', type: 'enumeration', options: [{ value: 'NOT_STARTED', label: 'Pendiente' }, { value: 'COMPLETED', label: 'Hecha' }] }, { name: 'hs_timestamp', label: 'Vence', type: 'datetime' }],
+};
+const SORT_VALUE = {
+  name: (r) => r.name || '', updatedAt: (r) => r.updatedAt || '', lastActivityAt: (r) => r.lastActivityAt || '', createdAt: (r) => r.createdAt || '',
+  amount: (r) => (r.amount ? r.amount.amountMinor : -1), stage: (r) => r.stageRef || '', closeDate: (r) => r.closeDate || '',
+};
+/** Lo que devolvería `GET /crm/records` para estos parámetros. */
+export function mockSheet(params = {}) {
+  const objectType = params.objectType || 'contact';
+  let rows = mockRows(objectType);
+  if (params.ids && params.ids.length) { const wanted = new Set(params.ids); rows = rows.filter((r) => wanted.has(r.id)); }
+  if (params.q) { const q = String(params.q).toLowerCase(); rows = rows.filter((r) => JSON.stringify(r).toLowerCase().includes(q)); }
+  const by = SORT_VALUE[params.sort] || SORT_VALUE.updatedAt; const dir = params.dir === 'asc' ? 1 : -1;
+  rows.sort((a, b) => (by(a) > by(b) ? dir : by(a) < by(b) ? -dir : 0));
+  const offset = Number(params.offset) || 0; const limit = Number(params.limit) || 200;
+  const page = rows.slice(offset, offset + limit);
+  return { objectType, computedAt: new Date().toISOString(), columns: COLUMNS[objectType] || [], rows: page, total: rows.length, offset, limit, next: offset + page.length < rows.length ? offset + page.length : null };
+}
+/** Los registros sobre los que cayó un turno: en el mock, cinco contactos de Surco. */
+export function mockCommandRecords(id) {
+  const ids = mockRows('contact').filter((r) => r.fields.distrito === 'Surco').slice(0, 5).map((r) => r.id);
+  return { commandId: id, planId: 'plan-' + id, objectType: 'contact', ids, count: ids.length, truncated: false };
+}
+
