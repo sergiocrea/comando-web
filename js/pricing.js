@@ -94,6 +94,7 @@ const PRICING_I18N = {
       moreInfo: 'More about commands, packs and enterprise',
       pricingDetails: 'Pricing details', faqTitle: 'Frequently asked questions',
       formInvalid: 'Write your email or your WhatsApp so we can reply.',
+      formSubmit: 'Send',
       formSending: 'Sending…',
       formSaved: 'Done, we have your details. Tell us which CRM you use and we will let you know first.',
     },
@@ -134,6 +135,7 @@ const PRICING_I18N = {
       moreInfo: 'Mais sobre comandos, pacotes e enterprise',
       pricingDetails: 'Detalhes de preços', faqTitle: 'Perguntas frequentes',
       formInvalid: 'Escreva seu e-mail ou seu WhatsApp para a gente responder.',
+      formSubmit: 'Enviar',
       formSending: 'Enviando…',
       formSaved: 'Pronto, já temos seus dados. Diga qual é o seu CRM e a gente avisa você primeiro.',
     },
@@ -181,6 +183,7 @@ const PRICING_I18N = {
     moreInfo: 'Más sobre comandos, paquetes y enterprise',
     pricingDetails: 'Detalles de precios', faqTitle: 'Preguntas frecuentes',
     formInvalid: 'Escribe tu correo o tu WhatsApp para poder responderte.',
+    formSubmit: 'Enviar',
     formSending: 'Enviando…',
     formSaved: 'Listo, ya tenemos tus datos. Dinos cuál es tu CRM y te avisamos primero.',
   };
@@ -323,6 +326,11 @@ const PRICING_I18N = {
     const input = form.querySelector('input[name="name"]');
     const trap = form.querySelector('input[name="website"]');
     const submit = form.querySelector('input[type="submit"]');
+    /* La etiqueta del botón se pone aquí y no en el HTML: el `value` de un input
+       no entra en el catálogo de traducciones —sólo alt, placeholder, aria-label,
+       title y data-label—, así que en inglés y portugués se quedaría en
+       castellano. El HTML ya trae «Enviar» para que no parpadee. */
+    if (submit) submit.value = W.formSubmit;
     const valid = (v) => /^[^\s@]+@[^\s@.]+\.[^\s@]{2,}$/.test(v) || (/^[+\d\s()-]+$/.test(v) && v.replace(/\D/g, '').length >= 8);
     const say = (box, msg) => {
       if (failBox) failBox.style.display = 'none';

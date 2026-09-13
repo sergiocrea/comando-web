@@ -2068,3 +2068,15 @@ html { scroll-behavior: smooth; }
 @media (min-width: 992px) {
   .b2b-hero-grid:has(.b2b-hero-visual[hidden]) { grid-template-columns: minmax(0, 1fr); }
 }
+
+/* Móvil: el botón iba debajo del campo, a pantalla completa y con su misma
+   altura, y pesaba más que el correo que hay que escribir. Ahora va en la misma
+   fila, ceñido a su texto: el campo manda y el botón lo remata. La trampa de
+   robots (`.lead-hp`) está fuera del flujo, así que no ocupa sitio en la fila. */
+@media (max-width: 767px) {
+  .pricing-contacto .form-wrapper { flex-flow: row; align-items: stretch; grid-column-gap: .6rem; grid-row-gap: 0; gap: .6rem; }
+  .pricing-contacto .update_form-input { flex: 1 1 auto; width: auto; min-height: 3.4rem; padding: .9rem 1rem; font-size: 1rem; }
+  .pricing-contacto .submit-button-wrap { position: static; flex: 0 0 auto; width: auto; max-width: none; height: auto; min-height: 0; aspect-ratio: auto; overflow: visible; }
+  .pricing-contacto .update_form-submit { position: static; width: auto; height: auto; min-height: 3.4rem; padding: 0 1.3rem; font-size: .95rem; border-radius: .75rem; }
+  .pricing-contacto .dash { display: none; }
+}
