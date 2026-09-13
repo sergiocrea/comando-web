@@ -2159,3 +2159,11 @@ html { scroll-behavior: smooth; }
   .nav_menu-button { margin-left: .25rem; }
 }
 @media (max-width: 400px) { .nav_cta { padding: .58rem .8rem; font-size: .72rem; } }
+
+/* El selector de idioma se perdía en tableta. Webflow le pone al menú abierto un
+   `height` en línea sacado del alto del DOCUMENTO —4453 px a 810 de ancho—, y
+   como el idioma va con `margin-top: auto` acababa a 4368 px del borde: había
+   que desplazar el menú media página para encontrarlo. Por debajo de 768 no
+   pasaba porque la hoja de Webflow ya lo topa ahí con `max-height: 100dvh`; esto
+   sube ese mismo tope hasta donde llega la hamburguesa. */
+@media (max-width: 991px) { .nav_component .nav_menu { max-height: 100dvh; } }
