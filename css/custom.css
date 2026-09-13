@@ -224,15 +224,13 @@ input[type='file']:focus-visible {
 .pricing-head .getupdate-text { margin-top: 1rem; max-width: 34rem; }
 .pricing-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; z-index: 2; position: relative; }
 .price-card { background: #0b0b0b; color: #fff; border-radius: 1rem; padding: 1.75rem; display: flex; flex-direction: column; gap: .5rem; border: 1px solid #222; }
-.price-card.is-featured { border-color: #4d7cff; box-shadow: 0 0 0 1px #4d7cff inset; }
 .price-name { font-family: "Jetbrainsmono Variable", monospace; font-size: .8rem; letter-spacing: .08em; text-transform: uppercase; color: #8a8a8a; }
 .price-amount { font-family: Neuemachina, "Space Grotesk", Inter, sans-serif; font-size: 2.4rem; font-weight: 600; line-height: 1.1; }
 .price-amount span { font-family: "Jetbrainsmono Variable", monospace; font-size: .9rem; color: #8a8a8a; margin-left: .35rem; }
 .price-qty { color: #4d7cff; font-family: "Jetbrainsmono Variable", monospace; font-size: .85rem; }
 .price-list { list-style: none; padding: 0; margin: .75rem 0 1.25rem; display: flex; flex-direction: column; gap: .45rem; color: #c8c8c8; font-size: .95rem; }
 .price-list li::before { content: "✓"; color: #4d7cff; margin-right: .5rem; }
-.price-cta { margin-top: auto; text-align: center; padding: .85rem 1rem; background: #4d7cff; color: #0a0a0a; font-family: "Jetbrainsmono Variable", monospace; font-size: .85rem; letter-spacing: .04em; text-decoration: none; border-radius: .5rem; font-weight: 600; }
-.price-card:not(.is-featured) .price-cta { background: #1f1f1f; color: #fff; }
+.price-cta { margin-top: auto; text-align: center; padding: .85rem 1rem; background: #1f1f1f; color: #fff; font-family: "Jetbrainsmono Variable", monospace; font-size: .85rem; letter-spacing: .04em; text-decoration: none; border-radius: .5rem; font-weight: 600; }
 .price-cta:hover { filter: brightness(1.15); }
 .pricing-form { z-index: 2; position: relative; max-width: 34rem; }
 @media (max-width: 991px) { .pricing-grid { grid-template-columns: 1fr; } }
@@ -1682,7 +1680,11 @@ html { scroll-behavior: smooth; }
    no cabe entero en la primera pantalla: meter algo más antes lo hundiría y
    separaría las pestañas de lo único que gobiernan. */
 @media (max-width: 991px) {
-  .uc-feed { display: block; grid-area: feed; margin-top: .5rem; }
+  /* El mismo orden de pintado que en escritorio: los rieles y la tira se meten
+     DEBAJO del marco. Sin esto, la tira va después en el DOM y se dibujaba
+     encima del teléfono, que es justo lo contrario de lo que cuenta. */
+  .uc-phone { z-index: 2; }
+  .uc-feed { display: block; grid-area: feed; margin-top: .5rem; z-index: 1; }
   .uc-feed-track {
     height: auto; display: flex; padding: .75rem 0;
     -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
@@ -1765,7 +1767,17 @@ html { scroll-behavior: smooth; }
     /* 5rem de hueco visible + 3,5rem que ya corren bajo el marco del teléfono */
     left: 100%; top: 50%; width: 8.5rem; height: 0;
   }
-  .uc-wire i { top: 0; left: 0; right: 0; height: 2px; border-radius: 2px; }
+  .uc-wire i {
+    top: 0; left: 0; right: 0; height: 4px; margin-top: -2px; border-radius: 3px;
+    /* Mismo grosor, mismo paso y mismo halo que los rieles de las tarjetas de
+       anuncios: dos secciones seguidas con la misma señal a dos grosores se
+       leían como dos ideas distintas. */
+    background-image: repeating-linear-gradient(90deg,
+      rgba(77, 124, 255, .95) 0 11px, rgba(77, 124, 255, 0) 11px 19px);
+    background-size: 19px 100%;
+    box-shadow: 0 0 8px rgba(77, 124, 255, .55);
+    animation-name: uc-flow-card;
+  }
   .uc-wire i:nth-child(1) { transform: rotate(-13deg); }
   .uc-wire i:nth-child(3) { transform: rotate(13deg); }
 }
@@ -1964,22 +1976,23 @@ html { scroll-behavior: smooth; }
    Móvil: la tira de sistemas entra en el teléfono
    ------------------------------------------------------------
    Antes la tira corría centrada bajo el teléfono y tres rieles subían hacia
-   él: dos cosas contando lo mismo. Ahora la banda nace bajo la esquina
-   inferior derecha del teléfono (se mete unos píxeles debajo de él, que va
-   por encima) y sale por el borde derecho de la pantalla; los logos corren de
-   derecha a izquierda y se desvanecen justo al cruzar la esquina, que es la
-   forma más corta de decir «esto entra ahí». Los rieles sobran y se van.
+   él: dos cosas contando lo mismo. Ahora la banda CRUZA la esquina inferior
+   derecha del teléfono —casi la mitad de su alto queda tapada por el marco— y
+   sale por el borde derecho de la pantalla; los logos corren de derecha a
+   izquierda y se meten debajo del aparato, que es la forma más corta de decir
+   «esto entra ahí». Los rieles sobran y se van, y el rótulo también: una
+   banda que desaparece dentro del teléfono ya no necesita que se lo expliquen.
    ============================================================ */
 @media (max-width: 767px) {
   .section_dia { overflow-x: clip; }
   .section_dia .uc-phone { z-index: 2; }
-  .uc-feed:not(.uc-ads) { position: relative; z-index: 1; width: 100vw; margin: -1.9rem 0 0 52%; }
+  .uc-feed:not(.uc-ads) { position: relative; z-index: 1; width: 100vw; margin: -3.6rem 0 0 50%; }
   .uc-feed:not(.uc-ads) .uc-feed-track {
     border-radius: 1.1rem 0 0 1.1rem;
     -webkit-mask-image: linear-gradient(90deg, transparent 6%, #000 28%);
     mask-image: linear-gradient(90deg, transparent 6%, #000 28%);
   }
-  .uc-feed:not(.uc-ads) .uc-feed-label { text-align: left; padding-left: 1.2rem; margin: .55rem 0 0; }
+  .uc-feed:not(.uc-ads) .uc-feed-label { display: none; }
   .uc-feed:not(.uc-ads) .uc-wire { display: none; }
 }
 
