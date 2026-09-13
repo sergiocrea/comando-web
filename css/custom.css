@@ -2174,12 +2174,19 @@ html { scroll-behavior: smooth; }
 /* El rótulo y el selector, en una fila. Se envuelve en pantallas estrechas, y
    entonces el selector cae debajo como antes; lo que no hace es reservar una
    línea entera cuando hay sitio de sobra al lado del rótulo. */
-.pricing-head-row { display: flex; align-items: center; flex-wrap: wrap; gap: .9rem 1.5rem; }
+.pricing-head-row { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: .9rem 1.5rem; }
 .pricing-head-row .pricing-toggles { margin-top: 0; }
 /* El botón anual pasa a dos pisos: la insignia arriba, pequeña, y la palabra
    debajo. Los dos botones se estiran al mismo alto porque el grupo es flex. */
 .pt-btn.is-anual { flex-direction: column; gap: .05rem; padding-top: .32rem; padding-bottom: .38rem; }
-.pt-btn.is-anual .pt-badge { font-size: .58rem; letter-spacing: .02em; padding: .04rem .34rem; }
+/* La insignia pierde la pastilla azul: encima de «Anual» ya está en el sitio que
+   le corresponde, y el fondo de color la hacía más ancha y más llamativa que la
+   palabra que califica. Hereda el color del botón, así que funciona igual
+   encendido (blanco sobre negro) que apagado (negro sobre azul). */
+.pt-btn.is-anual .pt-badge {
+  background: transparent; color: inherit; opacity: .72;
+  font-size: .56rem; letter-spacing: .02em; padding: 0; border-radius: 0;
+}
 
 /* En un móvil estrecho el rótulo y el selector no cabían juntos y el selector
    se iba a su propia línea, que es justo lo que esta fila viene a evitar. Se
