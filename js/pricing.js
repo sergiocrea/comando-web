@@ -125,7 +125,7 @@ const PRICING_I18N = {
   },
   pt: {
     words: {
-      eyebrow: 'PREÇOS', priceOptions: 'Opções de preço', billing: 'Cobrança',
+      eyebrow: 'PREÇO', priceOptions: 'Opções de preço', billing: 'Cobrança',
       monthly: 'Mensal', annual: 'Anual', freeMonths: (n) => `${n} meses grátis`,
       perMonth: '/mês', perYear: (amount) => `${amount} por ano`, off: (p) => `${p} % de desconto`,
       contactsInReach: (n) => `<b>${n}</b> contatos no seu CRM`,
@@ -173,7 +173,7 @@ const PRICING_I18N = {
   const LANG = (document.documentElement.lang || 'es').slice(0, 2);
   const L = PRICING_I18N[LANG];
   const W = L ? L.words : {
-    eyebrow: 'PRECIOS', priceOptions: 'Opciones de precio', billing: 'Facturación',
+    eyebrow: 'PRECIO', priceOptions: 'Opciones de precio', billing: 'Facturación',
     monthly: 'Mensual', annual: 'Anual', freeMonths: (n) => `${n} meses gratis`,
     perMonth: '/mes', perYear: (amount) => `${amount} al año`, off: (p) => `${p} % de descuento`,
     contactsInReach: (n) => `<b>${n}</b> contactos en tu CRM`,
@@ -256,15 +256,22 @@ const PRICING_I18N = {
   const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 
   function renderHead() {
-    return `<div class="pricing-head"><div class="getupdate-eyebrow">${esc(W.eyebrow)}</div>
-      ${C.title ? `<h3 class="home_getupdate-heading">${esc(C.title)}</h3>` : ''}
-      ${C.subtitle ? `<div class="getupdate-text">${esc(C.subtitle)}</div>` : ''}
-      <div class="pricing-toggles" role="group" aria-label="${esc(W.priceOptions)}">
-        <div class="pt-group" role="group" aria-label="${esc(W.billing)}">
-          <button type="button" class="pt-btn${state.annual ? '' : ' is-on'}" data-set="annual" data-val="0" aria-pressed="${!state.annual}">${esc(W.monthly)}</button>
-          <button type="button" class="pt-btn${state.annual ? ' is-on' : ''}" data-set="annual" data-val="1" aria-pressed="${state.annual}">${esc(W.annual)} <span class="pt-badge">${esc(W.freeMonths(C.billing.annualFreeMonths))}</span></button>
+    /* El rótulo y el selector van en la MISMA fila: la sección ya era alta y el
+       selector se llevaba una línea entera para decir dos palabras. Y en el
+       botón anual «2 meses gratis» se sube encima de «Anual», en pequeño: al
+       lado alargaba el grupo hasta no caber en un móvil junto al rótulo. */
+    return `<div class="pricing-head">
+      <div class="pricing-head-row">
+        <div class="getupdate-eyebrow">${esc(W.eyebrow)}</div>
+        <div class="pricing-toggles" role="group" aria-label="${esc(W.priceOptions)}">
+          <div class="pt-group" role="group" aria-label="${esc(W.billing)}">
+            <button type="button" class="pt-btn${state.annual ? '' : ' is-on'}" data-set="annual" data-val="0" aria-pressed="${!state.annual}">${esc(W.monthly)}</button>
+            <button type="button" class="pt-btn is-anual${state.annual ? ' is-on' : ''}" data-set="annual" data-val="1" aria-pressed="${state.annual}"><span class="pt-badge">${esc(W.freeMonths(C.billing.annualFreeMonths))}</span><span class="pt-label">${esc(W.annual)}</span></button>
+          </div>
         </div>
-      </div></div>`;
+      </div>
+      ${C.title ? `<h3 class="home_getupdate-heading">${esc(C.title)}</h3>` : ''}
+      ${C.subtitle ? `<div class="getupdate-text">${esc(C.subtitle)}</div>` : ''}</div>`;
   }
   function renderCard(p) {
     const free = p.price === 0;

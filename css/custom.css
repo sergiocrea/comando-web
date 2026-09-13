@@ -223,7 +223,7 @@ input[type='file']:focus-visible {
    mitad izquierda —cortados a media tarjeta, con media pantalla azul vacía al
    lado—. Las tres propiedades de abajo eran de flex y no hacían nada. */
 .home_getupdate-component-content { display: flex; flex-direction: column; align-items: stretch; gap: 2rem; }
-.pricing-head { max-width: 40rem; z-index: 2; position: relative; }
+.pricing-head { max-width: 100%; z-index: 2; position: relative; }
 /* PRECIOS es el único titular que tiene esta sección —no hay `home_getupdate-heading`
    debajo—, así que se le da tamaño de titular en vez de tamaño de rótulo. Sigue
    en monoespaciada y en versales: es la voz de la página, no la de un h2 más. */
@@ -2167,3 +2167,33 @@ html { scroll-behavior: smooth; }
    pasaba porque la hoja de Webflow ya lo topa ahí con `max-height: 100dvh`; esto
    sube ese mismo tope hasta donde llega la hamburguesa. */
 @media (max-width: 991px) { .nav_component .nav_menu { max-height: 100dvh; } }
+
+/* El rótulo y el selector, en una fila. Se envuelve en pantallas estrechas, y
+   entonces el selector cae debajo como antes; lo que no hace es reservar una
+   línea entera cuando hay sitio de sobra al lado del rótulo. */
+.pricing-head-row { display: flex; align-items: center; flex-wrap: wrap; gap: .9rem 1.5rem; }
+.pricing-head-row .pricing-toggles { margin-top: 0; }
+/* El botón anual pasa a dos pisos: la insignia arriba, pequeña, y la palabra
+   debajo. Los dos botones se estiran al mismo alto porque el grupo es flex. */
+.pt-btn.is-anual { flex-direction: column; gap: .05rem; padding-top: .32rem; padding-bottom: .38rem; }
+.pt-btn.is-anual .pt-badge { font-size: .58rem; letter-spacing: .02em; padding: .04rem .34rem; }
+
+/* En un móvil estrecho el rótulo y el selector no cabían juntos y el selector
+   se iba a su propia línea, que es justo lo que esta fila viene a evitar. Se
+   aprieta el selector y el rótulo cede 3 px: con eso entran los dos. */
+@media (max-width: 480px) {
+  .pricing-head .getupdate-eyebrow { font-size: 1.5rem; }
+  .pricing-head-row { gap: .6rem 1rem; }
+  .pricing-head-row .pt-group { padding: .18rem; }
+  .pricing-head-row .pt-btn { padding: .45rem .62rem; font-size: .72rem; }
+  .pricing-head-row .pt-btn.is-anual .pt-badge { font-size: .53rem; padding: .04rem .28rem; }
+}
+
+/* Y un escalón más para los móviles de 360 px y menos, donde la fila seguía
+   partiéndose. El rótulo baja a 1,35rem: sigue siendo titular (el original era
+   de 16 px) y es lo que hace que quepan los dos. */
+@media (max-width: 380px) {
+  .pricing-head .getupdate-eyebrow { font-size: 1.35rem; }
+  .pricing-head-row .pt-btn { padding: .42rem .5rem; font-size: .68rem; }
+  .pricing-head-row .pt-btn.is-anual .pt-badge { font-size: .5rem; padding: .03rem .24rem; }
+}
