@@ -783,7 +783,9 @@ body.sheet-open { overflow: hidden; }
 
 /* ===== 2026 B2B hero: light promise first, dark product demo second ===== */
 html { scroll-behavior: smooth; }
-#home, #about, #features, #specs, #CTA { scroll-margin-top: 5rem; }
+/* `#casos` y `#dia` entran aquí: son destino de enlaces del menú y del héroe, y
+   sin margen el menú fijo les tapaba el rótulo al aterrizar. */
+#home, #about, #features, #specs, #CTA, #casos, #dia { scroll-margin-top: calc(var(--nav-height, 5rem) + 1rem); }
 
 /* A light, persistent enterprise nav keeps the long page easy to scan. */
 .nav_component.w-nav {
