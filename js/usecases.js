@@ -63,8 +63,8 @@
     ['hubspot', 'HubSpot', '#ff7a59'], ['salesforce', 'Salesforce', '#00a1e0'], ['zoho', 'Zoho CRM', '#e42527'],
     ['pipedrive', 'Pipedrive', '#1fa971'], ['kommo', 'Kommo', '#3d8bfd'], ['dynamics', 'Dynamics 365', '#3b8ce8'],
     ['shopify', 'Shopify', '#95bf47'],
-    ['woocommerce', 'WooCommerce', '#b07fa6'], ['tiendanube', 'Tiendanube', '#2c6dea'],
-    ['mercadolibre', 'Mercado Libre', '#ffe600'], ['vtex', 'VTEX', '#ed125f'], ['googlesheets', 'Google Sheets', '#34a853'],
+    ['woocommerce', 'WooCommerce', '#b07fa6'],
+    ['vtex', 'VTEX', '#ed125f'], ['googlesheets', 'Google Sheets', '#34a853'],
   ];
   // Deja de ser <img> y pasa a ser una caja enmascarada por el propio SVG: así
   // el color lo pone el CSS (`background-color`) y no el fichero, que sigue
