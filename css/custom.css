@@ -1959,3 +1959,33 @@ html { scroll-behavior: smooth; }
 @keyframes uc-flow-card { to { background-position: 19px 0; } }
 @keyframes uc-flow-card-up { to { background-position: 0 -19px; } }
 @media (prefers-reduced-motion: reduce) { .uc-wire-card { animation: none; } }
+
+/* ============================================================
+   Móvil: la tira de sistemas entra en el teléfono
+   ------------------------------------------------------------
+   Antes la tira corría centrada bajo el teléfono y tres rieles subían hacia
+   él: dos cosas contando lo mismo. Ahora la banda nace bajo la esquina
+   inferior derecha del teléfono (se mete unos píxeles debajo de él, que va
+   por encima) y sale por el borde derecho de la pantalla; los logos corren de
+   derecha a izquierda y se desvanecen justo al cruzar la esquina, que es la
+   forma más corta de decir «esto entra ahí». Los rieles sobran y se van.
+   ============================================================ */
+@media (max-width: 767px) {
+  .section_dia { overflow-x: clip; }
+  .section_dia .uc-phone { z-index: 2; }
+  .uc-feed:not(.uc-ads) { position: relative; z-index: 1; width: 100vw; margin: -1.9rem 0 0 52%; }
+  .uc-feed:not(.uc-ads) .uc-feed-track {
+    border-radius: 1.1rem 0 0 1.1rem;
+    -webkit-mask-image: linear-gradient(90deg, transparent 6%, #000 28%);
+    mask-image: linear-gradient(90deg, transparent 6%, #000 28%);
+  }
+  .uc-feed:not(.uc-ads) .uc-feed-label { text-align: left; padding-left: 1.2rem; margin: .55rem 0 0; }
+  .uc-feed:not(.uc-ads) .uc-wire { display: none; }
+}
+
+/* Móvil: el menú medía 70 px con una marca de 21 px dentro. La marca crece y el
+   menú se ciñe al área táctil del burger (44 px), que es lo que no puede bajar. */
+@media (max-width: 991px) {
+  .nav_component.w-nav { padding-top: .3rem; padding-bottom: .3rem; }
+  .nav_brand-name { font-size: 1.75rem; }
+}
