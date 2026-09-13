@@ -220,6 +220,12 @@ input[type='file']:focus-visible {
 /* pricing band */
 .home_getupdate-component-content { flex-direction: column; align-items: stretch; gap: 2rem; }
 .pricing-head { max-width: 40rem; z-index: 2; position: relative; }
+/* PRECIOS es el único titular que tiene esta sección —no hay `home_getupdate-heading`
+   debajo—, así que se le da tamaño de titular en vez de tamaño de rótulo. Sigue
+   en monoespaciada y en versales: es la voz de la página, no la de un h2 más. */
+.pricing-head .getupdate-eyebrow { font-size: clamp(1.7rem, 4.6vw, 2.5rem); font-weight: 700; letter-spacing: .05em; line-height: 1.05; color: #0a0a0a; }
+/* La banda repetida vive sobre el negro de precios, no sobre el vídeo del héroe. */
+.b2b-hero-band.is-precios { background: #151515; }
 .pricing-head .home_getupdate-heading { margin-top: .75rem; }
 .pricing-head .getupdate-text { margin-top: 1rem; max-width: 34rem; }
 .pricing-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; z-index: 2; position: relative; }

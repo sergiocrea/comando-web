@@ -195,7 +195,7 @@
           <div class="uc-outcome">${outcomeHtml(c)}</div>
           ${opts.feed ? feedHtml() : opts.ads ? adsHtml() : ''}
         </div>
-        <div class="uc-foot"><p class="uc-close">${esc(D.seccion.cierre)}</p><a href="${esc(D.seccion.cta.href)}" class="btn-primary uc-cta">${esc(D.seccion.cta.texto)}<span class="uc-cta-sufijo">${esc(D.seccion.cta.sufijo || '')}</span><span class="btn-arrow" aria-hidden="true">→</span></a></div>`;
+        ${opts.foot === false ? '' : `<div class="uc-foot"><p class="uc-close">${esc(D.seccion.cierre)}</p><a href="${esc(D.seccion.cta.href)}" class="btn-primary uc-cta">${esc(D.seccion.cta.texto)}<span class="uc-cta-sufijo">${esc(D.seccion.cta.sufijo || '')}</span><span class="btn-arrow" aria-hidden="true">→</span></a></div>`}`;
       root.querySelectorAll('[data-rol]').forEach((b) => b.addEventListener('click', () => { state.rol = +b.dataset.rol; update(); }));
       root.querySelectorAll('[data-vertical]').forEach((b) => b.addEventListener('click', () => { state.vertical = +b.dataset.vertical; update(); }));
       bindSteps();
@@ -234,5 +234,7 @@
   const meta = document.getElementById('metaads-root');
   if (meta) mount(meta, { data: 'metaads', pickers: false, feed: false, ads: true, version: 9 });
   const dia = document.getElementById('usecases-root');
-  if (dia) mount(dia, { data: 'usecases', pickers: true, feed: true, anchor: 'como-funciona', version: 18 });
+  // `foot: false`: el cierre y su botón se iban justo antes de precios, y ahí
+  // el visitante ya tiene cuatro planes con su propio botón a un dedo.
+  if (dia) mount(dia, { data: 'usecases', pickers: true, feed: true, foot: false, anchor: 'como-funciona', version: 18 });
 })();
