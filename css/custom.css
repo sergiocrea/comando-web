@@ -1882,11 +1882,20 @@ html { scroll-behavior: smooth; }
    nombre debajo. Apiladas ocupaban media pantalla para decir tres nombres. */
 @media (max-width: 991px) {
   .uc-ads-cards { flex-direction: row; justify-content: center; flex-wrap: nowrap; gap: .6rem; max-width: 24rem; margin: 0 auto; }
-  .uc-ads-cards li { flex: 1 1 0; justify-content: center; padding: .95rem .4rem; }
-  .uc-ads-cards span { font-size: .66rem; }
+  /* Aire a los lados del nombre: a .4rem las letras tocaban el borde. */
+  .uc-ads-cards li { flex: 1 1 0; justify-content: center; padding: 1rem .7rem; }
+  .uc-ads-cards span { font-size: clamp(.54rem, 2.3vw, .66rem); letter-spacing: .04em; }
 }
 @media (max-width: 767px) {
-  .uc-ads .uc-feed-label { margin-top: .7rem; }
+  /* En móvil el rótulo sobra: las tres marcas ya dicen qué son. */
+  .uc-ads .uc-feed-label { display: none; }
+  /* Las tarjetas ocupan la columna del teléfono y solo esa: la línea de
+     tiempo se queda en la suya (ahora alta como las dos filas) y las tres
+     tarjetas quedan alineadas con el aparato, no centradas en toda la pantalla. */
+  .section_metaads .uc-layout { grid-template-areas: "phone timeline" "feed timeline"; }
+  .section_metaads .uc-timeline { align-self: start; }
+  .uc-ads-cards { max-width: 23rem; width: 100%; }
+  .uc-ads { display: block; margin-top: 1.4rem; }
   /* Cinco momentos en vez de tres: los puntos de la línea de tiempo del móvil
      se aprietan un poco para caber a la altura del teléfono. */
   .section_metaads .uc-timeline li { padding-bottom: 1.6rem; }
@@ -1926,9 +1935,9 @@ html { scroll-behavior: smooth; }
   .uc-ads-cards li:nth-child(3) .uc-wire-card { transform: rotate(-13deg); animation-delay: -.6s; }
 }
 
-/* Móvil: las tarjetas van en fila bajo el teléfono y el riel de cada una sube
-   hacia él, que a esta anchura está a la izquierda (38 %): la de la izquierda
-   sube casi recta, las otras se inclinan hacia él. */
+/* Móvil: las tarjetas van en fila justo bajo el teléfono (misma columna) y el
+   riel de cada una sube hacia su centro: las de los lados se inclinan hacia
+   dentro, la del medio sube recta. */
 @media (max-width: 767px) {
   .uc-wire-card {
     display: block;
@@ -1940,9 +1949,9 @@ html { scroll-behavior: smooth; }
     box-shadow: 0 0 8px rgba(77, 124, 255, .55);
     animation: uc-flow-card-up .9s linear infinite;
   }
-  .uc-ads-cards li:nth-child(1) .uc-wire-card { transform: rotate(8deg); }
-  .uc-ads-cards li:nth-child(2) .uc-wire-card { transform: rotate(-10deg); animation-delay: -.3s; }
-  .uc-ads-cards li:nth-child(3) .uc-wire-card { transform: rotate(-24deg); animation-delay: -.6s; }
+  .uc-ads-cards li:nth-child(1) .uc-wire-card { transform: rotate(14deg); }
+  .uc-ads-cards li:nth-child(2) .uc-wire-card { animation-delay: -.3s; }
+  .uc-ads-cards li:nth-child(3) .uc-wire-card { transform: rotate(-14deg); animation-delay: -.6s; }
   /* Con rieles propios, el bloque ya no necesita el corredor del riel compartido. */
   .uc-ads .uc-wire { display: none; }
 }
