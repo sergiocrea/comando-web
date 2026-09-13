@@ -1,365 +1,365 @@
 {
- "seccion": {
-  "subtitulo": "With Comando they keep it up to date.",
-  "cierre": "Your team keeps the judgement. Comando removes the load.",
-  "cta": {
-   "texto": "Take work off the team",
-   "sufijo": " in 2 minutes",
-   "href": "/app/"
+  "seccion": {
+    "subtitulo": "With Comando they keep it up to date.",
+    "cierre": "Your team keeps the judgement. Comando removes the load.",
+    "cta": {
+      "texto": "Take work off the team",
+      "sufijo": " in 2 minutes",
+      "href": "/app/"
+    },
+    "eyebrow": "THIS IS HOW THE DAY CHANGES",
+    "titulo": "Your team spends more time in the CRM than selling."
   },
-  "eyebrow": "THIS IS HOW THE DAY CHANGES",
-  "titulo": "Your team loses hours in the CRM instead of selling."
- },
- "roles": [
-  "Sales rep",
-  "Sales manager or owner",
-  "Support and after-sales"
- ],
- "verticales": [
-  "Online store",
-  "Real estate",
-  "Clinic / health",
-  "Automotive",
-  "Gyms and fitness"
- ],
- "evidencias": {
-  "speed": "Answering a lead in under 5 minutes multiplies the odds of qualifying it by 21 (Lead Response Management Study).",
-  "toques": "80 % of sales need 5 or more contacts; 44 % of reps give up after the first one (Brevet Group).",
-  "cotizacion": "Following up between day 3 and day 5 after a quote doubles the close rate.",
-  "noshow": "Confirming the appointment and reminding 24 h and 2 h before cuts no-shows by 40 % to 70 %.",
-  "carrito": "Cart recovery over WhatsApp reaches 18-23 % against roughly 8 % by email.",
-  "estancados": "A deal past 1.5 times the average cycle has less than half the chance of closing."
- },
- "casos": [
-  {
-   "rol": "Sales rep",
-   "vertical": "Real estate",
-   "titulo": "I close more without living in the CRM",
-   "comandos": [
-    {
-     "u": "Which leads came in last night from the portal and who has not touched them?",
-     "r": "6 new leads from the portals; 2 with no owner for 9 hours. Shall I take them for you or split them?"
-    },
-    {
-     "u": "For the ones who did not answer the quote, remind me on day 3, 5 and 7 with the message ready.",
-     "r": "Done. 4 are due today: here is the first, the Rojas family, unit 402 — “Hi Carla, I sent you the quote for 402 on Monday…”. Tap to send it."
-    },
-    {
-     "u": "Move the Rojas 402 to Negotiation and note that they asked for 30 days for the deposit.",
-     "r": "Done in HubSpot: stage Negotiation, note saved. Shall I create the task to call on the 15th to confirm the deposit?"
-    }
-   ],
-   "resultado": "No follow-up forgotten. Zero minutes typing into the CRM.",
-   "evidencia": "cotizacion",
-   "proactivo": "☀️ Good morning. 6 leads came in from the portals last night and 2 still have no owner. On top of that, 4 quotes hit 3 days with no reply. Answer SEE for the list."
+  "roles": [
+    "Sales rep",
+    "Sales manager or owner",
+    "Support and after-sales"
+  ],
+  "verticales": [
+    "Online store",
+    "Real estate",
+    "Clinic / health",
+    "Automotive",
+    "Gyms and fitness"
+  ],
+  "evidencias": {
+    "speed": "Answering a lead in under 5 minutes multiplies the odds of qualifying it by 21 (Lead Response Management Study).",
+    "toques": "80 % of sales need 5 or more contacts; 44 % of reps give up after the first one (Brevet Group).",
+    "cotizacion": "Following up between day 3 and day 5 after a quote doubles the close rate.",
+    "noshow": "Confirming the appointment and reminding 24 h and 2 h before cuts no-shows by 40 % to 70 %.",
+    "carrito": "Cart recovery over WhatsApp reaches 18-23 % against roughly 8 % by email.",
+    "estancados": "A deal past 1.5 times the average cycle has less than half the chance of closing."
   },
-  {
-   "rol": "Sales rep",
-   "vertical": "Clinic / health",
-   "titulo": "Every quote gets a follow-up",
-   "comandos": [
+  "casos": [
     {
-     "u": "Which patients got a quote this week and have not replied?",
-     "r": "7 quotes with no reply: 3 for braces, 4 for implants. The oldest is Marta Pérez (6 days)."
+      "rol": "Sales rep",
+      "vertical": "Real estate",
+      "titulo": "I close more without living in the CRM",
+      "comandos": [
+        {
+          "u": "Which leads came in last night from the portal and who has not touched them?",
+          "r": "6 new leads from the portals; 2 with no owner for 9 hours. Shall I take them for you or split them?"
+        },
+        {
+          "u": "For the ones who did not answer the quote, remind me on day 3, 5 and 7 with the message ready.",
+          "r": "Done. 4 are due today: here is the first, the Rojas family, unit 402 — “Hi Carla, I sent you the quote for 402 on Monday…”. Tap to send it."
+        },
+        {
+          "u": "Move the Rojas 402 to Negotiation and note that they asked for 30 days for the deposit.",
+          "r": "Done in HubSpot: stage Negotiation, note saved. Shall I create the task to call on the 15th to confirm the deposit?"
+        }
+      ],
+      "resultado": "No follow-up forgotten. Zero minutes typing into the CRM.",
+      "evidencia": "cotizacion",
+      "proactivo": "☀️ Good morning. 6 leads came in from the portals last night and 2 still have no owner. On top of that, 4 quotes hit 3 days with no reply. Answer SEE for the list."
     },
     {
-     "u": "Prepare the message for Marta reminding her the quote expires on Friday.",
-     "r": "“Hi Marta, this is Diego from Clínica Sonríe. Your braces quote is valid until Friday; if you like we can go over it here in 10 minutes.” Tap to send it."
+      "rol": "Sales rep",
+      "vertical": "Clinic / health",
+      "titulo": "Every quote gets a follow-up",
+      "comandos": [
+        {
+          "u": "Which patients got a quote this week and have not replied?",
+          "r": "7 quotes with no reply: 3 for braces, 4 for implants. The oldest is Marta Pérez (6 days)."
+        },
+        {
+          "u": "Prepare the message for Marta reminding her the quote expires on Friday.",
+          "r": "“Hi Marta, this is Diego from Clínica Sonríe. Your braces quote is valid until Friday; if you like we can go over it here in 10 minutes.” Tap to send it."
+        },
+        {
+          "u": "Mark Luis Ávila's quote as accepted and create me the task to book the first session.",
+          "r": "Quote accepted in the CRM and task created for today. Shall I offer Tuesday or Thursday?"
+        }
+      ],
+      "resultado": "Quotes close while they still matter.",
+      "evidencia": "toques",
+      "proactivo": "⏰ 7 quotes from this week still have no reply; Marta Pérez's (braces) expires on Friday. Answer SEE and I will hand you the messages ready."
     },
     {
-     "u": "Mark Luis Ávila's quote as accepted and create me the task to book the first session.",
-     "r": "Quote accepted in the CRM and task created for today. Shall I offer Tuesday or Thursday?"
+      "rol": "Sales rep",
+      "vertical": "Online store",
+      "titulo": "I sell while I serve",
+      "comandos": [
+        {
+          "u": "Which carts over $200 were abandoned today?",
+          "r": "5 carts: the largest is Andrea Gómez's ($480, sneakers and a jacket). None completed payment."
+        },
+        {
+          "u": "Prepare the message for Andrea with the payment link and 5 % off.",
+          "r": "Coupon ANDREA5 created in Shopify. “Hi Andrea, you left your sneakers and the jacket in the cart; here is the link with an extra 5 %…”. Tap to send it."
+        },
+        {
+          "u": "Mark order 1042 as delivered and note that the customer asked for an invoice.",
+          "r": "Order 1042 delivered and note saved. Tomorrow I will leave you the message ready to ask for the review."
+        }
+      ],
+      "resultado": "Every abandoned cart gets a second chance.",
+      "evidencia": "carrito",
+      "proactivo": "🛒 5 carts over $200 were abandoned today; the largest is Andrea Gómez's ($480). Answer SEE and I will leave the recovery messages ready."
+    },
+    {
+      "rol": "Sales manager or owner",
+      "vertical": "Real estate",
+      "titulo": "I see the pipeline without asking for reports",
+      "comandos": [
+        {
+          "u": "Every Monday at 8 send me the pipeline by rep and the deals stalled more than 10 days.",
+          "r": "Scheduled. This Monday: 38 active deals, 6 stalled (4 of them Luis's). I will send it at 8:00."
+        },
+        {
+          "u": "Split the north-zone leads between Ana and Luis; if nobody takes them within 1 hour, tell me.",
+          "r": "11 leads assigned (6 Ana, 5 Luis). I will tell you in an hour about any still with no activity."
+        },
+        {
+          "u": "How many viewings did we close this month compared with last month?",
+          "r": "August: 31 % of viewings ended in a deposit against 24 % in July. Up 7 points."
+        }
+      ],
+      "resultado": "One WhatsApp at the end of the day beats three dashboards.",
+      "evidencia": "speed",
+      "proactivo": "📊 Monday 8:00 · 38 active deals, 6 stalled more than 10 days (4 of them Luis's). Answer SEE for the breakdown by rep."
+    },
+    {
+      "rol": "Sales manager or owner",
+      "vertical": "Clinic / health",
+      "titulo": "A full calendar, with no no-shows",
+      "comandos": [
+        {
+          "u": "How many of tomorrow's appointments are unconfirmed?",
+          "r": "14 of 41 unconfirmed. 5 are first consultations."
+        },
+        {
+          "u": "If a patient misses the appointment, create the rebooking task for their adviser the same day.",
+          "r": "Rule active. No-shows are marked from the calendar and the task is created instantly."
+        },
+        {
+          "u": "Which treatments brought in the most revenue this quarter?",
+          "r": "Implants $142,000 (41 %), braces $96,000 (28 %), aesthetics $58,000 (17 %)."
+        }
+      ],
+      "resultado": "Clear numbers, without waiting for the accountant.",
+      "evidencia": "noshow",
+      "proactivo": "📅 There are 41 appointments tomorrow and 14 are still unconfirmed, 5 of them first consultations. Answer SEE to hand them out to the advisers."
+    },
+    {
+      "rol": "Sales manager or owner",
+      "vertical": "Online store",
+      "titulo": "Operations reports to me",
+      "comandos": [
+        {
+          "u": "Tell me if an order over $500 sits in “Payment pending” for more than 24 hours.",
+          "r": "Rule active. Right now there are 2: orders 1031 ($640) and 1037 ($512)."
+        },
+        {
+          "u": "If a product runs out of stock and has pending orders, tell purchasing and me.",
+          "r": "Rule active on the Shopify inventory. Purchasing gets it on WhatsApp, and so do you."
+        },
+        {
+          "u": "How much did we sell on the marketplace against our own store this month?",
+          "r": "Marketplace $48,000 (54 %), own store $41,000 (46 %). The margin is 9 points higher in your own store."
+        }
+      ],
+      "resultado": "You decide on today's number, from your phone.",
+      "evidencia": "carrito",
+      "proactivo": "⚠️ 2 orders over $500 have been in “Payment pending” for 24 h: 1031 ($640) and 1037 ($512). Answer SEE or LATER."
+    },
+    {
+      "rol": "Support and after-sales",
+      "vertical": "Real estate",
+      "titulo": "Nobody is left without an answer",
+      "comandos": [
+        {
+          "u": "The day before each viewing, hand me the reminder for the customer and tell me if they do not confirm.",
+          "r": "Scheduled. There are 6 viewings tomorrow; at 17:00 I will leave you the 6 messages ready."
+        },
+        {
+          "u": "When the purchase agreement is signed, create me the task to send the documents to the notary.",
+          "r": "Rule active. It fires when the deal moves to “Agreement signed” in the CRM."
+        },
+        {
+          "u": "If a customer goes 3 days with no reply after the viewing, tell me with their record.",
+          "r": "Rule active. Right now there are 2: the Quispe family (Monday's viewing) and Mr. Paredes."
+        }
+      ],
+      "resultado": "Every customer looked after as if they were the only one.",
+      "evidencia": "noshow",
+      "proactivo": "📅 There are 6 viewings tomorrow; at 17:00 I will leave the 6 reminders ready. Today 2 customers have gone 3 days without replying after their viewing. Answer SEE."
+    },
+    {
+      "rol": "Support and after-sales",
+      "vertical": "Clinic / health",
+      "titulo": "The patient comes back because they are looked after",
+      "comandos": [
+        {
+          "u": "The day after each treatment, prepare the message to ask the patient how they feel.",
+          "r": "Scheduled. You have 12 follow-up messages ready today; starting with Rosa Díaz (yesterday's extraction)."
+        },
+        {
+          "u": "If a patient has not come back in 6 months since their last cleaning, tell me and prepare the invitation.",
+          "r": "Rule active. 58 patients come due this month; I will hand them to you in batches of 10 each morning."
+        },
+        {
+          "u": "Note on Rosa Díaz's record that she prefers afternoon appointments and create her check-up task in 15 days.",
+          "r": "Note saved and check-up scheduled for the 11th. Shall I send her the proposed time now?"
+        }
+      ],
+      "resultado": "Patients who come back, with no reminder calls.",
+      "evidencia": "noshow",
+      "proactivo": "🩺 You have 12 post-treatment follow-ups ready today; first, Rosa Díaz (yesterday's extraction). Answer SEE to start."
+    },
+    {
+      "rol": "Support and after-sales",
+      "vertical": "Online store",
+      "titulo": "From the order to the review, with no friction",
+      "comandos": [
+        {
+          "u": "When an order moves to “Delivered”, leave me the message ready the next day to ask for the review.",
+          "r": "Rule active. Tomorrow you will have 22 messages ready with each product's review link."
+        },
+        {
+          "u": "If a customer asks about their order on the marketplace and we do not reply within 2 hours, tell me.",
+          "r": "Rule active on the marketplace questions and messages."
+        },
+        {
+          "u": "Mark order 1058 as return accepted and create me the refund task for finance.",
+          "r": "Order 1058 in “Return accepted”; task created for finance with the amount $210."
+        }
+      ],
+      "resultado": "Customers who come back and tell others.",
+      "evidencia": "carrito",
+      "proactivo": "⭐ 22 orders were delivered yesterday: your review messages are ready. 1 marketplace question has gone 2 h with no reply. Answer SEE."
+    },
+    {
+      "rol": "Sales rep",
+      "vertical": "Automotive",
+      "titulo": "From the test drive to the signature without losing anyone",
+      "comandos": [
+        {
+          "u": "Who took a test drive this week and still has no quote?",
+          "r": "6 prospects. The oldest is Jorge Salas (Kicks SUV, Tuesday). None has a quote in the CRM."
+        },
+        {
+          "u": "Prepare the message for Jorge with the quote and the financing options.",
+          "r": "“Hi Jorge, thanks for the Kicks test drive. Here is the quote and two financing plans over 36 and 48 months…”. I attached the PDF. Tap to send it."
+        },
+        {
+          "u": "Move Jorge to “Financing” and create me the task to ask him for the documents on Thursday.",
+          "r": "Stage Financing and task created for Thursday at 9:00. Shall I tell finance to pre-assess?"
+        }
+      ],
+      "resultado": "Every test drive ends in a quote with a follow-up.",
+      "evidencia": "cotizacion",
+      "proactivo": "🚗 6 people took a test drive this week and none has a quote. The oldest: Jorge Salas (Kicks, Tuesday). Answer SEE."
+    },
+    {
+      "rol": "Sales manager or owner",
+      "vertical": "Automotive",
+      "titulo": "I see the dealership funnel without asking for reports",
+      "comandos": [
+        {
+          "u": "Every Monday send me quotes by rep and the prospects stalled more than 7 days.",
+          "r": "Scheduled. This week: 48 quotes (Marco 14, Lucía 12, Pedro 11, Ana 11); 9 stalled prospects, 5 in Financing."
+        },
+        {
+          "u": "How many test drives turned into a sale this month, by rep?",
+          "r": "Marco 6 of 15 (40 %), Lucía 5 of 14 (36 %), Pedro 3 of 13 (23 %), Ana 4 of 10 (40 %). Month average: 35 %."
+        },
+        {
+          "u": "Which model got the most quotes this month and how many closed?",
+          "r": "Kicks: 42 quotes, 9 sales (21 %). Then Versa (31, 8) and Frontier (18, 5)."
+        }
+      ],
+      "resultado": "You decide on today's number, from your phone.",
+      "evidencia": "estancados",
+      "proactivo": "📊 Monday · 48 quotes this week (Marco 14, Lucía 12); 9 prospects stalled more than 7 days. Answer SEE by rep."
+    },
+    {
+      "rol": "Support and after-sales",
+      "vertical": "Automotive",
+      "titulo": "From the workshop back to the showroom",
+      "comandos": [
+        {
+          "u": "The day before each service appointment, hand me the reminder for the customer and tell me if they do not confirm.",
+          "r": "Scheduled. There are 9 appointments tomorrow; at 17:00 I will leave you the 9 messages ready and flag the ones that do not confirm."
+        },
+        {
+          "u": "5 days after each handover, prepare the message to ask how the car is doing and request the review.",
+          "r": "Rule active. You have 4 messages ready today; starting with Jorge Salas (Kicks, handed over on Monday)."
+        },
+        {
+          "u": "If a customer hits 3 years with their car, tell me and prepare the invitation to quote the new model.",
+          "r": "Rule active. 27 customers come due this month; I will hand them to you in batches of 5 each morning."
+        }
+      ],
+      "resultado": "Customers who come back to the workshop and to the showroom.",
+      "evidencia": "noshow",
+      "proactivo": "🔧 There are 9 service appointments tomorrow; at 17:00 I will leave the reminders. Today 4 handovers hit 5 days: review messages ready. Answer SEE."
+    },
+    {
+      "rol": "Sales rep",
+      "vertical": "Gyms and fitness",
+      "titulo": "Every free trial ends in a membership",
+      "comandos": [
+        {
+          "u": "Who booked a free trial this week and still hasn't come in?",
+          "r": "9 people with a trial booked and no visit: 4 for today, 5 for tomorrow. The oldest, Karla Ruiz, booked 6 days ago. Shall I send them the reminder?"
+        },
+        {
+          "u": "For those who finished the trial and didn't buy, send the free-enrollment offer before Sunday.",
+          "r": "Done. There are 11. Here's the first, Jorge Salas: \"Hi Jorge, your week at FitClub ended yesterday. Until Sunday, enrollment is free with the annual plan…\". Tap to send."
+        },
+        {
+          "u": "Mark Karla Ruiz as enrolled in the annual plan and create the reminder for her renewal.",
+          "r": "Done in HubSpot: Karla in \"Active member\", annual plan. Reminder set for 30 days before renewal. Shall I send her the welcome message?"
+        }
+      ],
+      "resultado": "No free trial is lost for lack of follow-up.",
+      "evidencia": "speed",
+      "proactivo": "☀️ Good morning. 14 leads came in overnight from the \"7-day pass\" ad; 5 still have no call. 3 free trials end today with no plan chosen. Reply VIEW for the list."
+    },
+    {
+      "rol": "Sales manager or owner",
+      "vertical": "Gyms and fitness",
+      "titulo": "Know which ad fills the gym",
+      "comandos": [
+        {
+          "u": "Every Monday at 8, send me leads by channel, trials booked and memberships closed by branch.",
+          "r": "Scheduled. Every Monday at 8:00 you get leads by channel, trials and memberships by branch, with each one's conversion rate."
+        },
+        {
+          "u": "If a lead from the ad goes 30 minutes without a call, alert the branch advisor and me.",
+          "r": "Rule created: lead with no contact in 30 minutes → alert to the branch advisor, copy to you. Applies to Meta and Google leads."
+        },
+        {
+          "u": "How much did each new membership cost us per channel this month?",
+          "r": "Meta: $38 per membership (19 closed). Google: $61 (7 closed). Referrals: $0 (6). Meta brings 60% of sign-ups with 55% of the spend."
+        }
+      ],
+      "resultado": "You decide where to put the budget with today's numbers.",
+      "evidencia": "speed",
+      "proactivo": "📊 Monday 8:00 · 86 leads last week (Meta 61, Google 25), 23 trials booked, 9 new memberships. North branch converts at 6%; Downtown, at 14%. Reply VIEW for the details."
+    },
+    {
+      "rol": "Support and after-sales",
+      "vertical": "Gyms and fitness",
+      "titulo": "Members stay",
+      "comandos": [
+        {
+          "u": "Which members haven't come in for over 3 weeks and still have an active membership?",
+          "r": "12 members: 7 on the monthly plan, 5 on the annual. Three of them expire this week. Shall I send them the \"we miss you\" message with a free class?"
+        },
+        {
+          "u": "For anyone expiring in 7 days who hasn't renewed, send the reminder with the early-renewal discount.",
+          "r": "Done. 4 are due today: here's the first, Andrea Mora: \"Hi Andrea, your plan expires on the 18th. Renew early and the month drops to $29 instead of $35…\". Tap to send."
+        },
+        {
+          "u": "Record that Andrea Mora renewed for 6 months and note that she asked to switch to the morning slot.",
+          "r": "Done in the CRM: Andrea renewed for 6 months, note saved about the schedule. Shall I tell the front desk about the change?"
+        }
+      ],
+      "resultado": "Fewer silent cancellations. Every expiry gets a message in time.",
+      "evidencia": "toques",
+      "proactivo": "⏰ 27 memberships expire in the next 7 days; 12 members haven't come in for 3 weeks. Reply VIEW and I'll send you the ready-made messages."
     }
-   ],
-   "resultado": "Quotes close while they still matter.",
-   "evidencia": "toques",
-   "proactivo": "⏰ 7 quotes from this week still have no reply; Marta Pérez's (braces) expires on Friday. Answer SEE and I will hand you the messages ready."
-  },
-  {
-   "rol": "Sales rep",
-   "vertical": "Online store",
-   "titulo": "I sell while I serve",
-   "comandos": [
-    {
-     "u": "Which carts over $200 were abandoned today?",
-     "r": "5 carts: the largest is Andrea Gómez's ($480, sneakers and a jacket). None completed payment."
-    },
-    {
-     "u": "Prepare the message for Andrea with the payment link and 5 % off.",
-     "r": "Coupon ANDREA5 created in Shopify. “Hi Andrea, you left your sneakers and the jacket in the cart; here is the link with an extra 5 %…”. Tap to send it."
-    },
-    {
-     "u": "Mark order 1042 as delivered and note that the customer asked for an invoice.",
-     "r": "Order 1042 delivered and note saved. Tomorrow I will leave you the message ready to ask for the review."
-    }
-   ],
-   "resultado": "Every abandoned cart gets a second chance.",
-   "evidencia": "carrito",
-   "proactivo": "🛒 5 carts over $200 were abandoned today; the largest is Andrea Gómez's ($480). Answer SEE and I will leave the recovery messages ready."
-  },
-  {
-   "rol": "Sales manager or owner",
-   "vertical": "Real estate",
-   "titulo": "I see the pipeline without asking for reports",
-   "comandos": [
-    {
-     "u": "Every Monday at 8 send me the pipeline by rep and the deals stalled more than 10 days.",
-     "r": "Scheduled. This Monday: 38 active deals, 6 stalled (4 of them Luis's). I will send it at 8:00."
-    },
-    {
-     "u": "Split the north-zone leads between Ana and Luis; if nobody takes them within 1 hour, tell me.",
-     "r": "11 leads assigned (6 Ana, 5 Luis). I will tell you in an hour about any still with no activity."
-    },
-    {
-     "u": "How many viewings did we close this month compared with last month?",
-     "r": "August: 31 % of viewings ended in a deposit against 24 % in July. Up 7 points."
-    }
-   ],
-   "resultado": "One WhatsApp at the end of the day beats three dashboards.",
-   "evidencia": "speed",
-   "proactivo": "📊 Monday 8:00 · 38 active deals, 6 stalled more than 10 days (4 of them Luis's). Answer SEE for the breakdown by rep."
-  },
-  {
-   "rol": "Sales manager or owner",
-   "vertical": "Clinic / health",
-   "titulo": "A full calendar, with no no-shows",
-   "comandos": [
-    {
-     "u": "How many of tomorrow's appointments are unconfirmed?",
-     "r": "14 of 41 unconfirmed. 5 are first consultations."
-    },
-    {
-     "u": "If a patient misses the appointment, create the rebooking task for their adviser the same day.",
-     "r": "Rule active. No-shows are marked from the calendar and the task is created instantly."
-    },
-    {
-     "u": "Which treatments brought in the most revenue this quarter?",
-     "r": "Implants $142,000 (41 %), braces $96,000 (28 %), aesthetics $58,000 (17 %)."
-    }
-   ],
-   "resultado": "Clear numbers, without waiting for the accountant.",
-   "evidencia": "noshow",
-   "proactivo": "📅 There are 41 appointments tomorrow and 14 are still unconfirmed, 5 of them first consultations. Answer SEE to hand them out to the advisers."
-  },
-  {
-   "rol": "Sales manager or owner",
-   "vertical": "Online store",
-   "titulo": "Operations reports to me",
-   "comandos": [
-    {
-     "u": "Tell me if an order over $500 sits in “Payment pending” for more than 24 hours.",
-     "r": "Rule active. Right now there are 2: orders 1031 ($640) and 1037 ($512)."
-    },
-    {
-     "u": "If a product runs out of stock and has pending orders, tell purchasing and me.",
-     "r": "Rule active on the Shopify inventory. Purchasing gets it on WhatsApp, and so do you."
-    },
-    {
-     "u": "How much did we sell on the marketplace against our own store this month?",
-     "r": "Marketplace $48,000 (54 %), own store $41,000 (46 %). The margin is 9 points higher in your own store."
-    }
-   ],
-   "resultado": "You decide on today's number, from your phone.",
-   "evidencia": "carrito",
-   "proactivo": "⚠️ 2 orders over $500 have been in “Payment pending” for 24 h: 1031 ($640) and 1037 ($512). Answer SEE or LATER."
-  },
-  {
-   "rol": "Support and after-sales",
-   "vertical": "Real estate",
-   "titulo": "Nobody is left without an answer",
-   "comandos": [
-    {
-     "u": "The day before each viewing, hand me the reminder for the customer and tell me if they do not confirm.",
-     "r": "Scheduled. There are 6 viewings tomorrow; at 17:00 I will leave you the 6 messages ready."
-    },
-    {
-     "u": "When the purchase agreement is signed, create me the task to send the documents to the notary.",
-     "r": "Rule active. It fires when the deal moves to “Agreement signed” in the CRM."
-    },
-    {
-     "u": "If a customer goes 3 days with no reply after the viewing, tell me with their record.",
-     "r": "Rule active. Right now there are 2: the Quispe family (Monday's viewing) and Mr. Paredes."
-    }
-   ],
-   "resultado": "Every customer looked after as if they were the only one.",
-   "evidencia": "noshow",
-   "proactivo": "📅 There are 6 viewings tomorrow; at 17:00 I will leave the 6 reminders ready. Today 2 customers have gone 3 days without replying after their viewing. Answer SEE."
-  },
-  {
-   "rol": "Support and after-sales",
-   "vertical": "Clinic / health",
-   "titulo": "The patient comes back because they are looked after",
-   "comandos": [
-    {
-     "u": "The day after each treatment, prepare the message to ask the patient how they feel.",
-     "r": "Scheduled. You have 12 follow-up messages ready today; starting with Rosa Díaz (yesterday's extraction)."
-    },
-    {
-     "u": "If a patient has not come back in 6 months since their last cleaning, tell me and prepare the invitation.",
-     "r": "Rule active. 58 patients come due this month; I will hand them to you in batches of 10 each morning."
-    },
-    {
-     "u": "Note on Rosa Díaz's record that she prefers afternoon appointments and create her check-up task in 15 days.",
-     "r": "Note saved and check-up scheduled for the 11th. Shall I send her the proposed time now?"
-    }
-   ],
-   "resultado": "Patients who come back, with no reminder calls.",
-   "evidencia": "noshow",
-   "proactivo": "🩺 You have 12 post-treatment follow-ups ready today; first, Rosa Díaz (yesterday's extraction). Answer SEE to start."
-  },
-  {
-   "rol": "Support and after-sales",
-   "vertical": "Online store",
-   "titulo": "From the order to the review, with no friction",
-   "comandos": [
-    {
-     "u": "When an order moves to “Delivered”, leave me the message ready the next day to ask for the review.",
-     "r": "Rule active. Tomorrow you will have 22 messages ready with each product's review link."
-    },
-    {
-     "u": "If a customer asks about their order on the marketplace and we do not reply within 2 hours, tell me.",
-     "r": "Rule active on the marketplace questions and messages."
-    },
-    {
-     "u": "Mark order 1058 as return accepted and create me the refund task for finance.",
-     "r": "Order 1058 in “Return accepted”; task created for finance with the amount $210."
-    }
-   ],
-   "resultado": "Customers who come back and tell others.",
-   "evidencia": "carrito",
-   "proactivo": "⭐ 22 orders were delivered yesterday: your review messages are ready. 1 marketplace question has gone 2 h with no reply. Answer SEE."
-  },
-  {
-   "rol": "Sales rep",
-   "vertical": "Automotive",
-   "titulo": "From the test drive to the signature without losing anyone",
-   "comandos": [
-    {
-     "u": "Who took a test drive this week and still has no quote?",
-     "r": "6 prospects. The oldest is Jorge Salas (Kicks SUV, Tuesday). None has a quote in the CRM."
-    },
-    {
-     "u": "Prepare the message for Jorge with the quote and the financing options.",
-     "r": "“Hi Jorge, thanks for the Kicks test drive. Here is the quote and two financing plans over 36 and 48 months…”. I attached the PDF. Tap to send it."
-    },
-    {
-     "u": "Move Jorge to “Financing” and create me the task to ask him for the documents on Thursday.",
-     "r": "Stage Financing and task created for Thursday at 9:00. Shall I tell finance to pre-assess?"
-    }
-   ],
-   "resultado": "Every test drive ends in a quote with a follow-up.",
-   "evidencia": "cotizacion",
-   "proactivo": "🚗 6 people took a test drive this week and none has a quote. The oldest: Jorge Salas (Kicks, Tuesday). Answer SEE."
-  },
-  {
-   "rol": "Sales manager or owner",
-   "vertical": "Automotive",
-   "titulo": "I see the dealership funnel without asking for reports",
-   "comandos": [
-    {
-     "u": "Every Monday send me quotes by rep and the prospects stalled more than 7 days.",
-     "r": "Scheduled. This week: 48 quotes (Marco 14, Lucía 12, Pedro 11, Ana 11); 9 stalled prospects, 5 in Financing."
-    },
-    {
-     "u": "How many test drives turned into a sale this month, by rep?",
-     "r": "Marco 6 of 15 (40 %), Lucía 5 of 14 (36 %), Pedro 3 of 13 (23 %), Ana 4 of 10 (40 %). Month average: 35 %."
-    },
-    {
-     "u": "Which model got the most quotes this month and how many closed?",
-     "r": "Kicks: 42 quotes, 9 sales (21 %). Then Versa (31, 8) and Frontier (18, 5)."
-    }
-   ],
-   "resultado": "You decide on today's number, from your phone.",
-   "evidencia": "estancados",
-   "proactivo": "📊 Monday · 48 quotes this week (Marco 14, Lucía 12); 9 prospects stalled more than 7 days. Answer SEE by rep."
-  },
-  {
-   "rol": "Support and after-sales",
-   "vertical": "Automotive",
-   "titulo": "From the workshop back to the showroom",
-   "comandos": [
-    {
-     "u": "The day before each service appointment, hand me the reminder for the customer and tell me if they do not confirm.",
-     "r": "Scheduled. There are 9 appointments tomorrow; at 17:00 I will leave you the 9 messages ready and flag the ones that do not confirm."
-    },
-    {
-     "u": "5 days after each handover, prepare the message to ask how the car is doing and request the review.",
-     "r": "Rule active. You have 4 messages ready today; starting with Jorge Salas (Kicks, handed over on Monday)."
-    },
-    {
-     "u": "If a customer hits 3 years with their car, tell me and prepare the invitation to quote the new model.",
-     "r": "Rule active. 27 customers come due this month; I will hand them to you in batches of 5 each morning."
-    }
-   ],
-   "resultado": "Customers who come back to the workshop and to the showroom.",
-   "evidencia": "noshow",
-   "proactivo": "🔧 There are 9 service appointments tomorrow; at 17:00 I will leave the reminders. Today 4 handovers hit 5 days: review messages ready. Answer SEE."
-  },
-  {
-   "rol": "Sales rep",
-   "vertical": "Gyms and fitness",
-   "titulo": "Every free trial ends in a membership",
-   "comandos": [
-    {
-     "u": "Who booked a free trial this week and still hasn't come in?",
-     "r": "9 people with a trial booked and no visit: 4 for today, 5 for tomorrow. The oldest, Karla Ruiz, booked 6 days ago. Shall I send them the reminder?"
-    },
-    {
-     "u": "For those who finished the trial and didn't buy, send the free-enrollment offer before Sunday.",
-     "r": "Done. There are 11. Here's the first, Jorge Salas: \"Hi Jorge, your week at FitClub ended yesterday. Until Sunday, enrollment is free with the annual plan…\". Tap to send."
-    },
-    {
-     "u": "Mark Karla Ruiz as enrolled in the annual plan and create the reminder for her renewal.",
-     "r": "Done in HubSpot: Karla in \"Active member\", annual plan. Reminder set for 30 days before renewal. Shall I send her the welcome message?"
-    }
-   ],
-   "resultado": "No free trial is lost for lack of follow-up.",
-   "evidencia": "speed",
-   "proactivo": "☀️ Good morning. 14 leads came in overnight from the \"7-day pass\" ad; 5 still have no call. 3 free trials end today with no plan chosen. Reply VIEW for the list."
-  },
-  {
-   "rol": "Sales manager or owner",
-   "vertical": "Gyms and fitness",
-   "titulo": "Know which ad fills the gym",
-   "comandos": [
-    {
-     "u": "Every Monday at 8, send me leads by channel, trials booked and memberships closed by branch.",
-     "r": "Scheduled. Every Monday at 8:00 you get leads by channel, trials and memberships by branch, with each one's conversion rate."
-    },
-    {
-     "u": "If a lead from the ad goes 30 minutes without a call, alert the branch advisor and me.",
-     "r": "Rule created: lead with no contact in 30 minutes → alert to the branch advisor, copy to you. Applies to Meta and Google leads."
-    },
-    {
-     "u": "How much did each new membership cost us per channel this month?",
-     "r": "Meta: $38 per membership (19 closed). Google: $61 (7 closed). Referrals: $0 (6). Meta brings 60% of sign-ups with 55% of the spend."
-    }
-   ],
-   "resultado": "You decide where to put the budget with today's numbers.",
-   "evidencia": "speed",
-   "proactivo": "📊 Monday 8:00 · 86 leads last week (Meta 61, Google 25), 23 trials booked, 9 new memberships. North branch converts at 6%; Downtown, at 14%. Reply VIEW for the details."
-  },
-  {
-   "rol": "Support and after-sales",
-   "vertical": "Gyms and fitness",
-   "titulo": "Members stay",
-   "comandos": [
-    {
-     "u": "Which members haven't come in for over 3 weeks and still have an active membership?",
-     "r": "12 members: 7 on the monthly plan, 5 on the annual. Three of them expire this week. Shall I send them the \"we miss you\" message with a free class?"
-    },
-    {
-     "u": "For anyone expiring in 7 days who hasn't renewed, send the reminder with the early-renewal discount.",
-     "r": "Done. 4 are due today: here's the first, Andrea Mora: \"Hi Andrea, your plan expires on the 18th. Renew early and the month drops to $29 instead of $35…\". Tap to send."
-    },
-    {
-     "u": "Record that Andrea Mora renewed for 6 months and note that she asked to switch to the morning slot.",
-     "r": "Done in the CRM: Andrea renewed for 6 months, note saved about the schedule. Shall I tell the front desk about the change?"
-    }
-   ],
-   "resultado": "Fewer silent cancellations. Every expiry gets a message in time.",
-   "evidencia": "toques",
-   "proactivo": "⏰ 27 memberships expire in the next 7 days; 12 members haven't come in for 3 weeks. Reply VIEW and I'll send you the ready-made messages."
-  }
- ]
+  ]
 }
