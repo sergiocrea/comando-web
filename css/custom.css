@@ -2038,3 +2038,9 @@ html { scroll-behavior: smooth; }
 .pricing-contacto .update_form-submit:hover { background-color: #4d7cff; color: #fff; }
 .pricing-contacto .success_message, .pricing-contacto .text-block-2 { color: #f2f4f8; }
 @media (max-width: 767px) { .pricing-contacto { padding: 1rem 0 3rem; } }
+
+/* Móvil: la sección de anuncios se queda sin su cierre. En una pantalla estrecha
+   el bloque cae encima de la banda de conectores y de precios, y son tres
+   llamadas a la acción seguidas pidiendo lo mismo. En escritorio sigue: ahí la
+   sección tiene aire de sobra y precios queda mucho más abajo. */
+@media (max-width: 767px) { .section_metaads .uc-foot { display: none; } }
