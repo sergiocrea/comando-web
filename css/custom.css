@@ -2000,7 +2000,10 @@ html { scroll-behavior: smooth; }
   .banda-conectores { display: block; position: relative; z-index: 2; }
   /* La pista deja de ser una tarjeta: va de borde a borde, sin esquinas ni
      sombra, como la franja del héroe. */
-  .banda-conectores .uc-feed-track { border-radius: 0; box-shadow: none; }
+  /* Y con más aire arriba y abajo: con el padding de la columna los logos
+     quedaban pegados al borde donde acaba el crema, y la banda se leía como un
+     recorte en vez de como una franja. */
+  .banda-conectores .uc-feed-track { border-radius: 0; box-shadow: none; padding: 1.4rem 0; }
 }
 
 /* Móvil: el menú medía 70 px con una marca de 21 px dentro. La marca crece y el
@@ -2009,3 +2012,29 @@ html { scroll-behavior: smooth; }
   .nav_component.w-nav { padding-top: .3rem; padding-bottom: .3rem; }
   .nav_brand-name { font-size: 1.75rem; }
 }
+
+/* ============================================================
+   Enterprise: el formulario, ya fuera de la tarjeta azul
+   ------------------------------------------------------------
+   Va sobre el mismo negro que las preguntas, así que el formulario se invierte
+   entero —texto claro, borde gris, botón blanco—: tal cual venía era negro
+   sobre azul y aquí habría desaparecido contra el fondo.
+   ============================================================ */
+.pricing-contacto { background: #0a0a0a; padding: 1.5rem 0 4.5rem; }
+.pricing-contacto .pricing-form { max-width: 34rem; margin: 0; text-align: left; }
+/* El botón de escritorio son DOS cajas superpuestas: el `input` de 48 px y, por
+   encima, una caja negra con la flecha. Teñir sólo el input dejaba el botón
+   negro sobre negro con una flecha blanca flotando; hay que voltear las dos. */
+.pricing-contacto .dash { background-color: #f2f4f8; }
+.pricing-contacto .dash svg path { stroke: #0a0a0a; }
+/* En móvil Webflow centra `.getupdate-text` con una regla propia, así que el
+   `text-align` del bloque no basta: aquí el párrafo va alineado con las
+   preguntas que tiene encima, no centrado en medio del negro. */
+.pricing-contacto .getupdate-text { color: #d0d0d0; text-align: left; }
+.pricing-contacto .update_form-input { color: #f2f4f8; border-color: #3a3a3a; }
+.pricing-contacto .update_form-input::placeholder { color: #7d7d7d; }
+.pricing-contacto .update_form-input:focus { border-color: #4d7cff; }
+.pricing-contacto .update_form-submit { background-color: #f2f4f8; color: #0a0a0a; }
+.pricing-contacto .update_form-submit:hover { background-color: #4d7cff; color: #fff; }
+.pricing-contacto .success_message, .pricing-contacto .text-block-2 { color: #f2f4f8; }
+@media (max-width: 767px) { .pricing-contacto { padding: 1rem 0 3rem; } }
