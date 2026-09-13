@@ -1979,35 +1979,28 @@ html { scroll-behavior: smooth; }
 @media (prefers-reduced-motion: reduce) { .uc-wire-card { animation: none; } }
 
 /* ============================================================
-   Móvil: la tira de sistemas entra en el teléfono
+   Móvil: la banda de conectores se va al pie, encima de precios
    ------------------------------------------------------------
-   Antes la tira corría centrada bajo el teléfono y tres rieles subían hacia
-   él: dos cosas contando lo mismo. Ahora la franja ENTRA por el costado del
-   teléfono: nace dentro del marco, a la altura de la parte baja de la
-   pantalla, y sale por el borde derecho del móvil. Los logos corren de derecha
-   a izquierda y desaparecen bajo el aparato, que es la forma más corta de
-   decir «esto entra ahí». Los rieles sobran y se van, y el rótulo también.
-
-   La franja se cuelga de la COLUMNA DEL TELÉFONO, no del ancho de la pantalla:
-   con un porcentaje del viewport, a 390 px quedaba metida en el marco y a 500
-   caía justo al lado, que es cuando se lee «una banda debajo» en vez de «algo
-   que entra». Compartiendo celda con el teléfono, el 55 % es siempre 55 % del
-   aparato. Y va ENTERA por encima de su borde inferior: cualquier trozo que
-   asome por debajo vuelve a leerse como una tira aparte.
+   La columna de logos de esta sección no cabe junto al teléfono en un móvil, y
+   las dos formas que se probaron —una tira debajo con rieles, y una franja
+   metiéndose por el costado del marco— competían con la conversación, que es
+   lo único que esta sección tiene que dejar leer. Así que los logos salen de
+   aquí y reaparecen enteros, y en color, en una banda a lo ancho justo encima
+   de precios: el último sitio donde ver con qué se conecta antes de mirar
+   cuánto cuesta.
    ============================================================ */
 @media (max-width: 767px) {
-  .section_dia { overflow-x: clip; }
-  .section_dia .uc-layout { grid-template-areas: "phone timeline" "feed timeline"; }
-  .section_dia .uc-timeline { align-self: start; }
-  .section_dia .uc-phone { z-index: 2; }
-  .uc-feed:not(.uc-ads) { position: relative; z-index: 1; width: 100vw; margin: -9.7rem 0 0 55%; }
-  .uc-feed:not(.uc-ads) .uc-feed-track {
-    border-radius: 1.1rem 0 0 1.1rem;
-    -webkit-mask-image: linear-gradient(90deg, transparent 6%, #000 28%);
-    mask-image: linear-gradient(90deg, transparent 6%, #000 28%);
-  }
-  .uc-feed:not(.uc-ads) .uc-feed-label { display: none; }
-  .uc-feed:not(.uc-ads) .uc-wire { display: none; }
+  .uc-feed:not(.uc-ads) { display: none; }
+}
+
+/* La banda del pie: en escritorio no existe —ahí están la columna de la sección
+   y la franja del héroe—, y en móvil es la única vez que se ven los logos. */
+.banda-conectores { display: none; }
+@media (max-width: 767px) {
+  .banda-conectores { display: block; position: relative; z-index: 2; }
+  /* La pista deja de ser una tarjeta: va de borde a borde, sin esquinas ni
+     sombra, como la franja del héroe. */
+  .banda-conectores .uc-feed-track { border-radius: 0; box-shadow: none; }
 }
 
 /* Móvil: el menú medía 70 px con una marca de 21 px dentro. La marca crece y el

@@ -237,4 +237,13 @@
   // `foot: false`: el cierre y su botón se iban justo antes de precios, y ahí
   // el visitante ya tiene cuatro planes con su propio botón a un dedo.
   if (dia) mount(dia, { data: 'usecases', pickers: true, feed: true, foot: false, anchor: 'como-funciona', version: 18 });
+
+  // La banda de encima de precios. Reutiliza el item de la columna —logotipo
+  // en color arriba, nombre debajo— y sus dos listas, que es lo que hace el
+  // bucle sin costura; el CSS la enseña sólo en móvil, donde la columna no
+  // cabe al lado del teléfono y la tira que se metía en el marco ya no está.
+  const banda = document.getElementById('banda-conectores');
+  if (banda) {
+    banda.innerHTML = `<div class="uc-feed-track"><ul class="uc-feed-col">${feedItems()}</ul><ul class="uc-feed-col">${feedItems()}</ul></div>`;
+  }
 })();
