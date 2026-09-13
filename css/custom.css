@@ -1982,6 +1982,12 @@ html { scroll-behavior: smooth; }
    a izquierda y desaparecen bajo el aparato, que es la forma más corta de
    decir «esto entra ahí». Los rieles sobran y se van, y el rótulo también.
 
+   Y va sin nombres: sólo los iconos. A 82 px de franja visible, un nombre
+   como «DYNAMICS 365» ocupa el hueco entero y sólo se lee a medias, así que
+   contaba menos que el propio logotipo. Sin él caben tres marcas donde antes
+   cabía una y media, y la franja pasa a leerse como caudal en vez de como
+   lista.
+
    La franja se cuelga de la COLUMNA DEL TELÉFONO, no del ancho de la pantalla:
    con un porcentaje del viewport, a 390 px quedaba metida en el marco y a 500
    caía justo al lado, que es cuando se lee «una banda debajo» en vez de «algo
@@ -1994,7 +2000,15 @@ html { scroll-behavior: smooth; }
   .section_dia .uc-layout { grid-template-areas: "phone timeline" "feed timeline"; }
   .section_dia .uc-timeline { align-self: start; }
   .section_dia .uc-phone { z-index: 2; }
-  .uc-feed:not(.uc-ads) { position: relative; z-index: 1; width: 100vw; margin: -6.6rem 0 0 55%; }
+  .uc-feed:not(.uc-ads) { position: relative; z-index: 1; width: 100vw; margin: -9.7rem 0 0 55%; }
+  .uc-feed:not(.uc-ads) .uc-feed-col span { display: none; }
+  /* Sin nombre, el logotipo puede encoger sin dejar de reconocerse, y de ahí
+     salen las marcas que caben en el hueco: con el nombre entraba una y media,
+     con el icono a 1,45rem y el paso apretado entran tres. */
+  .uc-feed:not(.uc-ads) .uc-feed-col { gap: .75rem; }
+  .uc-feed:not(.uc-ads) .uc-feed-col li { padding: 0 .15rem; }
+  .uc-feed:not(.uc-ads) .uc-feed-logo { width: 1.45rem; height: 1.45rem; }
+  .uc-feed:not(.uc-ads) .uc-feed-track { padding: .7rem 0; }
   .uc-feed:not(.uc-ads) .uc-feed-track {
     border-radius: 1.1rem 0 0 1.1rem;
     -webkit-mask-image: linear-gradient(90deg, transparent 6%, #000 28%);
