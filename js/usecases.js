@@ -82,17 +82,18 @@
   }
 
   // ---- Las plataformas de pauta (sección Meta Ads) ----
-  // Mismo sitio y mismos rieles que la columna «De tus sistemas», pero aquí
-  // son dos tarjetas quietas: la sección habla de la pauta, y la pauta son
-  // estas dos. Comparte la clase `uc-feed` para heredar la maqueta y la señal.
+  // Mismo sitio que la columna «De tus sistemas», pero aquí son tres tarjetas
+  // quietas —logo arriba, nombre abajo, como en la columna— y de CADA una sale
+  // su propio riel hacia el teléfono (`uc-wire-card`, dentro de la tarjeta):
+  // antes los tres nacían de un mismo punto del bloque y no se leía de cuál
+  // salía cada uno. Comparte la clase `uc-feed` para heredar la maqueta.
   // Google Ads en amarillo de marca: el logo real es tricolor y aquí va de un
   // solo tono; el amarillo es el que lo hace reconocible sobre negro.
   const ADS = [['meta', 'Meta Ads', '#0081fb'], ['tiktok', 'TikTok Ads', '#e7e9ec'], ['googleads', 'Google Ads', '#fbbc04']];
   function adsHtml() {
     return `<div class="uc-feed uc-ads" aria-hidden="true">
       <div class="uc-feed-label">${esc(T.ads)}</div>
-      <ul class="uc-ads-cards">${ADS.map(([f, n, c]) => `<li><i class="uc-feed-logo" style="--uc-marca:${c};--uc-logo:url(/assets/img/logos/${f}.svg)"></i><span>${esc(n)}</span></li>`).join('')}</ul>
-      <div class="uc-wire"><i></i><i></i><i></i></div>
+      <ul class="uc-ads-cards">${ADS.map(([f, n, c]) => `<li><i class="uc-feed-logo" style="--uc-marca:${c};--uc-logo:url(/assets/img/logos/${f}.svg)"></i><span>${esc(n)}</span><i class="uc-wire-card"></i></li>`).join('')}</ul>
     </div>`;
   }
 

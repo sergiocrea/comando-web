@@ -1855,16 +1855,20 @@ html { scroll-behavior: smooth; }
    heredan su sitio en la maqueta y sus rieles por la clase `uc-feed`. */
 .uc-ads .uc-feed-label { color: #7a7d7a; }
 .uc-ads-cards { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: .7rem; }
+/* Logo arriba y nombre abajo, como en la columna de sistemas: la tarjeta se
+   lee por la marca y el nombre lo confirma. `position: relative` porque el
+   riel de cada tarjeta nace de su propio borde. */
 .uc-ads-cards li {
-  display: flex; align-items: center; gap: .7rem;
-  padding: .8rem .95rem; border-radius: .85rem;
+  position: relative;
+  display: flex; flex-direction: column; align-items: center; gap: .55rem;
+  padding: .95rem .8rem; border-radius: .85rem; text-align: center;
   background: #131316; border: 1px solid rgba(255, 255, 255, .14);
   box-shadow: 0 18px 40px -28px rgba(0, 0, 0, .9);
 }
 .uc-ads-cards li:first-child { border-color: rgba(0, 129, 251, .55); box-shadow: 0 0 0 1px rgba(0, 129, 251, .15), 0 18px 40px -28px rgba(0, 129, 251, .6); }
-.uc-ads-cards .uc-feed-logo { width: 1.45rem; height: 1.45rem; }
+.uc-ads-cards .uc-feed-logo { width: 2.1rem; height: 2.1rem; }
 .uc-ads-cards span {
-  display: flex; flex-direction: column; gap: .15rem; min-width: 0;
+  display: flex; flex-direction: column; align-items: center; gap: .15rem; min-width: 0;
   font-family: "Jetbrainsmono Variable", ui-monospace, monospace;
   font-size: .72rem; font-weight: 500; letter-spacing: .06em; text-transform: uppercase; color: #f2f4f8; white-space: nowrap;
 }
@@ -1873,15 +1877,13 @@ html { scroll-behavior: smooth; }
      la pista de lo que se lee de cada una. */
   .section_metaads .uc-layout { grid-template-columns: minmax(0, 11.5rem) minmax(0, 21rem) minmax(0, 28rem); gap: 3rem 4.5rem; }
   .uc-ads { align-self: center; }
-  .uc-ads .uc-wire { width: 8rem; }
 }
 /* Tableta y móvil: las tres en una fila, con el logo grande arriba y el
    nombre debajo. Apiladas ocupaban media pantalla para decir tres nombres. */
 @media (max-width: 991px) {
   .uc-ads-cards { flex-direction: row; justify-content: center; flex-wrap: nowrap; gap: .6rem; max-width: 24rem; margin: 0 auto; }
-  .uc-ads-cards li { flex: 1 1 0; flex-direction: column; justify-content: center; gap: .55rem; padding: .95rem .4rem; text-align: center; }
-  .uc-ads-cards .uc-feed-logo { width: 2.1rem; height: 2.1rem; }
-  .uc-ads-cards span { align-items: center; font-size: .66rem; }
+  .uc-ads-cards li { flex: 1 1 0; justify-content: center; padding: .95rem .4rem; }
+  .uc-ads-cards span { font-size: .66rem; }
 }
 @media (max-width: 767px) {
   .uc-ads .uc-feed-label { margin-top: .7rem; }
@@ -1895,3 +1897,56 @@ html { scroll-behavior: smooth; }
    suspensivos: entero ocupaba cinco y aplastaba las preguntas de debajo. El
    texto completo se lee en el teléfono, que es donde vive. */
 .uc-step-pro .uc-step-text { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; line-clamp: 2; overflow: hidden; }
+
+/* ============================================================
+   El riel de cada tarjeta de pauta
+   ------------------------------------------------------------
+   Antes los tres rieles nacían de un mismo punto del bloque y no se leía de
+   qué tarjeta salía cada uno. Ahora cada tarjeta lleva el suyo: nace en su
+   borde, entero desde el primer píxel —no se desvanece hacia el origen, la
+   tarjeta ES el origen—, más grueso que los de la columna de sistemas, y los
+   tres convergen hacia el teléfono girando sobre el extremo que toca la
+   tarjeta. Mismos guiones en marcha, misma animación.
+   ============================================================ */
+.uc-wire-card { position: absolute; display: none; pointer-events: none; }
+
+@media (min-width: 992px) {
+  .uc-wire-card {
+    display: block;
+    left: 100%; top: 50%; width: 8.5rem; height: 4px; margin-top: -2px;
+    border-radius: 3px; transform-origin: 0 50%;
+    background-image: repeating-linear-gradient(90deg,
+      rgba(77, 124, 255, .95) 0 11px, rgba(77, 124, 255, 0) 11px 19px);
+    background-size: 19px 100%;
+    box-shadow: 0 0 8px rgba(77, 124, 255, .55);
+    animation: uc-flow-card .9s linear infinite;
+  }
+  .uc-ads-cards li:nth-child(1) .uc-wire-card { transform: rotate(13deg); }
+  .uc-ads-cards li:nth-child(2) .uc-wire-card { animation-delay: -.3s; }
+  .uc-ads-cards li:nth-child(3) .uc-wire-card { transform: rotate(-13deg); animation-delay: -.6s; }
+}
+
+/* Móvil: las tarjetas van en fila bajo el teléfono y el riel de cada una sube
+   hacia él, que a esta anchura está a la izquierda (38 %): la de la izquierda
+   sube casi recta, las otras se inclinan hacia él. */
+@media (max-width: 767px) {
+  .uc-wire-card {
+    display: block;
+    left: 50%; bottom: 100%; top: auto; width: 4px; height: 4.5rem; margin-left: -2px;
+    border-radius: 3px; transform-origin: 50% 100%;
+    background-image: repeating-linear-gradient(0deg,
+      rgba(77, 124, 255, .95) 0 11px, rgba(77, 124, 255, 0) 11px 19px);
+    background-size: 100% 19px;
+    box-shadow: 0 0 8px rgba(77, 124, 255, .55);
+    animation: uc-flow-card-up .9s linear infinite;
+  }
+  .uc-ads-cards li:nth-child(1) .uc-wire-card { transform: rotate(8deg); }
+  .uc-ads-cards li:nth-child(2) .uc-wire-card { transform: rotate(-10deg); animation-delay: -.3s; }
+  .uc-ads-cards li:nth-child(3) .uc-wire-card { transform: rotate(-24deg); animation-delay: -.6s; }
+  /* Con rieles propios, el bloque ya no necesita el corredor del riel compartido. */
+  .uc-ads .uc-wire { display: none; }
+}
+
+@keyframes uc-flow-card { to { background-position: 19px 0; } }
+@keyframes uc-flow-card-up { to { background-position: 0 -19px; } }
+@media (prefers-reduced-motion: reduce) { .uc-wire-card { animation: none; } }
