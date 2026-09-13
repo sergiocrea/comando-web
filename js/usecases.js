@@ -236,7 +236,7 @@
   const dia = document.getElementById('usecases-root');
   // `foot: false`: el cierre y su botón se iban justo antes de precios, y ahí
   // el visitante ya tiene cuatro planes con su propio botón a un dedo.
-  if (dia) mount(dia, { data: 'usecases', pickers: true, feed: true, foot: false, anchor: 'como-funciona', version: 19 });
+  if (dia) mount(dia, { data: 'usecases', pickers: true, feed: true, foot: false, anchor: 'como-funciona', version: 20 });
 
   // La banda de encima de precios. Reutiliza el item de la columna —logotipo
   // en color arriba, nombre debajo— y sus dos listas, que es lo que hace el

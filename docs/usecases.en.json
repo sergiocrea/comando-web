@@ -16,8 +16,8 @@
     "Support and after-sales"
   ],
   "verticales": [
-    "Online store",
     "Real estate",
+    "Online store",
     "Clinic / health",
     "Automotive",
     "Gyms and fitness"
@@ -155,8 +155,8 @@
           "r": "Rule active on the Shopify inventory. Purchasing gets it on WhatsApp, and so do you."
         },
         {
-          "u": "How much did we sell on the marketplace against our own store this month?",
-          "r": "Marketplace $48,000 (54 %), own store $41,000 (46 %). The margin is 9 points higher in your own store."
+          "u": "How much did we sell on Shopify against WooCommerce this month?",
+          "r": "Shopify $48,000 (54 %), WooCommerce $41,000 (46 %). Shopify is up 9 points on last month."
         }
       ],
       "resultado": "You decide on today's number, from your phone.",
@@ -217,8 +217,8 @@
           "r": "Rule active. Tomorrow you will have 22 messages ready with each product's review link."
         },
         {
-          "u": "If a customer asks about their order on the marketplace and we do not reply within 2 hours, tell me.",
-          "r": "Rule active on the marketplace questions and messages."
+          "u": "If a customer writes about their Shopify order and we do not reply within 2 hours, tell me.",
+          "r": "Rule active on Shopify customer messages."
         },
         {
           "u": "Mark order 1058 as return accepted and create me the refund task for finance.",
@@ -227,7 +227,7 @@
       ],
       "resultado": "Customers who come back and tell others.",
       "evidencia": "carrito",
-      "proactivo": "⭐ 22 orders were delivered yesterday: your review messages are ready. 1 marketplace question has gone 2 h with no reply. Answer SEE."
+      "proactivo": "⭐ 22 orders were delivered yesterday: your review messages are ready. 1 Shopify customer message has gone 2 h with no reply. Answer SEE."
     },
     {
       "rol": "Sales rep",

@@ -16,8 +16,8 @@
     "Atendimento e pós-venda"
   ],
   "verticales": [
-    "Loja online",
     "Imobiliária",
+    "Loja online",
     "Clínica / saúde",
     "Automotivo",
     "Academias e fitness"
@@ -155,8 +155,8 @@
           "r": "Regra ativa sobre o estoque da Shopify. Aviso compras pelo WhatsApp e você também."
         },
         {
-          "u": "Quanto vendemos no marketplace contra a loja própria neste mês?",
-          "r": "Marketplace $48.000 (54 %), loja própria $41.000 (46 %). A margem é 9 pontos maior na loja própria."
+          "u": "Quanto vendemos pela Shopify contra a WooCommerce neste mês?",
+          "r": "Shopify $48.000 (54 %), WooCommerce $41.000 (46 %). A Shopify cresce 9 pontos frente ao mês passado."
         }
       ],
       "resultado": "Você decide com o dado do dia, pelo celular.",
@@ -217,8 +217,8 @@
           "r": "Regra ativa. Amanhã você terá 22 mensagens prontas com o link de avaliação de cada produto."
         },
         {
-          "u": "Se um cliente perguntar sobre o pedido no marketplace e a gente não responder em 2 horas, me avisa.",
-          "r": "Regra ativa sobre as perguntas e mensagens do marketplace."
+          "u": "Se um cliente escrever sobre o pedido da Shopify e a gente não responder em 2 horas, me avisa.",
+          "r": "Regra ativa sobre as mensagens de clientes da Shopify."
         },
         {
           "u": "Marca o pedido 1058 como devolução aceita e cria a tarefa de reembolso para o financeiro.",
@@ -227,7 +227,7 @@
       ],
       "resultado": "Clientes que voltam e contam para os outros.",
       "evidencia": "carrito",
-      "proactivo": "⭐ 22 pedidos foram entregues ontem: as mensagens de avaliação estão prontas. 1 pergunta do marketplace está há 2 h sem resposta. Responda VER."
+      "proactivo": "⭐ 22 pedidos foram entregues ontem: as mensagens de avaliação estão prontas. 1 mensagem de um cliente da Shopify está há 2 h sem resposta. Responda VER."
     },
     {
       "rol": "Vendedor",

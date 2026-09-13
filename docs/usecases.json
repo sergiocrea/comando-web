@@ -16,8 +16,8 @@
     "Atención y postventa"
   ],
   "verticales": [
-    "Tienda online",
     "Inmobiliaria",
+    "Tienda online",
     "Clínica / salud",
     "Automotriz",
     "Gimnasios y fitness"
@@ -155,8 +155,8 @@
           "r": "Regla activa sobre el inventario de Shopify. Aviso a compras por WhatsApp y a ti."
         },
         {
-          "u": "¿Cuánto vendimos por Mercado Libre vs la tienda propia este mes?",
-          "r": "Mercado Libre $48,000 (54 %), tienda propia $41,000 (46 %). El margen es 9 puntos mayor en la tienda propia."
+          "u": "¿Cuánto vendimos por Shopify vs por WooCommerce este mes?",
+          "r": "Shopify $48,000 (54 %), WooCommerce $41,000 (46 %). Shopify crece 9 puntos frente al mes pasado."
         }
       ],
       "resultado": "Decides con el dato del día, desde el celular.",
@@ -217,8 +217,8 @@
           "r": "Regla activa. Mañana tendrás 22 mensajes listos con el enlace de reseña de cada producto."
         },
         {
-          "u": "Si un cliente pregunta por su pedido en Mercado Libre y no respondemos en 2 horas, avísame.",
-          "r": "Regla activa sobre las preguntas y mensajes de Mercado Libre."
+          "u": "Si un cliente escribe por su pedido de Shopify y no respondemos en 2 horas, avísame.",
+          "r": "Regla activa sobre los mensajes de clientes de Shopify."
         },
         {
           "u": "Marca el pedido 1058 como devolución aceptada y créame la tarea de reembolso para finanzas.",
@@ -227,7 +227,7 @@
       ],
       "resultado": "Clientes que vuelven y lo cuentan.",
       "evidencia": "carrito",
-      "proactivo": "⭐ 22 pedidos se entregaron ayer: tienes los mensajes de reseña listos. 1 pregunta de Mercado Libre lleva 2 h sin respuesta. Responde VER."
+      "proactivo": "⭐ 22 pedidos se entregaron ayer: tienes los mensajes de reseña listos. 1 mensaje de un cliente de Shopify lleva 2 h sin respuesta. Responde VER."
     },
     {
       "rol": "Vendedor",
