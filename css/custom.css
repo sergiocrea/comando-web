@@ -1976,17 +1976,25 @@ html { scroll-behavior: smooth; }
    Móvil: la tira de sistemas entra en el teléfono
    ------------------------------------------------------------
    Antes la tira corría centrada bajo el teléfono y tres rieles subían hacia
-   él: dos cosas contando lo mismo. Ahora la banda CRUZA la esquina inferior
-   derecha del teléfono —casi la mitad de su alto queda tapada por el marco— y
-   sale por el borde derecho de la pantalla; los logos corren de derecha a
-   izquierda y se meten debajo del aparato, que es la forma más corta de decir
-   «esto entra ahí». Los rieles sobran y se van, y el rótulo también: una
-   banda que desaparece dentro del teléfono ya no necesita que se lo expliquen.
+   él: dos cosas contando lo mismo. Ahora la franja ENTRA por el costado del
+   teléfono: nace dentro del marco, a la altura de la parte baja de la
+   pantalla, y sale por el borde derecho del móvil. Los logos corren de derecha
+   a izquierda y desaparecen bajo el aparato, que es la forma más corta de
+   decir «esto entra ahí». Los rieles sobran y se van, y el rótulo también.
+
+   La franja se cuelga de la COLUMNA DEL TELÉFONO, no del ancho de la pantalla:
+   con un porcentaje del viewport, a 390 px quedaba metida en el marco y a 500
+   caía justo al lado, que es cuando se lee «una banda debajo» en vez de «algo
+   que entra». Compartiendo celda con el teléfono, el 55 % es siempre 55 % del
+   aparato. Y va ENTERA por encima de su borde inferior: cualquier trozo que
+   asome por debajo vuelve a leerse como una tira aparte.
    ============================================================ */
 @media (max-width: 767px) {
   .section_dia { overflow-x: clip; }
+  .section_dia .uc-layout { grid-template-areas: "phone timeline" "feed timeline"; }
+  .section_dia .uc-timeline { align-self: start; }
   .section_dia .uc-phone { z-index: 2; }
-  .uc-feed:not(.uc-ads) { position: relative; z-index: 1; width: 100vw; margin: -3.6rem 0 0 50%; }
+  .uc-feed:not(.uc-ads) { position: relative; z-index: 1; width: 100vw; margin: -6.6rem 0 0 55%; }
   .uc-feed:not(.uc-ads) .uc-feed-track {
     border-radius: 1.1rem 0 0 1.1rem;
     -webkit-mask-image: linear-gradient(90deg, transparent 6%, #000 28%);
