@@ -7,7 +7,7 @@
    - una sola acción principal por fila; lo demás va dentro de «más»;
    - vocabulario del operador (plata en juego, parado, sin dueño, repetidos), nunca del sistema. */
 
-import { isPending } from './api.js?v=15';
+import { isPending } from './api.js?v=16';
 import { crmBlock, crmActions, whatsappStep, NAMES as PROVIDER_NAMES } from './setup.js?v=12';
 import {
   esc, num, money, pct, fmtTime, fmtDate, fmtDateTime, monthName, dayLabel, sameDay, rel, isToday, isPast, isoDay,
@@ -15,8 +15,8 @@ import {
   personName, personEmail, highValueAmount, SYMBOL, setAccountCurrency,
 } from './ui.js?v=12';
 import { t, tn, localeTag } from '../i18n.js?v=1';
-import { chatActions, awaitsWord } from './chat.js?v=2';
-import { hoja } from './hoja.js?v=2';
+import { chatActions, awaitsWord } from './chat.js?v=3';
+import { hoja } from './hoja.js?v=3';
 
 /** Renderiza una parte según el estado de su dato. */
 function part(v, fn, opts = {}) {
@@ -1250,6 +1250,16 @@ function metaCard(value) {
    pronto» y no un error. */
 const canSetCurrency = (me) => !me.role || me.role === 'owner' || me.role === 'admin';
 
+/* Los «no» de la pasarela, en palabras del operador: 503 sin pagos en línea,
+   409 con su motivo (sin precio, sin cliente todavía, otro proveedor), 403 no
+   es el dueño. Lo demás, tal cual lo diga el motor. */
+function avisarFalloDePago(e) {
+  if (e && e.status === 503) toast(t('pago.noDisponible'));
+  else if (e && e.status === 409) toast(e.message || t('pago.sinPrecio'));
+  else if (e && e.status === 403) toast(t('pago.soloDueno'), 'bad');
+  else toast((e && e.message) || t('common.failed'), 'bad');
+}
+
 /* Un campo con lista de sugerencias en vez de un desplegable cerrado: el engine
    acepta cualquier ISO 4217 de tres letras y un desplegable dejaría fuera al
    cliente en guaraníes. La lista lleva código y símbolo, que no se traducen. */
@@ -1288,7 +1298,7 @@ function currencyRow(me, active) {
 /* ==================================================================== CUENTA */
 const cuenta = {
   id: 'cuenta', get title() { return t('nav.cuenta'); }, get sub() { return t('sub.cuenta'); }, icon: 'user',
-  load: (api) => ({ me: api.me(), quota: api.quota(), connections: api.connections(), sheets: api.sheets(), meta: api.metaStatus(), team: api.team(), agent: api.agent(), health: api.health(), history: api.history() }),
+  load: (api) => ({ me: api.me(), quota: api.quota(), plans: api.publicPlans(), connections: api.connections(), sheets: api.sheets(), meta: api.metaStatus(), team: api.team(), agent: api.agent(), health: api.health(), history: api.history() }),
   view(d, ctx) {
     const me = val(d.me, {});
     const PLAN = { gratis: 'plan.gratis', free: 'plan.gratis', basico: 'plan.basico', starter: 'plan.starter', pro: 'plan.pro', enterprise: 'plan.enterprise' };
@@ -1318,12 +1328,46 @@ const cuenta = {
     // El CRM activo se resuelve antes de la tarjeta de cuenta: la moneda dice de
     // dónde salió («la sacamos de tu HubSpot») y necesita su nombre.
     const conns = val(d.connections, []); const active = conns.find((c) => c.bound && c.status === 'active'); const recoverable = conns.find((c) => c.recoverable);
+    /* Pagos, segunda fase (13-sep): cambiar de plan, el portal del proveedor
+       (método de pago, facturas, cancelar) y los paquetes extra. Todo sale de
+       `GET /billing/quota`, que ya dice quién puede hacer qué: `subscription`
+       trae si hay suscripción en la pasarela y si hay cliente para el portal.
+       Sin permiso de dinero (un vendedor) no se ofrece nada de esto. */
+    const q = val(d.quota, null);
+    const puedePagar = canSetCurrency(me) && Boolean(q && q.subscription && q.subscription.canChangePlan);
+    const pagoAcciones = puedePagar
+      ? `<div class="row-actions"><button class="btn sm" data-act="pago:elegir">${esc(t('cuenta.changePlan'))}</button>${q.subscription.hasPortal ? `<button class="btn sm ghost" data-act="pago:portal">${esc(t('cuenta.billingPortal'))}</button>` : ''}</div>`
+      : canSetCurrency(me) ? `<div class="row-actions"><a class="btn sm" href="../../#precios">${esc(t('cuenta.changePlan'))}</a></div>` : '';
+    const INV_KIND = { paid: 'ok', open: 'warn', draft: '', void: '', uncollectible: 'bad' };
+    const facturas = puedePagar
+      ? card(t('cuenta.invoices'), (q.invoices || []).length
+          ? `<div class="list">${q.invoices.map((f) => row({
+              ico: '🧾',
+              title: esc(money(f.amountMinor / 100, f.currency)),
+              sub: esc(f.periodEnd ? t('cuenta.invoicePeriod', { from: fmtDate(f.date, true), to: fmtDate(f.periodEnd, true) }) : fmtDate(f.date, true)),
+              side: chip(t('inv.' + (INV_KIND[f.status] !== undefined ? f.status : 'open')), INV_KIND[f.status] || ''),
+              primary: f.hostedUrl ? `<a class="btn sm ghost" href="${esc(f.hostedUrl)}" target="_blank" rel="noopener">${esc(t('cuenta.invoiceView'))}</a>` : '',
+            })).join('')}</div>`
+          : `<div class="empty"><b>${esc(t('cuenta.noInvoices'))}</b>${esc(t('cuenta.noInvoicesSub'))}</div>`,
+          { sub: t('cuenta.invoicesSub') })
+      : '';
+    const paquetes = puedePagar && (q.addons || []).length
+      ? card(t('cuenta.addonsTitle'), `<div class="list">${q.addons.map((a) => row({
+          ico: '➕',
+          title: esc(a.name),
+          sub: esc(a.price ? t('cuenta.addonPrice', { price: money(a.price.amountMinor / 100, a.price.currency), units: num(a.units) }) : t('cuenta.addonNoPrice')),
+          primary: a.price ? `<button class="btn sm primary" data-act="pago:paquete" data-code="${esc(a.code)}">${esc(t('cuenta.addonBuy'))}</button>` : '',
+        })).join('')}</div>`, { sub: t('cuenta.addonsSub') })
+      : '';
+    const pagos = facturas + paquetes;
+
     const cuentaCard = card(t('cuenta.yourAccount'), `<div class="list">
       ${row({ ico: '👤', title: esc(personName(me, ctx)), sub: esc(personEmail(me, ctx)), primary: `<button class="btn sm" data-act="acc:profile">${esc(t('cuenta.edit'))}</button>` })}
       ${row({ ico: ICON.wa, title: `WhatsApp ${me.whatsapp ? statusChip(me.whatsapp.status) : ''}`, sub: `${esc(me.whatsapp?.phone || t('cuenta.notLinked'))}${me.comandoNumber ? ` · ${esc(t('cuenta.youWriteTo', { number: me.comandoNumber }))}` : ''}`, primary: `<button class="btn sm ghost" data-act="wa:change">${esc(t('cuenta.changeNumber'))}</button>` })}
       <div id="wa-change-box"></div>
       ${currencyRow(me, active)}
-      <div class="row"><div class="row-ico">💳</div><div class="row-body">${plan}${usage}</div>${canSetCurrency(me) ? `<div class="row-actions"><a class="btn sm" href="../../#precios">${esc(t('cuenta.changePlan'))}</a></div>` : ''}</div>
+      <div class="row"><div class="row-ico">💳</div><div class="row-body">${plan}${usage}</div>${pagoAcciones}</div>
+      <div id="plan-chooser" class="plan-chooser" hidden></div>
     </div>`);
 
     const h = val(d.health, null);
@@ -1360,9 +1404,64 @@ const cuenta = {
     const privacidad = card(t('cuenta.privacy'), `<ul class="plain"><li>${esc(t('cuenta.privacy1'))}</li><li>${esc(t('cuenta.privacy2'))}</li><li>${esc(t('cuenta.privacy3'))}</li></ul>
       <div class="inline-list" style="margin-top:12px"><a class="btn sm ghost" href="../../privacidad.html">${esc(t('cuenta.privacyPolicy'))}</a><a class="btn sm ghost" href="mailto:hola@comando.pro">${esc(t('cuenta.deleteAccount'))}</a><button class="btn sm danger" data-act="acc:signout">${esc(t('cuenta.signOut'))}</button></div>`);
 
-    return `<div class="stack">${head(this.title, this.sub)}${cuentaCard}${conexiones}${anuncios}<div class="two">${equipo}${sabe}</div>${privacidad}</div>`;
+    return `<div class="stack">${head(this.title, this.sub)}${cuentaCard}${pagos}${conexiones}${anuncios}<div class="two">${equipo}${sabe}</div>${privacidad}</div>`;
   },
   act: {
+    /* Elegir plan: la lista pública de planes, sin el gratuito ni el actual,
+       con un botón por intervalo. Cambiar es en el acto si ya se paga por la
+       pasarela (`mode: 'changed'`) o pasa por el checkout si no. */
+    'pago:elegir': (el, ctx, d) => {
+      const box = document.getElementById('plan-chooser');
+      if (!box) return;
+      if (!box.hidden) { box.hidden = true; box.innerHTML = ''; return; }
+      const q = val(d.quota, null);
+      const actual = q && q.plan ? q.plan.code : '';
+      const planes = val(d.plans, []).filter((p) => p.code !== 'free' && p.code !== 'gratis' && p.amountMinor !== null && p.amountMinor > 0);
+      const filas = planes.map((p) => {
+        const precio = p.amountMinor !== null && p.currency ? money(p.amountMinor / 100, p.currency) : '';
+        const esActual = p.code === actual;
+        const intervalo = p.billingInterval === 'annual' ? t('cuenta.year') : t('cuenta.month');
+        return row({
+          ico: esActual ? '✅' : '📦',
+          title: `${esc(p.displayName || p.code)} ${esActual ? chip(t('cuenta.current'), 'ok') : ''}`,
+          sub: precio ? `${esc(precio)}/${esc(intervalo)}` : '',
+          primary: esActual ? '' : `<button class="btn sm primary" data-act="pago:cambiar" data-plan="${esc(p.code)}" data-interval="${esc(p.billingInterval === 'annual' ? 'annual' : 'monthly')}" data-name="${esc(p.displayName || p.code)}">${esc(t('cuenta.choosePlan'))}</button>`,
+        });
+      }).join('');
+      box.innerHTML = filas
+        ? `<div class="card"><div class="card-head"><div><h2>${esc(t('cuenta.choosePlanTitle'))}</h2><p>${esc(t('cuenta.choosePlanSub'))}</p></div><button class="btn sm ghost" data-act="pago:elegir">${esc(t('row.cancel'))}</button></div><div class="list">${filas}</div></div>`
+        : `<div class="empty"><b>${esc(t('cuenta.noPlans'))}</b></div>`;
+      box.hidden = false;
+      box.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    },
+    'pago:cambiar': async (el, ctx, d, reload) => {
+      const { plan: planCode, interval, name } = el.dataset;
+      el.disabled = true;
+      try {
+        const r = await ctx.api.changePlan(planCode, interval);
+        if (r && r.mode === 'checkout' && r.url) { location.assign(r.url); return; }
+        toast(t('cuenta.planChanged', { name: name || planCode }), 'ok');
+        ctx.cache = {};
+        reload();
+      } catch (e) {
+        el.disabled = false;
+        avisarFalloDePago(e);
+      }
+    },
+    'pago:portal': async (el, ctx) => {
+      el.disabled = true;
+      try {
+        const r = await ctx.api.portal();
+        if (r && r.url) location.assign(r.url); else toast(t('pago.noDisponible'));
+      } catch (e) { el.disabled = false; avisarFalloDePago(e); }
+    },
+    'pago:paquete': async (el, ctx) => {
+      el.disabled = true;
+      try {
+        const r = await ctx.api.addonCheckout(el.dataset.code);
+        if (r && r.url) location.assign(r.url); else toast(t('pago.noDisponible'));
+      } catch (e) { el.disabled = false; avisarFalloDePago(e); }
+    },
     'acc:profile': (el, ctx) => (ctx.clerk ? ctx.clerk.openUserProfile() : toast(t('cuenta.noSessionInMock'))),
     'acc:signout': async (el, ctx) => { if (!ctx.clerk) return toast(t('cuenta.noSessionInMock')); await ctx.clerk.signOut(); location.href = '../'; },
     'team:invite': () => { toast(t('cuenta.inviteToast')); navigator.clipboard?.writeText(location.origin + '/app/'); },

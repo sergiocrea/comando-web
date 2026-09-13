@@ -7,7 +7,7 @@
      equivalente para pedirlo por WhatsApp. Ver README.md: tabla de endpoints.
    - `createMockApi()` sirve los datos de mock-data.js con una pequeña latencia. */
 
-import { MOCK, MOCK_DELAY_MS, marketingOverview, marketingRefresh, metaStatus, mockSheet, mockCommandRecords } from './mock-data.js?v=10';
+import { MOCK, MOCK_DELAY_MS, marketingOverview, marketingRefresh, metaStatus, mockSheet, mockCommandRecords } from './mock-data.js?v=11';
 
 const PENDING = (reason) => ({ pending: true, reason });
 
@@ -104,6 +104,12 @@ export function createApi(cfg, getToken) {
        dónde mandar al cliente. 503 mientras la pasarela no esté configurada
        (se enseña como «pronto»); 409 si el plan no tiene precio en línea. */
     checkout: (planCode, interval) => mutate('/billing/checkout', 'POST', { planCode, interval: interval || 'monthly' }),
+    /* Segunda fase: cambiar de plan (en el acto o por checkout), el portal del
+       proveedor y un paquete extra cobrado una vez. Mismos códigos: 503 sin
+       pasarela, 409 con motivo, 403 si no es el dueño. */
+    changePlan: (planCode, interval) => mutate('/billing/plan-change', 'POST', { planCode, interval: interval || 'monthly' }),
+    portal: () => mutate('/billing/portal', 'POST', {}),
+    addonCheckout: (addonCode) => mutate('/billing/addons/checkout', 'POST', { addonCode }),
     team: () => optional(() => call('/team'), 'team'),
     /* Las métricas de Meta (plan 16 §6): `{connection, period, totals[],
        campaigns[], accounts[], freshness, refresh}`. `totals` es una lista con
@@ -225,6 +231,9 @@ export function createMockApi() {
     policy: () => wait(a.policy),
     quota: () => wait(MOCK.quota),
     checkout: (planCode, interval) => log('POST /billing/checkout', { planCode, interval }).then(() => ({ provider: 'stripe', url: location.href.split('?')[0] + '?mock=1&checkout=ok#/cuenta', expiresAt: new Date(Date.now() + 18e5).toISOString(), planCode, interval })),
+    changePlan: (planCode, interval) => log('POST /billing/plan-change', { planCode, interval }).then(() => ({ mode: 'changed', provider: 'stripe', planCode, interval, status: 'active' })),
+    portal: () => log('POST /billing/portal').then(() => ({ provider: 'stripe', url: location.href.split('?')[0] + '?mock=1&portal=1#/cuenta' })),
+    addonCheckout: (addonCode) => log('POST /billing/addons/checkout', { addonCode }).then(() => ({ provider: 'stripe', url: location.href.split('?')[0] + '?mock=1&checkout=ok#/cuenta', addonCode, units: 500 })),
     team: () => wait(MOCK.team),
     /* El caso que se quiere mirar va en la URL: `?mock=1&mk=limitado` (el
        botón dentro de los cinco minutos), `&mk=marcada` (Facebook retiró el

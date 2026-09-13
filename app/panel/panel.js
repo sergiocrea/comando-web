@@ -6,12 +6,12 @@
      aún no exista en el engine no tumba la página.
    - Tres piezas fijas: el menú arriba, la página en el centro y el chat con
      Comando a la derecha (en móvil, un cajón que se abre desde la barra de abajo). */
-import { createApi, createMockApi } from './api.js?v=15';
-import { SECTIONS, globalActions } from './sections.js?v=25';
-import { chatView, paintChat, loadHistory, openChat, closeChat, chatPreference } from './chat.js?v=2';
+import { createApi, createMockApi } from './api.js?v=16';
+import { SECTIONS, globalActions } from './sections.js?v=27';
+import { chatView, paintChat, loadHistory, openChat, closeChat, chatPreference } from './chat.js?v=3';
 import { whatsappStep, resumePendingConnection } from './setup.js?v=12';
 import { esc, setWaBase, setAccountCurrency, wa, skeleton, toast, ICON, personName, isToday, isPast } from './ui.js?v=12';
-import '../strings.js?v=18';
+import '../strings.js?v=19';
 import { initLocale, adoptAccountLocale, mountLanguagePicker, onLocaleChange, locale, t } from '../i18n.js?v=1';
 
 initLocale();

@@ -44,25 +44,27 @@ export const MOCK = {
   ],
 
   quota: {
-    plan: { code: 'starter', name: 'Starter', priceUsd: 7, interval: 'month' },
-    period: { start: at(-12), end: at(18), resetAt: at(18) },
+    plan: { code: 'starter', name: 'Starter', interval: 'monthly', price: { amountMinor: 700, currency: 'USD', source: 'subscription' } },
+    subscription: { provider: 'stripe', status: 'active', canChangePlan: true, hasPortal: true },
+    addons: [{ code: 'extra_commands_500', name: '+500 comandos', units: 500, price: { amountMinor: 800, currency: 'USD' } }],
+    period: { key: '2026-09', kind: 'monthly', start: at(-12), end: at(18), resetAt: at(18) },
     commands: { allowance: 500, addons: 0, adjustments: 0, used: 212, balance: 288 },
     contacts: { used: 174, limit: 30_000 },
     connections: { used: 2, limit: 5 },
     audioShare: 0.31,
     blockedReason: null,
     invoices: [
-      { id: 'inv-3', date: at(-12), amount: 7, status: 'paid' },
-      { id: 'inv-2', date: at(-42), amount: 7, status: 'paid' },
-      { id: 'inv-1', date: at(-72), amount: 3, status: 'paid' },
+      { id: 'inv-3', date: at(-12), periodEnd: at(18), amountMinor: 700, currency: 'USD', status: 'paid', hostedUrl: 'https://invoice.stripe.com/i/ejemplo-3' },
+      { id: 'inv-2', date: at(-42), periodEnd: at(-12), amountMinor: 700, currency: 'USD', status: 'paid', hostedUrl: 'https://invoice.stripe.com/i/ejemplo-2' },
+      { id: 'inv-1', date: at(-72), periodEnd: at(-42), amountMinor: 300, currency: 'USD', status: 'paid', hostedUrl: null },
     ],
   },
 
   plans: [
-    { code: 'gratis', name: 'Gratis', priceUsd: 0, contacts: 10_000, commands: 30, connections: 1 },
-    { code: 'basico', name: 'Básico', priceUsd: 3, contacts: 10_000, commands: 150, connections: 2 },
-    { code: 'starter', name: 'Starter', priceUsd: 7, contacts: 30_000, commands: 500, connections: 5 },
-    { code: 'pro', name: 'Pro', priceUsd: 19, contacts: 80_000, commands: 1500, connections: null },
+    { code: 'free', displayName: 'Gratis', billingInterval: 'none', currency: null, amountMinor: null, commandLimit: 30, contactLimit: 10_000, connectionLimit: 1 },
+    { code: 'basico', displayName: 'Básico', billingInterval: 'monthly', currency: 'USD', amountMinor: 300, commandLimit: 150, contactLimit: 10_000, connectionLimit: 2 },
+    { code: 'starter', displayName: 'Starter', billingInterval: 'monthly', currency: 'USD', amountMinor: 700, commandLimit: 500, contactLimit: 30_000, connectionLimit: 5 },
+    { code: 'pro', displayName: 'Pro', billingInterval: 'monthly', currency: 'USD', amountMinor: 1900, commandLimit: 1500, contactLimit: 80_000, connectionLimit: null },
   ],
 
   /* Sales intelligence: recomendaciones vigentes (skill deal_health / next_best_action). */
