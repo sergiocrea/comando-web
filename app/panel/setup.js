@@ -8,7 +8,7 @@
    - `crmActions`: los manejadores de esos botones (OAuth por Nango en ventana emergente,
      confirmación por sondeo, selector de hojas de Google). */
 
-import { esc, toast, ICON, fmtDate } from './ui.js?v=11';
+import { esc, toast, preguntar, ICON, fmtDate } from './ui.js?v=12';
 import { t, tn } from '../i18n.js?v=1';
 
 const cfg = () => window.COMANDO_CONFIG || {};
@@ -242,7 +242,7 @@ export const crmActions = {
   },
   'crm:disconnect': async (el, ctx, d, reload) => {
     const name = NAMES[el.dataset.provider] || t('crm.theCrm');
-    if (!window.confirm(t('crm.confirmDisconnect', { name }))) return;
+    if (!(await preguntar({ titulo: t('crm.confirmDisconnectTitle', { name }), texto: t('crm.confirmDisconnect'), si: t('crm.disconnectYes'), peligro: true }))) return;
     el.disabled = true;
     try {
       const result = await ctx.api.raw('/integrations/connections/' + el.dataset.id, { method: 'DELETE', headers: rid(), body: JSON.stringify({ purgeMode: 'after-grace', reason: 'onboarding_crm_switch' }) });
@@ -251,7 +251,7 @@ export const crmActions = {
   },
   'crm:purge': async (el, ctx, d, reload) => {
     const name = NAMES[el.dataset.provider] || t('crm.theCrm');
-    if (!window.confirm(t('crm.confirmPurge', { name }))) return;
+    if (!(await preguntar({ titulo: t('crm.confirmPurgeTitle', { name }), texto: t('crm.confirmPurge'), si: t('crm.purgeYes'), peligro: true }))) return;
     el.disabled = true;
     try {
       const result = await ctx.api.raw('/integrations/connections/' + el.dataset.id, { method: 'DELETE', headers: rid(), body: JSON.stringify({ purgeMode: 'immediate', reason: 'operator_delete_now' }) });

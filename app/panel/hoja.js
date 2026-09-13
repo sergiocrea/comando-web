@@ -10,7 +10,7 @@
    hoja»). Nada de esto escribe en el CRM. */
 
 import { isPending } from './api.js?v=15';
-import { esc, num, money, fmtDate, rel, toast, ICON } from './ui.js?v=11';
+import { esc, num, money, fmtDate, rel, toast, ICON } from './ui.js?v=12';
 import { t, tn } from '../i18n.js?v=1';
 
 export const OBJECT_TYPES = ['contact', 'deal', 'company', 'task'];

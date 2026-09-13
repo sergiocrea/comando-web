@@ -14,7 +14,7 @@
    aparece, y por eso se queda mirando. */
 
 import { isPending } from './api.js?v=15';
-import { esc, rel, fmtTime, askLine, toast } from './ui.js?v=11';
+import { esc, rel, fmtTime, askLine, toast } from './ui.js?v=12';
 import { t, tn } from '../i18n.js?v=1';
 
 const POLL_MS = 1500;

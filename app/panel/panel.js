@@ -7,11 +7,11 @@
    - Tres piezas fijas: el menú arriba, la página en el centro y el chat con
      Comando a la derecha (en móvil, un cajón que se abre desde la barra de abajo). */
 import { createApi, createMockApi } from './api.js?v=15';
-import { SECTIONS, globalActions } from './sections.js?v=24';
-import { chatView, paintChat, loadHistory, openChat, closeChat, chatPreference } from './chat.js?v=1';
-import { whatsappStep, resumePendingConnection } from './setup.js?v=11';
-import { esc, setWaBase, setAccountCurrency, wa, skeleton, toast, ICON, personName, isToday, isPast } from './ui.js?v=11';
-import '../strings.js?v=17';
+import { SECTIONS, globalActions } from './sections.js?v=25';
+import { chatView, paintChat, loadHistory, openChat, closeChat, chatPreference } from './chat.js?v=2';
+import { whatsappStep, resumePendingConnection } from './setup.js?v=12';
+import { esc, setWaBase, setAccountCurrency, wa, skeleton, toast, ICON, personName, isToday, isPast } from './ui.js?v=12';
+import '../strings.js?v=18';
 import { initLocale, adoptAccountLocale, mountLanguagePicker, onLocaleChange, locale, t } from '../i18n.js?v=1';
 
 initLocale();
@@ -99,7 +99,7 @@ const reload = () => route(true);
    Un solo despachador para la página, el chat y las barras: la acción se
    busca primero en la sección y, si no la conoce, en las globales (el chat y
    el menú), que valen desde cualquier sitio. */
-const GLOBALES = { ...globalActions(), 'menu:more': () => $('mas').showModal(), 'menu:close': () => $('mas').close() };
+const GLOBALES = { ...globalActions(), 'menu:more': () => $('mas').showModal(), 'menu:close': () => $('mas').close(), 'filtro:cerrar': (el) => el.closest('details')?.removeAttribute('open') };
 const actionFor = (name) => { const section = SECTIONS.find((s) => s.id === currentId()); return (section.act && section.act[name]) || GLOBALES[name]; };
 async function onClick(ev) {
   const el = ev.target.closest('[data-tab],[data-cal],[data-act],[data-reload],[data-nav]');
@@ -148,12 +148,31 @@ async function onSubmit(ev) {
   catch (e) { msg.className = 'form-msg bad'; msg.textContent = e.message || t('common.saveFailed'); }
   finally { btn.disabled = false; }
 }
+/* `toggle` no burbujea: se escucha en captura. Un menú `<details data-onclose>`
+   aplica lo elegido al cerrarse (las cuentas de Marketing), esté donde esté
+   ya el menú: si un clic en otra sección lo cerró, el nodo suelto todavía
+   conserva sus casillas. */
+async function onToggle(ev) {
+  const el = ev.target;
+  if (!(el instanceof HTMLDetailsElement) || el.open || !el.dataset.onclose) return;
+  const section = SECTIONS.find((s) => s.id === currentId());
+  const fn = actionFor(el.dataset.onclose);
+  if (!fn) return;
+  try { await fn(el, ctx, ctx.cache[section.id], reload, rerender); } catch (e) { toast(e.message || t('common.failed'), 'bad'); }
+}
 for (const host of ['page', 'chat', 'tabbar', 'mas', 'hoja-columnas', 'top']) {
   const el = $(host); if (!el) continue;
   el.addEventListener('click', onClick);
   el.addEventListener('change', onChange);
   el.addEventListener('submit', onSubmit);
+  el.addEventListener('toggle', onToggle, true);
 }
+/* Un menú de filtros abierto se cierra con un clic fuera de él; en móvil, el
+   fondo velado es el propio `details` (su ::before), así que también cuenta. */
+document.addEventListener('click', (ev) => {
+  for (const menu of document.querySelectorAll('details.filtro[open]'))
+    if (ev.target === menu || !menu.contains(ev.target)) menu.removeAttribute('open');
+});
 window.addEventListener('hashchange', () => route(false));
 
 /* ---------------------------------------------------------------- el chat

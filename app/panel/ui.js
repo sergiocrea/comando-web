@@ -211,6 +211,44 @@ export function toast(msg, kind = '') {
   document.body.appendChild(el); setTimeout(() => el.remove(), 3200);
 }
 
+/* Una sola manera de preguntar «¿seguro?» en todo el panel: un diálogo propio
+   con título, explicación, «Cancelar» con el foco y, a la derecha, el botón
+   que rompe algo. Ni `confirm()` ni `prompt()` del navegador: se leen en
+   diagonal, no se traducen y no cabe en ellos lo que la acción cuesta.
+   Con `campo` pide además un texto (el motivo de un rechazo) y lo devuelve;
+   sin él devuelve true/false. Escape o «Cancelar» es null/false.
+   A propósito NO se cierra pulsando el fondo: un clic despistado fuera de la
+   caja no debe contar como respuesta. */
+export function preguntar({ titulo, texto = '', si, no, peligro = false, campo = null }) {
+  return new Promise((resolve) => {
+    document.getElementById('pregunta')?.remove();
+    const dlg = document.createElement('dialog');
+    dlg.className = 'modal'; dlg.id = 'pregunta';
+    dlg.innerHTML = `<form method="dialog" class="modal-caja">
+      <h3>${esc(titulo)}</h3>
+      ${texto ? `<p>${esc(texto)}</p>` : ''}
+      ${campo ? `<label class="pregunta-campo"><span>${esc(campo.label || '')}</span><input type="text" name="valor" autocomplete="off" maxlength="${Number(campo.maxlength) || 240}" placeholder="${esc(campo.placeholder || '')}"${campo.required === false ? '' : ' required'}></label>` : ''}
+      <div class="modal-pie">
+        <button type="button" class="btn sm ghost" value="no"${campo ? '' : ' autofocus'}>${esc(no || t('common.cancel'))}</button>
+        <button type="submit" class="btn sm ${peligro ? 'danger' : 'primary'}" value="si">${esc(si || t('common.confirm'))}</button>
+      </div></form>`;
+    document.body.appendChild(dlg);
+    const form = dlg.querySelector('form');
+    const input = dlg.querySelector('input[name=valor]');
+    let respuesta = campo ? null : false;
+    form.querySelector('button[value=no]').addEventListener('click', () => dlg.close());
+    form.addEventListener('submit', (ev) => {
+      if (!campo) { respuesta = true; return; }
+      const v = (input.value || '').trim();
+      if (!v && campo.required !== false) { ev.preventDefault(); input.focus(); return; }
+      respuesta = v;
+    });
+    dlg.addEventListener('close', () => { dlg.remove(); resolve(respuesta); });
+    dlg.showModal();
+    input?.focus();
+  });
+}
+
 export const ICON = {
   grid: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 10h18M3 15h18M9 4v16M15 4v16"/></svg>',
   chat: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"/></svg>',

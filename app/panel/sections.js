@@ -8,15 +8,15 @@
    - vocabulario del operador (plata en juego, parado, sin dueño, repetidos), nunca del sistema. */
 
 import { isPending } from './api.js?v=15';
-import { crmBlock, crmActions, whatsappStep, NAMES as PROVIDER_NAMES } from './setup.js?v=11';
+import { crmBlock, crmActions, whatsappStep, NAMES as PROVIDER_NAMES } from './setup.js?v=12';
 import {
   esc, num, money, pct, fmtTime, fmtDate, fmtDateTime, monthName, dayLabel, sameDay, rel, isToday, isPast, isoDay,
-  wa, waBtn, waLink, askLine, chip, statusChip, bar, spark, kpi, card, row, moreBox, empty, soon, skeleton, toast, ICON, SIGNAL_PHRASE,
+  wa, waBtn, waLink, askLine, chip, statusChip, bar, spark, kpi, card, row, moreBox, empty, soon, skeleton, toast, preguntar, ICON, SIGNAL_PHRASE,
   personName, personEmail, highValueAmount, SYMBOL, setAccountCurrency,
-} from './ui.js?v=11';
+} from './ui.js?v=12';
 import { t, tn, localeTag } from '../i18n.js?v=1';
-import { chatActions, awaitsWord } from './chat.js?v=1';
-import { hoja } from './hoja.js?v=1';
+import { chatActions, awaitsWord } from './chat.js?v=2';
+import { hoja } from './hoja.js?v=2';
 
 /** Renderiza una parte según el estado de su dato. */
 function part(v, fn, opts = {}) {
@@ -103,7 +103,7 @@ const taskActions = () => ({
 });
 const approvalActions = () => ({
   'ap:approve': async (el, ctx, d, reload) => { el.disabled = true; try { await ctx.api.decideApproval(el.dataset.id, 'approve'); toast(t('toast.approved'), 'ok'); reload(); } catch (e) { toast(e.message, 'bad'); el.disabled = false; } },
-  'ap:reject': async (el, ctx, d, reload) => { const reason = window.prompt(t('prompt.rejectReason')); if (!reason) return; el.disabled = true; try { await ctx.api.decideApproval(el.dataset.id, 'reject', reason); toast(t('toast.rejected'), 'ok'); reload(); } catch (e) { toast(e.message, 'bad'); el.disabled = false; } },
+  'ap:reject': async (el, ctx, d, reload) => { const reason = await preguntar({ titulo: t('prompt.rejectTitle'), campo: { label: t('prompt.rejectReason') }, si: t('prompt.rejectYes'), peligro: true }); if (!reason) return; el.disabled = true; try { await ctx.api.decideApproval(el.dataset.id, 'reject', reason); toast(t('toast.rejected'), 'ok'); reload(); } catch (e) { toast(e.message, 'bad'); el.disabled = false; } },
 });
 
 /* ======================================================== EL CHAT CON COMANDO
@@ -120,7 +120,7 @@ const chatNudge = () => `<button type="button" class="chat-nudge" data-act="chat
 /* ===================================================================== HOY */
 const hoy = {
   id: 'hoy', get title() { return t('nav.hoy'); }, get sub() { return t('sub.hoy'); }, icon: 'home',
-  load: (api) => ({ me: api.me(), recs: api.recommendations(), tasks: api.tasks(), health: api.health(), pipeline: api.pipeline(), history: api.history(), approvals: api.approvals() }),
+  load: (api) => ({ me: api.me(), recs: api.recommendations(), tasks: api.tasks(), health: api.health(), history: api.history(), approvals: api.approvals() }),
   view(d, ctx) {
     const me = val(d.me, {});
     const recs = val(d.recs, []).filter((r) => r.status === 'pending').sort((a, b) => b.priority - a.priority);
@@ -131,7 +131,6 @@ const hoy = {
     const pendingPlan = hist.find(awaitsWord);
     const waiting = hist.filter((x) => x.status === 'awaiting_approval');
     const approvals = val(d.approvals, []).filter((a) => a.status === 'pending');
-    const pipe = val(d.pipeline, null);
     const hour = new Date().getHours();
     const greet = t(hour < 12 ? 'hoy.greet.morning' : hour < 19 ? 'hoy.greet.afternoon' : 'hoy.greet.evening');
 
@@ -149,8 +148,7 @@ const hoy = {
     const tray = card(t('hoy.tray'), allPending ? soon(t('hoy.trayWhat'), t('wa.whatMattersToday')) : (items.length ? `<div class="list">${items.join('')}</div>` : empty(t('hoy.nothingPending'), t('hoy.silenceIsGood'))),
       { sub: count ? tn('hoy.dependOnYou', count) : t('hoy.whenSomething') });
 
-    const kpis = `<div class="grid c3">
-      ${kpi(t('hoy.moneyInPlay'), pipe ? money(pipe.open.amount, pipe.currency) : t('common.dash'), pipe ? t('hoy.openDeals', { n: num(pipe.open.count) }) : (isPending(d.pipeline) ? t('hoy.soonInAccount') : ''), { spark: pipe ? spark(pipe.stages.map((s) => s.count)) : '' })}
+    const kpis = `<div class="grid c2">
       ${kpi(t('hoy.forToday'), `${num(today.length)}<small>${esc(tn('hoy.task', today.length))}</small>`, overdue.length ? `<span class="sev-warning">${esc(tn('hoy.overdue', overdue.length))}</span>` : t('hoy.noneOverdue'))}
       ${kpi(t('hoy.waitingForYou'), `${num(count)}<small>${esc(tn('hoy.pending', count))}</small>`, recs.length ? esc(tn('hoy.deserve', recs.length)) : t('hoy.nothingUrgent'))}
     </div>`;
@@ -165,15 +163,19 @@ const hoy = {
       <p>${count ? tn('hoy.youHave', count) : esc(t('hoy.nothingUrgentNow'))} ${esc(t('hoy.askByPhrase'))}</p>
       ${waLink(t('wa.whatMattersToday'), t('common.writeToComando'), 'btn primary')}</div><div class="welcome-art">${art}</div></div>`;
 
-    const review = card(t('hoy.review'), part(d.health, (hh) => {
-      const top = hh.metrics.filter((m) => m.severity === 'high' || m.severity === 'warning').slice(0, 3);
-      return `<div class="bars">${top.map((m) => bar(m.label, m.value, m.of || Math.max(m.value, 1), { cls: m.severity === 'high' ? 'warn' : 'blue', text: `<b>${num(m.value)}</b>${m.of ? ' / ' + num(m.of) : ''}` })).join('')}</div><div class="status-line" style="margin-top:14px">${syncLine(hh.sync)}</div>`;
-    }, { what: t('hoy.review'), phrase: t('wa.whatToReview') }), { more: t('hoy.seeAll'), moreHref: '#/crm' });
+    /* Lo del CRM —la plata en juego, qué revisar— vive en Resumen. Aquí solo
+       se apunta, en una línea y solo si hay algo: las mismas barras y el mismo
+       importe en dos secciones fue un hallazgo de la auditoría del 12-sep. */
+    const hh = val(d.health, null);
+    const alertas = hh && hh.metrics ? hh.metrics.filter((m) => m.severity === 'high' || m.severity === 'warning').length : 0;
+    const crmPointer = hh && hh.metrics
+      ? `<div class="status-line crm-pointer">${syncLine(hh.sync)}${alertas ? `<span>${esc(tn('hoy.toReview', alertas, { n: num(alertas) }))}</span>` : ''}<a href="#/crm">${esc(t('hoy.seeCrm'))}</a></div>`
+      : '';
     const last = card(t('hoy.last'), part(d.history, (hs) => list(hs.filter((h) => !awaitsWord(h) && !(h.status === 'pending' && !h.note && !h.plan)).slice(0, 5), histRow, t('hoy.neverWrote')), { what: t('hoy.last'), phrase: t('wa.lastThing') }),
       { right: waBtn(t('wa.undo'), t('hoy.undoLast'), 'btn sm ghost') });
 
     const noCrm = me.status === 'ok' && me.crmConnected === false ? `<div class="card setup-nudge"><div class="row"><div class="row-ico ok">🔌</div><div class="row-body"><div class="row-title">${esc(t('hoy.connectCrm'))}</div><div class="row-sub">${esc(t('hoy.connectCrmSub'))}</div></div><div class="row-actions"><a class="btn sm primary" href="#/cuenta">${esc(t('hoy.connectCrmBtn'))}</a></div></div></div>` : '';
-    return `<div class="stack">${welcome}${noCrm}${chatNudge()}${kpis}${tray}<div class="two">${review}${last}</div></div>`;
+    return `<div class="stack">${welcome}${noCrm}${chatNudge()}${kpis}${crmPointer}${tray}${last}</div>`;
   },
   act: { ...recActions(), ...taskActions(), ...approvalActions(), ...chatActions() },
 };
@@ -577,6 +579,10 @@ async function pedirPeriodo(ctx, d, rerender, periodo) {
  *  que se acaban de pedir, que es lo que uno estaba mirando. */
 function cerrarMenu(el) { el?.closest('details.filtro')?.removeAttribute('open'); }
 
+/* En móvil el menú es una hoja que sube desde abajo, y hace falta un sitio
+   claro por donde salir sin elegir nada. En escritorio el botón no se ve. */
+const listo = () => `<button type="button" class="btn sm primary filtro-listo" data-act="filtro:cerrar">${esc(t('mk.filterDone'))}</button>`;
+
 function menuDeDatos(m) {
   const r = m.refresh || {};
   const bloqueado = r.allowed === false && r.retryAfterSeconds > 0;
@@ -591,6 +597,7 @@ function menuDeDatos(m) {
         <span class="menu-titulo">${esc(t('mk.importHistory'))}</span>
         <span class="hint">${esc(t('mk.importHistorySub'))}</span>
       </button>
+      ${listo()}
     </div>
   </details>`;
 }
@@ -730,6 +737,7 @@ function periodPicker(ctx, hoy) {
         <label><span>${esc(t('mk.periodFrom'))}</span><input type="date" data-act="mk:fecha" data-extremo="desde" value="${esc(desde)}" min="${suelo}" max="${techo}"></label>
         <label><span>${esc(t('mk.periodTo'))}</span><input type="date" data-act="mk:fecha" data-extremo="hasta" value="${esc(hasta)}" min="${suelo}" max="${techo}"></label>
       </div>
+      ${listo()}
     </div>
   </details>`;
 }
@@ -752,7 +760,7 @@ function filterBar(m, cuentas, ctx) {
   const grupos = [...porPortfolio].map(([nombre, items]) => `
     <p class="filtro-grupo">${esc(nombre)}</p>
     ${items.map((c) => `<label class="filtro-opcion">
-      <input type="checkbox" class="mk-cuenta" data-act="mk:accounts" value="${esc(c.id)}"${c.selected ? ' checked' : ''}>
+      <input type="checkbox" class="mk-cuenta" data-act="mk:accountsToggle" value="${esc(c.id)}"${c.selected ? ' checked' : ''}>
       <span class="filtro-texto">
         <span class="filtro-nombre">${esc(c.name)}</span>
         <span class="filtro-detalle">${esc(c.accountRef || '')}${c.currency ? ` · ${esc(c.currency)}` : ''}${c.timezoneName ? ` · ${esc(c.timezoneName)}` : ''}</span>
@@ -760,7 +768,7 @@ function filterBar(m, cuentas, ctx) {
       </span>
     </label>`).join('')}`).join('');
   const cuentasFiltro = total
-    ? `<details class="filtro">
+    ? `<details class="filtro" data-onclose="mk:accountsApply">
          <summary>${esc(tn('mk.filterAccounts', elegidas, { n: num(elegidas), total: num(total) }))}</summary>
          <div class="filtro-panel">
            ${grupos}
@@ -768,6 +776,7 @@ function filterBar(m, cuentas, ctx) {
              <button class="btn sm ghost" data-act="meta:refresh">${esc(t('mk.metaRefresh'))}</button>
              <span class="hint">${esc(t('mk.metaRefreshHint'))}</span>
            </div>
+           ${listo()}
          </div>
        </details>`
     : '';
@@ -1050,24 +1059,32 @@ const marketing = {
       await pedirPeriodo(ctx, d, rerender, { id: 'rango', since: desde, until: hasta });
     },
     /**
-     * Marcar o desmarcar una cuenta.
+     * Marcar o desmarcar cuentas.
      *
-     * Se guarda al instante, sin «Guardar la elección»: es un filtro más y
-     * pedir un segundo clic para confirmar lo que ya se dijo sobra.
+     * Marcar no cierra el menú ni repinta: elegir tres cuentas exigía abrirlo
+     * tres veces (M5 de la auditoría). La píldora cuenta en vivo y lo elegido
+     * se aplica de una vez al cerrar el menú —por «Listo», por escape, por un
+     * clic fuera— y ahí sí se guarda, se avisa y se repide todo.
      *
-     * Pero NO es solo una vista: cambia lo que el trabajo horario sincroniza.
-     * Por eso se avisa de que quedó guardado —una elección que persiste en
-     * silencio deja al operador sin saber si tomó— y por eso desmarcar la
-     * ÚLTIMA se rechaza: sin ninguna cuenta no hay nada que copiar, y eso se
-     * dice en vez de dejarlo pasar y que el panel se vacíe sin explicación.
+     * No es solo una vista: cambia lo que el trabajo horario sincroniza. Por
+     * eso desmarcar la ÚLTIMA se rechaza en el acto: sin ninguna cuenta no hay
+     * nada que copiar, y eso se dice en vez de dejar que el panel se vacíe.
      */
-    'mk:accounts': async (el, ctx, d, reload, rerender) => {
-      const refs = [...document.querySelectorAll('input.mk-cuenta:checked')].map((i) => i.value);
-      if (!refs.length) {
-        el.checked = true;
-        toast(t('mk.accountsAtLeastOne'));
-        return;
-      }
+    'mk:accountsToggle': (el) => {
+      const menu = el.closest('details.filtro');
+      if (!menu) return;
+      const marcadas = menu.querySelectorAll('input.mk-cuenta:checked').length;
+      if (!marcadas) { el.checked = true; toast(t('mk.accountsAtLeastOne')); return; }
+      const total = menu.querySelectorAll('input.mk-cuenta').length;
+      const pildora = menu.querySelector('summary');
+      if (pildora) pildora.textContent = tn('mk.filterAccounts', marcadas, { n: num(marcadas), total: num(total) });
+      menu.dataset.cambiado = '1';
+    },
+    'mk:accountsApply': async (menu, ctx, d, reload) => {
+      if (!menu.dataset.cambiado) return;
+      delete menu.dataset.cambiado;
+      const refs = [...menu.querySelectorAll('input.mk-cuenta:checked')].map((i) => i.value);
+      if (!refs.length) return;
       cargando(true);
       try {
         await ctx.api.metaSelectAccounts(refs);
@@ -1075,7 +1092,6 @@ const marketing = {
         ctx.cache = {};
         reload();
       } catch (e) {
-        el.checked = !el.checked;
         toast(e.message, 'bad');
         cargando(false);
       }
@@ -1160,20 +1176,13 @@ const marketing = {
       try { await ctx.api.metaRefreshAccounts(); ctx.cache = {}; reload(); }
       catch (e) { toast(e.message, 'bad'); el.disabled = false; }
     },
-    /* Un `<dialog>` de verdad, no una caja dentro de la tarjeta.
-     *
-     * `showModal()` lo sube a la capa superior, así que no lo recorta ni lo
-     * tapa ningún `overflow` de las tarjetas, y trae hechos el fondo, la tecla
-     * de escape y el foco atrapado — que en una acción destructiva no son
-     * adorno: son que no se confirme sin querer con la tecla equivocada.
-     *
-     * A propósito NO se cierra pulsando el fondo. En un diálogo que borra algo,
-     * un clic despistado fuera de la caja no debe contar como respuesta. Se
-     * sale por «Cancelar» o por escape, que son deliberados; y «Cancelar» lleva
-     * el foco de entrada, para que la tecla fácil sea la que no rompe nada. */
-    'meta:disconnect': () => { document.getElementById('meta-off')?.showModal(); },
-    'meta:disconnectNo': () => { document.getElementById('meta-off')?.close(); },
-    'meta:disconnectYes': async (el, ctx, d, reload) => {
+    /* Se confirma con `preguntar()` (ui.js), el mismo diálogo de todo el panel:
+     * capa superior, escape y foco atrapado, «Cancelar» con el foco de entrada
+     * y sin cerrarse al pulsar el fondo —en una acción que borra algo, un clic
+     * despistado no debe contar como respuesta. */
+    'meta:disconnect': async (el, ctx, d, reload) => {
+      const ok = await preguntar({ titulo: t('mk.offConfirmQ'), texto: t('mk.offConfirmWhy'), si: t('mk.offConfirmYes'), peligro: true });
+      if (!ok) return;
       el.disabled = true;
       try { await ctx.api.metaDisconnect(); toast(t('mk.metaRemoved'), 'ok'); ctx.cache = {}; reload(); }
       catch (e) { toast(e.message, 'bad'); el.disabled = false; }
@@ -1220,17 +1229,7 @@ function metaCard(value) {
       <ul class="consecuencias">${consecuencias}</ul>
       <div class="inline-list" style="margin-top:16px">
         <button class="btn sm danger" data-act="meta:disconnect">${esc(t('mk.metaDisconnect'))}</button>
-      </div>
-      <dialog class="modal" id="meta-off">
-        <div class="modal-caja">
-          <h3>${esc(t('mk.offConfirmQ'))}</h3>
-          <p>${esc(t('mk.offConfirmWhy'))}</p>
-          <div class="modal-pie">
-            <button class="btn sm ghost" data-act="meta:disconnectNo" autofocus>${esc(t('row.cancel'))}</button>
-            <button class="btn sm danger" data-act="meta:disconnectYes">${esc(t('mk.offConfirmYes'))}</button>
-          </div>
-        </div>
-      </dialog>`,
+      </div>`,
       { sub: s.connectedAt ? t('mk.metaSince', { date: fmtDate(s.connectedAt) }) : t('mk.metaSub'),
         right: `${logo}${chip(t('mk.connected'), 'ok')}` });
   }, { what: t('mk.meta'), phrase: t('wa.connectAds'), extra: t('mk.metaOffSub') });
