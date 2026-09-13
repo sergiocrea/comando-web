@@ -682,7 +682,7 @@ body.sheet-open { overflow: hidden; }
   .uc-step { text-align: left; }
   .uc-result { border-left: 0; padding-left: 0; border-top: 3px solid #4d7cff; padding-top: 1rem; display: inline-block; }
 }
-@media (max-width: 767px) {
+@media (max-width: 991px) {
   /* En móvil el encabezado se comía media pantalla antes del teléfono: menos aire
      entre etiqueta y título, sin subtítulo (las pestañas ya invitan a elegir) y
      pestañas pegadas al título. */
@@ -1700,11 +1700,10 @@ html { scroll-behavior: smooth; }
     flex: 0 0 auto; flex-direction: row; align-items: center; gap: 1.9rem;
     padding: 0 .95rem 0 0; animation-name: uc-feed-slide; animation-duration: 30s;
   }
-  .uc-layout { grid-template-columns: minmax(0, 24rem); grid-template-areas: "phone" "outcome" "feed"; }
 }
 @keyframes uc-feed-slide { to { transform: translateX(-100%); } }
 
-@media (max-width: 767px) {
+@media (max-width: 991px) {
   .uc-layout { grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: "phone timeline" "feed feed"; }
   /* El aire bajo el teléfono deja de ser margen y pasa a ser el trayecto que
      recorren los rieles, así que hace falta más que los .9rem de antes. */
@@ -1712,6 +1711,15 @@ html { scroll-behavior: smooth; }
 }
 
 /* Obligatorio: sin movimiento, la lista se queda quieta y se lee igual. */
+/* Tableta: la MISMA maqueta que el móvil, sólo que ceñida. Entre 768 y 991 px
+   había una tercera: una columna de 384 px, sin línea de tiempo y con la tira de
+   logos bajo el teléfono, que no era ni lo uno ni lo otro. Ahora se reutiliza la
+   de móvil, y el tope evita lo que la delataba: un «teléfono» de 690 px de ancho
+   con los globos de chat cruzando la pantalla entera. */
+@media (min-width: 768px) and (max-width: 991px) {
+  .uc-layout { max-width: 34rem; }
+}
+
 @media (prefers-reduced-motion: reduce) { .uc-feed-col { animation: none; } }
 
 /* ============================================================
@@ -1792,7 +1800,7 @@ html { scroll-behavior: smooth; }
    en el 38 % del ancho, que a esta anchura cae dentro del teléfono: la segunda
    columna es la línea de tiempo, y subir por el centro sería apuntar al hueco
    que queda entre los dos. */
-@media (max-width: 767px) {
+@media (max-width: 991px) {
   /* El rótulo baja para dejar libre el corredor entre teléfono y tira. */
   .uc-feed { display: flex; flex-direction: column-reverse; }
   .uc-feed-label { margin: .7rem 0 0; }
@@ -1904,7 +1912,7 @@ html { scroll-behavior: smooth; }
   .uc-ads-cards li { flex: 1 1 0; justify-content: center; padding: 1rem .7rem; }
   .uc-ads-cards span { font-size: clamp(.54rem, 2.3vw, .66rem); letter-spacing: .04em; }
 }
-@media (max-width: 767px) {
+@media (max-width: 991px) {
   /* En móvil el rótulo sobra: las tres marcas ya dicen qué son. */
   .uc-ads .uc-feed-label { display: none; }
   /* Las tarjetas ocupan la columna del teléfono y solo esa: la línea de
@@ -1956,7 +1964,7 @@ html { scroll-behavior: smooth; }
 /* Móvil: las tarjetas van en fila justo bajo el teléfono (misma columna) y el
    riel de cada una sube hacia su centro: las de los lados se inclinan hacia
    dentro, la del medio sube recta. */
-@media (max-width: 767px) {
+@media (max-width: 991px) {
   .uc-wire-card {
     display: block;
     left: 50%; bottom: 100%; top: auto; width: 4px; height: 4.5rem; margin-left: -2px;
@@ -1989,14 +1997,14 @@ html { scroll-behavior: smooth; }
    de precios: el último sitio donde ver con qué se conecta antes de mirar
    cuánto cuesta.
    ============================================================ */
-@media (max-width: 767px) {
+@media (max-width: 991px) {
   .uc-feed:not(.uc-ads) { display: none; }
 }
 
 /* La banda del pie: en escritorio no existe —ahí están la columna de la sección
    y la franja del héroe—, y en móvil es la única vez que se ven los logos. */
 .banda-conectores { display: none; }
-@media (max-width: 767px) {
+@media (max-width: 991px) {
   .banda-conectores { display: block; position: relative; z-index: 2; }
   /* La pista deja de ser una tarjeta: va de borde a borde, sin esquinas ni
      sombra, como la franja del héroe. */
@@ -2030,14 +2038,22 @@ html { scroll-behavior: smooth; }
 /* En móvil Webflow centra `.getupdate-text` con una regla propia, así que el
    `text-align` del bloque no basta: aquí el párrafo va alineado con las
    preguntas que tiene encima, no centrado en medio del negro. */
-.pricing-contacto .getupdate-text { color: #d0d0d0; text-align: left; margin-bottom: .9rem; }
+/* La frase iba en monoespaciada a 1,25rem con su interletrado ancho, encima de
+   cuatro preguntas en la sans a 1,05rem: se leía como de otra sección. Toma la
+   misma letra, el mismo cuerpo y el mismo blanco que las preguntas, y pasa a ser
+   la quinta línea de la lista en vez de un cartel aparte. */
+.pricing-contacto .getupdate-text {
+  color: #fff; text-align: left; margin-bottom: .9rem;
+  font-family: "Neuehaasunicaw 1 G", Inter, sans-serif;
+  font-size: 1.05rem; letter-spacing: normal; line-height: 1.4;
+}
 .pricing-contacto .update_form-input { color: #f2f4f8; border-color: #3a3a3a; }
 .pricing-contacto .update_form-input::placeholder { color: #7d7d7d; }
 .pricing-contacto .update_form-input:focus { border-color: #4d7cff; }
 .pricing-contacto .update_form-submit { background-color: #f2f4f8; color: #0a0a0a; }
 .pricing-contacto .update_form-submit:hover { background-color: #4d7cff; color: #fff; }
 .pricing-contacto .success_message, .pricing-contacto .text-block-2 { color: #f2f4f8; }
-@media (max-width: 767px) { .pricing-contacto { padding: 0 0 2rem; } }
+@media (max-width: 991px) { .pricing-contacto { padding: 0 0 2rem; } }
 /* Las preguntas ya se cierran con su propia raya: el hueco de después sobraba.
    Los 3,5rem de margen del bloque son para separar bloques DENTRO de las
    preguntas; al último no le hace falta. */
@@ -2057,7 +2073,7 @@ html { scroll-behavior: smooth; }
    el bloque cae encima de la banda de conectores y de precios, y son tres
    llamadas a la acción seguidas pidiendo lo mismo. En escritorio sigue: ahí la
    sección tiene aire de sobra y precios queda mucho más abajo. */
-@media (max-width: 767px) { .section_metaads .uc-foot { display: none; } }
+@media (max-width: 991px) { .section_metaads .uc-foot { display: none; } }
 
 /* El panel del héroe, escondido a la espera de volver. Webflow y este mismo
    fichero le dan `display`, así que `hidden` por sí solo no basta; y sin él el
@@ -2073,7 +2089,7 @@ html { scroll-behavior: smooth; }
    altura, y pesaba más que el correo que hay que escribir. Ahora va en la misma
    fila, ceñido a su texto: el campo manda y el botón lo remata. La trampa de
    robots (`.lead-hp`) está fuera del flujo, así que no ocupa sitio en la fila. */
-@media (max-width: 767px) {
+@media (max-width: 991px) {
   .pricing-contacto .form-wrapper { flex-flow: row; align-items: stretch; grid-column-gap: .6rem; grid-row-gap: 0; gap: .6rem; }
   .pricing-contacto .update_form-input { flex: 1 1 auto; width: auto; min-height: 3.4rem; padding: .9rem 1rem; font-size: 1rem; }
   .pricing-contacto .submit-button-wrap { position: static; flex: 0 0 auto; width: auto; max-width: none; height: auto; min-height: 0; aspect-ratio: auto; overflow: visible; }
