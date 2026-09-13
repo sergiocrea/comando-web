@@ -218,7 +218,11 @@ input[type='file']:focus-visible {
 .card-text.is-command { font-size: 1.08rem; line-height: 1.45; }
 
 /* pricing band */
-.home_getupdate-component-content { flex-direction: column; align-items: stretch; gap: 2rem; }
+/* `display: flex` explícito: Webflow vuelve esta caja una rejilla de dos
+   columnas por debajo de 992 px, y los planes se quedaban encerrados en la
+   mitad izquierda —cortados a media tarjeta, con media pantalla azul vacía al
+   lado—. Las tres propiedades de abajo eran de flex y no hacían nada. */
+.home_getupdate-component-content { display: flex; flex-direction: column; align-items: stretch; gap: 2rem; }
 .pricing-head { max-width: 40rem; z-index: 2; position: relative; }
 /* PRECIOS es el único titular que tiene esta sección —no hay `home_getupdate-heading`
    debajo—, así que se le da tamaño de titular en vez de tamaño de rótulo. Sigue
@@ -227,7 +231,13 @@ input[type='file']:focus-visible {
 /* La banda repetida vive sobre el negro de precios, no sobre el vídeo del héroe. */
 .b2b-hero-band.is-precios { background: #151515; }
 .pricing-head .home_getupdate-heading { margin-top: .75rem; }
-.pricing-head .getupdate-text { margin-top: 1rem; max-width: 34rem; }
+/* La línea bajo PRECIOS explica por qué se cobra. Va más pequeña que el titular
+   y en la sans: en monoespaciada a 1,34rem competía con él en vez de servirlo. */
+.pricing-head .getupdate-text {
+  margin-top: .75rem; max-width: 34rem;
+  font-family: "Neuehaasunicaw 1 G", Inter, sans-serif;
+  font-size: 1.05rem; line-height: 1.4; letter-spacing: normal; color: #0a0a0a;
+}
 .pricing-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; z-index: 2; position: relative; }
 .price-card { background: #0b0b0b; color: #fff; border-radius: 1rem; padding: 1.75rem; display: flex; flex-direction: column; gap: .5rem; border: 1px solid #222; }
 .price-name { font-family: "Jetbrainsmono Variable", monospace; font-size: .8rem; letter-spacing: .08em; text-transform: uppercase; color: #8a8a8a; }
@@ -247,7 +257,12 @@ input[type='file']:focus-visible {
 .footer-v2 { display: flex; flex-direction: column; gap: 3rem; }
 .footer-grid { display: grid; grid-template-columns: 1.6fr 1fr 1fr 1fr; gap: 2.5rem; }
 .footer-brand { display: flex; flex-direction: column; gap: 1.25rem; max-width: 26rem; }
-.footer-brand-link { display: inline-flex; align-items: center; gap: .75rem; color: #fff; text-decoration: none; font-family: Neuemachina, "Space Grotesk", Inter, sans-serif; font-weight: 600; font-size: 1.4rem; }
+.footer-brand-link { display: inline-flex; align-items: center; gap: .75rem; color: #fff; text-decoration: none; font-family: Neuemachina, "Space Grotesk", Inter, sans-serif; font-weight: 600; font-size: 2rem; }
+/* En el pie la marca se queda quieta y en blanco. El cuadrado azul que parpadea
+   es la «o» de la cabecera, donde marca el pulso del producto; repetido abajo,
+   entre enlaces legales y redes, sólo llama la atención sobre sí mismo. Aquí la
+   marca es firma, no señal de vida. */
+.footer-brand-link .cmd-o { background: #fff; animation: none; }
 .footer-tagline { margin: 0; color: #9a9a9a; font-family: "Neuehaasunicaw 1 G", Inter, Arial, sans-serif; font-size: .95rem; line-height: 1.55; }
 .footer-brand .footer_social-icons { justify-content: flex-start; gap: 1.1rem; }
 .footer-col { display: flex; flex-direction: column; gap: .7rem; }
@@ -2050,6 +2065,28 @@ html { scroll-behavior: smooth; }
 .pricing-contacto .update_form-input { color: #f2f4f8; border-color: #3a3a3a; }
 .pricing-contacto .update_form-input::placeholder { color: #7d7d7d; }
 .pricing-contacto .update_form-input:focus { border-color: #4d7cff; }
+/* Autocompletado: el navegador pinta el campo con su propio azul claro y su
+   propio texto oscuro, y sobre el negro de esta sección eso canta. No se puede
+   cambiar con `background-color` —Chrome lo ignora en `:-webkit-autofill`—, así
+   que el fondo se pinta con una sombra interior enorme y el texto con
+   `-webkit-text-fill-color`. La transición eterna evita el parpadeo azul del
+   primer instante. Firefox usa `:autofill`, de ahí las dos reglas. */
+.pricing-contacto .update_form-input:-webkit-autofill,
+.pricing-contacto .update_form-input:-webkit-autofill:hover,
+.pricing-contacto .update_form-input:-webkit-autofill:focus,
+.pricing-contacto .update_form-input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 1000px #0a0a0a inset;
+  box-shadow: 0 0 0 1000px #0a0a0a inset;
+  -webkit-text-fill-color: #f2f4f8;
+  caret-color: #f2f4f8;
+  transition: background-color 100000s ease-in-out 0s;
+}
+.pricing-contacto .update_form-input:autofill {
+  box-shadow: 0 0 0 1000px #0a0a0a inset;
+  -webkit-text-fill-color: #f2f4f8;
+  caret-color: #f2f4f8;
+  filter: none;
+}
 .pricing-contacto .update_form-submit { background-color: #f2f4f8; color: #0a0a0a; }
 .pricing-contacto .update_form-submit:hover { background-color: #4d7cff; color: #fff; }
 .pricing-contacto .success_message, .pricing-contacto .text-block-2 { color: #f2f4f8; }
@@ -2096,3 +2133,29 @@ html { scroll-behavior: smooth; }
   .pricing-contacto .update_form-submit { position: static; width: auto; height: auto; min-height: 3.4rem; padding: 0 1.3rem; font-size: .95rem; border-radius: .75rem; }
   .pricing-contacto .dash { display: none; }
 }
+
+/* La barra: entre 768 y 991 px la hamburguesa no llegaba al borde. La culpa era
+   de `.nav_clip-path`, un div decorativo que es el ÚLTIMO hijo de un contenedor
+   con `space-between`: se quedaba el sitio de la derecha y empujaba la
+   hamburguesa hacia dentro. Por debajo de 768 ya estaba oculto y por eso allí sí
+   se veía bien. */
+@media (max-width: 991px) { .nav_component .nav_clip-path { display: none; } }
+
+/* El botón de alta en la barra, sólo donde hay hamburguesa: en escritorio el
+   menú ya lleva INGRESAR y el héroe su propio botón, y poner un tercero sería
+   pedir tres cosas a la vez. Va con `margin-left: auto` para pegarse a la
+   hamburguesa, y por encima de la capa del menú abierto (mismo z-index que la
+   marca) para no desaparecer al desplegar. */
+.nav_cta { display: none; }
+@media (max-width: 991px) {
+  .nav_cta {
+    display: inline-flex; align-items: center; position: relative; z-index: 1001;
+    margin-left: auto; background: #111; color: #fff; border-radius: 999px;
+    padding: .62rem 1.05rem; text-decoration: none; white-space: nowrap;
+    font-family: "Jetbrainsmono Variable", ui-monospace, monospace;
+    font-size: .78rem; letter-spacing: .03em; line-height: 1;
+  }
+  .nav_cta:hover { background: #315fef; }
+  .nav_menu-button { margin-left: .25rem; }
+}
+@media (max-width: 400px) { .nav_cta { padding: .58rem .8rem; font-size: .72rem; } }

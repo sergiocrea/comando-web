@@ -44,8 +44,8 @@ const ADDONS = {
 const PRICING_CONFIG = {
   billing: { annualFreeMonths: 2 },          // anual = precio mensual × 10 / 12
   cta: { trialBase: '/app/', trialLabel: 'Elegir plan', freeLabel: 'Empezar gratis', enterpriseHref: '#pricing-form', enterpriseLabel: 'Habla con ventas' },
-  title: '', // sin titular: el rótulo PRECIOS y el precio bastan
-  subtitle: '',
+  title: '', // sin titular: PRECIOS y esta línea bastan
+  subtitle: 'Paga por el uso de comandos y la cantidad de contactos en tu CRM.',
   // Cada plan muestra solo 4 líneas: contactos, comandos, CRM y anuncios.
   // Aquí va lo que es presentación; los números salen de PLAN_LADDER por `id`.
   plans: [
@@ -100,7 +100,7 @@ const PRICING_I18N = {
     },
     cta: { trialLabel: 'Choose plan', freeLabel: 'Start free', enterpriseLabel: 'Talk to sales' },
     title: '',
-    subtitle: '',
+    subtitle: 'Pay for the commands you use and the contacts in your CRM.',
     planNames: { gratis: 'Free', basico: 'Basic', starter: 'Starter', pro: 'Pro' },
     planCrms: {
       gratis: '<b>{gratis.conexiones}</b> CRM connected', basico: '<b>{basico.conexiones}</b> CRMs connected',
@@ -141,7 +141,7 @@ const PRICING_I18N = {
     },
     cta: { trialLabel: 'Escolher plano', freeLabel: 'Começar grátis', enterpriseLabel: 'Falar com vendas' },
     title: '',
-    subtitle: '',
+    subtitle: 'Pague pelo uso de comandos e pela quantidade de contatos no seu CRM.',
     planNames: { gratis: 'Grátis', basico: 'Básico', starter: 'Starter', pro: 'Pro' },
     planCrms: {
       gratis: '<b>{gratis.conexiones}</b> CRM conectado', basico: '<b>{basico.conexiones}</b> CRMs conectados',
