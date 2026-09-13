@@ -64,7 +64,7 @@
     <!-- Webflow-generated layout stylesheet (fonts + layout), served from its public CDN -->
     <link href="assets/css/webflow.css" rel="stylesheet" type="text/css" />
     <!-- Custom styles (reconstructed inline utility + component styles) -->
-    <link href="css/custom.css?v=183" rel="stylesheet" type="text/css" />
+    <link href="css/custom.css?v=184" rel="stylesheet" type="text/css" />
     <script>/* La landing se monta desde arriba: sus animaciones por scroll se miden al cargar. Si el navegador restaura la posicion, ScrollTrigger calcula progresos con medidas a medio asentar y deja secciones en opacity 0 (la de Producto se veia negra). */if("scrollRestoration" in history)history.scrollRestoration="manual";</script>
 <script type="text/javascript">
       !(function (o, c) {
@@ -751,6 +751,12 @@
                       data-wf-page-id="69d660abd07691d10eb7ed1e"
                       data-wf-element-id="bbd4e3f8-fd1a-4deb-5a94-cec1c9b8b4e4"
                     >
+                      <!-- `spellcheck="false"` y compañía: un correo no es una
+                           palabra del diccionario, así que el corrector del
+                           móvil lo subrayaba en rojo y pintaba ese trozo como
+                           texto en corrección, oscuro sobre el fondo negro. El
+                           `type` sigue siendo `text` porque aquí también vale un
+                           teléfono, y `type="email"` lo rechazaría. -->
                       <input
                         class="update_form-input w-input"
                         maxlength="256"
@@ -759,6 +765,11 @@
                         placeholder="user@email.com"
                         type="text"
                         id="name"
+                        inputmode="email"
+                        autocomplete="email"
+                        spellcheck="false"
+                        autocapitalize="none"
+                        autocorrect="off"
                       />
                       <input class="lead-hp" type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
                       <div class="submit-button-wrap">

@@ -2065,7 +2065,10 @@ html { scroll-behavior: smooth; }
   font-family: "Neuehaasunicaw 1 G", Inter, sans-serif;
   font-size: 1.05rem; letter-spacing: normal; line-height: 1.4;
 }
-.pricing-contacto .update_form-input { color: #f2f4f8; border-color: #3a3a3a; }
+/* `-webkit-text-fill-color` además de `color`: en Chrome de Android el texto en
+   corrección se pinta con el color del sistema y se volvía negro sobre negro.
+   Esta propiedad gana a ese repintado. */
+.pricing-contacto .update_form-input { color: #f2f4f8; -webkit-text-fill-color: #f2f4f8; border-color: #3a3a3a; }
 .pricing-contacto .update_form-input::placeholder { color: #7d7d7d; }
 .pricing-contacto .update_form-input:focus { border-color: #4d7cff; }
 /* Autocompletado: el navegador pinta el campo con su propio azul claro y su
