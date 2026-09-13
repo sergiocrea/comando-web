@@ -64,7 +64,7 @@
     <!-- Webflow-generated layout stylesheet (fonts + layout), served from its public CDN -->
     <link href="/assets/css/webflow.css" rel="stylesheet" type="text/css" />
     <!-- Custom styles (reconstructed inline utility + component styles) -->
-    <link href="/css/custom.css?v=170" rel="stylesheet" type="text/css" />
+    <link href="/css/custom.css?v=172" rel="stylesheet" type="text/css" />
     <script>/* La landing se monta desde arriba: sus animaciones por scroll se miden al cargar. Si el navegador restaura la posicion, ScrollTrigger calcula progresos con medidas a medio asentar y deja secciones en opacity 0 (la de Producto se veia negra). */if("scrollRestoration" in history)history.scrollRestoration="manual";</script>
 <script type="text/javascript">
       !(function (o, c) {
@@ -434,10 +434,15 @@
                   </div>
                   <p class="b2b-hero-note"><span>No card</span>&nbsp;· <span>Your CRM connects in 2 minutes</span></p>
                 </div>
+                <!-- Oculto a propósito, no borrado: el panel vuelve. El
+                     `hidden` es la única marca que hace falta para volver a
+                     enseñarlo; el CSS de al lado hace que el héroe se quede a
+                     una columna mientras no está. -->
                 <div
                   class="b2b-hero-visual"
                   role="img"
                   aria-label="One WhatsApp message updates the CRM, creates a follow-up and tells the team"
+                  hidden
                 >
                   <div class="power-panel" aria-hidden="true">
                     <div class="power-chat-stage">
@@ -724,8 +729,7 @@
             <div class="container-large">
                 <div id="pricing-form" class="pricing-form">
                   <div data-reveal="text" class="getupdate-text">
-                    Enterprise, or questions about your plan? Leave us your email and
-                    we will talk.
+                    Leave us your email and we will talk.
                   </div>
                   <div data-reveal="block" class="update_form-block w-form">
                     <form

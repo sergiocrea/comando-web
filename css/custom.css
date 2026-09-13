@@ -2020,7 +2020,7 @@ html { scroll-behavior: smooth; }
    entero —texto claro, borde gris, botón blanco—: tal cual venía era negro
    sobre azul y aquí habría desaparecido contra el fondo.
    ============================================================ */
-.pricing-contacto { background: #0a0a0a; padding: 1.5rem 0 4.5rem; }
+.pricing-contacto { background: #0a0a0a; padding: 0 0 3rem; }
 .pricing-contacto .pricing-form { max-width: 34rem; margin: 0; text-align: left; }
 /* El botón de escritorio son DOS cajas superpuestas: el `input` de 48 px y, por
    encima, una caja negra con la flecha. Teñir sólo el input dejaba el botón
@@ -2030,17 +2030,41 @@ html { scroll-behavior: smooth; }
 /* En móvil Webflow centra `.getupdate-text` con una regla propia, así que el
    `text-align` del bloque no basta: aquí el párrafo va alineado con las
    preguntas que tiene encima, no centrado en medio del negro. */
-.pricing-contacto .getupdate-text { color: #d0d0d0; text-align: left; }
+.pricing-contacto .getupdate-text { color: #d0d0d0; text-align: left; margin-bottom: .9rem; }
 .pricing-contacto .update_form-input { color: #f2f4f8; border-color: #3a3a3a; }
 .pricing-contacto .update_form-input::placeholder { color: #7d7d7d; }
 .pricing-contacto .update_form-input:focus { border-color: #4d7cff; }
 .pricing-contacto .update_form-submit { background-color: #f2f4f8; color: #0a0a0a; }
 .pricing-contacto .update_form-submit:hover { background-color: #4d7cff; color: #fff; }
 .pricing-contacto .success_message, .pricing-contacto .text-block-2 { color: #f2f4f8; }
-@media (max-width: 767px) { .pricing-contacto { padding: 1rem 0 3rem; } }
+@media (max-width: 767px) { .pricing-contacto { padding: 0 0 2rem; } }
+/* Las preguntas ya se cierran con su propia raya: el hueco de después sobraba.
+   Los 3,5rem de margen del bloque son para separar bloques DENTRO de las
+   preguntas; al último no le hace falta. */
+.pricing-more { padding-bottom: .5rem; }
+.pricing-more .pm-block:last-child { margin-bottom: 0; }
+.pricing-contacto { padding-top: 1.5rem; }
+/* Escritorio: en columna, la frase y el campo dejaban media pantalla vacía a la
+   derecha y tres alturas de aire. En fila caben en una sola línea y el bloque
+   mide la mitad. */
+@media (min-width: 992px) {
+  .pricing-contacto .pricing-form { max-width: none; display: flex; align-items: center; gap: 2.5rem; }
+  .pricing-contacto .getupdate-text { margin-bottom: 0; flex: 0 1 auto; }
+  .pricing-contacto .update_form-block { flex: 1 1 24rem; max-width: 30rem; min-width: 0; }
+}
 
 /* Móvil: la sección de anuncios se queda sin su cierre. En una pantalla estrecha
    el bloque cae encima de la banda de conectores y de precios, y son tres
    llamadas a la acción seguidas pidiendo lo mismo. En escritorio sigue: ahí la
    sección tiene aire de sobra y precios queda mucho más abajo. */
 @media (max-width: 767px) { .section_metaads .uc-foot { display: none; } }
+
+/* El panel del héroe, escondido a la espera de volver. Webflow y este mismo
+   fichero le dan `display`, así que `hidden` por sí solo no basta; y sin él el
+   héroe se queda con una columna vacía a la derecha, de ahí la rejilla a una
+   sola columna mientras dure. */
+.b2b-hero-visual[hidden] { display: none !important; }
+.b2b-hero-grid:has(.b2b-hero-visual[hidden]) { grid-template-columns: minmax(0, 1fr); }
+@media (min-width: 992px) {
+  .b2b-hero-grid:has(.b2b-hero-visual[hidden]) { grid-template-columns: minmax(0, 1fr); }
+}

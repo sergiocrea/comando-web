@@ -95,7 +95,6 @@
   "Recibe y emite eventos firmados de cualquier sistema.": "Receive and emit signed events from any system.",
   "Automatizaciones": "Automations",
   "Reglas trigger → acción en lenguaje natural sobre\n                        cualquier cambio.": "Trigger → action rules in plain language on\n                        any change.",
-  "¿Enterprise o dudas sobre tu plan? Déjanos tu correo y\n                    hablamos.": "Enterprise, or questions about your plan? Leave us your email and\n                    we will talk.",
   "user@email.com": "user@email.com",
   "¡Listo! Te escribimos pronto.": "Done! We will write to you soon.",
   "Algo salió mal. Inténtalo de nuevo.": "Something went wrong. Try again.",
@@ -274,5 +273,6 @@
   "Escribe a": "Write to",
   ". Respondemos en un plazo máximo de 30 días y te decimos exactamente qué se borró y cuándo. El detalle completo de qué datos tratamos y con qué base legal está en la": ". We reply within 30 days and tell you exactly what was deleted and when. The full detail of what data we process and on what legal basis is in the",
   "Conectores — Comando": "Integrations — Comando",
-  "Los CRM, tiendas y canales con los que Comando se conecta hoy.": "The CRMs, stores and channels Comando connects to today."
+  "Los CRM, tiendas y canales con los que Comando se conecta hoy.": "The CRMs, stores and channels Comando connects to today.",
+  "Déjanos tu correo y hablamos.": "Leave us your email and we will talk."
 }

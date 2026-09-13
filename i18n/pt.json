@@ -95,7 +95,6 @@
   "Recibe y emite eventos firmados de cualquier sistema.": "Receba e envie eventos assinados de qualquer sistema.",
   "Automatizaciones": "Automações",
   "Reglas trigger → acción en lenguaje natural sobre\n                        cualquier cambio.": "Regras gatilho → ação em linguagem natural sobre\n                        qualquer mudança.",
-  "¿Enterprise o dudas sobre tu plan? Déjanos tu correo y\n                    hablamos.": "Enterprise ou dúvidas sobre seu plano? Deixe seu e-mail e\n                    a gente conversa.",
   "user@email.com": "user@email.com",
   "¡Listo! Te escribimos pronto.": "Pronto! A gente escreve em breve.",
   "Algo salió mal. Inténtalo de nuevo.": "Algo deu errado. Tente de novo.",
@@ -274,5 +273,6 @@
   "Escribe a": "Escreva para",
   ". Respondemos en un plazo máximo de 30 días y te decimos exactamente qué se borró y cuándo. El detalle completo de qué datos tratamos y con qué base legal está en la": ". Respondemos em no máximo 30 dias e dizemos exatamente o que foi apagado e quando. O detalhe completo de quais dados tratamos e com que base legal está na",
   "Conectores — Comando": "Conectores — Comando",
-  "Los CRM, tiendas y canales con los que Comando se conecta hoy.": "Os CRMs, lojas e canais aos quais o Comando se conecta hoje."
+  "Los CRM, tiendas y canales con los que Comando se conecta hoy.": "Os CRMs, lojas e canais aos quais o Comando se conecta hoje.",
+  "Déjanos tu correo y hablamos.": "Deixe seu e-mail e a gente conversa."
 }
