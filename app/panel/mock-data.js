@@ -17,7 +17,7 @@ export const MOCK = {
     status: 'ok',
     tenantId: 'tenant-demo',
     operatorId: 'op-demo',
-    plan: 'starter',
+    plan: 'operador',
     role: 'owner',
     locale: 'es',
     name: 'Sergio',
@@ -44,27 +44,34 @@ export const MOCK = {
   ],
 
   quota: {
-    plan: { code: 'starter', name: 'Starter', interval: 'monthly', price: { amountMinor: 700, currency: 'USD', source: 'subscription' } },
+    plan: { code: 'operador', name: 'Operador', interval: 'monthly', price: { amountMinor: 2900, currency: 'USD', source: 'subscription' } },
     subscription: { provider: 'stripe', status: 'active', canChangePlan: true, hasPortal: true },
     addons: [{ code: 'extra_commands_500', name: '+500 comandos', units: 500, price: { amountMinor: 800, currency: 'USD' } }],
     period: { key: '2026-09', kind: 'monthly', start: at(-12), end: at(18), resetAt: at(18) },
-    commands: { allowance: 500, addons: 0, adjustments: 0, used: 212, balance: 288 },
-    contacts: { used: 174, limit: 30_000 },
-    connections: { used: 2, limit: 5 },
+    commands: { allowance: 1500, addons: 0, adjustments: 0, used: 212, balance: 1288 },
+    contacts: { used: 174, limit: 50_000 },
+    connections: { used: 2, limit: 2 },
     audioShare: 0.31,
     blockedReason: null,
     invoices: [
-      { id: 'inv-3', date: at(-12), periodEnd: at(18), amountMinor: 700, currency: 'USD', status: 'paid', hostedUrl: 'https://invoice.stripe.com/i/ejemplo-3' },
-      { id: 'inv-2', date: at(-42), periodEnd: at(-12), amountMinor: 700, currency: 'USD', status: 'paid', hostedUrl: 'https://invoice.stripe.com/i/ejemplo-2' },
-      { id: 'inv-1', date: at(-72), periodEnd: at(-42), amountMinor: 300, currency: 'USD', status: 'paid', hostedUrl: null },
+      { id: 'inv-3', date: at(-12), periodEnd: at(18), amountMinor: 2900, currency: 'USD', status: 'paid', hostedUrl: 'https://invoice.stripe.com/i/ejemplo-3' },
+      { id: 'inv-2', date: at(-42), periodEnd: at(-12), amountMinor: 2900, currency: 'USD', status: 'paid', hostedUrl: 'https://invoice.stripe.com/i/ejemplo-2' },
+      { id: 'inv-1', date: at(-72), periodEnd: at(-42), amountMinor: 900, currency: 'USD', status: 'paid', hostedUrl: null },
     ],
   },
 
   plans: [
-    { code: 'free', displayName: 'Gratis', billingInterval: 'none', currency: null, amountMinor: null, commandLimit: 30, contactLimit: 10_000, connectionLimit: 1 },
-    { code: 'basico', displayName: 'Básico', billingInterval: 'monthly', currency: 'USD', amountMinor: 300, commandLimit: 150, contactLimit: 10_000, connectionLimit: 2 },
-    { code: 'starter', displayName: 'Starter', billingInterval: 'monthly', currency: 'USD', amountMinor: 700, commandLimit: 500, contactLimit: 30_000, connectionLimit: 5 },
-    { code: 'pro', displayName: 'Pro', billingInterval: 'monthly', currency: 'USD', amountMinor: 1900, commandLimit: 1500, contactLimit: 80_000, connectionLimit: null },
+    // La escalera del 14-sep-2026 (operador de ventas y marketing). Lleva los
+    // campos del contrato viejo (`commandLimit`…) y los del nuevo (`limits`,
+    // `trial`), porque el panel lee los dos mientras el motor cambia.
+    { code: 'free', displayName: 'Gratis', billingInterval: 'none', currency: null, amountMinor: null, commandLimit: 30, contactLimit: 1_000, connectionLimit: 1,
+      limits: { commands: { limit: 30, period: 'monthly', blocking: true }, mirrorRecords: 1_000, crmAccounts: 1, adsAccounts: 1, bulkMaxRecords: 10 }, trial: { days: 14, plan: 'operador' } },
+    { code: 'asistente', displayName: 'Asistente', billingInterval: 'monthly', currency: 'USD', amountMinor: 900, commandLimit: 300, contactLimit: 10_000, connectionLimit: 1,
+      limits: { commands: { limit: 300, period: 'monthly', blocking: false }, mirrorRecords: 10_000, crmAccounts: 1, adsAccounts: 1, bulkMaxRecords: 100 } },
+    { code: 'operador', displayName: 'Operador', billingInterval: 'monthly', currency: 'USD', amountMinor: 2900, commandLimit: 1500, contactLimit: 50_000, connectionLimit: 2,
+      limits: { commands: { limit: 1500, period: 'monthly', blocking: false }, mirrorRecords: 50_000, crmAccounts: 2, adsAccounts: 3, bulkMaxRecords: null } },
+    { code: 'escala', displayName: 'Escala', billingInterval: 'monthly', currency: 'USD', amountMinor: 7900, commandLimit: 5000, contactLimit: 200_000, connectionLimit: null,
+      limits: { commands: { limit: 5000, period: 'monthly', blocking: false }, mirrorRecords: 200_000, crmAccounts: null, adsAccounts: null, bulkMaxRecords: null } },
   ],
 
   /* Sales intelligence: recomendaciones vigentes (skill deal_health / next_best_action). */
@@ -430,7 +437,7 @@ export function marketingOverview(scenario) {
     // falló), no la del más reciente: eso la haría parecer más fresca.
     freshness: { refreshedAt: ago(0.7), ageSeconds: 42 * MIN, stale: false, pending: 0, failing: 1 },
     refresh: { allowed: true, retryAfterSeconds: 0, nextAllowedAt: null },
-    plan: { code: 'pro', analysisPolicy: 'diagnosis' },
+    plan: { code: 'operador', analysisPolicy: 'diagnosis' },
     targets: structuredClone(MK_TARGETS),
     analysis: structuredClone(MK_ANALYSIS),
   };
@@ -444,8 +451,8 @@ export function marketingOverview(scenario) {
   }
   if (scenario === 'bloqueado') {
     // Un plan sin diagnóstico: los números se ven igual; el porqué no.
-    base.plan = { code: 'starter', analysisPolicy: 'numbers' };
-    base.analysis = { available: false, reason: 'plan', policy: 'numbers', requiredPlan: 'pro', planCode: 'starter', methodology: '3qs-felipe-vergara' };
+    base.plan = { code: 'asistente', analysisPolicy: 'numbers' };
+    base.analysis = { available: false, reason: 'plan', policy: 'numbers', requiredPlan: 'operador', planCode: 'asistente', methodology: '3qs-felipe-vergara' };
     return base;
   }
   if (scenario === 'primera') {

@@ -1,7 +1,7 @@
 /* Acceso a Comando (/app/): iniciar sesión o crear cuenta con Clerk y pasar al panel.
    Los pasos siguientes (vincular WhatsApp, conectar el CRM) viven dentro de /app/panel/.
    Sin build: ClerkJS se carga desde el Frontend API de la instancia. */
-import './strings.js?v=19';
+import './strings.js?v=20';
 import { initLocale, mountLanguagePicker, onLocaleChange, locale, t } from './i18n.js?v=1';
 
 initLocale();
@@ -23,7 +23,8 @@ function paint() {
 }
 
 /**
- * Cuántos comandos regala el plan gratis, según el catálogo publicado.
+ * Cuántos comandos regala el plan gratis y cuántos días dura la prueba, según
+ * el catálogo publicado.
  *
  * El número estaba escrito en el diccionario, en tres idiomas. Coincidía con la
  * base, pero el día que se cambie el plan la pantalla de registro seguiría
@@ -36,7 +37,7 @@ function paint() {
  * que en la práctica no añade espera, pero si el motor no contesta la pantalla
  * de acceso no se queda colgada por un adorno.
  */
-async function freeCommandLimit(engineUrl) {
+async function freePlanOffer(engineUrl) {
   if (!engineUrl) return null;
   try {
     const ctl = new AbortController();
@@ -46,7 +47,10 @@ async function freeCommandLimit(engineUrl) {
     if (!res.ok) return null;
     const plans = (await res.json()).plans || [];
     const free = plans.find((x) => x.code === 'free' || x.code === 'gratis');
-    return free && typeof free.commandLimit === 'number' ? free.commandLimit : null;
+    if (!free) return null;
+    const commands = free.limits?.commands?.limit ?? free.commandLimit;
+    const days = free.trial?.days;
+    return typeof commands === 'number' && typeof days === 'number' && days > 0 ? { commands, days } : null;
   } catch (e) { return null; }
 }
 
@@ -71,11 +75,11 @@ async function freeCommandLimit(engineUrl) {
       s.setAttribute('data-clerk-publishable-key', cfg.clerkPublishableKey);
       s.async = true; s.crossOrigin = 'anonymous';
       // Las dos peticiones van juntas: el catálogo no le suma espera a nadie.
-      const [, freeCommands] = await Promise.all([
+      const [, offer] = await Promise.all([
         new Promise((res, rej) => { s.onload = res; s.onerror = () => rej(new Error(t('auth.loadFailed'))); document.head.appendChild(s); }),
-        freeCommandLimit(cfg.engineUrl),
+        freePlanOffer(cfg.engineUrl),
       ]);
-      const signUpSub = () => (freeCommands == null ? t('clerk.signUpSubNoLimit') : t('clerk.signUpSub', { n: freeCommands }));
+      const signUpSub = () => (offer == null ? t('clerk.signUpSubNoLimit') : t('clerk.signUpSub', { n: offer.commands, d: offer.days }));
       const clerk = window.Clerk;
       const emailCode = () => ({
         title: t('clerk.checkEmail'), subtitle: t('clerk.codeSent'),
