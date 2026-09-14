@@ -2,12 +2,12 @@
  "seccion": {
   "eyebrow": "META ADS",
   "titulo": "¿Tus anuncios traen leads o traen ventas?",
-  "subtitulo": "Comando te lo cuenta cada mañana.",
-  "cierre": "El informe llega solo. Las respuestas, cuando las pides.",
+  "subtitulo": "Pregúntale y te lo cuenta con el dato delante.",
+  "cierre": "Hoy Comando lee y diagnostica tus campañas. Pausar y ajustar presupuestos desde WhatsApp llega pronto.",
   "cta": {
    "texto": "Conectar tus anuncios",
    "sufijo": " en 2 minutos",
-   "href": "/app/"
+   "href": "/app/?mode=signup"
   }
  },
  "proHora": "7:30",
@@ -20,10 +20,9 @@
  ],
  "casos": [
   {
-   "rol": "Meta, TikTok y Google Ads",
-   "vertical": "Informe y preguntas",
+   "rol": "Meta Ads",
+   "vertical": "Números y diagnóstico",
    "titulo": "",
-   "proactivo": "☀️ Buenos días. Ayer invertiste US$ 214 en 5 campañas y entraron 38 leads: US$ 5,60 cada uno, 12 % menos que la semana pasada. «Remarketing» lleva 3 días gastando sin resultados. Responde VER para el detalle.",
    "comandos": [
     {
      "u": "¿Qué campaña trajo más leads ayer y cuánto me costó cada uno?",
@@ -35,18 +34,18 @@
     },
     {
      "u": "¿Qué anuncio está gastando y no trae nada?",
-     "r": "«Remarketing» lleva US$ 96 en 3 días sin un solo lead y una frecuencia de 4,8: la audiencia ya lo vio de más. ¿Lo pauso?"
+     "r": "«Remarketing» lleva US$ 96 en 3 días sin un solo lead y una frecuencia de 4,8: la audiencia ya lo vio de más. Con 3 días todavía es pronto para pausarla; revisa la audiencia y vuelve a mirarla el lunes."
     },
     {
-     "u": "¿Cuántos de los leads de Meta de este mes ya tienen cita o cotización en el CRM?",
-     "r": "De 612 leads de Meta, 148 tienen cita o cotización en HubSpot (24 %). «Leads septiembre» convierte al 31 %; «Catálogo», al 9 %."
+     "u": "¿Por qué subió el costo por lead de «Catálogo»?",
+     "r": "Pagó más por cada mil impresiones (CPM +22 %) y la tasa de clics bajó de 1,4 % a 0,9 %: el anuncio se está gastando. Lo primero a revisar es el creativo, no el presupuesto."
     },
     {
-     "u": "Mándame cada lunes a las 8 el resumen de la semana con las campañas que hay que revisar.",
-     "r": "Listo. Cada lunes a las 8:00 recibes inversión, leads, costo por lead y las campañas fuera de rango. El primero llega el lunes 15."
+     "u": "¿Cuánto llevo gastado este mes y cuántos resultados van?",
+     "r": "US$ 3.120 en septiembre y 571 resultados: US$ 5,46 cada uno. «Leads septiembre» se lleva el 48 % del gasto y trae el 61 % de los resultados."
     }
    ],
-   "resultado": "Cero minutos en el Ads Manager. Cada decisión de presupuesto, con el dato delante.",
+   "resultado": "Menos horas en el Ads Manager. Cada decisión de presupuesto, con el dato delante.",
    "meta": "Comandos"
   }
  ]

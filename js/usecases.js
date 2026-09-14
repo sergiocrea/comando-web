@@ -17,20 +17,20 @@
     es: { rol: 'Rol', sector: 'Sector', proTag: 'Comando te avisa', proStep: 'Comando te avisa.',
           proAria: (t) => `Aviso de Comando a las ${t}`, sendAria: (t) => `Enviar el mensaje de las ${t}`,
           chat: 'Conversación de WhatsApp con Comando', moments: 'Momentos del día', feed: 'De tus sistemas',
-          ads: 'Tus anuncios', commands: 'Comandos' },
+          ads: 'Tus anuncios', commands: 'Comandos', soon: 'Próximamente' },
     en: { rol: 'Role', sector: 'Sector', proTag: 'Comando tells you', proStep: 'Comando tells you.',
           proAria: (t) => `Comando alert at ${t}`, sendAria: (t) => `Send the ${t} message`,
           chat: 'WhatsApp conversation with Comando', moments: 'Moments of the day', feed: 'From your systems',
-          ads: 'Your ads', commands: 'Commands' },
+          ads: 'Your ads', commands: 'Commands', soon: 'Coming soon' },
     pt: { rol: 'Papel', sector: 'Setor', proTag: 'O Comando te avisa', proStep: 'O Comando te avisa.',
           proAria: (t) => `Aviso do Comando às ${t}`, sendAria: (t) => `Enviar a mensagem das ${t}`,
           chat: 'Conversa de WhatsApp com o Comando', moments: 'Momentos do dia', feed: 'Dos seus sistemas',
-          ads: 'Seus anúncios', commands: 'Comandos' },
+          ads: 'Seus anúncios', commands: 'Comandos', soon: 'Em breve' },
   }[LANG] ?? {
     rol: 'Rol', sector: 'Sector', proTag: 'Comando te avisa', proStep: 'Comando te avisa.',
     proAria: (t) => `Aviso de Comando a las ${t}`, sendAria: (t) => `Enviar el mensaje de las ${t}`,
     chat: 'Conversación de WhatsApp con Comando', moments: 'Momentos del día', feed: 'De tus sistemas',
-    ads: 'Tus anuncios', commands: 'Comandos',
+    ads: 'Tus anuncios', commands: 'Comandos', soon: 'Próximamente',
   };
 
   // ---- El caudal que alimenta la conversación ----
@@ -61,7 +61,9 @@
   // marca aproximado, a confirmar contra su manual.
   const CONECTORES = [
     ['hubspot', 'HubSpot', '#ff7a59'], ['salesforce', 'Salesforce', '#00a1e0'], ['zoho', 'Zoho CRM', '#e42527'],
-    ['pipedrive', 'Pipedrive', '#1fa971'], ['kommo', 'Kommo', '#3d8bfd'], ['dynamics', 'Dynamics 365', '#3b8ce8'],
+    // Kommo sale de la lista: el motor no tiene adaptador todavía, y esta
+    // columna dice «de aquí sale lo que el teléfono contesta».
+    ['pipedrive', 'Pipedrive', '#1fa971'], ['dynamics', 'Dynamics 365', '#3b8ce8'],
     ['shopify', 'Shopify', '#95bf47'],
     ['woocommerce', 'WooCommerce', '#b07fa6'],
     ['vtex', 'VTEX', '#ed125f'], ['googlesheets', 'Google Sheets', '#34a853'],
@@ -89,11 +91,14 @@
   // salía cada uno. Comparte la clase `uc-feed` para heredar la maqueta.
   // Google Ads en amarillo de marca: el logo real es tricolor y aquí va de un
   // solo tono; el amarillo es el que lo hace reconocible sobre negro.
-  const ADS = [['meta', 'Meta Ads', '#0081fb'], ['tiktok', 'TikTok Ads', '#e7e9ec'], ['googleads', 'Google Ads', '#fbbc04']];
+  // El cuarto campo marca lo que todavía no existe en el producto: TikTok Ads y
+  // Google Ads se quedan a la vista, pero rotulados «Próximamente» y apagados.
+  // Hoy Comando solo lee Meta Ads.
+  const ADS = [['meta', 'Meta Ads', '#0081fb', false], ['tiktok', 'TikTok Ads', '#e7e9ec', true], ['googleads', 'Google Ads', '#fbbc04', true]];
   function adsHtml() {
     return `<div class="uc-feed uc-ads" aria-hidden="true">
       <div class="uc-feed-label">${esc(T.ads)}</div>
-      <ul class="uc-ads-cards">${ADS.map(([f, n, c]) => `<li><i class="uc-feed-logo" style="--uc-marca:${c};--uc-logo:url(/assets/img/logos/${f}.svg)"></i><span>${esc(n)}</span><i class="uc-wire-card"></i></li>`).join('')}</ul>
+      <ul class="uc-ads-cards">${ADS.map(([f, n, c, soon]) => `<li${soon ? ' class="is-soon"' : ''}><i class="uc-feed-logo" style="--uc-marca:${c};--uc-logo:url(/assets/img/logos/${f}.svg)"></i><span>${esc(n)}</span>${soon ? `<small class="uc-soon">${esc(T.soon)}</small>` : ''}<i class="uc-wire-card"></i></li>`).join('')}</ul>
     </div>`;
   }
 
@@ -232,11 +237,11 @@
   }
 
   const meta = document.getElementById('metaads-root');
-  if (meta) mount(meta, { data: 'metaads', pickers: false, feed: false, ads: true, version: 9 });
+  if (meta) mount(meta, { data: 'metaads', pickers: false, feed: false, ads: true, version: 10 });
   const dia = document.getElementById('usecases-root');
   // `foot: false`: el cierre y su botón se iban justo antes de precios, y ahí
   // el visitante ya tiene cuatro planes con su propio botón a un dedo.
-  if (dia) mount(dia, { data: 'usecases', pickers: true, feed: true, foot: false, anchor: 'como-funciona', version: 20 });
+  if (dia) mount(dia, { data: 'usecases', pickers: true, feed: true, foot: false, anchor: 'como-funciona', version: 21 });
 
   // La banda de encima de precios. Reutiliza el item de la columna —logotipo
   // en color arriba, nombre debajo— y sus dos listas, que es lo que hace el

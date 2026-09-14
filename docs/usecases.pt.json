@@ -85,12 +85,12 @@
           "r": "5 carrinhos: o maior é o da Andrea Gómez ($480, tênis e jaqueta). Nenhum concluiu o pagamento."
         },
         {
-          "u": "Prepara a mensagem para a Andrea com o link de pagamento e 5 % de desconto.",
-          "r": "Cupom ANDREA5 criado na Shopify. «Oi Andrea, você deixou o tênis e a jaqueta no carrinho; aqui está o link com 5 % extra…». Toque para enviar."
+          "u": "Me prepara a mensagem para a Andrea com o link de pagamento.",
+          "r": "«Oi Andrea, você deixou os tênis e a jaqueta no carrinho; aqui está o link para concluir sua compra…». Toque para enviar."
         },
         {
-          "u": "Marca o pedido 1042 como entregue e anota que o cliente pediu nota fiscal.",
-          "r": "Pedido 1042 entregue e nota salva. Amanhã deixo pronta a mensagem pedindo a avaliação."
+          "u": "Passa a Andrea para «Cliente» no CRM e anota que ela pediu nota fiscal.",
+          "r": "Feito no CRM: Andrea em «Cliente» e nota salva. Amanhã te lembro de pedir a avaliação."
         }
       ],
       "resultado": "Cada carrinho abandonado ganha uma segunda chance.",
@@ -151,8 +151,8 @@
           "r": "Regra ativa. Agora há 2: pedidos 1031 ($640) e 1037 ($512)."
         },
         {
-          "u": "Se um produto ficar sem estoque e tiver pedidos pendentes, avisa a compras e a mim.",
-          "r": "Regra ativa sobre o estoque da Shopify. Aviso compras pelo WhatsApp e você também."
+          "u": "Se um cliente com pedido acima de $500 ficar 2 dias sem acompanhamento, me avisa com a ficha dele.",
+          "r": "Regra ativa. Agora mesmo há 1: Carlos Medina, pedido de $620 sem atividade desde terça."
         },
         {
           "u": "Quanto vendemos pela Shopify contra a WooCommerce neste mês?",
@@ -217,17 +217,17 @@
           "r": "Regra ativa. Amanhã você terá 22 mensagens prontas com o link de avaliação de cada produto."
         },
         {
-          "u": "Se um cliente escrever sobre o pedido da Shopify e a gente não responder em 2 horas, me avisa.",
-          "r": "Regra ativa sobre as mensagens de clientes da Shopify."
+          "u": "Se um pedido da Shopify ficar 5 dias «A caminho» sem passar para «Entregue», me avisa.",
+          "r": "Regra ativa. Hoje são 3: pedidos 1049, 1051 e 1053."
         },
         {
-          "u": "Marca o pedido 1058 como devolução aceita e cria a tarefa de reembolso para o financeiro.",
-          "r": "Pedido 1058 em «Devolução aceita»; tarefa criada para o financeiro com o valor $210."
+          "u": "Anota na ficha do cliente do pedido 1058 que a devolução foi aceita e cria a tarefa de reembolso para o financeiro.",
+          "r": "Nota salva e tarefa criada para o financeiro com o valor de $210."
         }
       ],
       "resultado": "Clientes que voltam e contam para os outros.",
       "evidencia": "carrito",
-      "proactivo": "⭐ 22 pedidos foram entregues ontem: as mensagens de avaliação estão prontas. 1 mensagem de um cliente da Shopify está há 2 h sem resposta. Responda VER."
+      "proactivo": "⭐ 22 pedidos foram entregues ontem: as mensagens de avaliação estão prontas. 3 pedidos estão há 5 dias a caminho. Responda VER."
     },
     {
       "rol": "Vendedor",
@@ -240,7 +240,7 @@
         },
         {
           "u": "Prepara a mensagem para o Jorge com a proposta e as opções de financiamento.",
-          "r": "«Oi Jorge, obrigado pelo test drive do Kicks. Te mando a proposta e dois planos de financiamento em 36 e 48 meses…». Anexei o PDF. Toque para enviar."
+          "r": "«Oi Jorge, obrigado pelo test drive do Kicks. Segue a cotação e dois planos de financiamento em 36 e 48 meses…». Toque para enviar."
         },
         {
           "u": "Move o Jorge para «Financiamento» e cria a tarefa de pedir os documentos na quinta.",
@@ -328,11 +328,11 @@
         },
         {
           "u": "Se um lead do anúncio ficar 30 minutos sem ligação, avise o consultor da unidade e a mim.",
-          "r": "Regra criada: lead sem contato em 30 minutos → aviso ao consultor da unidade e cópia para você. Vale para os leads do Meta e do Google."
+          "r": "Regra criada: lead sem contato em 30 minutos → aviso ao consultor da unidade e cópia para você. Vale para os leads que chegam do Meta."
         },
         {
-          "u": "Quanto nos custou cada matrícula nova por canal este mês?",
-          "r": "Meta: $38 por matrícula (19 fechadas). Google: $61 (7 fechadas). Indicações: $0 (6). O Meta traz 60 % das matrículas com 55 % do gasto."
+          "u": "Quantas matrículas novas vieram de cada canal este mês?",
+          "r": "Meta: 19 matrículas (59 %). Google: 7 (22 %). Indicações: 6 (19 %). O Meta traz quase duas de cada três matrículas."
         }
       ],
       "resultado": "Você decide onde colocar a verba com o dado do dia.",

@@ -2,12 +2,12 @@
  "seccion": {
   "eyebrow": "META ADS",
   "titulo": "Do your ads bring leads, or do they bring sales?",
-  "subtitulo": "Comando tells you every morning.",
-  "cierre": "The report arrives on its own. The answers, whenever you ask.",
+  "subtitulo": "Ask, and it tells you with the numbers in front of you.",
+  "cierre": "Today Comando reads and diagnoses your campaigns. Pausing and adjusting budgets from WhatsApp is coming soon.",
   "cta": {
    "texto": "Connect your ads",
    "sufijo": " in 2 minutes",
-   "href": "/app/"
+   "href": "/app/?mode=signup"
   }
  },
  "proHora": "7:30",
@@ -20,10 +20,9 @@
  ],
  "casos": [
   {
-   "rol": "Meta, TikTok and Google Ads",
-   "vertical": "Report and questions",
+   "rol": "Meta Ads",
+   "vertical": "Numbers and diagnosis",
    "titulo": "",
-   "proactivo": "☀️ Good morning. Yesterday you spent US$ 214 across 5 campaigns and got 38 leads: US$ 5.60 each, 12% less than last week. \"Remarketing\" has been spending for 3 days with no results. Reply VIEW for the details.",
    "comandos": [
     {
      "u": "Which campaign brought the most leads yesterday, and what did each one cost me?",
@@ -35,18 +34,18 @@
     },
     {
      "u": "Which ad is spending and bringing nothing?",
-     "r": "\"Remarketing\" has spent US$ 96 in 3 days without a single lead, at a frequency of 4.8: the audience has seen it too often. Pause it?"
+     "r": "\"Remarketing\" has spent US$ 96 in 3 days without a single lead, at a frequency of 4.8: the audience has seen it too often. At 3 days it is still early to pause it; check the audience and look again on Monday."
     },
     {
-     "u": "How many of this month's Meta leads already have an appointment or quote in the CRM?",
-     "r": "Of 612 Meta leads, 148 have an appointment or quote in HubSpot (24%). \"September leads\" converts at 31%; \"Catalog\", at 9%."
+     "u": "Why did the cost per lead of \"Catalog\" go up?",
+     "r": "It paid more per thousand impressions (CPM +22%) and the click-through rate fell from 1.4% to 0.9%: the ad is wearing out. The first thing to check is the creative, not the budget."
     },
     {
-     "u": "Send me the weekly summary every Monday at 8 with the campaigns I need to review.",
-     "r": "Done. Every Monday at 8:00 you get spend, leads, cost per lead and the campaigns out of range. The first one arrives Monday the 15th."
+     "u": "How much have I spent this month and how many results so far?",
+     "r": "US$ 3,120 in September and 571 results: US$ 5.46 each. \"September leads\" takes 48% of the spend and brings 61% of the results."
     }
    ],
-   "resultado": "Zero minutes in Ads Manager. Every budget decision, with the numbers in front of you.",
+   "resultado": "Fewer hours in Ads Manager. Every budget decision, with the numbers in front of you.",
    "meta": "Commands"
   }
  ]

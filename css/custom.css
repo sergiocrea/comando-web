@@ -2212,3 +2212,91 @@ html { scroll-behavior: smooth; }
   .pricing-head-row .pt-btn { padding: .42rem .5rem; font-size: .68rem; }
   .pricing-head-row .pt-btn.is-anual .pt-badge { font-size: .5rem; padding: .03rem .24rem; }
 }
+
+/* ===== Operador de ventas y marketing (sep-2026) =====
+   Tres piezas nuevas sobre el mismo sistema: la tarjeta de precio ordenada
+   resultado → capacidades → límites, la sección «Cómo trabaja» (el bucle
+   observa → entiende → propone → ejecuta → supervisa) y la de confianza. Mismos
+   tokens que el héroe y el radar: tinta #151515, azul #315fef, papel #f3f1ea. */
+
+/* Precios: la promesa manda; los límites van al pie, en pequeño. */
+.price-top { display: flex; align-items: center; justify-content: space-between; gap: .5rem; }
+.price-badge { font-family: "Jetbrainsmono Variable", monospace; font-size: .64rem; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: #0a0a0a; background: #4d7cff; border-radius: 999px; padding: .22rem .55rem; white-space: nowrap; }
+.price-promise { font-family: Neuemachina, "Space Grotesk", Inter, sans-serif; font-weight: 600; font-size: 1.3rem; line-height: 1.12; letter-spacing: -.02em; color: #fff; margin: .15rem 0 .4rem; text-wrap: balance; }
+.price-caps-intro { margin-top: .85rem; font-family: "Neuehaasunicaw 1 G", Inter, sans-serif; font-size: .8rem; color: #8a8a8a; }
+.pricing-grid.is-four .price-list { margin: .55rem 0 1.1rem; }
+.price-card:not(:has(.price-caps-intro)) .price-list { margin-top: 1rem; }
+.price-limits { margin: auto 0 1.1rem; padding: .85rem 0 0; border-top: 1px solid #242424; display: grid; gap: .38rem; font-family: "Jetbrainsmono Variable", monospace; font-size: .72rem; color: #8a8a8a; }
+.price-limits div { display: flex; justify-content: space-between; align-items: baseline; gap: .75rem; }
+.price-limits dt { min-width: 0; }
+.price-limits dd { margin: 0; color: #ececec; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.price-card .price-note { margin: -.35rem 0 1rem; }
+.price-card .price-cta { margin-top: 0; }
+.price-card.is-featured { border-color: #4d7cff; box-shadow: 0 28px 60px -34px rgba(77, 124, 255, .7); }
+.price-card.is-featured .price-cta { background: #4d7cff; color: #0a0a0a; }
+.price-card.is-featured .price-cta:hover { filter: brightness(1.08); }
+.pricing-soon { position: relative; z-index: 2; margin: 1.1rem 0 0; max-width: 60rem; font-family: "Neuehaasunicaw 1 G", Inter, sans-serif; font-size: .92rem; line-height: 1.5; color: #0a0a0a; }
+.price-cta:focus-visible { outline: 2px solid #4d7cff; outline-offset: 3px; }
+
+/* Cómo trabaja: el titular se queda quieto mientras se leen los cinco verbos. */
+.section_loop {
+  position: relative; z-index: 2;
+  color: #151515;
+  background: #f3f1ea;
+  padding: 6rem 0 5rem;
+  border-top: 1px solid rgba(21, 21, 21, .08);
+  scroll-margin-top: calc(var(--nav-height, 5rem) + .5rem);
+}
+.loop-layout { display: grid; grid-template-columns: minmax(0, 27rem) minmax(0, 38rem); justify-content: space-between; gap: 4rem; align-items: start; }
+.loop-intro { position: sticky; top: calc(var(--nav-height, 5rem) + 2rem); }
+.loop-title { margin: 0; font-family: Neuemachina, "Space Grotesk", Inter, sans-serif; font-weight: 600; font-size: clamp(2.3rem, 4.2vw, 3.5rem); line-height: .98; letter-spacing: -.045em; color: #151515; text-wrap: balance; }
+.loop-title span { display: block; color: #315fef; }
+.loop-lede { margin: 1.3rem 0 0; max-width: 34rem; font-family: "Neuehaasunicaw 1 G", Inter, sans-serif; font-size: 1.05rem; line-height: 1.55; color: #5f625f; }
+.loop-goal { margin: 2rem 0 0; padding: 1.1rem 1.25rem 1.2rem; background: #fff; border-radius: 1rem; box-shadow: 0 0 0 1px rgba(21, 21, 21, .06), 0 22px 44px -30px rgba(24, 37, 80, .45); }
+.loop-goal figcaption { font-family: "Neuehaasunicaw 1 G", Inter, sans-serif; font-size: .82rem; font-weight: 600; color: #315fef; }
+.loop-goal blockquote { margin: .4rem 0 0; font-family: Neuemachina, "Space Grotesk", Inter, sans-serif; font-weight: 500; font-size: 1.32rem; line-height: 1.2; letter-spacing: -.02em; color: #151515; }
+.loop-steps { position: relative; list-style: none; margin: 0; padding: 0; }
+.loop-steps::before { content: ""; position: absolute; left: .45rem; top: 1rem; bottom: 1.2rem; width: 1px; background: linear-gradient(#315fef, rgba(49, 95, 239, .12)); }
+.loop-step { position: relative; padding: 0 0 2.5rem 2.6rem; }
+.loop-step:last-child { padding-bottom: 0; }
+.loop-step::before { content: ""; position: absolute; left: 0; top: .6rem; width: .95rem; height: .95rem; border-radius: 50%; background: #f3f1ea; border: 2px solid #315fef; }
+.loop-step:last-child::before { background: #315fef; }
+.loop-verb { margin: 0; font-family: Neuemachina, "Space Grotesk", Inter, sans-serif; font-weight: 600; font-size: clamp(1.65rem, 2.6vw, 2.15rem); line-height: 1.05; letter-spacing: -.035em; color: #151515; }
+.loop-text { margin: .5rem 0 0; max-width: 34rem; font-family: "Neuehaasunicaw 1 G", Inter, sans-serif; font-size: 1rem; line-height: 1.55; color: #3f423f; }
+.loop-example { display: inline-block; max-width: 100%; margin: .8rem 0 0; padding: .55rem .8rem; border-radius: .55rem; background: rgba(49, 95, 239, .08); font-family: "Jetbrainsmono Variable", ui-monospace, monospace; font-size: .8rem; line-height: 1.5; color: #2447b8; }
+.loop-foot { margin: 3.5rem 0 0; max-width: 52rem; font-family: "Neuehaasunicaw 1 G", Inter, sans-serif; font-size: .9rem; line-height: 1.5; color: #6b6f6b; }
+@media (max-width: 991px) {
+  .loop-layout { grid-template-columns: minmax(0, 1fr); gap: 3rem; }
+  .loop-intro { position: static; }
+}
+@media (max-width: 767px) {
+  .section_loop { padding: 4rem 0 3.5rem; }
+  .loop-step { padding: 0 0 2rem 2.2rem; }
+  .loop-goal blockquote { font-size: 1.15rem; }
+  .loop-foot { margin-top: 2.5rem; }
+}
+
+/* Confianza: una lista con reglas finas, no cinco tarjetas iguales. */
+.section_trust { position: relative; z-index: 3; background: #0b0b0b; color: #fff; padding: 5.5rem 0; }
+.trust-layout { display: grid; grid-template-columns: minmax(0, 25rem) minmax(0, 42rem); justify-content: space-between; gap: 3rem; align-items: start; }
+.trust-title { margin: 0; font-family: Neuemachina, "Space Grotesk", Inter, sans-serif; font-weight: 600; font-size: clamp(2rem, 3.6vw, 3rem); line-height: 1.02; letter-spacing: -.04em; text-wrap: balance; }
+.trust-title span { display: block; color: #7f9dff; }
+.trust-list { list-style: none; margin: 0; padding: 0; border-top: 1px solid #262626; }
+.trust-list li { display: grid; grid-template-columns: minmax(0, 15rem) minmax(0, 1fr); gap: .35rem 2rem; padding: 1.2rem 0; border-bottom: 1px solid #262626; }
+.trust-list strong { font-family: "Neuehaasunicaw 1 G", Inter, sans-serif; font-weight: 600; font-size: 1.02rem; line-height: 1.35; color: #fff; }
+.trust-list span { font-family: "Neuehaasunicaw 1 G", Inter, sans-serif; font-size: .95rem; line-height: 1.5; color: #b0b0b0; }
+@media (max-width: 991px) { .trust-layout { grid-template-columns: minmax(0, 1fr); } }
+@media (max-width: 767px) {
+  .section_trust { padding: 4rem 0; }
+  .trust-list li { grid-template-columns: minmax(0, 1fr); }
+}
+
+/* Lo que todavía no existe se dice: «Próximamente», nunca como disponible. */
+.connector-soon { display: inline-block; margin: .45rem 0 .2rem; padding: .16rem .5rem; border: 1px solid rgba(77, 124, 255, .5); border-radius: 999px; font-family: "Jetbrainsmono Variable", monospace; font-size: .64rem; letter-spacing: .08em; text-transform: uppercase; color: #7f9dff; }
+.uc-ads-cards li.is-soon .uc-feed-logo, .uc-ads-cards li.is-soon > span { opacity: .55; }
+.uc-soon { display: block; margin-top: .2rem; font-family: "Jetbrainsmono Variable", monospace; font-size: .58rem; letter-spacing: .06em; text-transform: uppercase; color: #8a8a8a; }
+/* El CTA del héroe ahora dice «Empieza con 14 días de Operador»: en dos
+   columnas de móvil se salía de la pantalla. Apilados, cada uno a lo ancho. */
+@media (max-width: 767px) {
+  .b2b-hero-actions { grid-template-columns: minmax(0, 1fr); }
+}

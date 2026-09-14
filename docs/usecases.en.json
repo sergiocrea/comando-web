@@ -85,12 +85,12 @@
           "r": "5 carts: the largest is Andrea Gómez's ($480, sneakers and a jacket). None completed payment."
         },
         {
-          "u": "Prepare the message for Andrea with the payment link and 5 % off.",
-          "r": "Coupon ANDREA5 created in Shopify. “Hi Andrea, you left your sneakers and the jacket in the cart; here is the link with an extra 5 %…”. Tap to send it."
+          "u": "Get the message ready for Andrea with the payment link.",
+          "r": "\"Hi Andrea, you left your sneakers and the jacket in your cart; here is the link to finish your purchase…\". Tap to send it."
         },
         {
-          "u": "Mark order 1042 as delivered and note that the customer asked for an invoice.",
-          "r": "Order 1042 delivered and note saved. Tomorrow I will leave you the message ready to ask for the review."
+          "u": "Move Andrea to \"Customer\" in the CRM and note that she asked for an invoice.",
+          "r": "Done in the CRM: Andrea is a \"Customer\" and the note is saved. Tomorrow I'll remind you to ask her for a review."
         }
       ],
       "resultado": "Every abandoned cart gets a second chance.",
@@ -151,8 +151,8 @@
           "r": "Rule active. Right now there are 2: orders 1031 ($640) and 1037 ($512)."
         },
         {
-          "u": "If a product runs out of stock and has pending orders, tell purchasing and me.",
-          "r": "Rule active on the Shopify inventory. Purchasing gets it on WhatsApp, and so do you."
+          "u": "If a customer with an order over $500 has no follow-up in 2 days, tell me with their record.",
+          "r": "Rule active. Right now there is 1: Carlos Medina, a $620 order with no activity since Tuesday."
         },
         {
           "u": "How much did we sell on Shopify against WooCommerce this month?",
@@ -217,17 +217,17 @@
           "r": "Rule active. Tomorrow you will have 22 messages ready with each product's review link."
         },
         {
-          "u": "If a customer writes about their Shopify order and we do not reply within 2 hours, tell me.",
-          "r": "Rule active on Shopify customer messages."
+          "u": "If a Shopify order has been \"In transit\" for 5 days without moving to \"Delivered\", tell me.",
+          "r": "Rule active. Today there are 3: orders 1049, 1051 and 1053."
         },
         {
-          "u": "Mark order 1058 as return accepted and create me the refund task for finance.",
-          "r": "Order 1058 in “Return accepted”; task created for finance with the amount $210."
+          "u": "Note on the record of the customer for order 1058 that the return was accepted, and create the refund task for finance.",
+          "r": "Note saved and task created for finance for the $210 amount."
         }
       ],
       "resultado": "Customers who come back and tell others.",
       "evidencia": "carrito",
-      "proactivo": "⭐ 22 orders were delivered yesterday: your review messages are ready. 1 Shopify customer message has gone 2 h with no reply. Answer SEE."
+      "proactivo": "⭐ 22 orders were delivered yesterday: your review messages are ready. 3 orders have been in transit for 5 days. Reply VIEW."
     },
     {
       "rol": "Sales rep",
@@ -240,7 +240,7 @@
         },
         {
           "u": "Prepare the message for Jorge with the quote and the financing options.",
-          "r": "“Hi Jorge, thanks for the Kicks test drive. Here is the quote and two financing plans over 36 and 48 months…”. I attached the PDF. Tap to send it."
+          "r": "\"Hi Jorge, thanks for test-driving the Kicks. Here is the quote and two financing plans over 36 and 48 months…\". Tap to send it."
         },
         {
           "u": "Move Jorge to “Financing” and create me the task to ask him for the documents on Thursday.",
@@ -328,11 +328,11 @@
         },
         {
           "u": "If a lead from the ad goes 30 minutes without a call, alert the branch advisor and me.",
-          "r": "Rule created: lead with no contact in 30 minutes → alert to the branch advisor, copy to you. Applies to Meta and Google leads."
+          "r": "Rule created: lead with no contact in 30 minutes → alert the location's advisor and copy you. It applies to leads coming in from Meta."
         },
         {
-          "u": "How much did each new membership cost us per channel this month?",
-          "r": "Meta: $38 per membership (19 closed). Google: $61 (7 closed). Referrals: $0 (6). Meta brings 60% of sign-ups with 55% of the spend."
+          "u": "How many new memberships came from each channel this month?",
+          "r": "Meta: 19 memberships (59%). Google: 7 (22%). Referrals: 6 (19%). Meta brings almost two out of every three sign-ups."
         }
       ],
       "resultado": "You decide where to put the budget with today's numbers.",

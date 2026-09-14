@@ -85,12 +85,12 @@
           "r": "5 carritos: el mayor es de Andrea Gómez ($480, zapatillas y casaca). Ninguno completó el pago."
         },
         {
-          "u": "Prepárame el mensaje para Andrea con el enlace de pago y un 5 % de descuento.",
-          "r": "Cupón ANDREA5 creado en Shopify. «Hola Andrea, dejaste tus zapatillas y la casaca en el carrito; aquí tienes el enlace con 5 % extra…». Toca para enviarlo."
+          "u": "Prepárame el mensaje para Andrea con el enlace de pago.",
+          "r": "«Hola Andrea, dejaste tus zapatillas y la casaca en el carrito; aquí tienes el enlace para completar tu compra…». Toca para enviarlo."
         },
         {
-          "u": "Marca el pedido 1042 como entregado y anota que el cliente pidió factura.",
-          "r": "Pedido 1042 entregado y nota guardada. Mañana te dejo listo el mensaje para pedirle la reseña."
+          "u": "Pasa a Andrea a «Cliente» en el CRM y anota que pidió factura.",
+          "r": "Hecho en el CRM: Andrea en «Cliente» y nota guardada. Mañana te recuerdo pedirle la reseña."
         }
       ],
       "resultado": "Cada carrito abandonado tiene una segunda oportunidad.",
@@ -151,8 +151,8 @@
           "r": "Regla activa. Ahora mismo hay 2: pedidos 1031 ($640) y 1037 ($512)."
         },
         {
-          "u": "Si un producto se queda sin stock y tiene pedidos pendientes, avisa a compras y a mí.",
-          "r": "Regla activa sobre el inventario de Shopify. Aviso a compras por WhatsApp y a ti."
+          "u": "Si un cliente con pedido de más de $500 no tiene seguimiento en 2 días, avísame con su ficha.",
+          "r": "Regla activa. Ahora mismo hay 1: Carlos Medina, pedido de $620 sin actividad desde el martes."
         },
         {
           "u": "¿Cuánto vendimos por Shopify vs por WooCommerce este mes?",
@@ -217,17 +217,17 @@
           "r": "Regla activa. Mañana tendrás 22 mensajes listos con el enlace de reseña de cada producto."
         },
         {
-          "u": "Si un cliente escribe por su pedido de Shopify y no respondemos en 2 horas, avísame.",
-          "r": "Regla activa sobre los mensajes de clientes de Shopify."
+          "u": "Si un pedido de Shopify lleva 5 días «En camino» sin pasar a «Entregado», avísame.",
+          "r": "Regla activa. Hoy hay 3: pedidos 1049, 1051 y 1053."
         },
         {
-          "u": "Marca el pedido 1058 como devolución aceptada y créame la tarea de reembolso para finanzas.",
-          "r": "Pedido 1058 en «Devolución aceptada»; tarea creada para finanzas con el monto $210."
+          "u": "Anota en la ficha del cliente del pedido 1058 que se aceptó la devolución y créale la tarea de reembolso a finanzas.",
+          "r": "Nota guardada y tarea creada para finanzas con el monto de $210."
         }
       ],
       "resultado": "Clientes que vuelven y lo cuentan.",
       "evidencia": "carrito",
-      "proactivo": "⭐ 22 pedidos se entregaron ayer: tienes los mensajes de reseña listos. 1 mensaje de un cliente de Shopify lleva 2 h sin respuesta. Responde VER."
+      "proactivo": "⭐ 22 pedidos se entregaron ayer: tienes los mensajes de reseña listos. 3 pedidos llevan 5 días en camino. Responde VER."
     },
     {
       "rol": "Vendedor",
@@ -240,7 +240,7 @@
         },
         {
           "u": "Prepárame el mensaje para Jorge con la cotización y las opciones de financiamiento.",
-          "r": "«Hola Jorge, gracias por la prueba del Kicks. Te dejo la cotización y dos planes de financiamiento a 36 y 48 meses…». Adjunté el PDF. Toca para enviarlo."
+          "r": "«Hola Jorge, gracias por la prueba del Kicks. Te dejo la cotización y dos planes de financiamiento a 36 y 48 meses…». Toca para enviarlo."
         },
         {
           "u": "Mueve a Jorge a «Financiamiento» y créame la tarea de pedirle los documentos el jueves.",
@@ -328,11 +328,11 @@
         },
         {
           "u": "Si un lead del anuncio lleva 30 minutos sin llamada, avisa al asesor de la sede y a mí.",
-          "r": "Regla creada: lead sin contacto en 30 minutos → aviso al asesor de la sede y copia a ti. Aplica a los leads de Meta y Google."
+          "r": "Regla creada: lead sin contacto en 30 minutos → aviso al asesor de la sede y copia a ti. Aplica a los leads que entran de Meta."
         },
         {
-          "u": "¿Cuánto nos costó cada membresía nueva por canal este mes?",
-          "r": "Meta: $38 por membresía (19 cerradas). Google: $61 (7 cerradas). Referidos: $0 (6). Meta trae el 60 % de las altas con el 55 % del gasto."
+          "u": "¿Cuántas membresías nuevas vinieron de cada canal este mes?",
+          "r": "Meta: 19 membresías (59 %). Google: 7 (22 %). Referidos: 6 (19 %). Meta trae casi dos de cada tres altas."
         }
       ],
       "resultado": "Decides dónde poner la pauta con el dato del día.",
