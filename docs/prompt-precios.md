@@ -19,40 +19,43 @@ Tono directo, concreto, sin jerga técnica. Español neutro LatAm. Mantener el e
 visual actual de la landing (fondo oscuro, tipografía y animaciones existentes); la
 sección debe sentirse parte de la misma página.
 
-## 3. Modelo de precios vigente desde 2026-08-30
-- Cada plan corresponde a **una persona** y se cobra por usuario.
-- Cada usuario tiene su propio **alcance de contactos del CRM**, con el límite del plan.
-- **Nunca se describe públicamente como «espejo» ni como una copia del CRM.**
-- Uso justo en **comandos** (texto o audio; paquete incluido por plan + add-on).
-- Alertas en **tiempo real** por eventos del CRM en todos los planes.
-- Plan **Gratis como prueba individual con cupo**: 30 comandos en total, 1 usuario,
-  1 CRM y hasta 20,000 contactos a su alcance, sin tarjeta. Al agotar el cupo deja de
-  ejecutar hasta que el usuario elija un plan.
-- Moneda: USD. Anual = 2 meses gratis.
+## 3. Modelo de precios vigente desde 2026-09-14
 
-> Nota histórica: antes del 2026-08-30 se evaluó cobrar solo por contactos con operadores
-> ilimitados. Ese modelo fue reemplazado por planes individuales; no debe volver a
-> publicarse como una capacidad vigente.
->
-> El plan Business de $49 también se retiró de la oferta pública el 2026-08-30. Las
-> necesidades por encima de Pro pasan a una conversación comercial.
+> Sustituye a la escalera Básico 3 / Starter 8 / Pro 20 (y a la anterior 3/7/19).
+> Los números viven en `js/pricing.js` (`PLAN_LADDER`, `TRIAL`, `ADDONS`); esta
+> tabla es solo referencia para quien redacte textos, no una segunda copia.
 
-| | Gratis | Básico | Starter | Pro | Enterprise |
+- Comando se vende como **operador de ventas y marketing**: el plan es cuánto
+  trabajo hace Comando (vigilar, actuar solo, cuántas herramientas opera), no
+  «comandos + contactos».
+- Toda cuenta empieza con **14 días de Operador** sin tarjeta y después queda en
+  **Gratis**.
+- **Nunca se describe públicamente como «espejo» ni como una copia del CRM**: se
+  dice «registros del CRM al día».
+- Los comandos son **uso justo**: aviso al 80 % y al 100 %; en los planes de pago
+  no se corta el servicio. Un audio cuenta como **un** comando.
+
+| | Gratis | Asistente | Operador | Escala | Enterprise |
 |---|---|---|---|---|---|
-| Precio mensual del plan individual | $0 | **$3/mes** | $7/mes | $19/mes | A medida |
-| Contactos disponibles | hasta 20,000 | hasta 20,000 | hasta 70,000 | hasta 200,000 | A medida |
-| Comandos incluidos (texto o audio; una nota de voz = 1.5) | 50 en total | 150 / mes | 500 / mes | 1,500 / mes | Negociados |
-| CRM conectados | 1 | 2 | 5 | Ilimitados | A medida |
-| Cuentas de anuncios (Meta Ads, TikTok Ads) | 1 (Meta Ads) | 1 | 3 | Ilimitadas | A medida |
-| Usuarios incluidos | 1 | 1 | 1 | 1 | Negociados |
-| Soporte | Autoservicio | Estándar | Estándar | WhatsApp | Dedicado + SLA |
+| Promesa | Pregúntale a tu CRM | Ejecuta el trabajo por ti | Vigila y actúa | Opera a todo el equipo | A medida |
+| Precio mensual | $0 | $9 | $29 (recomendado) | $79 | A medida |
+| Registros del CRM al día | 1 000 | 10 000 | 50 000 | 200 000 | A medida |
+| CRM conectados | 1 | 1 | 2 | Ilimitados | A medida |
+| Cuentas de Meta Ads (lectura) | 1 | 1 | 3 | Ilimitadas | A medida |
+| Comandos al mes | 30 | 300 | 1 500 | 5 000 | Negociados |
+| Cambios por operación | hasta 10 | hasta 100 | con aprobación | con aprobación | — |
+| Agente, resumen diario, reglas, diagnóstico de Meta Ads | — | — | ✓ | ✓ | ✓ |
 
-Add-ons (todos los planes): **+20,000 contactos → $1/mes** · **+500 comandos → $8** (62 comandos por dólar: siempre conviene más subir de plan que acumular paquetes).
+Add-on: **+500 comandos → $8**, pago único para el mes en curso. Anual: 2 meses
+gratis (×10/12).
 
-Sincronización: en tiempo real cuando el CRM envía eventos (HubSpot, Pipedrive, Zoho, Kommo, Shopify, Tiendanube, WooCommerce, Mercado Libre…); en los que no, Comando revisa cambios cada 6 h (Básico), 30 min (Starter) o 5 min (Pro).
-Anual: 2 meses gratis (toggle mensual/anual). Plan destacado: Starter.
-Al superar contactos o comandos: aviso al 80%; sugerir add-on o plan siguiente; nunca se
-corta el servicio sin aviso.
+Próximamente, en todos los planes (decirlo así, nunca como disponible): pausar
+campañas y ajustar presupuestos de Meta Ads, Google Ads, TikTok Ads, Kommo y
+HighLevel.
+
+Sincronización: no se prometen intervalos por plan. Cuando el CRM avisa de los
+cambios, llegan en el momento; cuando no, Comando revisa varias veces al día y se
+pone al día cuando le preguntan.
 
 ## 4. Bloque comparativo: "¿Cuánto es esto frente a tu CRM?"
 Comparación honesta (Comando complementa al CRM, no lo sustituye) con precios públicos
