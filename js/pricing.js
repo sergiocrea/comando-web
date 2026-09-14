@@ -1,81 +1,125 @@
 /* ============================================================
    pricing.js — Sección de precios de Comando.
-   Todo lo editable (planes, límites, add-ons, tipo de cambio, comparativa,
-   FAQ y textos) vive en PRICING_CONFIG. El markup se genera desde aquí.
+   Todo lo editable (planes, límites, add-ons, comparativa, FAQ y textos) vive
+   en PRICING_CONFIG. El markup se genera desde aquí.
 
    Los tres idiomas: PRICING_CONFIG es el castellano y PRICING_I18N trae lo que
    cambia en inglés y portugués. Lo que NO cambia son los números: un plan de
-   US$ 8 con 70 000 contactos es el mismo plan en los tres, y tenerlo escrito
+   US$ 29 con 50 000 registros es el mismo plan en los tres, y tenerlo escrito
    una sola vez es lo que impide que un precio se quede viejo en un idioma.
 
    Y por qué los números están escritos y no se piden al motor: ver
    `tooling/plans-check.mjs`. En resumen: una página de precios que espera a la
    red puede salir vacía, y salir vacía es peor que salir desactualizada. Lo que
-   sí hay es UNA copia de cada número —PLAN_LADDER y ADDONS, aquí abajo— y una
-   comprobación que grita cuando deja de coincidir con lo que se cobra.
+   sí hay es UNA copia de cada número —PLAN_LADDER, TRIAL y ADDONS, aquí abajo—
+   y una comprobación que grita cuando deja de coincidir con lo que se cobra.
+
+   Jerarquía de cada tarjeta: RESULTADO (la promesa del plan) → CAPACIDADES (lo
+   que Comando puede hacer por ti) → LÍMITES (en pequeño, al pie). Los límites
+   importan, pero no son lo que se compra.
    ============================================================ */
 
 /**
  * La escalera de planes: la única copia de cada número en todo el archivo.
  *
- * Antes cada cifra estaba escrita tantas veces como frases la mencionaban: el
- * «30» del plan gratis vivía en la tarjeta y otra vez en el FAQ, en tres
- * idiomas. Cambiar un plan obligaba a acordarse de siete sitios, y olvidarse de
- * uno no rompe nada visible: la página simplemente promete algo que ya no es.
- * Ahora las frases llevan marcas —`{gratis.comandos}`— que se rellenan al
- * pintar, así que solo hay un sitio donde equivocarse.
+ * `code` es el código del plan en el motor: es lo que permite a
+ * `tooling/plans-check.mjs` comparar esto con `/v1/public/plans`. Los nombres de
+ * los campos siguen a los del catálogo público (`limits.*`, `capabilities.*`).
  *
- * `code` es el código del plan en el motor (`free`, no `gratis`): es lo que
- * permite a `tooling/plans-check.mjs` comparar esto con `/v1/public/plans`.
+ * `null` en un límite = sin límite. En las capacidades: `true` incluido,
+ * `'limited'` incluido con tope, `false` no incluido, `'soon'` todavía no existe
+ * en el producto y la página lo dice como «Próximamente». Nada se marca `true`
+ * si el motor no lo hace hoy.
  */
 const PLAN_LADDER = [
-  { id: 'gratis',  code: 'free',    price: 0,               contacts: 20000,  commands: 30,   connections: 1 },
-  { id: 'basico',  code: 'basico',  price: 3, listPrice: 6, contacts: 20000,  commands: 200,  connections: 2 },
-  { id: 'starter', code: 'starter', price: 8,               contacts: 70000,  commands: 700,  connections: 5 },
-  { id: 'pro',     code: 'pro',     price: 20,              contacts: 200000, commands: 2000, connections: null },
+  {
+    id: 'gratis', code: 'free', price: 0,
+    mirrorRecords: 1000, commands: 30, crmAccounts: 1, adsAccounts: 1, bulkMaxRecords: 10,
+    capabilities: { crmWrites: 'limited', undo: true, reports: true, approvals: true, automations: false, agent: false, dailyBriefing: false, adsRead: true, adsDiagnosis: false, adsExecution: 'soon', googleAds: 'soon', tiktokAds: 'soon' },
+  },
+  {
+    id: 'asistente', code: 'asistente', price: 9,
+    mirrorRecords: 10000, commands: 300, crmAccounts: 1, adsAccounts: 1, bulkMaxRecords: 100,
+    capabilities: { crmWrites: true, undo: true, reports: true, approvals: true, automations: false, agent: false, dailyBriefing: false, adsRead: true, adsDiagnosis: false, adsExecution: 'soon', googleAds: 'soon', tiktokAds: 'soon' },
+  },
+  {
+    id: 'operador', code: 'operador', price: 29, featured: true,
+    mirrorRecords: 50000, commands: 1500, crmAccounts: 2, adsAccounts: 3, bulkMaxRecords: null,
+    capabilities: { crmWrites: true, undo: true, reports: true, approvals: true, automations: true, agent: true, dailyBriefing: true, adsRead: true, adsDiagnosis: true, adsExecution: 'soon', googleAds: 'soon', tiktokAds: 'soon' },
+  },
+  {
+    id: 'escala', code: 'escala', price: 79,
+    mirrorRecords: 200000, commands: 5000, crmAccounts: null, adsAccounts: null, bulkMaxRecords: null,
+    capabilities: { crmWrites: true, undo: true, reports: true, approvals: true, automations: true, agent: true, dailyBriefing: true, adsRead: true, adsDiagnosis: true, adsExecution: 'soon', googleAds: 'soon', tiktokAds: 'soon' },
+  },
 ];
 
-/** Los paquetes que se suman sin cambiar de plan. Misma regla: una sola copia. */
+/** La prueba al registrarse: todas las cuentas empiezan con Operador. */
+const TRIAL = { days: 14, plan: 'operador' };
+
+/** Los paquetes que se suman sin cambiar de plan. Un pago único para el mes en curso. */
 const ADDONS = {
-  contacts: { amount: 20000, price: 1 },
-  commands: { amount: 500,   price: 8 },
+  commands: { amount: 500, price: 8 },
 };
 
 const PRICING_CONFIG = {
   billing: { annualFreeMonths: 2 },          // anual = precio mensual × 10 / 12
   cta: { trialBase: '/app/', trialLabel: 'Elegir plan', freeLabel: 'Empezar gratis', enterpriseHref: '#pricing-form', enterpriseLabel: 'Habla con ventas' },
   title: '', // sin titular: PRECIOS y esta línea bastan
-  subtitle: 'Paga por el uso de comandos y la cantidad de contactos en tu CRM.',
-  // Cada plan muestra solo 4 líneas: contactos, comandos, CRM y anuncios.
-  // Aquí va lo que es presentación; los números salen de PLAN_LADDER por `id`.
+  subtitle: 'Pagas por el trabajo que Comando hace por tu equipo. Todas las cuentas empiezan con {trial.dias} días de Operador, sin tarjeta.',
+  // Lo que es presentación; los números salen de PLAN_LADDER por `id`.
   plans: [
-    { id: 'gratis',  name: 'Gratis',  crms: '<b>{gratis.conexiones}</b> CRM conectado',  ads: '<b>1</b> cuenta de Meta Ads', note: 'Prueba individual, sin tarjeta.' },
-    { id: 'basico',  name: 'Básico',  crms: '<b>{basico.conexiones}</b> CRM conectados', ads: '<b>1</b> cuenta de Meta Ads' },
-    { id: 'starter', name: 'Starter', crms: '<b>{starter.conexiones}</b> CRM conectados', ads: '<b>3</b> cuentas de anuncios' },
-    { id: 'pro',     name: 'Pro',     crms: '<b>CRM ilimitados</b>', ads: '<b>Anuncios ilimitados</b>' },
+    {
+      id: 'gratis', name: 'Gratis', promise: 'Pregúntale a tu CRM',
+      caps: [
+        'Preguntas y reportes sobre tu CRM',
+        'Cambios en tu CRM con vista previa y CONFIRMAR, hasta {gratis.masivo} registros por vez',
+        'Deshacer y aprobaciones',
+        'Gasto y resultados de tu cuenta de Meta Ads',
+      ],
+      note: 'Empiezas con {trial.dias} días de Operador. Después sigues aquí, sin tarjeta.',
+    },
+    {
+      id: 'asistente', name: 'Asistente', promise: 'Ejecuta el trabajo por ti', intro: 'Todo lo de Gratis, más:',
+      caps: [
+        'Cambios de hasta {asistente.masivo} registros a la vez',
+        'Tu cartera completa al día, hasta {asistente.registros} registros',
+      ],
+    },
+    {
+      id: 'operador', name: 'Operador', promise: 'Vigila y actúa', intro: 'Todo lo de Asistente, más:',
+      caps: [
+        'Un agente que vigila tu CRM y te avisa',
+        'Resumen del día por WhatsApp',
+        'Reglas que actúan solas en tu CRM',
+        'Diagnóstico de tus campañas de Meta Ads',
+        'Cambios masivos con aprobación',
+      ],
+    },
+    {
+      id: 'escala', name: 'Escala', promise: 'Opera a todo el equipo', intro: 'Todo lo de Operador, más:',
+      caps: [
+        'CRM y cuentas de Meta Ads sin límite',
+        'Hasta {escala.registros} registros al día',
+        '{escala.comandos} comandos al mes para todo el equipo',
+      ],
+    },
   ],
-  enterpriseLine: '¿Más de {pro.contactos} contactos, integraciones avanzadas o soporte dedicado?',
+  soonLine: 'Próximamente, en todos los planes: pausar campañas y ajustar presupuestos de Meta Ads, y Google Ads y TikTok Ads.',
+  enterpriseLine: '¿Más de {escala.registros} registros, varios equipos o soporte dedicado?',
   commandNote: 'Un comando es cada pedido que le haces a Comando por WhatsApp, por texto o por audio. Las confirmaciones y las respuestas no cuentan.',
   addons: [
-    { id: 'contacts', label: '+{addon.contactos} contactos' },
     { id: 'commands', label: '+{addon.comandos} comandos' },
   ],
-  addonsIntro: '¿Te quedas corto? Suma paquetes sin cambiar de plan:',
-  overageNote: 'Te avisamos al 80 % de tu límite. Nunca cortamos el servicio sin aviso.',
-  includes: [
-    'Conexión al CRM en 2 minutos',
-    'Nadie cambia nada sin confirmar',
-    'Historial auditable de cada acción',
-    'Español adaptado al país de tu equipo',
-    'Los avisos que quieras, cuando los quieras. Se apagan en un mensaje',
-    'Comandos por texto o audio de WhatsApp',
-    'Un plan individual con comandos propios',
-  ],
+  addonsIntro: '¿Te quedas corto? Suma un paquete sin cambiar de plan, para el mes en curso:',
+  overageNote: 'Te avisamos al 80 % y al 100 % de tus comandos. En los planes de pago el servicio no se corta.',
   faq: [
-    { q: '¿Cómo se calcula el precio?', a: 'Cada persona usa un plan según cuántos contactos de su CRM necesita tener a su alcance. Si dos usuarios necesitan hasta {basico.contactos} contactos cada uno, cada uno usa un plan Básico de {basico.precio} al mes. Puedes cambiar de plan cuando quieras; se prorratea.' },
-    { q: '¿Qué cuenta como comando y qué pasa si me paso?', a: 'Un comando es cada pedido que le haces a Comando por WhatsApp, por texto o por audio; una nota de voz cuenta como 1,5. Las confirmaciones («sí», «ok») y las respuestas de Comando no cuentan. Te avisamos al 80 % del cupo y nunca cortamos el servicio sin aviso: puedes sumar paquetes de {addon.comandos} comandos por {addon.comandosPrecio} o subir de plan.' },
-    { q: '¿Qué incluye el plan Gratis?', a: '{gratis.comandos} comandos para una persona, con hasta {gratis.contactos} contactos en tu CRM y {gratis.conexiones} CRM conectado, sin tarjeta. Cuando se te acaben, eliges un plan y sigues donde ibas.' },
-    { q: '¿Cada cuánto se actualiza mi CRM en Comando?', a: 'Cuando tu CRM envía eventos, los cambios llegan en tiempo real. Cuando no los envía, Comando revisa los cambios cada 6 horas en Básico, cada 30 minutos en Starter y cada 5 minutos en Pro.' },
+    { q: '¿Qué incluyen los {trial.dias} días de Operador?', a: 'Al crear tu cuenta tienes Operador completo durante {trial.dias} días, sin tarjeta: el agente que vigila tu CRM, el resumen del día, las reglas y el diagnóstico de Meta Ads. Al terminar sigues en Gratis, con {gratis.registros} registros y {gratis.comandos} comandos al mes, o eliges un plan. Tu cuenta y tus conexiones se quedan como estaban.' },
+    { q: '¿Qué cuenta como comando y qué pasa si me paso?', a: 'Un comando es cada pedido que le haces a Comando por WhatsApp, por texto o por audio: un audio cuenta como un comando. Las confirmaciones («sí», «ok») y las respuestas de Comando no cuentan. Te avisamos al 80 % y al 100 %. En los planes de pago no cortamos el servicio: puedes sumar {addon.comandos} comandos por {addon.comandosPrecio} o subir de plan. En Gratis, al llegar al límite esperas al mes siguiente o eliges un plan.' },
+    { q: '¿Qué son los registros al día?', a: 'Son los contactos y registros de tu CRM que Comando mantiene listos para responderte al instante y para vigilar. Si tu CRM tiene más de los que incluye tu plan, no se borra nada ni se toca nada en tu CRM: te avisamos y decides si subir de plan.' },
+    { q: '¿Comando cambia mis campañas de Meta Ads?', a: 'Hoy no. Comando lee tus campañas de Meta Ads —gasto, resultados, costo por resultado, ROAS y alcance— y desde Operador te dice por qué rinden así y qué revisar. Pausar campañas y ajustar presupuestos desde Comando llega pronto, igual que Google Ads y TikTok Ads.' },
+    { q: '¿Puedo deshacer lo que hizo Comando?', a: 'Sí, en un mensaje: los cambios de etapa, dueño, campos, importe, descuento y etiquetas se revierten con «deshacer». Las notas, los registros nuevos y los mensajes ya enviados no se pueden deshacer, y por eso Comando te los enseña antes de confirmar.' },
+    { q: '¿Cada cuánto se actualiza mi CRM en Comando?', a: 'Cuando tu CRM avisa de los cambios, llegan en el momento. Cuando no avisa, Comando revisa los cambios varias veces al día y se pone al día cuando le preguntas. Si un dato es demasiado viejo para responder, te lo dice antes de contestar.' },
   ],
 };
 
@@ -87,9 +131,9 @@ const PRICING_I18N = {
       eyebrow: 'PRICING', priceOptions: 'Price options', billing: 'Billing',
       monthly: 'Monthly', annual: 'Annual', freeMonths: (n) => `${n} months free`,
       perMonth: '/mo', perYear: (amount) => `${amount} a year`, off: (p) => `${p} % off`,
-      contactsInReach: (n) => `<b>${n}</b> contacts in your CRM`,
-      contactsByPlan: 'Contacts as per your plan',
-      commands: (n) => `<b>${n}</b> commands`,
+      recommended: 'Recommended', unlimited: 'Unlimited',
+      limits: { mirrorRecords: 'Records kept current', crmAccounts: 'Connected CRMs', adsAccounts: 'Meta Ads accounts', commands: 'Commands a month' },
+      limitsLabel: 'Plan limits',
       whatIsACommand: 'What is a command?',
       moreInfo: 'More about commands, packs and enterprise',
       pricingDetails: 'Pricing details', faqTitle: 'Frequently asked questions',
@@ -100,27 +144,44 @@ const PRICING_I18N = {
     },
     cta: { trialLabel: 'Choose plan', freeLabel: 'Start free', enterpriseLabel: 'Talk to sales' },
     title: '',
-    subtitle: 'Pay for the commands you use and the contacts in your CRM.',
-    planNames: { gratis: 'Free', basico: 'Basic', starter: 'Starter', pro: 'Pro' },
-    planCrms: {
-      gratis: '<b>{gratis.conexiones}</b> CRM connected', basico: '<b>{basico.conexiones}</b> CRMs connected',
-      starter: '<b>{starter.conexiones}</b> CRMs connected', pro: '<b>Unlimited CRMs</b>',
+    subtitle: 'You pay for the work Comando does for your team. Every account starts with {trial.dias} days of Operator, no card.',
+    plans: {
+      gratis: {
+        name: 'Free', promise: 'Ask your CRM',
+        caps: [
+          'Questions and reports on your CRM',
+          'Changes to your CRM with a preview and CONFIRM, up to {gratis.masivo} records at a time',
+          'Undo and approvals',
+          'Spend and results from your Meta Ads account',
+        ],
+        note: 'You start with {trial.dias} days of Operator. Then you stay here, no card.',
+      },
+      asistente: {
+        name: 'Assistant', promise: 'Does the work for you', intro: 'Everything in Free, plus:',
+        caps: ['Changes to up to {asistente.masivo} records at once', 'Your whole book of business kept current, up to {asistente.registros} records'],
+      },
+      operador: {
+        name: 'Operator', promise: 'Watches and acts', intro: 'Everything in Assistant, plus:',
+        caps: ['An agent that watches your CRM and tells you', 'Daily summary on WhatsApp', 'Rules that act on their own in your CRM', 'Diagnosis of your Meta Ads campaigns', 'Bulk changes with approval'],
+      },
+      escala: {
+        name: 'Scale', promise: 'Runs the whole team', intro: 'Everything in Operator, plus:',
+        caps: ['Unlimited CRMs and Meta Ads accounts', 'Up to {escala.registros} records kept current', '{escala.comandos} commands a month for the whole team'],
+      },
     },
-    planAds: {
-      gratis: '<b>1</b> Meta Ads account', basico: '<b>1</b> Meta Ads account', starter: '<b>3</b> ad accounts',
-      pro: '<b>Unlimited ads</b>',
-    },
-    planNotes: { gratis: 'Individual trial, no card.' },
-    enterpriseLine: 'More than {pro.contactos} contacts, advanced integrations or dedicated support?',
+    soonLine: 'Coming soon, on every plan: pausing campaigns and adjusting Meta Ads budgets, plus Google Ads and TikTok Ads.',
+    enterpriseLine: 'More than {escala.registros} records, several teams or dedicated support?',
     commandNote: 'A command is every request you make to Comando on WhatsApp, by text or by voice. Confirmations and replies do not count.',
-    addonLabels: { contacts: '+{addon.contactos} contacts', commands: '+{addon.comandos} commands' },
-    addonsIntro: 'Running short? Add packs without changing plan:',
-    overageNote: 'We warn you at 80 % of your limit. We never cut the service without telling you.',
+    addonLabels: { commands: '+{addon.comandos} commands' },
+    addonsIntro: 'Running short? Add a pack without changing plan, for the current month:',
+    overageNote: 'We tell you at 80 % and at 100 % of your commands. On paid plans the service is never cut.',
     faq: [
-      { q: 'How is the price calculated?', a: 'Each person uses a plan based on how many CRM contacts they need within reach. If two users each need up to {basico.contactos} contacts, each uses a Basic plan at {basico.precio} a month. You can change plan whenever you want; it is prorated.' },
-      { q: 'What counts as a command and what happens if I go over?', a: 'A command is every request you make to Comando on WhatsApp, by text or by voice; a voice note counts as 1.5. Confirmations ("yes", "ok") and Comando\'s replies do not count. We warn you at 80 % of your quota and never cut the service without telling you: you can add packs of {addon.comandos} commands for {addon.comandosPrecio} or move up a plan.' },
-      { q: 'What does the Free plan include?', a: '{gratis.comandos} commands for one person, with up to {gratis.contactos} contacts in your CRM and {gratis.conexiones} CRM connected, no card. When they run out, you pick a plan and carry on where you were.' },
-      { q: 'How often is my CRM refreshed in Comando?', a: 'When your CRM sends events, changes arrive in real time. When it does not, Comando checks for changes every 6 hours on Basic, every 30 minutes on Starter and every 5 minutes on Pro.' },
+      { q: 'What do the {trial.dias} days of Operator include?', a: 'When you create your account you get the full Operator plan for {trial.dias} days, no card: the agent that watches your CRM, the daily summary, rules and the Meta Ads diagnosis. When it ends you stay on Free, with {gratis.registros} records and {gratis.comandos} commands a month, or you pick a plan. Your account and your connections stay as they were.' },
+      { q: 'What counts as a command and what happens if I go over?', a: 'A command is every request you make to Comando on WhatsApp, by text or by voice: a voice note counts as one command. Confirmations ("yes", "ok") and Comando\'s replies do not count. We tell you at 80 % and at 100 %. On paid plans we never cut the service: you can add {addon.comandos} commands for {addon.comandosPrecio} or move up a plan. On Free, when you reach the limit you wait for next month or pick a plan.' },
+      { q: 'What are records kept current?', a: 'They are the contacts and records from your CRM that Comando keeps ready to answer you instantly and to watch. If your CRM has more than your plan includes, nothing is deleted and nothing changes in your CRM: we tell you and you decide whether to move up a plan.' },
+      { q: 'Does Comando change my Meta Ads campaigns?', a: 'Not today. Comando reads your Meta Ads campaigns —spend, results, cost per result, ROAS and reach— and from Operator it tells you why they perform that way and what to check. Pausing campaigns and adjusting budgets from Comando is coming soon, as are Google Ads and TikTok Ads.' },
+      { q: 'Can I undo what Comando did?', a: 'Yes, with one message: changes to stage, owner, fields, amount, discount and tags are reverted with "undo". Notes, new records and messages already sent cannot be undone, which is why Comando shows them to you before you confirm.' },
+      { q: 'How often is my CRM refreshed in Comando?', a: 'When your CRM reports its changes, they arrive right away. When it does not, Comando checks for changes several times a day and catches up when you ask. If a figure is too old to answer with, it tells you before replying.' },
     ],
   },
   pt: {
@@ -128,9 +189,9 @@ const PRICING_I18N = {
       eyebrow: 'PREÇO', priceOptions: 'Opções de preço', billing: 'Cobrança',
       monthly: 'Mensal', annual: 'Anual', freeMonths: (n) => `${n} meses grátis`,
       perMonth: '/mês', perYear: (amount) => `${amount} por ano`, off: (p) => `${p} % de desconto`,
-      contactsInReach: (n) => `<b>${n}</b> contatos no seu CRM`,
-      contactsByPlan: 'Contatos conforme seu plano',
-      commands: (n) => `<b>${n}</b> comandos`,
+      recommended: 'Recomendado', unlimited: 'Sem limite',
+      limits: { mirrorRecords: 'Registros em dia', crmAccounts: 'CRMs conectados', adsAccounts: 'Contas de Meta Ads', commands: 'Comandos por mês' },
+      limitsLabel: 'Limites do plano',
       whatIsACommand: 'O que é um comando?',
       moreInfo: 'Mais sobre comandos, pacotes e enterprise',
       pricingDetails: 'Detalhes de preços', faqTitle: 'Perguntas frequentes',
@@ -141,27 +202,44 @@ const PRICING_I18N = {
     },
     cta: { trialLabel: 'Escolher plano', freeLabel: 'Começar grátis', enterpriseLabel: 'Falar com vendas' },
     title: '',
-    subtitle: 'Pague pelo uso de comandos e pela quantidade de contatos no seu CRM.',
-    planNames: { gratis: 'Grátis', basico: 'Básico', starter: 'Starter', pro: 'Pro' },
-    planCrms: {
-      gratis: '<b>{gratis.conexiones}</b> CRM conectado', basico: '<b>{basico.conexiones}</b> CRMs conectados',
-      starter: '<b>{starter.conexiones}</b> CRMs conectados', pro: '<b>CRMs ilimitados</b>',
+    subtitle: 'Você paga pelo trabalho que o Comando faz pelo seu time. Toda conta começa com {trial.dias} dias de Operador, sem cartão.',
+    plans: {
+      gratis: {
+        name: 'Grátis', promise: 'Pergunte ao seu CRM',
+        caps: [
+          'Perguntas e relatórios sobre seu CRM',
+          'Mudanças no seu CRM com prévia e CONFIRMAR, até {gratis.masivo} registros por vez',
+          'Desfazer e aprovações',
+          'Investimento e resultados da sua conta de Meta Ads',
+        ],
+        note: 'Você começa com {trial.dias} dias de Operador. Depois continua aqui, sem cartão.',
+      },
+      asistente: {
+        name: 'Assistente', promise: 'Faz o trabalho por você', intro: 'Tudo do Grátis, mais:',
+        caps: ['Mudanças em até {asistente.masivo} registros de uma vez', 'Sua carteira inteira em dia, até {asistente.registros} registros'],
+      },
+      operador: {
+        name: 'Operador', promise: 'Vigia e age', intro: 'Tudo do Assistente, mais:',
+        caps: ['Um agente que vigia seu CRM e te avisa', 'Resumo do dia pelo WhatsApp', 'Regras que agem sozinhas no seu CRM', 'Diagnóstico das suas campanhas de Meta Ads', 'Mudanças em massa com aprovação'],
+      },
+      escala: {
+        name: 'Escala', promise: 'Opera o time inteiro', intro: 'Tudo do Operador, mais:',
+        caps: ['CRMs e contas de Meta Ads sem limite', 'Até {escala.registros} registros em dia', '{escala.comandos} comandos por mês para o time todo'],
+      },
     },
-    planAds: {
-      gratis: '<b>1</b> conta de Meta Ads', basico: '<b>1</b> conta de Meta Ads', starter: '<b>3</b> contas de anúncios',
-      pro: '<b>Anúncios ilimitados</b>',
-    },
-    planNotes: { gratis: 'Teste individual, sem cartão.' },
-    enterpriseLine: 'Mais de {pro.contactos} contatos, integrações avançadas ou suporte dedicado?',
+    soonLine: 'Em breve, em todos os planos: pausar campanhas e ajustar orçamentos de Meta Ads, além de Google Ads e TikTok Ads.',
+    enterpriseLine: 'Mais de {escala.registros} registros, vários times ou suporte dedicado?',
     commandNote: 'Um comando é cada pedido que você faz ao Comando pelo WhatsApp, por texto ou por áudio. As confirmações e as respostas não contam.',
-    addonLabels: { contacts: '+{addon.contactos} contatos', commands: '+{addon.comandos} comandos' },
-    addonsIntro: 'Ficou curto? Some pacotes sem trocar de plano:',
-    overageNote: 'A gente avisa a 80 % do seu limite. Nunca cortamos o serviço sem avisar.',
+    addonLabels: { commands: '+{addon.comandos} comandos' },
+    addonsIntro: 'Ficou curto? Some um pacote sem trocar de plano, para o mês em curso:',
+    overageNote: 'A gente avisa a 80 % e a 100 % dos seus comandos. Nos planos pagos o serviço não é cortado.',
     faq: [
-      { q: 'Como o preço é calculado?', a: 'Cada pessoa usa um plano conforme quantos contatos do CRM precisa ter ao alcance. Se dois usuários precisam de até {basico.contactos} contatos cada, cada um usa um plano Básico de {basico.precio} por mês. Você pode trocar de plano quando quiser; é proporcional.' },
-      { q: 'O que conta como comando e o que acontece se eu passar?', a: 'Um comando é cada pedido que você faz ao Comando pelo WhatsApp, por texto ou por áudio; um áudio conta como 1,5. As confirmações («sim», «ok») e as respostas do Comando não contam. A gente avisa a 80 % da cota e nunca corta o serviço sem avisar: você pode somar pacotes de {addon.comandos} comandos por {addon.comandosPrecio} ou subir de plano.' },
-      { q: 'O que inclui o plano Grátis?', a: '{gratis.comandos} comandos para uma pessoa, com até {gratis.contactos} contatos no seu CRM e {gratis.conexiones} CRM conectado, sem cartão. Quando acabarem, você escolhe um plano e continua de onde parou.' },
-      { q: 'De quanto em quanto tempo meu CRM é atualizado no Comando?', a: 'Quando seu CRM envia eventos, as mudanças chegam em tempo real. Quando não envia, o Comando verifica as mudanças a cada 6 horas no Básico, a cada 30 minutos no Starter e a cada 5 minutos no Pro.' },
+      { q: 'O que incluem os {trial.dias} dias de Operador?', a: 'Ao criar sua conta você tem o Operador completo por {trial.dias} dias, sem cartão: o agente que vigia seu CRM, o resumo do dia, as regras e o diagnóstico de Meta Ads. Ao terminar você continua no Grátis, com {gratis.registros} registros e {gratis.comandos} comandos por mês, ou escolhe um plano. Sua conta e suas conexões ficam como estavam.' },
+      { q: 'O que conta como comando e o que acontece se eu passar?', a: 'Um comando é cada pedido que você faz ao Comando pelo WhatsApp, por texto ou por áudio: um áudio conta como um comando. As confirmações («sim», «ok») e as respostas do Comando não contam. A gente avisa a 80 % e a 100 %. Nos planos pagos não cortamos o serviço: você pode somar {addon.comandos} comandos por {addon.comandosPrecio} ou subir de plano. No Grátis, ao chegar ao limite você espera o mês seguinte ou escolhe um plano.' },
+      { q: 'O que são os registros em dia?', a: 'São os contatos e registros do seu CRM que o Comando mantém prontos para te responder na hora e para vigiar. Se o seu CRM tiver mais do que o plano inclui, nada é apagado e nada muda no seu CRM: a gente avisa e você decide se sobe de plano.' },
+      { q: 'O Comando muda minhas campanhas de Meta Ads?', a: 'Hoje não. O Comando lê suas campanhas de Meta Ads —investimento, resultados, custo por resultado, ROAS e alcance— e a partir do Operador te diz por que rendem assim e o que revisar. Pausar campanhas e ajustar orçamentos pelo Comando chega em breve, assim como Google Ads e TikTok Ads.' },
+      { q: 'Posso desfazer o que o Comando fez?', a: 'Sim, com uma mensagem: mudanças de etapa, responsável, campos, valor, desconto e etiquetas se revertem com «desfazer». Notas, registros novos e mensagens já enviadas não podem ser desfeitos, e por isso o Comando mostra tudo antes de você confirmar.' },
+      { q: 'De quanto em quanto tempo meu CRM é atualizado no Comando?', a: 'Quando seu CRM avisa das mudanças, elas chegam na hora. Quando não avisa, o Comando verifica as mudanças várias vezes ao dia e se atualiza quando você pergunta. Se um dado estiver velho demais para responder, ele avisa antes de responder.' },
     ],
   },
 };
@@ -176,9 +254,9 @@ const PRICING_I18N = {
     eyebrow: 'PRECIO', priceOptions: 'Opciones de precio', billing: 'Facturación',
     monthly: 'Mensual', annual: 'Anual', freeMonths: (n) => `${n} meses gratis`,
     perMonth: '/mes', perYear: (amount) => `${amount} al año`, off: (p) => `${p} % de descuento`,
-    contactsInReach: (n) => `<b>${n}</b> contactos en tu CRM`,
-    contactsByPlan: 'Contactos según tu plan',
-    commands: (n) => `<b>${n}</b> comandos`,
+    recommended: 'Recomendado', unlimited: 'Sin límite',
+    limits: { mirrorRecords: 'Registros al día', crmAccounts: 'CRM conectados', adsAccounts: 'Cuentas de Meta Ads', commands: 'Comandos al mes' },
+    limitsLabel: 'Límites del plan',
     whatIsACommand: '¿Qué es un comando?',
     moreInfo: 'Más sobre comandos, paquetes y enterprise',
     pricingDetails: 'Detalles de precios', faqTitle: 'Preguntas frecuentes',
@@ -189,27 +267,30 @@ const PRICING_I18N = {
   };
   const state = { annual: false };
   const NUMBERS = { es: 'es-PE', en: 'en-US', pt: 'pt-BR' }[LANG] ?? 'es-PE';
-  const fmtN = (n) => n.toLocaleString(NUMBERS).replace(/,/g, ' ').replace(/\./g, ' ');
+  // Separador de miles: espacio que no se parte, o «10 000» se rompía en dos líneas.
+  const fmtN = (n) => n.toLocaleString(NUMBERS).replace(/[,.\s]/g, ' ');
   function money(usd) { if (usd == null) return null; const v = Number.isInteger(usd) ? usd : Math.round(usd * 100) / 100; return 'US$ ' + v.toLocaleString(NUMBERS); }
   function monthly(p) { if (p == null) return null; return state.annual ? p * (12 - C.billing.annualFreeMonths) / 12 : p; }
+  const limit = (n) => (n == null ? W.unlimited : fmtN(n));
 
   /**
    * Las marcas `{plan.campo}` de los textos, resueltas contra PLAN_LADDER.
    *
    * Se resuelven aquí y no al escribirlas porque el número también se formatea
-   * según el idioma: la misma frase dice «20 000» y «20,000» sin que nadie
+   * según el idioma: la misma frase dice «50 000» y «50,000» sin que nadie
    * tenga que acordarse de las dos.
    */
   const TOKENS = (() => {
     const map = {};
     for (const plan of PLAN_LADDER) {
       map[plan.id + '.comandos'] = fmtN(plan.commands);
-      map[plan.id + '.contactos'] = plan.contacts == null ? '' : fmtN(plan.contacts);
-      map[plan.id + '.conexiones'] = plan.connections == null ? '' : fmtN(plan.connections);
+      map[plan.id + '.registros'] = limit(plan.mirrorRecords);
+      map[plan.id + '.crm'] = limit(plan.crmAccounts);
+      map[plan.id + '.ads'] = limit(plan.adsAccounts);
+      map[plan.id + '.masivo'] = limit(plan.bulkMaxRecords);
       map[plan.id + '.precio'] = money(plan.price);
     }
-    map['addon.contactos'] = fmtN(ADDONS.contacts.amount);
-    map['addon.contactosPrecio'] = money(ADDONS.contacts.price);
+    map['trial.dias'] = fmtN(TRIAL.days);
     map['addon.comandos'] = fmtN(ADDONS.commands.amount);
     map['addon.comandosPrecio'] = money(ADDONS.commands.price);
     return map;
@@ -220,7 +301,7 @@ const PRICING_I18N = {
   const fill = (value) => {
     if (typeof value === 'string') return value.replace(/\{([a-z]+\.[a-zA-Z]+)\}/g, (whole, key) => TOKENS[key] ?? whole);
     if (Array.isArray(value)) return value.map(fill);
-    if (value && typeof value === 'object') return Object.fromEntries(Object.entries(value).map(([k, v]) => [k, fill(v)]));
+    if (value && typeof value === 'object') return Object.fromEntries(Object.entries(value).map(([k, v]) => [k, typeof v === 'function' ? v : fill(v)]));
     return value;
   };
 
@@ -238,13 +319,8 @@ const PRICING_I18N = {
         cta: { ...BASE.cta, ...L.cta },
         title: L.title,
         subtitle: L.subtitle,
-        plans: BASE.plans.map((plan) => ({
-          ...plan,
-          name: L.planNames[plan.id] ?? plan.name,
-          ...(plan.crms ? { crms: L.planCrms[plan.id] ?? plan.crms } : {}),
-          ...(plan.ads ? { ads: L.planAds[plan.id] ?? plan.ads } : {}),
-          ...(plan.note ? { note: L.planNotes[plan.id] ?? plan.note } : {}),
-        })),
+        plans: BASE.plans.map((plan) => ({ ...plan, ...(L.plans[plan.id] || {}) })),
+        soonLine: L.soonLine,
         enterpriseLine: L.enterpriseLine,
         commandNote: L.commandNote,
         addons: BASE.addons.map((addon) => ({ ...addon, label: L.addonLabels[addon.id] ?? addon.label })),
@@ -276,28 +352,35 @@ const PRICING_I18N = {
   function renderCard(p) {
     const free = p.price === 0;
     const m = monthly(p.price);
-    // Con `listPrice` la tarjeta muestra el precio de lista tachado y cuánto se ahorra.
-    const list = !free && p.listPrice ? monthly(p.listPrice) : null;
-    const off = list ? Math.round((1 - p.price / p.listPrice) * 100) : 0;
     const priceHtml = free ? `<div class="price-amount">US$ 0</div>`
-      : `<div class="price-amount">${money(m)}<span>${esc(W.perMonth)}</span>${list ? `<s>${money(list)}</s>` : ''}</div>${off ? `<div class="price-off">${esc(W.off(off))}</div>` : ''}${state.annual ? `<div class="price-annual">${esc(W.perYear(money(m * 12)))}</div>` : ''}`;
-    const lines = [p.contacts == null ? W.contactsByPlan : W.contactsInReach(fmtN(p.contacts)), W.commands(fmtN(p.commands)), p.crms, p.ads].filter(Boolean);
+      : `<div class="price-amount">${money(m)}<span>${esc(W.perMonth)}</span></div>${state.annual ? `<div class="price-annual">${esc(W.perYear(money(m * 12)))}</div>` : ''}`;
+    /* Resultado → capacidades → límites. Las capacidades acumulan («Todo lo
+       de Asistente, más:»): así cada tarjeta dice qué GANAS al subir, no la
+       lista entera repetida con una línea distinta escondida en medio. */
+    const caps = (p.caps || []).map((c) => `<li>${esc(c)}</li>`).join('');
+    const limits = [
+      ['mirrorRecords', limit(p.mirrorRecords)], ['crmAccounts', limit(p.crmAccounts)],
+      ['adsAccounts', limit(p.adsAccounts)], ['commands', fmtN(p.commands)],
+    ].map(([key, value]) => `<div><dt>${esc(W.limits[key])}</dt><dd>${esc(value)}</dd></div>`).join('');
     /* El enlace lleva el CÓDIGO del plan (el que cobra el motor) y el
        intervalo que se está viendo: al entrar, el panel abre el pago de ese
        plan. El gratuito solo registra. */
     const cta = free ? `<a href="${C.cta.trialBase}?plan=${p.code}" class="price-cta">${esc(C.cta.freeLabel)}</a>`
       : `<a href="${C.cta.trialBase}?plan=${p.code}&interval=${state.annual ? 'annual' : 'monthly'}" class="price-cta">${esc(C.cta.trialLabel)}</a>`;
-    return `<div class="price-card${free ? ' is-free' : ''}" data-plan="${p.id}">
-      <div class="price-name">${esc(p.name)}</div>${priceHtml}
-      <ul class="price-list">${lines.map((l) => `<li>${l}</li>`).join('')}</ul>${p.note ? `<div class="price-note">${esc(p.note)}</div>` : ''}${cta}</div>`;
+    return `<div class="price-card${free ? ' is-free' : ''}${p.featured ? ' is-featured' : ''}" data-plan="${p.id}">
+      <div class="price-top"><div class="price-name">${esc(p.name)}</div>${p.featured ? `<span class="price-badge">${esc(W.recommended)}</span>` : ''}</div>
+      <div class="price-promise">${esc(p.promise)}</div>${priceHtml}
+      ${p.intro ? `<div class="price-caps-intro">${esc(p.intro)}</div>` : ''}<ul class="price-list">${caps}</ul>
+      <dl class="price-limits" aria-label="${esc(W.limitsLabel)}">${limits}</dl>${p.note ? `<div class="price-note">${esc(p.note)}</div>` : ''}${cta}</div>`;
   }
   function renderCards() {
     return `<div class="pricing-grid is-four" id="pricing-cards">${C.plans.map(renderCard).join('')}</div>
+      <p class="pricing-soon">${esc(C.soonLine)}</p>
       <details class="pricing-notes">
         <summary class="pricing-notes-toggle">${esc(W.moreInfo)}</summary>
         <div class="pricing-notes-body">
           <p class="pricing-note"><b>${esc(W.whatIsACommand)}</b> ${esc(C.commandNote)}</p>
-          <p class="pricing-note"><b>${esc(C.addonsIntro)}</b> ${C.addons.map((a) => `${esc(a.label)} = ${money(a.price)}${esc(W.perMonth)}`).join(' · ')}. ${esc(C.overageNote)}</p>
+          <p class="pricing-note"><b>${esc(C.addonsIntro)}</b> ${C.addons.map((a) => `${esc(a.label)} = ${money(a.price)}`).join(' · ')}. ${esc(C.overageNote)}</p>
           <p class="pricing-note">${esc(C.enterpriseLine)} <a href="${C.cta.enterpriseHref}">${esc(C.cta.enterpriseLabel)}</a>.</p>
         </div>
       </details>`;

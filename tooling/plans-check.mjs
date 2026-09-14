@@ -9,33 +9,34 @@
  * La escalera de planes vive en la base de datos del motor y se publica desde
  * la consola de administración; `GET /v1/public/plans` la sirve. Lo evidente
  * sería que `js/pricing.js` la pidiera y pintara lo que llegue. No se hizo, por
- * tres razones que pesan más que la elegancia:
+ * dos razones que pesan más que la elegancia:
  *
  * 1. Una página de precios que espera a la red puede salir VACÍA. Un visitante
  *    con la red mala, un motor caído o un despliegue a medias vería el bloque
  *    que decide la compra en blanco. Una página desactualizada vende de menos;
  *    una página vacía no vende nada, y encima parece rota.
- * 2. Hoy la ruta ni siquiera trae los precios: la vista `public_plan_catalog`
- *    solo une precios en estado `ready`, y la escalera del 6-sep-2026 los dejó
- *    en `draft` hasta aprovisionarlos en la pasarela. `amountMinor` viene en
- *    `null` para los cuatro planes. Un precio dinámico que no puede traer el
- *    precio es decorado.
- * 3. Los números están tejidos en la prosa —«30 comandos para una persona, con
- *    hasta 20 000 contactos»— en tres idiomas. Repintar las tarjetas y no el
- *    FAQ deja una página que se contradice consigo misma, que es peor que estar
+ * 2. Los números están tejidos en la prosa —«Gratis, con 1 000 registros y 30
+ *    comandos al mes»— en tres idiomas. Repintar las tarjetas y no el FAQ deja
+ *    una página que se contradice consigo misma, que es peor que estar
  *    desfasada.
  *
- * Así que los números se quedan escritos, pero en UN solo sitio (`PLAN_LADDER`
- * en `js/pricing.js`) y con alguien vigilando: este script compara ese sitio
- * con lo que sirve el motor y falla cuando dejan de coincidir. El aviso llega
- * por el flujo de `.github/workflows/precios.yml`, que lo corre a diario: un
- * precio que se cambia en la consola un martes se descubre el miércoles, no
- * cuando lo suma un cliente.
+ * Así que los números se quedan escritos, pero en UN solo sitio (`PLAN_LADDER`,
+ * `TRIAL` y `ADDONS` en `js/pricing.js`) y con alguien vigilando: este script
+ * compara ese sitio con lo que sirve el motor y falla cuando dejan de coincidir.
+ * El aviso llega por el flujo de `.github/workflows/precios.yml`, que lo corre a
+ * diario: un precio que se cambia en la consola un martes se descubre el
+ * miércoles, no cuando lo suma un cliente.
  *
- * Si algún día la ruta sirve precios y hace falta que la página los siga al
- * minuto, el trabajo ya está hecho a medias: las frases llevan marcas
- * (`{gratis.comandos}`) y basta con rellenar `PLAN_LADDER` desde la respuesta
- * antes de pintar, dejando lo escrito como respaldo.
+ * Qué compara, campo a campo, cuando el motor lo publica:
+ *   - límites: comandos (y su periodo), registros al día, CRM conectados,
+ *     cuentas de Ads, tope de registros por operación masiva;
+ *   - capacidades: lo que la página promete como incluido (`true`/`'limited'`)
+ *     tiene que estar encendido en el motor, y lo que dice «Próximamente»
+ *     (`'soon'`) o «no incluido» (`false`) tiene que estar apagado;
+ *   - precios: mensual y anual (×10), solo los que están en `ready`;
+ *   - la prueba: días y plan.
+ * Con el catálogo viejo (`commandLimit`, `contactLimit`, `connectionLimit`,
+ * `amountMinor`) compara lo que puede y avisa de lo que no.
  */
 import { readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
@@ -60,8 +61,8 @@ function ladderFromSource() {
   const from = source.indexOf('const PLAN_LADDER');
   const to = source.indexOf('const PRICING_CONFIG');
   if (from === -1 || to === -1 || to < from)
-    throw new Error('js/pricing.js: no encuentro PLAN_LADDER/ADDONS antes de PRICING_CONFIG');
-  return new Function(`${source.slice(from, to)}\nreturn { PLAN_LADDER, ADDONS };`)();
+    throw new Error('js/pricing.js: no encuentro PLAN_LADDER/TRIAL/ADDONS antes de PRICING_CONFIG');
+  return new Function(`${source.slice(from, to)}\nreturn { PLAN_LADDER, TRIAL, ADDONS };`)();
 }
 
 async function catalog() {
@@ -83,8 +84,12 @@ async function catalog() {
 
 const same = (a, b) => (a ?? null) === (b ?? null);
 const show = (value) => (value == null ? 'ilimitado' : String(value));
+/** El valor del motor: primero el contrato nuevo, después el viejo. `undefined` = no lo publica. */
+const pick = (...values) => values.find((value) => value !== undefined);
+/** ¿Está encendida una capacidad en el motor? Admite booleano o texto (`'limited'`, `'full'`…). */
+const on = (value) => value === true || (typeof value === 'string' && !/^(false|none|off|soon|no)$/i.test(value));
 
-const { PLAN_LADDER, ADDONS } = ladderFromSource();
+const { PLAN_LADDER, TRIAL, ADDONS } = ladderFromSource();
 let plans;
 try {
   plans = await catalog();
@@ -104,24 +109,57 @@ for (const plan of PLAN_LADDER) {
     problems.push(`${plan.id}: la página lo anuncia y el motor no lo publica (código «${plan.code}»)`);
     continue;
   }
+  const limits = served.limits ?? {};
   const checks = [
-    ['comandos', plan.commands, served.commandLimit],
-    ['contactos', plan.contacts, served.contactLimit],
-    ['conexiones', plan.connections, served.connectionLimit],
+    ['comandos', plan.commands, pick(limits.commands?.limit, served.commandLimit)],
+    ['registros al día', plan.mirrorRecords, pick(limits.mirrorRecords, served.contactLimit)],
+    ['CRM conectados', plan.crmAccounts, pick(limits.crmAccounts, served.connectionLimit)],
+    ['cuentas de Ads', plan.adsAccounts, limits.adsAccounts],
+    ['registros por operación masiva', plan.bulkMaxRecords, limits.bulkMaxRecords],
   ];
-  for (const [what, web, engine] of checks)
+  for (const [what, web, engine] of checks) {
+    if (engine === undefined) { warnings.push(`${plan.id}: el motor no publica «${what}»; la página anuncia ${show(web)}`); continue; }
     if (!same(web, engine)) problems.push(`${plan.id}: ${what} — la página dice ${show(web)}, el motor ${show(engine)}`);
+  }
+  if (limits.commands?.period && limits.commands.period !== 'monthly')
+    problems.push(`${plan.id}: la página dice comandos «al mes» y el motor los cuenta por «${limits.commands.period}»`);
 
-  // El precio solo se compara cuando el motor lo publica. Mientras siga en
-  // `draft` no hay nada que comparar, y decir «no coincide» sería mentira.
-  if (served.amountMinor == null) {
-    warnings.push(`${plan.id}: el motor no publica precio todavía (precio en borrador); la página anuncia US$ ${plan.price}`);
+  // Capacidades: lo prometido tiene que existir, y lo que dice «Próximamente» no puede estar ya encendido sin que la página lo cuente.
+  if (served.capabilities) {
+    for (const [key, web] of Object.entries(plan.capabilities)) {
+      const engine = served.capabilities[key];
+      if (engine === undefined) { warnings.push(`${plan.id}: el motor no publica la capacidad «${key}»`); continue; }
+      const promised = web === true || web === 'limited';
+      if (promised && !on(engine)) problems.push(`${plan.id}: «${key}» — la página lo promete y el motor no lo incluye (${JSON.stringify(engine)})`);
+      if (!promised && on(engine)) warnings.push(`${plan.id}: «${key}» — el motor ya lo incluye y la página dice ${web === 'soon' ? '«Próximamente»' : 'que no'}`);
+    }
+  } else warnings.push(`${plan.id}: el motor no publica capacidades; no se pudieron comparar`);
+
+  // Precios. Solo se comparan los que están en `ready`: mientras sigan en borrador no hay nada que comparar.
+  const prices = Array.isArray(served.prices)
+    ? served.prices
+    : served.amountMinor != null ? [{ interval: served.billingInterval ?? 'monthly', currency: served.currency, amountMinor: served.amountMinor, status: 'ready' }] : [];
+  const ready = prices.filter((price) => price.status == null || price.status === 'ready');
+  if (plan.price === 0) {
+    const charged = ready.find((price) => price.amountMinor > 0);
+    if (charged) problems.push(`${plan.id}: la página lo anuncia gratis y el motor cobra US$ ${charged.amountMinor / 100}`);
+  } else if (!ready.length) {
+    warnings.push(`${plan.id}: el motor no publica precio listo todavía; la página anuncia US$ ${plan.price}/mes`);
   } else {
-    const engineUsd = served.amountMinor / 100;
-    if (served.currency && served.currency.toUpperCase() !== 'USD')
-      problems.push(`${plan.id}: el motor cobra en ${served.currency} y la página anuncia dólares`);
-    if (engineUsd !== plan.price)
-      problems.push(`${plan.id}: precio — la página dice US$ ${plan.price}, el motor US$ ${engineUsd}`);
+    for (const [interval, expected] of [['monthly', plan.price], ['annual', plan.price * 10]]) {
+      const price = ready.find((p) => p.interval === interval);
+      if (!price) { warnings.push(`${plan.id}: el motor no publica precio ${interval === 'monthly' ? 'mensual' : 'anual'}`); continue; }
+      if (price.currency && price.currency.toUpperCase() !== 'USD')
+        problems.push(`${plan.id}: el motor cobra en ${price.currency} y la página anuncia dólares`);
+      if (price.amountMinor / 100 !== expected)
+        problems.push(`${plan.id}: precio ${interval} — la página dice US$ ${expected}, el motor US$ ${price.amountMinor / 100}`);
+    }
+  }
+
+  if (served.trial !== undefined && plan.price === 0) {
+    const trial = served.trial;
+    if (!trial || trial.days !== TRIAL.days || trial.plan !== TRIAL.plan)
+      problems.push(`${plan.id}: la página promete ${TRIAL.days} días de ${TRIAL.plan} y el motor publica ${JSON.stringify(trial)}`);
   }
 }
 
@@ -132,8 +170,8 @@ const anunciados = new Set(PLAN_LADDER.map((plan) => plan.code));
 for (const plan of plans)
   if (!anunciados.has(plan.code)) warnings.push(`el motor publica «${plan.code}» y la página no lo enseña como plan`);
 
-console.log(`escalera anunciada: ${PLAN_LADDER.map((p) => `${p.id} US$ ${p.price}/${p.commands} comandos/${show(p.contacts)} contactos`).join(' · ')}`);
-console.log(`paquetes: +${ADDONS.contacts.amount} contactos US$ ${ADDONS.contacts.price} · +${ADDONS.commands.amount} comandos US$ ${ADDONS.commands.price} (el motor no los publica: no hay con qué compararlos)`);
+console.log(`escalera anunciada: ${PLAN_LADDER.map((p) => `${p.id} US$ ${p.price}/${p.commands} comandos/${show(p.mirrorRecords)} registros`).join(' · ')}`);
+console.log(`prueba: ${TRIAL.days} días de ${TRIAL.plan} · paquete: +${ADDONS.commands.amount} comandos US$ ${ADDONS.commands.price} (el motor no publica paquetes: no hay con qué compararlos)`);
 for (const warning of warnings) console.log(`aviso: ${warning}`);
 if (problems.length) {
   console.error(`\nla página de precios anuncia algo distinto de lo que se cobra (${problems.length}):`);
