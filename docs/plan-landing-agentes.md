@@ -243,6 +243,9 @@ Una cuenta publicitaria extra cuesta ≈ 0,014 USD/mes; de 15 a 100 campañas po
 | 15-sep | Notas de voz | **En todos los planes** (≈ 0,003 USD por gratis al mes) |
 | 15-sep | Módulo «Conversa con tu CRM» | **Desde US$ 9 al mes**; la calculadora sube el precio en CRM lentos o muy grandes |
 | 15-sep | Diseño (fase C) | **Aprobado:** botones de acción en **verde WhatsApp** (`#00a884`); **7 tarjetas de métricas**; agentes con **iconos simples** (estilo producto real, sin personajes); **precios y CRM en fondo claro**. Se mantienen sin eyebrows |
+| 15-sep | Calculadora del módulo CRM (fase D) | **Se queda** en la landing aunque hoy todos los tramos salgan en el mínimo de US$ 9 (estrategia 3) |
+| 15-sep | Automatizaciones (conectores) | **Disponible con el módulo CRM** (las reglas avisan y actúan en el CRM hoy). Los otros 14 conectores siguen «Próximamente» |
+| 15-sep | Paquete de comandos y enterprise | **Paquete +500 comandos por US$ 8 (para el mes en curso, pago único) vuelve** debajo de los planes; **enterprise como enlace, sin formulario** («¿Más de 20 cuentas publicitarias? Habla con nosotros»). No hay número de WhatsApp de ventas publicado: el enlace va a `hola@comando.pro` hasta tenerlo |
 | 15-sep | Prueba de 14 días | **Del plan Equipo** («Equipo, déjalo así»); al terminar, Gratis. «Operador» ya no es un plan. Propuesta para la web (pendiente de revisión en fase C): nota del hero «14 días de Equipo gratis · Sin tarjeta · Conecta Meta en 2 minutos» y una línea sobre las tarjetas de precios «Empiezas con 14 días del plan Equipo, sin tarjeta» |
 
 ---

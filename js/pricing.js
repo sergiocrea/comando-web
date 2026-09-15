@@ -78,9 +78,18 @@ const CRM_QUOTE = {
   },
 };
 
+/**
+ * Paquete de preguntas de pago único: se suma al cupo del MES EN CURSO (no es
+ * mensual). En el motor es el add-on de pago único de Stripe; no está en
+ * `ADDONS` porque el catálogo público solo publica módulos recurrentes.
+ */
+const COMMAND_PACK = { commands: 500, price: 8 };
+
 const PRICING_CONFIG = {
   annualMonths: 10,           // anual = 10 meses: 2 gratis
   signup: '/app/',
+  // Más cuentas que el plan mayor: sin formulario. No hay número de WhatsApp de ventas publicado; correo del sitio.
+  contact: 'mailto:hola@comando.pro?subject=M%C3%A1s%20cuentas%20publicitarias',
 };
 
 /* Las palabras, por idioma. Los números entran por función para que cada idioma los
@@ -90,6 +99,8 @@ const PRICING_TEXT = {
     billing: 'Facturación', monthly: 'Mensual', annual: 'Anual', freeMonths: '2 meses gratis',
     perMonth: '/mes', perYear: (a) => `${a} al año`, recommended: 'Recomendado', soon: 'Próximamente',
     trial: (days) => `Empiezas con ${days} días del plan Equipo, sin tarjeta`,
+    pack: (n, p) => `¿Te quedaste sin preguntas? Suma ${n} por ${p} para este mes.`,
+    more: (n) => `¿Más de ${n} cuentas publicitarias?`, talk: 'Habla con nosotros',
     caps: { team: 'Analista y estratega', voice: 'Notas de voz', soon: 'Comprador de medios y atribución', soonFirst: 'Primero en recibir comprador de medios y atribución' },
     limits: {
       accounts: (n, f) => (n === 1 ? '1 cuenta publicitaria' : `${f(n)} cuentas publicitarias`),
@@ -107,6 +118,8 @@ const PRICING_TEXT = {
     billing: 'Billing', monthly: 'Monthly', annual: 'Annual', freeMonths: '2 months free',
     perMonth: '/mo', perYear: (a) => `${a} a year`, recommended: 'Recommended', soon: 'Coming soon',
     trial: (days) => `You start with ${days} days of the Team plan, no card`,
+    pack: (n, p) => `Out of questions? Add ${n} for ${p} this month.`,
+    more: (n) => `More than ${n} ad accounts?`, talk: 'Talk to us',
     caps: { team: 'Analyst and strategist', voice: 'Voice notes', soon: 'Media buyer and attribution', soonFirst: 'First to get media buyer and attribution' },
     limits: {
       accounts: (n, f) => (n === 1 ? '1 ad account' : `${f(n)} ad accounts`),
@@ -124,6 +137,8 @@ const PRICING_TEXT = {
     billing: 'Cobrança', monthly: 'Mensal', annual: 'Anual', freeMonths: '2 meses grátis',
     perMonth: '/mês', perYear: (a) => `${a} por ano`, recommended: 'Recomendado', soon: 'Em breve',
     trial: (days) => `Você começa com ${days} dias do plano Equipe, sem cartão`,
+    pack: (n, p) => `Ficou sem perguntas? Some ${n} por ${p} para este mês.`,
+    more: (n) => `Mais de ${n} contas de anúncios?`, talk: 'Fale com a gente',
     caps: { team: 'Analista e estrategista', voice: 'Notas de voz', soon: 'Comprador de mídia e atribuição', soonFirst: 'Primeiro a receber comprador de mídia e atribuição' },
     limits: {
       accounts: (n, f) => (n === 1 ? '1 conta de anúncios' : `${f(n)} contas de anúncios`),
@@ -191,7 +206,11 @@ const PRICING_TEXT = {
           <button type="button" data-annual="1" aria-pressed="${state.annual}">${esc(T.annual)}<span>${esc(T.freeMonths)}</span></button>
         </div>
       </div>
-      <div class="plans">${PLAN_LADDER.map(renderPlan).join('')}</div>`;
+      <div class="plans">${PLAN_LADDER.map(renderPlan).join('')}</div>
+      <div class="pricing-extras">
+        <p>${esc(T.pack(int(COMMAND_PACK.commands), money(COMMAND_PACK.price)))}</p>
+        <p>${esc(T.more(int(PLAN_LADDER[PLAN_LADDER.length - 1].adsAccounts)))} <a href="${PRICING_CONFIG.contact}">${esc(T.talk)}</a></p>
+      </div>`;
     root.querySelectorAll('.billing button').forEach((button) => button.addEventListener('click', () => {
       state.annual = button.dataset.annual === '1';
       mountPlans();

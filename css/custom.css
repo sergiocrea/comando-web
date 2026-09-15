@@ -2292,6 +2292,7 @@ html { scroll-behavior: smooth; }
 }
 
 /* Lo que todavía no existe se dice: «Próximamente», nunca como disponible. */
+.connector-available { display: inline-block; margin: .45rem 0 .2rem; padding: .16rem .5rem; border: 1px solid rgba(0, 168, 132, .55); border-radius: 999px; font-family: "Jetbrainsmono Variable", monospace; font-size: .64rem; letter-spacing: .08em; text-transform: uppercase; color: #3fd1a8; }
 .connector-soon { display: inline-block; margin: .45rem 0 .2rem; padding: .16rem .5rem; border: 1px solid rgba(77, 124, 255, .5); border-radius: 999px; font-family: "Jetbrainsmono Variable", monospace; font-size: .64rem; letter-spacing: .08em; text-transform: uppercase; color: #7f9dff; }
 .uc-ads-cards li.is-soon .uc-feed-logo, .uc-ads-cards li.is-soon > span { opacity: .55; }
 .uc-soon { display: block; margin-top: .2rem; font-family: "Jetbrainsmono Variable", monospace; font-size: .58rem; letter-spacing: .06em; text-transform: uppercase; color: #8a8a8a; }

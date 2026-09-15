@@ -266,6 +266,9 @@ html:not(.js) .slider-btns { display: none; }
 .plan .btn-dark:hover { background: #2a2a2a; }
 .plan.star .btn-dark { background: var(--wa-green); color: #04140f; }
 .plan.star .btn-dark:hover { background: #14bb95; }
+.pricing-extras { display: flex; flex-wrap: wrap; justify-content: center; gap: .35rem 1.5rem; margin-top: 1.5rem; font-size: .95rem; color: var(--paper-soft); text-align: center; }
+.pricing-extras p { margin: 0; }
+.pricing-extras a { color: var(--paper-ink); font-weight: 600; }
 .pricing-crm-link { margin-top: 2rem; text-align: center; color: var(--paper-soft); }
 .pricing-crm-link a { color: var(--paper-ink); font-weight: 600; }
 .plans-noscript { margin-top: 2rem; font-size: 1.1rem; }
