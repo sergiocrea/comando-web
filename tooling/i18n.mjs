@@ -31,7 +31,9 @@ const PAGES = ['index.html', 'conectores.html', 'privacidad.html', 'terminos.htm
 const LOCAL_PAGES = new Set(PAGES);
 
 /** Atributos que un visitante lee (o le lee su lector de pantalla). */
-const TEXT_ATTRIBUTES = new Set(['alt', 'placeholder', 'aria-label', 'title', 'data-label']);
+// `data-words`: las palabras que rotan en el titular del hero, separadas por «|».
+// `data-longest`: la más larga de esas palabras, que reserva el ancho del titular.
+const TEXT_ATTRIBUTES = new Set(['alt', 'placeholder', 'aria-label', 'title', 'data-label', 'data-words', 'data-longest']);
 /** Etiquetas cuyo contenido es código, no texto. */
 const OPAQUE_TAGS = new Set(['script', 'style', 'svg']);
 

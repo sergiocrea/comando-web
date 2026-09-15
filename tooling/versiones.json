@@ -91,9 +91,9 @@
     "v": "187",
     "sha": "17e26b7d31a3d9c8"
   },
-  "css/landing.css": {
+  "css/hibrida.css": {
     "v": "2",
-    "sha": "6e45f9625e9cd546"
+    "sha": "4c8825dfc7cf88ef"
   },
   "css/legal.css": {
     "v": "1",
@@ -103,13 +103,17 @@
     "v": "2",
     "sha": "56278e0bc8807ff3"
   },
+  "js/hero2d.js": {
+    "v": "5",
+    "sha": "f6383aee5795ac1d"
+  },
   "js/landing.js": {
     "v": "2",
     "sha": "081a7ada95ca0bf6"
   },
   "js/main.js": {
-    "v": "34",
-    "sha": "6d27ba8503cb6830"
+    "v": "36",
+    "sha": "bbd9b540f9524998"
   },
   "js/pricing.js": {
     "v": "38",
@@ -118,5 +122,9 @@
   "js/screens.js": {
     "v": "17",
     "sha": "cda2eba6f36bdbdd"
+  },
+  "js/usecases.js": {
+    "v": "49",
+    "sha": "ccab1503c437363b"
   }
 }

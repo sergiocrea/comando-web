@@ -17,20 +17,24 @@
     es: { rol: 'Rol', sector: 'Sector', proTag: 'Comando te avisa', proStep: 'Comando te avisa.',
           proAria: (t) => `Aviso de Comando a las ${t}`, sendAria: (t) => `Enviar el mensaje de las ${t}`,
           chat: 'Conversación de WhatsApp con Comando', moments: 'Momentos del día', feed: 'De tus sistemas',
-          ads: 'Tus anuncios', commands: 'Comandos', soon: 'Próximamente' },
+          ads: 'Tus anuncios', commands: 'Comandos', soon: 'Próximamente',
+          online: 'en línea', write: 'Escribe un comando…' },
     en: { rol: 'Role', sector: 'Sector', proTag: 'Comando tells you', proStep: 'Comando tells you.',
           proAria: (t) => `Comando alert at ${t}`, sendAria: (t) => `Send the ${t} message`,
           chat: 'WhatsApp conversation with Comando', moments: 'Moments of the day', feed: 'From your systems',
-          ads: 'Your ads', commands: 'Commands', soon: 'Coming soon' },
+          ads: 'Your ads', commands: 'Commands', soon: 'Coming soon',
+          online: 'online', write: 'Write a command…' },
     pt: { rol: 'Papel', sector: 'Setor', proTag: 'O Comando te avisa', proStep: 'O Comando te avisa.',
           proAria: (t) => `Aviso do Comando às ${t}`, sendAria: (t) => `Enviar a mensagem das ${t}`,
           chat: 'Conversa de WhatsApp com o Comando', moments: 'Momentos do dia', feed: 'Dos seus sistemas',
-          ads: 'Seus anúncios', commands: 'Comandos', soon: 'Em breve' },
+          ads: 'Seus anúncios', commands: 'Comandos', soon: 'Em breve',
+          online: 'on-line', write: 'Escreva um comando…' },
   }[LANG] ?? {
     rol: 'Rol', sector: 'Sector', proTag: 'Comando te avisa', proStep: 'Comando te avisa.',
     proAria: (t) => `Aviso de Comando a las ${t}`, sendAria: (t) => `Enviar el mensaje de las ${t}`,
     chat: 'Conversación de WhatsApp con Comando', moments: 'Momentos del día', feed: 'De tus sistemas',
     ads: 'Tus anuncios', commands: 'Comandos', soon: 'Próximamente',
+    online: 'en línea', write: 'Escribe un comando…',
   };
 
   // ---- El caudal que alimenta la conversación ----
@@ -191,9 +195,9 @@
           <div class="uc-phone" role="img" aria-label="${esc(T.chat)}">
             <div class="uc-phone-screen">
               <div class="uc-status"><span>9:41</span><span class="uc-status-icons">●●● ▲ ▮</span></div>
-              <div class="uc-wa-head"><span class="uc-wa-back">‹</span><img src="/assets/img/comando-mark.svg" alt="" class="uc-wa-avatar"/><div class="uc-wa-name">Comando<small>en línea</small></div><span class="uc-wa-more">⋮</span></div>
+              <div class="uc-wa-head"><span class="uc-wa-back">‹</span><img src="/assets/img/comando-mark.svg" alt="" class="uc-wa-avatar"/><div class="uc-wa-name">Comando<small>${esc(T.online)}</small></div><span class="uc-wa-more">⋮</span></div>
               <div class="uc-chat" aria-live="polite">${chatHtml(c)}</div>
-              <div class="uc-wa-input"><span>Escribe un comando…</span><i>🎤</i></div>
+              <div class="uc-wa-input"><span>${esc(T.write)}</span><i>🎤</i></div>
             </div>
           </div>
           <ol class="uc-timeline" aria-label="${esc(T.moments)}">${timelineHtml(c)}</ol>
@@ -241,7 +245,7 @@
   const dia = document.getElementById('usecases-root');
   // `foot: false`: el cierre y su botón se iban justo antes de precios, y ahí
   // el visitante ya tiene cuatro planes con su propio botón a un dedo.
-  if (dia) mount(dia, { data: 'usecases', pickers: true, feed: true, foot: false, anchor: 'como-funciona', version: 21 });
+  if (dia) mount(dia, { data: 'usecases', pickers: true, feed: true, foot: false, anchor: 'como-funciona', version: 22 });
 
   // La banda de encima de precios. Reutiliza el item de la columna —logotipo
   // en color arriba, nombre debajo— y sus dos listas, que es lo que hace el

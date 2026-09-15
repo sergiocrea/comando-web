@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-wf-domain="comando-web" data-wf-page="home">
   <head>
     <meta charset="utf-8" />
     <title>A Meta Ads analyst in your WhatsApp — Comando</title>
@@ -36,13 +36,15 @@
       content="Ask how your ads are doing. It replies with ROAS, cost per result and what to change, in seconds."
     />
     <meta name="twitter:image" content="https://comando.pro/assets/img/og-image.jpg?v=4" />
-    <meta name="theme-color" content="#0e0e0e" />
+    <meta name="theme-color" content="#f3f1ea" />
     <link href="/assets/img/favicon.png" rel="shortcut icon" type="image/x-icon" />
     <link href="/assets/img/webclip.png" rel="apple-touch-icon" />
-    <link rel="preload" href="/assets/fonts/SpaceGrotesk-Variable.woff2" as="font" type="font/woff2" crossorigin />
-    <link href="/css/landing.css?v=2" rel="stylesheet" type="text/css" />
-    <!-- La clase .js se pone antes de pintar: si esperara al script, el chat del hero parpadearía (visible → oculto → animado). -->
-    <script>document.documentElement.classList.add("js");</script>
+    <link rel="preload" as="image" href="/assets/img/benefits-superpowers-poster-v5.jpg" />
+    <link href="/assets/css/webflow.css" rel="stylesheet" type="text/css" />
+    <link href="/css/custom.css?v=187" rel="stylesheet" type="text/css" />
+    <link href="/css/hibrida.css?v=2" rel="stylesheet" type="text/css" />
+    <script>/* La landing se monta desde arriba: sus animaciones por scroll se miden al cargar. Si el navegador restaura la posicion, ScrollTrigger calcula progresos con medidas a medio asentar. */if("scrollRestoration" in history)history.scrollRestoration="manual";</script>
+    <script type="text/javascript">!(function(o,c){var n=c.documentElement,t=" w-mod-";((n.className+=t+"js"),("ontouchstart" in o||(o.DocumentTouch&&c instanceof DocumentTouch))&&(n.className+=t+"touch"));})(window,document);</script>
   </head>
   <body>
     <svg width="0" height="0" style="position:absolute" aria-hidden="true">
@@ -68,151 +70,437 @@
         <symbol id="i-play" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.5v13l10.5-6.5Z"/></symbol>
       </defs>
     </svg>
-
-    <a class="skip" href="#contenido">Skip to content</a>
-
-    <header class="nav">
-      <div class="wrap">
-        <a class="brand" href="/en/" aria-label="Comando"><img src="/assets/img/comando-wordmark.svg" alt="Comando" width="120" height="29" /></a>
-        <nav class="nav-links" aria-label="Sections">
-          <a href="#equipo">Your team</a><a href="#metricas">Metrics</a><a href="#precios">Pricing</a><a href="#crm">CRM</a>
-        </nav>
-        <div class="nav-actions">
-          <div class="lang-switch" role="group" aria-label="Language"><a href="/" hreflang="es" lang="es" title="Español">ES</a><span class="lang-switch-current" aria-current="true" lang="en" title="English">EN</span><a href="/pt/" hreflang="pt" lang="pt" title="Português">PT</a></div>
-          <a class="nav-login" href="/app/">Log in</a>
-          <a class="btn btn-wa btn-sm" href="/app/?mode=signup"><svg aria-hidden="true"><use href="#i-wa"/></svg>Try free</a>
+    <div id="preloader" class="preloader-wrapper">
+      <div id="preloader-first" class="preloader-number-wrap">
+        <div class="logo_preloader w-embed">
+          <svg
+            width="100%"
+            height="100%"
+            viewBox="0 0 64 64"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <defs>
+              <linearGradient
+                id="animatedDiagonalGradient"
+                x1="-64"
+                y1="-64"
+                x2="0"
+                y2="0"
+                gradientUnits="userSpaceOnUse"
+              >
+                <stop offset="0" stop-color="#0E0E0E" />
+                <stop offset="0.5" stop-color="#4d7cff" />
+                <stop offset="1" stop-color="#0E0E0E" />
+                <animate
+                  attributeName="x1"
+                  from="-64"
+                  to="64"
+                  dur="0.75s"
+                  repeatCount="indefinite"
+                />
+                <animate
+                  attributeName="y1"
+                  from="-64"
+                  to="64"
+                  dur="0.75s"
+                  repeatCount="indefinite"
+                />
+                <animate
+                  attributeName="x2"
+                  from="0"
+                  to="128"
+                  dur="0.75s"
+                  repeatCount="indefinite"
+                />
+                <animate
+                  attributeName="y2"
+                  from="0"
+                  to="128"
+                  dur="0.75s"
+                  repeatCount="indefinite"
+                />
+              </linearGradient>
+            </defs>
+            <rect
+              x="21"
+              y="14"
+              width="22"
+              height="36"
+              rx="4.5"
+              fill="url(#animatedDiagonalGradient)"
+            />
+          </svg>
+        </div>
+        <div class="preloader-load-wrap">
+          <div class="preloader-num-text">LOADING</div>
+          <div id="preloader-number" class="preloader-num">0%</div>
         </div>
       </div>
-    </header>
+      <div id="pre-one" class="preloader-bg one"></div>
+      <div id="pre-two" class="preloader-bg two"></div>
+      <div id="pre-three" class="preloader-bg three"></div>
+    </div>
+    <div class="page-wrapper">
+      <div class="canvas-wrap">
+        <div class="canvas-wrapper w-embed">
+          <canvas id="gridCanvas"></canvas>
+        </div>
+      </div>
+      <div class="global-styles w-embed">
+        <svg
+          width="0"
+          height="0"
+          style="position: absolute; pointer-events: none"
+        >
+          <defs>
+            <clipPath
+              id="responsive-card-clip"
+              clipPathUnits="objectBoundingBox"
+            >
+              <path
+                stroke="#FFEBEB"
+                stroke-opacity="0.28"
+                transform="scale(0.0007168, 0.0002912)"
+                d="M194.221 119.779C217.539 134.16 247.593 117.385 247.593 89.9884V35C247.593 15.6701 263.263 0 282.593 0H1359.68C1379.01 0 1394.68 15.67 1394.68 35V3372.43C1394.68 3399.37 1365.51 3416.21 1342.18 3402.74L1188.52 3314.03C1165.18 3300.56 1136.02 3317.4 1136.02 3344.35V3398.05C1136.02 3417.38 1120.35 3433.05 1101.02 3433.05H35C15.67 3433.05 0 3417.38 0 3398.05V62.7057C0 35.3093 30.0536 18.5345 53.3721 32.9153L194.221 119.779Z"
+              />
+            </clipPath>
+          </defs>
+        </svg>
 
-    <main id="contenido">
-      <section class="hero" id="hero">
-        <div class="wrap">
-          <div>
-            <h1>A Meta Ads analyst in your <em>WhatsApp.</em></h1>
-            <p class="lede">Ask how your ads are doing. It replies with <strong>ROAS, cost per result and what to change</strong>, in seconds. From US$&nbsp;9 a month.</p>
-            <div class="hero-cta">
-              <a class="btn btn-wa" href="/app/?mode=signup"><svg aria-hidden="true"><use href="#i-wa"/></svg>Try it free on WhatsApp</a>
-              <a class="btn btn-ghost" href="#practica">See an example</a>
-            </div>
-            <p class="hero-note">
-              <span><svg aria-hidden="true"><use href="#i-check"/></svg>14 days of Team free</span>
-              <span><svg aria-hidden="true"><use href="#i-check"/></svg>No card</span>
-              <span><svg aria-hidden="true"><use href="#i-check"/></svg>Connect Meta in 2 minutes</span>
-            </p>
-          </div>
-          <div class="hero-stage">
-            <div class="phone" role="img" aria-label="Example WhatsApp chat with Comando">
-              <div class="screen" aria-hidden="true">
-                <div class="status"><span class="num">9:41</span><span class="num">5G</span></div>
-                <div class="wa-head"><img src="/assets/img/comando-mark.svg" alt="" width="32" height="32" /><div class="wa-name">Comando<small>online</small></div></div>
-                <div class="chat">
-                  <div class="msg me anim" data-step="1" data-hold="900"><div class="bubble">Which campaign is losing me money?<time>9:41<b>✓✓</b></time></div></div>
-                  <div class="msg bot typing-row" data-step="2" data-hold="1100"><div class="bubble typing"><i></i><i></i><i></i></div></div>
-                  <div class="msg bot anim mcard-row" data-step="3" data-hold="1700">
-                    <div class="mcard">
-                      <div class="mcard-title">Remarketing <span>last 3 days</span></div>
-                      <div class="mrow"><i class="light" data-to="bad"></i><span>CTR</span><span class="num">0.6%</span></div>
-                      <div class="mrow"><i class="light" data-to="bad"></i><span>Frequency</span><span class="num" data-num="4.8" data-dec="1">4,8</span></div>
-                      <div class="mrow"><i class="light" data-to="warn"></i><span>Spend with no leads</span><span class="num">US$&nbsp;96</span></div>
-                    </div>
+        <svg width="0" height="0" style="position: absolute">
+          <defs>
+            <clipPath
+              id="responsive-card-clip"
+              clipPathUnits="objectBoundingBox"
+            >
+              <path
+                transform="scale(0.003861, 0.003378)"
+                d="M198.692 44.3338C196.11 46.2325 192.465 44.3882 192.465 41.1826V12.7108C192.465 5.69084 186.774 0 179.754 0L19.5551 0C8.7551 0 -5.81386e-06 8.75511 -5.81386e-06 19.5551L-5.81386e-06 275.901C-5.81386e-06 286.701 8.7551 295.456 19.5551 295.456L239.445 295.456C250.245 295.456 259 286.701 259 275.901L259 19.323C259 11.3089 249.888 6.69833 243.431 11.4451L198.692 44.3338Z"
+              />
+            </clipPath>
+          </defs>
+        </svg>
+        <svg aria-hidden="true" style="position: absolute">
+          <symbol
+            id="card-bg-shape"
+            viewBox="0 0 259 296"
+            preserveAspectRatio="none"
+          >
+            <path
+              d="M198.692 44.3338C196.11 46.2325 192.465 44.3882 192.465 41.1826V12.7108C192.465 5.69084 186.774 0 179.754 0L19.5551 0C8.75513 0 3.05176e-05 8.75511 3.05176e-05 19.5551L3.05176e-05 275.901C3.05176e-05 286.701 8.75513 295.456 19.5551 295.456L239.445 295.456C250.245 295.456 259 286.701 259 275.901L259 19.323C259 11.3089 249.888 6.69833 243.431 11.4451L198.692 44.3338Z"
+              fill="url(#paint0_linear_7_992)"
+            />
+            <path
+              d="M179.754 0.489258L19.5547 0.489258C9.02504 0.48948 0.489472 9.02503 0.489258 19.5547L0.489258 275.901C0.489489 286.431 9.02504 294.967 19.5547 294.967L239.445 294.967C249.975 294.967 258.511 286.431 258.511 275.901L258.511 19.3232C258.511 11.7099 249.855 7.32948 243.721 11.8389L198.982 44.7275C196.077 46.8636 191.976 44.7889 191.976 41.1826V12.7109C191.976 5.96095 186.504 0.489258 179.754 0.489258Z"
+              stroke="url(#paint1_linear_7_992)"
+              stroke-opacity="0.28"
+              stroke-width="0.977754"
+            />
+            <defs>
+              <linearGradient
+                id="paint0_linear_7_992"
+                x1="129.5"
+                y1="0"
+                x2="235.763"
+                y2="198.068"
+                gradientUnits="userSpaceOnUse"
+              >
+                <stop stop-color="#060606" />
+                <stop offset="1" stop-color="#141414" />
+              </linearGradient>
+              <linearGradient
+                id="paint1_linear_7_992"
+                x1="129.5"
+                y1="0"
+                x2="129.5"
+                y2="295.456"
+                gradientUnits="userSpaceOnUse"
+              >
+                <stop stop-color="#FFEBEB" stop-opacity="0.45" />
+                <stop offset="1" stop-color="#8D9992" stop-opacity="0.54" />
+              </linearGradient>
+            </defs>
+          </symbol>
+        </svg>
+
+        <svg xmlns="http://www.w3.org/2000/svg" style="display: none">
+          <symbol id="icon-circle" viewBox="0 0 60 60" fill="none">
+            <circle cx="29.7574" cy="29.7574" r="29.2574" stroke="#D9D9D9" />
+          </symbol>
+        </svg>
+
+        <svg
+          width="100%"
+          height="100%"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <symbol id="card-graphic">
+            <path
+              d="M198.692 44.3338C196.11 46.2325 192.465 44.3882 192.465 41.1826V12.7108C192.465 5.69084 186.774 0 179.754 0L19.5551 0C8.7551 0 0 8.75511 0 19.5551L0 275.901C0 286.701 8.7551 295.456 19.5551 295.456L239.445 295.456C250.245 295.456 259 286.701 259 275.901L259 19.323C259 11.3089 249.888 6.69833 243.431 11.4451L198.692 44.3338Z"
+              fill="url(#paint0_linear_63_405)"
+            />
+            <path
+              d="M179.754 0.489258L19.5547 0.489258C9.02501 0.48948 0.489442 9.02503 0.489227 19.5547L0.489227 275.901C0.489458 286.431 9.02501 294.967 19.5547 294.967L239.445 294.967C249.975 294.967 258.51 286.431 258.511 275.901L258.511 19.3232C258.511 11.7099 249.855 7.32948 243.721 11.8389L198.982 44.7275C196.077 46.8636 191.976 44.7889 191.976 41.1826V12.7109C191.976 5.96095 186.504 0.489258 179.754 0.489258Z"
+              stroke="url(#paint1_linear_63_405)"
+              stroke-opacity="0.28"
+              stroke-width="0.977754"
+            />
+
+            <defs>
+              <linearGradient
+                id="paint0_linear_63_405"
+                x1="129.5"
+                y1="0"
+                x2="235.763"
+                y2="198.068"
+                gradientUnits="userSpaceOnUse"
+              >
+                <stop stop-color="#060606" />
+                <stop offset="1" stop-color="#141414" />
+              </linearGradient>
+              <linearGradient
+                id="paint1_linear_63_405"
+                x1="129.5"
+                y1="0"
+                x2="129.5"
+                y2="295.456"
+                gradientUnits="userSpaceOnUse"
+              >
+                <stop stop-color="#FFEBEB" stop-opacity="0.45" />
+                <stop offset="1" stop-color="#8D9992" stop-opacity="0.54" />
+              </linearGradient>
+            </defs>
+          </symbol>
+        </svg>
+      </div>
+      <main class="main-wrapper">
+        <div class="nav_fixed">
+          <div
+            data-wf--navbar--variant="base"
+            data-animation="over-right"
+            data-collapse="medium"
+            data-duration="600"
+            data-easing="ease"
+            data-easing2="ease"
+            role="banner"
+            class="nav_component w-nav"
+          >
+            <div class="padding-global">
+              <div class="nav_container">
+                <a
+                  href="/en/"
+                  data-wf-native-id-path="ad43a7dc-e35f-2320-39af-52425e607e28:396176c6-906a-9f74-c6d0-8a4663dfdeac"
+                  data-wf-ao-click-engagement-tracking="true"
+                  data-wf-element-id="396176c6-906a-9f74-c6d0-8a4663dfdeac"
+                  data-wf-component-context="%5B%7B%22componentId%22%3A%22396176c6-906a-9f74-c6d0-8a4663dfdea9%22%2C%22instanceId%22%3A%22ad43a7dc-e35f-2320-39af-52425e607e28%22%7D%5D"
+                  aria-current="page"
+                  class="nav_brand w-nav-brand w--current"
+                  ><span class="nav_brand-name"
+                    ><span class="cmd-wordmark" aria-label="Comando"
+                      ><span aria-hidden="true">comand</span
+                      ><span
+                        class="cmd-o"
+                        aria-hidden="true"
+                      ></span></span></span
+                ></a>
+                <nav role="navigation" class="nav_menu w-nav-menu">
+                  <a
+                    href="#home"
+                    data-wf-native-id-path="ad43a7dc-e35f-2320-39af-52425e607e28:396176c6-906a-9f74-c6d0-8a4663dfdeaf"
+                    data-wf-ao-click-engagement-tracking="true"
+                    data-wf-element-id="396176c6-906a-9f74-c6d0-8a4663dfdeaf"
+                    data-wf-component-context="%5B%7B%22componentId%22%3A%22396176c6-906a-9f74-c6d0-8a4663dfdea9%22%2C%22instanceId%22%3A%22ad43a7dc-e35f-2320-39af-52425e607e28%22%7D%5D"
+                    class="nav_menu_link w-nav-link"
+                    >HOME</a
+                  ><a href="#casos" class="nav_menu_link w-nav-link"
+                    >CASES</a
+                  ><a href="#equipo" class="nav_menu_link w-nav-link"
+                    >TEAM</a
+                  ><a
+                    href="#demo"
+                    id="nav-logo"
+                    data-wf-native-id-path="ad43a7dc-e35f-2320-39af-52425e607e28:f02cc71b-e7d3-6fc2-0549-0a0207eeb824"
+                    data-wf-ao-click-engagement-tracking="true"
+                    data-wf-element-id="f02cc71b-e7d3-6fc2-0549-0a0207eeb824"
+                    data-wf-component-context="%5B%7B%22componentId%22%3A%22396176c6-906a-9f74-c6d0-8a4663dfdea9%22%2C%22instanceId%22%3A%22ad43a7dc-e35f-2320-39af-52425e607e28%22%7D%5D"
+                    class="nav_menu_link w-nav-link"
+                    hidden
+                    >TRY IT</a
+                  ><a
+                    class="neoconda-logo w-inline-block w--current"
+                    data-wf-component-context="%5B%7B%22componentId%22%3A%22396176c6-906a-9f74-c6d0-8a4663dfdea9%22%2C%22instanceId%22%3A%22ad43a7dc-e35f-2320-39af-52425e607e28%22%7D%5D"
+                    data-wf-element-id="7d371829-7698-fcd2-bd56-8ab0ec053633"
+                    href="/en/"
+                    aria-current="page"
+                    data-nav-logo=""
+                    id="nav-logo-destination"
+                    data-wf-native-id-path="ad43a7dc-e35f-2320-39af-52425e607e28:7d371829-7698-fcd2-bd56-8ab0ec053633"
+                    data-wf-ao-click-engagement-tracking="true"
+                    ><img
+                      src="/assets/img/comando-wordmark.svg"
+                      loading="lazy"
+                      id="dummy"
+                      alt="Comando" /></a
+                  ><a
+                    href="/en/conectores.html"
+                    id="spec"
+                    data-wf-native-id-path="ad43a7dc-e35f-2320-39af-52425e607e28:721c6865-4a60-c388-bc34-745ab2100ecc"
+                    data-wf-ao-click-engagement-tracking="true"
+                    data-wf-element-id="721c6865-4a60-c388-bc34-745ab2100ecc"
+                    data-wf-component-context="%5B%7B%22componentId%22%3A%22396176c6-906a-9f74-c6d0-8a4663dfdea9%22%2C%22instanceId%22%3A%22ad43a7dc-e35f-2320-39af-52425e607e28%22%7D%5D"
+                    class="nav_menu_link w-nav-link"
+                    hidden
+                    >CONNECTORS</a
+                  ><a
+                    href="#precios"
+                    id="mailing-list"
+                    data-wf-native-id-path="ad43a7dc-e35f-2320-39af-52425e607e28:1d3025f9-7657-c39e-286f-f2e287a96e11"
+                    data-wf-ao-click-engagement-tracking="true"
+                    data-wf-element-id="1d3025f9-7657-c39e-286f-f2e287a96e11"
+                    data-wf-component-context="%5B%7B%22componentId%22%3A%22396176c6-906a-9f74-c6d0-8a4663dfdea9%22%2C%22instanceId%22%3A%22ad43a7dc-e35f-2320-39af-52425e607e28%22%7D%5D"
+                    class="nav_menu_link mailing-list w-nav-link"
+                    >PRICING</a
+                  >
+                  <div class="lang-switch" role="group" aria-label="Language"><a href="/" hreflang="es" lang="es" title="Español">ES</a><span class="lang-switch-current" aria-current="true" lang="en" title="English">EN</span><a href="/pt/" hreflang="pt" lang="pt" title="Português">PT</a></div>
+                  <a href="/app/" class="nav_menu_link w-nav-link"
+                    >SIGN IN</a
+                  >
+                </nav>
+                <!-- El botón de alta, visible en la barra de móvil sin abrir el
+                     menú: es la única acción de la página que no debería costar
+                     dos toques. En escritorio no aparece, que ahí el menú ya
+                     lleva INGRESAR. -->
+                <a href="/app/?mode=signup" class="nav_cta">Try free</a>
+                <div
+                  class="w-nav-button nav_menu-button"
+                  aria-label="Menu"
+                  role="button"
+                  tabindex="0"
+                  aria-controls="w-nav-overlay-0"
+                  aria-haspopup="menu"
+                  aria-expanded="false"
+                >
+                  <div class="nav_burger">
+                    <span></span><span></span><span></span>
                   </div>
-                  <div class="msg bot typing-row" data-step="4" data-hold="1000"><div class="bubble typing"><i></i><i></i><i></i></div></div>
-                  <div class="msg bot anim" data-step="5" data-hold="900"><div class="bubble">Remarketing spent US$&nbsp;96 with no leads. Your audience has already seen the ad almost 5 times: <b>change the creative before raising the budget.</b><time>9:41</time></div></div>
                 </div>
-                <div class="wa-input"><span>Message</span><i><svg><use href="#i-send"/></svg></i></div>
+                <div class="nav_clip-path hide-mobile-landscape"></div>
               </div>
             </div>
-            <p class="example-note">Illustrative example</p>
           </div>
         </div>
-      </section>
+        <section id="home" class="b2b-hero" aria-labelledby="b2b-hero-title">
+          <div class="b2b-hero-media" aria-hidden="true">
+            <video autoplay muted loop playsinline preload="auto" poster="/assets/img/benefits-superpowers-poster-v5.jpg">
+              <source src="/assets/videos/benefits-superpowers-v5-mobile.mp4" type="video/mp4" media="(max-width: 767px)" />
+              <source src="/assets/videos/benefits-superpowers-v5.mp4" type="video/mp4" />
+            </video>
+          </div>
+          <div class="b2b-hero-glow" aria-hidden="true"></div>
+          <div class="padding-global b2b-hero-padding">
+            <div class="container-large">
+              <div class="b2b-hero-grid is-copy-only">
+                <div class="b2b-hero-copy">
+                  <h1 id="b2b-hero-title" class="b2b-hero-title" aria-label="Your Meta Ads analyst, strategist and media buyer, on WhatsApp">
+                    Your
+                    <span class="b2b-hero-type" aria-hidden="true" data-words="analyst|strategist|media buyer" data-soon-index="2" data-longest="media buyer"><span id="hero-typed">analyst</span></span>
+                    for Meta Ads, on WhatsApp.
+                  </h1>
+                  <em class="b2b-hero-soon" hidden>Coming soon</em>
+                  <p class="b2b-hero-lede">Ask how your ads are doing. It replies with <strong>ROAS, cost per result and what to change</strong>, in seconds. From US$&nbsp;9 a month.</p>
+                  <div class="b2b-hero-actions">
+                    <a href="/app/?mode=signup" class="b2b-button is-primary"><svg aria-hidden="true"><use href="#i-wa"/></svg>Try it free on WhatsApp</a>
+                    <a href="#casos" class="b2b-button is-secondary">See an example <span aria-hidden="true">↓</span></a>
+                  </div>
+                  <p class="b2b-hero-note"><span>14 days of Team free</span>&nbsp;· <span>No card</span>&nbsp;· <span>Connect Meta in 2 minutes</span></p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="b2b-hero-band">
+            <div class="band-track"><ul class="band-row"><li><img src="/assets/img/logos/meta.svg" alt="Meta Ads" width="22" height="22" decoding="async"/><span>Meta Ads</span></li><li><img src="/assets/img/logos/hubspot.svg" alt="HubSpot" width="22" height="22" decoding="async"/><span>HubSpot</span></li><li><img src="/assets/img/logos/salesforce.svg" alt="Salesforce" width="22" height="22" decoding="async"/><span>Salesforce</span></li><li><img src="/assets/img/logos/googlesheets.svg" alt="Google Sheets" width="22" height="22" decoding="async"/><span>Google Sheets</span></li><li><img src="/assets/img/logos/zoho.svg" alt="Zoho CRM" width="22" height="22" decoding="async"/><span>Zoho CRM</span></li><li><img src="/assets/img/logos/pipedrive.svg" alt="Pipedrive" width="22" height="22" decoding="async"/><span>Pipedrive</span></li><li><img src="/assets/img/logos/dynamics.svg" alt="Dynamics 365" width="22" height="22" decoding="async"/><span>Dynamics 365</span></li><li><img src="/assets/img/logos/shopify.svg" alt="Shopify" width="22" height="22" decoding="async"/><span>Shopify</span></li><li><img src="/assets/img/logos/woocommerce.svg" alt="WooCommerce" width="22" height="22" decoding="async"/><span>WooCommerce</span></li><li><img src="/assets/img/logos/vtex.svg" alt="VTEX" width="22" height="22" decoding="async"/><span>VTEX</span></li><li><img src="/assets/img/logos/tiktok.svg" alt="TikTok Ads" width="22" height="22" decoding="async"/><span>TikTok Ads</span></li></ul><ul class="band-row" aria-hidden="true"><li><img src="/assets/img/logos/meta.svg" alt="" width="22" height="22" decoding="async"/><span>Meta Ads</span></li><li><img src="/assets/img/logos/hubspot.svg" alt="" width="22" height="22" decoding="async"/><span>HubSpot</span></li><li><img src="/assets/img/logos/salesforce.svg" alt="" width="22" height="22" decoding="async"/><span>Salesforce</span></li><li><img src="/assets/img/logos/googlesheets.svg" alt="" width="22" height="22" decoding="async"/><span>Google Sheets</span></li><li><img src="/assets/img/logos/zoho.svg" alt="" width="22" height="22" decoding="async"/><span>Zoho CRM</span></li><li><img src="/assets/img/logos/pipedrive.svg" alt="" width="22" height="22" decoding="async"/><span>Pipedrive</span></li><li><img src="/assets/img/logos/dynamics.svg" alt="" width="22" height="22" decoding="async"/><span>Dynamics 365</span></li><li><img src="/assets/img/logos/shopify.svg" alt="" width="22" height="22" decoding="async"/><span>Shopify</span></li><li><img src="/assets/img/logos/woocommerce.svg" alt="" width="22" height="22" decoding="async"/><span>WooCommerce</span></li><li><img src="/assets/img/logos/vtex.svg" alt="" width="22" height="22" decoding="async"/><span>VTEX</span></li><li><img src="/assets/img/logos/tiktok.svg" alt="" width="22" height="22" decoding="async"/><span>TikTok Ads</span></li></ul></div>
+          </div>
+        </section>
+        <div id="casos" class="section_usecases section_metaads">
+          <div class="padding-global">
+            <div class="container-large"><div id="metaads-root"></div></div>
+          </div>
+        </div>
+        <div class="lp">
+          <section class="lp-section lp-cream" id="equipo" aria-labelledby="equipo-title">
+            <div class="padding-global"><div class="container-large">
+              <header class="lp-head">
+                <p class="lp-eyebrow">Your team</p>
+                <h2 id="equipo-title">A marketing team that works in your WhatsApp.</h2>
+                <p class="lp-sub">Start today with your analyst and your strategist. The rest of the team is coming soon.</p>
+              </header>
+              <div class="lp-agents">
+                <article class="lp-agent">
+                  <div class="lp-agent-meta">
+                    <div class="lp-agent-top"><span class="lp-agent-icon"><svg aria-hidden="true"><use href="#i-analista"/></svg></span><span class="badge ok">Available</span></div>
+                    <h3>Analyst</h3>
+                    <p>Reads your campaigns and gives you the numbers that matter.</p>
+                    <p class="foot">Spend · results · comparisons</p>
+                  </div>
+                  <div class="mini-chat" role="group" aria-label="Example conversation">
+                    <div class="msg me"><div class="bubble">How much did I spend this month and how many leads did I get?<time>10:02</time></div></div>
+                    <div class="msg bot"><div class="bubble">US$&nbsp;3,120 and 571 leads: <b>US$&nbsp;5.46 each</b>. «September leads» takes 48&nbsp;% of the spend and brings 61&nbsp;% of the leads.<time>10:02</time></div></div>
+                  </div>
+                </article>
+                <article class="lp-agent">
+                  <div class="lp-agent-meta">
+                    <div class="lp-agent-top"><span class="lp-agent-icon"><svg aria-hidden="true"><use href="#i-estratega"/></svg></span><span class="badge ok">Available</span></div>
+                    <h3>Strategist</h3>
+                    <p>Diagnoses each campaign and tells you what to check first.</p>
+                    <p class="foot">3-question methodology · traffic light</p>
+                  </div>
+                  <div class="mini-chat" role="group" aria-label="Example conversation">
+                    <div class="msg me"><div class="bubble">Why did my cost per lead go up?<time>11:15</time></div></div>
+                    <div class="msg bot"><div class="bubble">You paid more per thousand impressions (+22&nbsp;%) and clicks dropped (1.4&nbsp;% → 0.9&nbsp;%). <b>Check the creative before the budget.</b><time>11:15</time></div></div>
+                  </div>
+                </article>
+                <article class="lp-agent is-soon">
+                  <div class="lp-agent-meta">
+                    <div class="lp-agent-top"><span class="lp-agent-icon"><svg aria-hidden="true"><use href="#i-comprador"/></svg></span><span class="badge soon">Coming soon</span></div>
+                    <h3>Media buyer</h3>
+                    <p>Pauses campaigns and moves budget when you confirm.</p>
+                    <p class="foot">Always with your CONFIRM</p>
+                  </div>
+                  <div class="mini-chat" role="group" aria-label="Example conversation">
+                    <div class="msg me"><div class="bubble">Lower Remarketing to US$&nbsp;10 a day.<time>12:30</time></div></div>
+                    <div class="msg bot"><div class="bubble confirm">It is at US$&nbsp;32 a day now. Shall I apply it?<span>REPLY CONFIRM</span><time>12:30</time></div></div>
+                  </div>
+                </article>
+                <article class="lp-agent is-soon">
+                  <div class="lp-agent-meta">
+                    <div class="lp-agent-top"><span class="lp-agent-icon"><svg aria-hidden="true"><use href="#i-atribucion"/></svg></span><span class="badge soon">Coming soon</span></div>
+                    <h3>Attribution</h3>
+                    <p>Matches your CRM sales with Meta so it brings you more buyers like yours.</p>
+                    <p class="foot">CRM → Meta</p>
+                  </div>
+                  <div class="mini-chat" role="group" aria-label="Example conversation">
+                    <div class="msg me"><div class="bubble">How many sales did Meta bring this month?<time>18:05</time></div></div>
+                    <div class="msg bot"><div class="bubble">18 sales from 240 leads: <b>US$&nbsp;72 per sale</b>. I sent them to Meta so it finds similar people.<time>18:05</time></div></div>
+                  </div>
+                </article>
+              </div>
+              <p class="lp-soon-note">Also coming soon: Google Ads and TikTok Ads <span class="badge soon">Coming soon</span></p>
+            </div></div>
+          </section>
 
-      <section class="section problem" id="problema">
-        <div class="wrap">
-          <div>
-            <h2>Running Meta ads shouldn't eat your whole week.</h2>
-            <p class="problem-close">Comando reads your campaigns for you and explains them on <em>WhatsApp.</em></p>
-          </div>
-          <ul class="pains">
-            <li><svg aria-hidden="true"><use href="#i-hours"/></svg><div><strong>Hours in Ads Manager.</strong><span>Exporting, cross-checking and guessing what happened.</span></div></li>
-            <li><svg aria-hidden="true"><use href="#i-dice"/></svg><div><strong>Gut-feel decisions.</strong><span>You scale or pause without knowing why the cost changed.</span></div></li>
-            <li><svg aria-hidden="true"><use href="#i-agency"/></svg><div><strong>A pricey agency.</strong><span>15–20&nbsp;% of your ad spend for someone who doesn't know your business.</span></div></li>
-          </ul>
-        </div>
-      </section>
-
-      <section class="section team" id="equipo">
-        <div class="wrap team-head">
-          <div>
-            <h2>A marketing team that works in your WhatsApp.</h2>
-            <p class="lede">Start today with your analyst and your strategist. The rest of the team is coming soon.</p>
-          </div>
-          <p class="team-progress" aria-hidden="true">Agent <b>1</b> / 4</p>
-        </div>
-        <div class="track-outer">
-          <div class="track">
-            <article class="agent">
-              <div class="agent-meta">
-                <div class="agent-top"><span class="agent-icon"><svg aria-hidden="true"><use href="#i-analista"/></svg></span><span class="badge ok">Available</span></div>
-                <h3>Analyst</h3>
-                <p>Reads your campaigns and gives you the numbers that matter.</p>
-                <p class="foot">Spend · results · comparisons</p>
+          <section class="lp-section lp-dark" id="metricas" data-slider aria-labelledby="metricas-title">
+            <div class="padding-global"><div class="container-large">
+              <div class="lp-slider-head">
+                <header class="lp-head is-left">
+                  <p class="lp-eyebrow">Metrics</p>
+                  <h2 id="metricas-title">The metrics that matter, with a traffic light.</h2>
+                  <p class="lp-sub">Comando compares each campaign with your goal and tells you what is going well and what isn't.</p>
+                </header>
+                <div class="slider-btns"><button type="button" aria-label="Previous"><svg aria-hidden="true"><use href="#i-arrow-l"/></svg></button><button type="button" aria-label="Next"><svg aria-hidden="true"><use href="#i-arrow-r"/></svg></button></div>
               </div>
-              <div class="mini-chat" role="group" aria-label="Example conversation">
-                <div class="msg me"><div class="bubble">How much did I spend this month and how many leads did I get?<time>10:02</time></div></div>
-                <div class="msg bot"><div class="bubble">US$&nbsp;3,120 and 571 leads: <b>US$&nbsp;5.46 each</b>. «September leads» takes 48&nbsp;% of the spend and brings 61&nbsp;% of the leads.<time>10:02</time></div></div>
-              </div>
-            </article>
-            <article class="agent">
-              <div class="agent-meta">
-                <div class="agent-top"><span class="agent-icon"><svg aria-hidden="true"><use href="#i-estratega"/></svg></span><span class="badge ok">Available</span></div>
-                <h3>Strategist</h3>
-                <p>Diagnoses each campaign and tells you what to check first.</p>
-                <p class="foot">3-question methodology · traffic light</p>
-              </div>
-              <div class="mini-chat" role="group" aria-label="Example conversation">
-                <div class="msg me"><div class="bubble">Why did my cost per lead go up?<time>11:15</time></div></div>
-                <div class="msg bot"><div class="bubble">You paid more per thousand impressions (+22&nbsp;%) and clicks dropped (1.4&nbsp;% → 0.9&nbsp;%). <b>Check the creative before the budget.</b><time>11:15</time></div></div>
-              </div>
-            </article>
-            <article class="agent is-soon">
-              <div class="agent-meta">
-                <div class="agent-top"><span class="agent-icon"><svg aria-hidden="true"><use href="#i-comprador"/></svg></span><span class="badge soon">Coming soon</span></div>
-                <h3>Media buyer</h3>
-                <p>Pauses campaigns and moves budget when you confirm.</p>
-                <p class="foot">Always with your CONFIRM</p>
-              </div>
-              <div class="mini-chat" role="group" aria-label="Example conversation">
-                <div class="msg me"><div class="bubble">Lower Remarketing to US$&nbsp;10 a day.<time>12:30</time></div></div>
-                <div class="msg bot"><div class="bubble confirm">It is at US$&nbsp;32 a day now. Shall I apply it?<span>REPLY CONFIRM</span><time>12:30</time></div></div>
-              </div>
-            </article>
-            <article class="agent is-soon">
-              <div class="agent-meta">
-                <div class="agent-top"><span class="agent-icon"><svg aria-hidden="true"><use href="#i-atribucion"/></svg></span><span class="badge soon">Coming soon</span></div>
-                <h3>Attribution</h3>
-                <p>Matches your CRM sales with Meta so it brings you more buyers like yours.</p>
-                <p class="foot">CRM → Meta</p>
-              </div>
-              <div class="mini-chat" role="group" aria-label="Example conversation">
-                <div class="msg me"><div class="bubble">How many sales did Meta bring this month?<time>18:05</time></div></div>
-                <div class="msg bot"><div class="bubble">18 sales from 240 leads: <b>US$&nbsp;72 per sale</b>. I sent them to Meta so it finds similar people.<time>18:05</time></div></div>
-              </div>
-            </article>
-          </div>
-        </div>
-        <p class="team-soon">Also coming soon: Google Ads and TikTok Ads <span class="badge soon">Coming soon</span></p>
-      </section>
-
-      <section class="section metrics" id="metricas" data-slider>
-        <div class="wrap slider-head">
-          <div>
-            <h2>The metrics that matter, with a traffic light.</h2>
-            <p class="lede">Comando compares each campaign with your goal and tells you what is going well and what isn't.</p>
-          </div>
-          <div class="slider-btns"><button type="button" aria-label="Previous"><svg aria-hidden="true"><use href="#i-arrow-l"/></svg></button><button type="button" aria-label="Next"><svg aria-hidden="true"><use href="#i-arrow-r"/></svg></button></div>
-        </div>
+            </div></div>
         <div class="rail" tabindex="0" role="region" aria-label="Metrics">
           <article class="metric">
             <div class="metric-top"><h3 class="metric-name">ROAS</h3><span class="lights" aria-hidden="true"><i class="light"></i><i class="light"></i><i class="light" data-to="ok"></i></span></div>
@@ -257,161 +545,234 @@
             <p class="desc">Real sales, not just leads.</p>
           </article>
         </div>
-        <p class="wrap metrics-foot">Example values. The traffic light uses the methodology's thresholds and your goal.</p>
-      </section>
-
-      <section class="section practice" id="practica" data-slider>
-        <div class="wrap slider-head">
-          <h2>From question to decision, in one chat.</h2>
-          <div class="slider-btns"><button type="button" aria-label="Previous"><svg aria-hidden="true"><use href="#i-arrow-l"/></svg></button><button type="button" aria-label="Next"><svg aria-hidden="true"><use href="#i-arrow-r"/></svg></button></div>
+            <div class="padding-global"><div class="container-large"><p class="metrics-foot">Example values. The traffic light uses the methodology's thresholds and your goal.</p></div></div>
+          </section>
         </div>
-        <div class="rail" tabindex="0" role="region" aria-label="Cases">
-          <article class="case">
-            <h3>Pause or wait?</h3>
-            <div class="mini-chat">
-              <div class="msg me"><div class="bubble">Should I pause Remarketing?<time>8:10</time></div></div>
-              <div class="msg bot"><div class="bubble">It spent US$&nbsp;96 in 3 days with no leads and frequency is 4.8. After 3 days it is still early to pause: <b>change the audience and check it again on Monday.</b><time>8:10</time></div></div>
+        <div id="dia" class="section_usecases section_dia">
+          <div class="padding-global">
+            <div class="container-large"><div id="usecases-root"></div></div>
+          </div>
+        </div>
+        <div class="lp">
+          <section class="lp-section lp-paper" id="precios" aria-labelledby="precios-title">
+            <div class="padding-global"><div class="container-large">
+              <header class="lp-head">
+                <p class="lp-eyebrow">Pricing</p>
+                <h2 id="precios-title">Less than the cost of a lunch.</h2>
+                <p class="lp-lede">An agency charges you 15&nbsp;% of what you invest. Comando, a fixed price.</p>
+              </header>
+              <!-- Las tarjetas las pinta js/pricing.js desde PLAN_LADDER (la única copia de los números). -->
+              <div id="pricing-root">
+                <noscript><p class="plans-noscript">Free, Analyst US$&nbsp;9, Team US$&nbsp;29 and Agency US$&nbsp;49 a month. <a href="/app/?mode=signup">Start free</a></p></noscript>
+              </div>
+              <p class="pricing-crm-link">Have a CRM? Add <a href="#crm">Chat with your CRM</a> from US$&nbsp;9 a month.</p>
+            </div></div>
+          </section>
+
+          <section class="lp-section lp-paper lp-crm" id="crm" aria-labelledby="crm-title">
+            <div class="padding-global"><div class="container-large">
+              <div class="lp-crm-grid">
+                <div>
+                  <p class="lp-eyebrow">CRM module</p>
+                  <h2 id="crm-title">Chat with your CRM too.</h2>
+                  <p class="lp-lede">Look up your deals, update stages and get alerts, all on WhatsApp.</p>
+                  <ul class="lp-crm-list">
+                    <li><svg aria-hidden="true"><use href="#i-check"/></svg><span>Ask: <q>Which deals have been stuck for 15 days?</q></span></li>
+                    <li><svg aria-hidden="true"><use href="#i-check"/></svg><span>Update with CONFIRM and undo if you make a mistake.</span></li>
+                    <li><svg aria-hidden="true"><use href="#i-check"/></svg><span>Daily summary and alerts about what is going cold.</span></li>
+                    <li class="soon"><svg aria-hidden="true"><use href="#i-clock"/></svg><span>Coming soon: connect your sales with Meta to measure real ROI.</span></li>
+                  </ul>
+                  <p class="lp-crm-links"><a href="/en/conectores.html">See connectors →</a></p>
+                </div>
+                <form class="calc" data-crm-calc aria-labelledby="calc-title">
+                  <h3 id="calc-title">How much with your CRM?</h3>
+                  <div class="field">
+                    <label for="crm-sel">Your CRM</label>
+                    <select id="crm-sel">
+                      <option value="hubspot">HubSpot</option>
+                      <option value="salesforce">Salesforce</option>
+                      <option value="sheets">Google Sheets</option>
+                      <option disabled>Zoho CRM · coming soon</option>
+                      <option disabled>Pipedrive · coming soon</option>
+                      <option disabled>Kommo · coming soon</option>
+                    </select>
+                  </div>
+                  <div class="field">
+                    <label for="crm-range">Contacts</label>
+                    <input id="crm-range" type="range" min="0" max="6" step="1" value="3" />
+                    <div class="range-row"><span data-contacts-min>1.000</span><span data-contacts>25.000</span><span data-contacts-max>200.000</span></div>
+                  </div>
+                  <div class="calc-out" aria-live="polite"><span>From</span><span class="plan-price"><span data-price>US$&nbsp;9</span><small>/mo</small></span></div>
+                  <p class="calc-note">Module estimate. It adds to your Meta plan. The price can go up for slow or very large CRMs.</p>
+                </form>
+              </div>
+            </div></div>
+          </section>
+
+          <section class="lp-section lp-cream" id="faq" aria-labelledby="faq-title">
+            <div class="padding-global"><div class="container-large">
+              <div class="lp-faq-grid">
+                <div>
+                  <p class="lp-eyebrow">FAQ</p>
+                  <h2 id="faq-title">Frequently asked questions.</h2>
+                </div>
+                <div>
+                  <details open><summary>Do I have to install anything?</summary><p>No. You use your WhatsApp and connect your Meta account in 2 minutes.</p></details>
+                  <details><summary>Does Comando change my campaigns?</summary><p>Today it reads them, analyzes them and recommends. Making changes is coming soon, and it will always ask you to CONFIRM.</p></details>
+                  <details><summary>What happens to my data?</summary><p>Comando only reads your ads. Your account stays yours and you can disconnect it whenever you want.</p></details>
+                  <details><summary>Does it work for Google Ads or TikTok Ads?</summary><p>Coming soon. Today it works with Meta (Facebook and Instagram).</p></details>
+                  <details><summary>What counts as a question?</summary><p>Every message where you ask Comando for something. Confirmations don't count.</p></details>
+                </div>
+              </div>
+            </div></div>
+          </section>
+
+          <section class="lp-section lp-dark lp-final" aria-labelledby="final-title">
+            <div class="padding-global"><div class="container-large">
+              <h2 id="final-title">Your Meta Ads analyst is waiting on WhatsApp.</h2>
+              <div class="b2b-hero-actions">
+                <a href="/app/?mode=signup" class="b2b-button is-primary"><svg aria-hidden="true"><use href="#i-wa"/></svg>Try it free</a>
+              </div>
+              <p class="trust"><span><svg aria-hidden="true"><use href="#i-shield"/></svg>Read-only on your ads</span><span><svg aria-hidden="true"><use href="#i-shield"/></svg>Nothing changes without your CONFIRM</span><span><svg aria-hidden="true"><use href="#i-shield"/></svg>Your data stays yours</span></p>
+            </div></div>
+          </section>
+        </div>
+        <div id="launching" class="home_footer-component">
+          <div class="padding-global">
+            <div class="container-full">
+              <div class="home_footer-content footer-v2">
+                <div class="footer-grid">
+                  <div class="footer-brand">
+                    <a href="#home" class="footer-brand-link"
+                      ><span class="cmd-wordmark" aria-label="Comando"
+                        ><span aria-hidden="true">comand</span
+                        ><span class="cmd-o" aria-hidden="true"></span></span
+                    ></a>
+                    <p class="footer-tagline">Comando · Your marketing team in WhatsApp.</p>
+                    <div class="footer_social-icons">
+                      <a
+                        href="https://www.instagram.com/comando.pro"
+                        target="_blank"
+                        rel="noopener"
+                        aria-label="Instagram"
+                        class="social-icon_link w-inline-block"
+                        ><div class="social-icon w-embed">
+                          <svg
+                            role="img"
+                            fill="currentColor"
+                            width="100%"
+                            height="100%"
+                            viewBox="0 0 24 24"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              d="M7.0301.084c-1.2768.0602-2.1487.264-2.911.5634-.7888.3075-1.4575.72-2.1228 1.3877-.6652.6677-1.075 1.3368-1.3802 2.127-.2954.7638-.4956 1.6365-.552 2.914-.0564 1.2775-.0689 1.6882-.0626 4.947.0062 3.2586.0206 3.6671.0825 4.9473.061 1.2765.264 2.1482.5635 2.9107.308.7889.72 1.4573 1.388 2.1228.6679.6655 1.3365 1.0743 2.1285 1.38.7632.295 1.6361.4961 2.9134.552 1.2773.056 1.6884.069 4.9462.0627 3.2578-.0062 3.668-.0207 4.9478-.0814 1.28-.0607 2.147-.2652 2.9098-.5633.7889-.3086 1.4578-.72 2.1228-1.3881.665-.6682 1.0745-1.3378 1.3795-2.1284.2957-.7632.4966-1.636.552-2.9124.056-1.2809.0692-1.6898.063-4.948-.0063-3.2583-.021-3.6668-.0817-4.9465-.0607-1.2797-.264-2.1487-.5633-2.9117-.3084-.7889-.72-1.4568-1.3876-2.1228C21.2982 1.33 20.628.9208 19.8378.6165 19.074.321 18.2017.1197 16.9244.0645 15.6471.0093 15.236-.005 11.977.0014 8.718.0076 8.31.0215 7.0301.0839m.1402 21.6932c-1.17-.0509-1.8053-.2453-2.2287-.408-.5606-.216-.96-.4771-1.3819-.895-.422-.4178-.6811-.8186-.9-1.378-.1644-.4234-.3624-1.058-.4171-2.228-.0595-1.2645-.072-1.6442-.079-4.848-.007-3.2037.0053-3.583.0607-4.848.05-1.169.2456-1.805.408-2.2282.216-.5613.4762-.96.895-1.3816.4188-.4217.8184-.6814 1.3783-.9003.423-.1651 1.0575-.3614 2.227-.4171 1.2655-.06 1.6447-.072 4.848-.079 3.2033-.007 3.5835.005 4.8495.0608 1.169.0508 1.8053.2445 2.228.408.5608.216.96.4754 1.3816.895.4217.4194.6816.8176.9005 1.3787.1653.4217.3617 1.056.4169 2.2263.0602 1.2655.0739 1.645.0796 4.848.0058 3.203-.0055 3.5834-.061 4.848-.051 1.17-.245 1.8055-.408 2.2294-.216.5604-.4763.96-.8954 1.3814-.419.4215-.8181.6811-1.3783.9-.4224.1649-1.0577.3617-2.2262.4174-1.2656.0595-1.6448.072-4.8493.079-3.2045.007-3.5825-.006-4.848-.0608M16.953 5.5864A1.44 1.44 0 1 0 18.39 4.144a1.44 1.44 0 0 0-1.437 1.4424M5.8385 12.012c.0067 3.4032 2.7706 6.1557 6.173 6.1493 3.4026-.0065 6.157-2.7701 6.1506-6.1733-.0065-3.4032-2.771-6.1565-6.174-6.1498-3.403.0067-6.156 2.771-6.1496 6.1738M8 12.0077a4 4 0 1 1 4.008 3.9921A3.9996 3.9996 0 0 1 8 12.0077"
+                            />
+                          </svg></div></a
+                      ><a
+                        href="https://www.tiktok.com/@comando.pro"
+                        target="_blank"
+                        rel="noopener"
+                        aria-label="TikTok"
+                        class="social-icon_link w-inline-block"
+                        ><div class="social-icon w-embed">
+                          <svg
+                            role="img"
+                            fill="currentColor"
+                            width="100%"
+                            height="100%"
+                            viewBox="0 0 24 24"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"
+                            />
+                          </svg></div></a
+                      ><a
+                        href="https://www.linkedin.com/company/comando-pro"
+                        target="_blank"
+                        rel="noopener"
+                        aria-label="LinkedIn"
+                        class="social-icon_link w-inline-block"
+                        ><div class="social-icon w-embed">
+                          <svg
+                            role="img"
+                            fill="currentColor"
+                            width="100%"
+                            height="100%"
+                            viewBox="0 0 24 24"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"
+                            />
+                          </svg></div></a
+                      ><a
+                        href="https://www.youtube.com/@comando.pro"
+                        target="_blank"
+                        rel="noopener"
+                        aria-label="YouTube"
+                        class="social-icon_link w-inline-block"
+                        ><div class="social-icon w-embed">
+                          <svg
+                            role="img"
+                            fill="currentColor"
+                            width="100%"
+                            height="100%"
+                            viewBox="0 0 24 24"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"
+                            />
+                          </svg></div
+                      ></a>
+                    </div>
+                  </div>
+                  <div class="footer-col">
+                    <div class="footer-col-title">PRODUCT</div>
+                    <a href="#equipo">Your team</a
+                    ><a href="#precios">Pricing</a
+                    ><a href="/en/conectores.html">Connectors</a>
+                  </div>
+                  <div class="footer-col">
+                    <div class="footer-col-title">COMPANY</div>
+                    <a href="/app/?mode=signup">Try 14 days free</a
+                    ><a href="/app/">Log in</a
+                    ><a href="mailto:hola@comando.pro">hola@comando.pro</a>
+                  </div>
+                  <div class="footer-col">
+                    <div class="footer-col-title">LEGAL</div>
+                    <a href="/en/privacidad.html">Privacy policy</a
+                    ><a href="/en/terminos.html">Terms of service</a
+                    ><a href="/en/eliminar-datos.html">Delete my data</a>
+                  </div>
+                </div>
+                <div class="footer-bottom">
+                  <span>© 2026 Comando. All rights reserved.</span
+                  ><span>Made in LATAM · Support in Spanish and Portuguese</span>
+                </div>
+              </div>
             </div>
-            <p class="decision"><svg aria-hidden="true"><use href="#i-check"/></svg><span><b>Decision</b>You didn't pause blindly.</span></p>
-          </article>
-          <article class="case">
-            <h3>Are we doing better than last week?</h3>
-            <div class="mini-chat">
-              <div class="msg me"><div class="bubble">Compare this week with last week.<time>9:00</time></div></div>
-              <div class="msg bot"><div class="bubble">Spend <b>+6&nbsp;%</b>, leads <b>+19&nbsp;%</b>, cost per lead <b>−11&nbsp;%</b>. The jump comes from «September leads».<time>9:00</time></div></div>
-            </div>
-            <p class="decision"><svg aria-hidden="true"><use href="#i-check"/></svg><span><b>Decision</b>You know which campaign to scale.</span></p>
-          </article>
-          <article class="case">
-            <h3>From the car.</h3>
-            <div class="mini-chat">
-              <div class="msg me"><div class="bubble voice" role="img" aria-label="Voice note: which campaign brought the most leads yesterday?"><span class="play"><svg aria-hidden="true"><use href="#i-play"/></svg></span><svg viewBox="0 0 110 22" aria-hidden="true"><g fill="#9fd6c9"><rect x="0" y="8" width="3" height="6" rx="1.5"/><rect x="6" y="4" width="3" height="14" rx="1.5"/><rect x="12" y="7" width="3" height="8" rx="1.5"/><rect x="18" y="2" width="3" height="18" rx="1.5"/><rect x="24" y="6" width="3" height="10" rx="1.5"/><rect x="30" y="3" width="3" height="16" rx="1.5"/><rect x="36" y="8" width="3" height="6" rx="1.5"/><rect x="42" y="5" width="3" height="12" rx="1.5"/><rect x="48" y="2" width="3" height="18" rx="1.5"/><rect x="54" y="7" width="3" height="8" rx="1.5"/><rect x="60" y="4" width="3" height="14" rx="1.5"/><rect x="66" y="8" width="3" height="6" rx="1.5"/><rect x="72" y="5" width="3" height="12" rx="1.5"/><rect x="78" y="7" width="3" height="8" rx="1.5"/><rect x="84" y="3" width="3" height="16" rx="1.5"/><rect x="90" y="8" width="3" height="6" rx="1.5"/></g></svg><span class="num">0:07</span><time>7:45</time></div></div>
-              <div class="msg bot"><div class="bubble">«September leads»: <b>21 leads at US$&nbsp;4.10</b> each.<time>7:45</time></div></div>
-            </div>
-            <p class="decision"><svg aria-hidden="true"><use href="#i-check"/></svg><span><b>Decision</b>The answer without opening your laptop.</span></p>
-          </article>
+          </div>
         </div>
-        <p class="wrap metrics-foot">Illustrative examples.</p>
-      </section>
+        <div class="code-embed w-embed"></div>
+      </main>
+    </div>
 
-      <section class="section why" id="porque">
-        <div class="wrap">
-          <h2>Everything happens where you already work: WhatsApp.</h2>
-          <div class="grid4">
-            <div class="item"><svg aria-hidden="true"><use href="#i-chat"/></svg><h3>Chat.</h3><p>Type or send a voice note. No dashboards, no training.</p></div>
-            <div class="item"><svg aria-hidden="true"><use href="#i-report"/></svg><h3>Get your report.</h3><p>Ask for it whenever you need it and it arrives in seconds.</p><span class="soon-line">Coming soon: every Monday without asking</span></div>
-            <div class="item"><svg aria-hidden="true"><use href="#i-decide"/></svg><h3>Decide right there.</h3><p>In your CRM, every change asks you to CONFIRM and can be undone.</p><span class="soon-line">Coming soon on Meta too</span></div>
-            <div class="item"><svg aria-hidden="true"><use href="#i-latam"/></svg><h3>Made for LATAM.</h3><p>In Spanish and Portuguese, in your account's currency and the way you talk.</p></div>
-          </div>
-          <p class="trust"><span><svg aria-hidden="true"><use href="#i-shield"/></svg>Read-only on your ads</span><span><svg aria-hidden="true"><use href="#i-shield"/></svg>Nothing changes without your CONFIRM</span><span><svg aria-hidden="true"><use href="#i-shield"/></svg>Your data stays yours</span></p>
-        </div>
-      </section>
-
-      <section class="section paper pricing" id="precios">
-        <div class="wrap">
-          <h2>Less than the cost of a lunch.</h2>
-          <p class="lede">An agency charges you 15&nbsp;% of what you invest. Comando, a fixed price.</p>
-          <!-- Las tarjetas las pinta js/pricing.js desde PLAN_LADDER (la única copia de los números). -->
-          <div id="pricing-root">
-            <noscript><p class="plans-noscript">Free, Analyst US$&nbsp;9, Team US$&nbsp;29 and Agency US$&nbsp;49 a month. <a href="/app/?mode=signup">Start free</a></p></noscript>
-          </div>
-          <p class="pricing-crm-link">Have a CRM? Add <a href="#crm">Chat with your CRM</a> from US$&nbsp;9 a month.</p>
-        </div>
-      </section>
-
-      <section class="section paper crm" id="crm">
-        <div class="wrap">
-          <div>
-            <h2>Chat with your CRM too.</h2>
-            <p class="lede">Look up your deals, update stages and get alerts, all on WhatsApp.</p>
-            <ul>
-              <li><svg aria-hidden="true"><use href="#i-check"/></svg><span>Ask: <q>Which deals have been stuck for 15 days?</q></span></li>
-              <li><svg aria-hidden="true"><use href="#i-check"/></svg><span>Update with CONFIRM and undo if you make a mistake.</span></li>
-              <li><svg aria-hidden="true"><use href="#i-check"/></svg><span>Daily summary and alerts about what is going cold.</span></li>
-              <li class="soon"><svg aria-hidden="true"><use href="#i-clock"/></svg><span>Coming soon: connect your sales with Meta to measure real ROI.</span></li>
-            </ul>
-            <p class="crm-links"><a href="/en/conectores.html">See connectors →</a></p>
-          </div>
-          <form class="calc" data-crm-calc aria-labelledby="calc-title">
-            <h3 id="calc-title">How much with your CRM?</h3>
-            <div class="field">
-              <label for="crm-sel">Your CRM</label>
-              <select id="crm-sel">
-                <option value="hubspot">HubSpot</option>
-                <option value="salesforce">Salesforce</option>
-                <option value="sheets">Google Sheets</option>
-                <option disabled>Zoho CRM · coming soon</option>
-                <option disabled>Pipedrive · coming soon</option>
-                <option disabled>Kommo · coming soon</option>
-              </select>
-            </div>
-            <div class="field">
-              <label for="crm-range">Contacts</label>
-              <input id="crm-range" type="range" min="0" max="6" step="1" value="3" />
-              <div class="range-row"><span data-contacts-min>1.000</span><span data-contacts>25.000</span><span data-contacts-max>200.000</span></div>
-            </div>
-            <div class="calc-out" aria-live="polite"><span>From</span><span class="plan-price"><span data-price>US$&nbsp;9</span><small>/mo</small></span></div>
-            <p class="calc-note">Module estimate. It adds to your Meta plan. The price can go up for slow or very large CRMs.</p>
-          </form>
-        </div>
-      </section>
-
-      <section class="section faq" id="faq">
-        <div class="wrap">
-          <h2>Frequently asked questions.</h2>
-          <div>
-            <details open><summary>Do I have to install anything?</summary><p>No. You use your WhatsApp and connect your Meta account in 2 minutes.</p></details>
-            <details><summary>Does Comando change my campaigns?</summary><p>Today it reads them, analyzes them and recommends. Making changes is coming soon, and it will always ask you to CONFIRM.</p></details>
-            <details><summary>What happens to my data?</summary><p>Comando only reads your ads. Your account stays yours and you can disconnect it whenever you want.</p></details>
-            <details><summary>Does it work for Google Ads or TikTok Ads?</summary><p>Coming soon. Today it works with Meta (Facebook and Instagram).</p></details>
-            <details><summary>What counts as a question?</summary><p>Every message where you ask Comando for something. Confirmations don't count.</p></details>
-          </div>
-        </div>
-      </section>
-
-      <section class="section final">
-        <div class="wrap">
-          <h2>Your Meta Ads analyst is waiting on WhatsApp.</h2>
-          <a class="btn btn-wa" href="/app/?mode=signup"><svg aria-hidden="true"><use href="#i-wa"/></svg>Try it free</a>
-        </div>
-      </section>
-    </main>
-
-    <footer class="site-footer">
-      <div class="wrap">
-        <div class="footer-grid">
-          <div class="footer-brand">
-            <a href="/en/" aria-label="Comando"><img src="/assets/img/comando-wordmark.svg" alt="Comando" width="128" height="31" loading="lazy" /></a>
-            <p class="footer-tagline">Comando · Your marketing team in WhatsApp.</p>
-            <div class="footer-social">
-              <a href="https://www.instagram.com/comando.pro" target="_blank" rel="noopener" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7.0301.084c-1.2768.0602-2.1487.264-2.911.5634-.7888.3075-1.4575.72-2.1228 1.3877-.6652.6677-1.075 1.3368-1.3802 2.127-.2954.7638-.4956 1.6365-.552 2.914-.0564 1.2775-.0689 1.6882-.0626 4.947.0062 3.2586.0206 3.6671.0825 4.9473.061 1.2765.264 2.1482.5635 2.9107.308.7889.72 1.4573 1.388 2.1228.6679.6655 1.3365 1.0743 2.1285 1.38.7632.295 1.6361.4961 2.9134.552 1.2773.056 1.6884.069 4.9462.0627 3.2578-.0062 3.668-.0207 4.9478-.0814 1.28-.0607 2.147-.2652 2.9098-.5633.7889-.3086 1.4578-.72 2.1228-1.3881.665-.6682 1.0745-1.3378 1.3795-2.1284.2957-.7632.4966-1.636.552-2.9124.056-1.2809.0692-1.6898.063-4.948-.0063-3.2583-.021-3.6668-.0817-4.9465-.0607-1.2797-.264-2.1487-.5633-2.9117-.3084-.7889-.72-1.4568-1.3876-2.1228C21.2982 1.33 20.628.9208 19.8378.6165 19.074.321 18.2017.1197 16.9244.0645 15.6471.0093 15.236-.005 11.977.0014 8.718.0076 8.31.0215 7.0301.0839m.1402 21.6932c-1.17-.0509-1.8053-.2453-2.2287-.408-.5606-.216-.96-.4771-1.3819-.895-.422-.4178-.6811-.8186-.9-1.378-.1644-.4234-.3624-1.058-.4171-2.228-.0595-1.2645-.072-1.6442-.079-4.848-.007-3.2037.0053-3.583.0607-4.848.05-1.169.2456-1.805.408-2.2282.216-.5613.4762-.96.895-1.3816.4188-.4217.8184-.6814 1.3783-.9003.423-.1651 1.0575-.3614 2.227-.4171 1.2655-.06 1.6447-.072 4.848-.079 3.2033-.007 3.5835.005 4.8495.0608 1.169.0508 1.8053.2445 2.228.408.5608.216.96.4754 1.3816.895.4217.4194.6816.8176.9005 1.3787.1653.4217.3617 1.056.4169 2.2263.0602 1.2655.0739 1.645.0796 4.848.0058 3.203-.0055 3.5834-.061 4.848-.051 1.17-.245 1.8055-.408 2.2294-.216.5604-.4763.96-.8954 1.3814-.419.4215-.8181.6811-1.3783.9-.4224.1649-1.0577.3617-2.2262.4174-1.2656.0595-1.6448.072-4.8493.079-3.2045.007-3.5825-.006-4.848-.0608M16.953 5.5864A1.44 1.44 0 1 0 18.39 4.144a1.44 1.44 0 0 0-1.437 1.4424M5.8385 12.012c.0067 3.4032 2.7706 6.1557 6.173 6.1493 3.4026-.0065 6.157-2.7701 6.1506-6.1733-.0065-3.4032-2.771-6.1565-6.174-6.1498-3.403.0067-6.156 2.771-6.1496 6.1738M8 12.0077a4 4 0 1 1 4.008 3.9921A3.9996 3.9996 0 0 1 8 12.0077"/></svg></a>
-              <a href="https://www.tiktok.com/@comando.pro" target="_blank" rel="noopener" aria-label="TikTok"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/></svg></a>
-              <a href="https://www.linkedin.com/company/comando-pro" target="_blank" rel="noopener" aria-label="LinkedIn"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></a>
-              <a href="https://www.youtube.com/@comando.pro" target="_blank" rel="noopener" aria-label="YouTube"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg></a>
-            </div>
-          </div>
-          <div class="footer-col">
-            <div class="footer-col-title">Product</div>
-            <a href="#equipo">Your team</a><a href="#precios">Pricing</a><a href="/en/conectores.html">Connectors</a>
-          </div>
-          <div class="footer-col">
-            <div class="footer-col-title">Company</div>
-            <a href="/app/?mode=signup">Try 14 days free</a><a href="/app/">Log in</a><a href="mailto:hola@comando.pro">hola@comando.pro</a>
-          </div>
-          <div class="footer-col">
-            <div class="footer-col-title">Legal</div>
-            <a href="/en/privacidad.html">Privacy policy</a><a href="/en/terminos.html">Terms of service</a><a href="/en/eliminar-datos.html">Delete my data</a>
-          </div>
-        </div>
-        <div class="footer-bottom">
-          <span>© 2026 Comando. All rights reserved.</span><span>Made in LATAM · Support in Spanish and Portuguese</span>
-        </div>
-      </div>
-    </footer>
-
-    <script src="/assets/vendor/gsap.min.js" defer></script>
-    <script src="/assets/vendor/ScrollTrigger.min.js" defer></script>
+    <script src="/assets/vendor/jquery-3.5.1.min.js"></script>
+    <script src="/assets/vendor/webflow.schunk.js"></script>
+    <script src="/assets/vendor/webflow.js"></script>
+    <script src="/assets/vendor/gsap.min.js"></script>
+    <script src="/assets/vendor/Flip.min.js"></script>
+    <script src="/assets/vendor/ScrollTrigger.min.js"></script>
+    <script src="/assets/vendor/SplitText.min.js"></script>
+    <script src="/assets/vendor/ScrambleTextPlugin.min.js"></script>
+    <script src="/js/screens.js?v=17"></script>
+    <script src="/js/usecases.js?v=49" defer></script>
     <script src="/js/pricing.js?v=38" defer></script>
     <script src="/js/landing.js?v=2" defer></script>
+    <script type="module" src="/js/main.js?v=36"></script>
+    <script src="/js/hero2d.js?v=5"></script>
   </body>
 </html>

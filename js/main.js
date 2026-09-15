@@ -672,28 +672,42 @@ function initAnchorOffset() {
 }
 
 /* ============================================================
-   12. Titular del hero: «Conversa con tu» + palabra que se escribe sola
+   12. Titular del hero: «Tu» + la palabra que cambia
+   Las palabras se RELEVAN con un fundido, no se escriben letra a letra: el
+   titular es la frase que vende, y media rotación con «Tu me de Meta Ads, en
+   WhatsApp» o con el renglón vacío se lee roto. Con el fundido, lo que hay en
+   pantalla es siempre una palabra entera.
+   `data-soon-index` marca la palabra que todavía no existe en el producto
+   (hoy «media buyer»): mientras se enseña, aparece su sello «Próximamente»,
+   que se esconde durante el relevo.
    ============================================================ */
 function initHeroTyping() {
   const wrap = document.querySelector('.b2b-hero-type');
   const out = document.getElementById('hero-typed');
   if (!wrap || !out) return;
   const words = (wrap.dataset.words || '').split('|').map((w) => w.trim()).filter(Boolean);
+  if (words.length && out.textContent.trim() !== words[0]) out.textContent = words[0];
+  // El sello vive fuera del titular (debajo), para no partir la frase.
+  const soon = document.querySelector('.b2b-hero-soon');
+  const soonIndex = wrap.dataset.soonIndex === undefined ? -1 : Number(wrap.dataset.soonIndex);
+  let i = 0;
+  const pintar = () => { out.textContent = words[i]; if (soon) soon.hidden = i !== soonIndex; };
+  pintar();
+  // Sin rotación con movimiento reducido: se queda la primera palabra, entera.
   if (words.length < 2 || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-  let i = 0, len = words[0].length, deleting = false;
-  const tick = () => {
-    const word = words[i];
-    if (!deleting) {
-      len += 1; out.textContent = word.slice(0, len);
-      if (len >= word.length) { deleting = true; setTimeout(tick, 2200); return; }
-      setTimeout(tick, 70);
-    } else {
-      len -= 1; out.textContent = word.slice(0, len);
-      if (len <= 0) { deleting = false; i = (i + 1) % words.length; setTimeout(tick, 350); return; }
-      setTimeout(tick, 38);
-    }
+  const FUNDIDO = 260;
+  const relevo = () => {
+    out.classList.add('is-changing');
+    if (soon) soon.hidden = true;
+    setTimeout(() => {
+      i = (i + 1) % words.length;
+      pintar();
+      out.classList.remove('is-changing');
+      // La que no existe se queda más tiempo: hay que leer el sello.
+      setTimeout(relevo, i === soonIndex ? 3400 : 2600);
+    }, FUNDIDO);
   };
-  setTimeout(tick, 2600);
+  setTimeout(relevo, 2600);
 }
 
 /* ============================================================

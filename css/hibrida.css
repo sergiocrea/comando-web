@@ -1,0 +1,273 @@
+/* Landing híbrida (16-sep-2026): el sistema claro y corporativo de antes —webflow.css + custom.css,
+   hero con video, dispositivos de #casos y #dia— con el contenido Meta-first de la fase D.
+   Todo lo nuevo vive bajo `.lp` para que no toque el resto de la web (conectores y legales
+   siguen solo con custom.css). Tipografías y colores del sistema anterior: Neue Machina en
+   títulos, Neue Haas en texto, JetBrains Mono para datos; azul #315fef, crema #f3f1ea. */
+
+/* ---------- hero: palabra que rota y su sello «Próximamente» ---------- */
+.b2b-hero-grid.is-copy-only { grid-template-columns: minmax(0, 1fr); }
+.b2b-hero-grid.is-copy-only .b2b-hero-copy { max-width: 46rem; }
+/* La palabra que rota reserva el ancho de la más larga (`data-longest`): el titular
+   no cambia de ancho ni salta de alto —ni se va a una línea más— al rotar. */
+.b2b-hero-title .b2b-hero-type { position: relative; display: block; width: max-content; max-width: 100%; }
+/* La reserva es la palabra más larga (`data-longest`, traducida en cada idioma)
+   ocupando su bloque DE VERDAD: ancho y alto, con los mismos saltos de línea.
+   Reservar solo el ancho bastaba en castellano e inglés, pero en portugués
+   «comprador de mídia» ocupa dos renglones en móvil y el titular crecía 74 px
+   justo al enseñarla. La palabra visible va encima, fuera del flujo. */
+.b2b-hero-title .b2b-hero-type::before { content: attr(data-longest); display: block; visibility: hidden; pointer-events: none; }
+/* El relevo es un fundido, no un tecleo: en pantalla hay siempre una palabra
+   entera. Escribirla letra a letra dejaba el renglón vacío o a medias («Tu me
+   de Meta Ads, en WhatsApp») durante buena parte del ciclo. */
+.b2b-hero-title #hero-typed { position: absolute; inset: 0; transition: opacity .26s ease; }
+.b2b-hero-title #hero-typed.is-changing { opacity: 0; }
+@media (prefers-reduced-motion: reduce) { .b2b-hero-title #hero-typed { transition: none; } }
+/* El sello va DEBAJO del titular, nunca dentro de la frase: «Tu media buyer de Meta
+   Ads, en WhatsApp.» se lee de corrido y el aviso no la parte. Ocupa su línea
+   siempre —oculto es invisible, no ausente— para que nada se mueva al aparecer. */
+.b2b-hero-soon {
+  display: inline-block; margin-top: .9rem;
+  font: 500 clamp(.62rem, .85vw, .76rem)/1 "Jetbrainsmono Variable", ui-monospace, monospace;
+  font-style: normal; letter-spacing: .06em; text-transform: uppercase; white-space: nowrap;
+  color: #5b3fd1; background: rgba(247, 245, 255, .92); border: 1px solid rgba(91, 63, 209, .35);
+  border-radius: 999px; padding: .55em .8em;
+}
+.b2b-hero-soon[hidden] { display: inline-block; visibility: hidden; }
+.b2b-button svg { width: 1.15rem; height: 1.15rem; flex: none; }
+@media (max-width: 767px) {
+  .b2b-hero-soon { margin-top: .7rem; }
+  /* Dos botones en una fila no caben con «Pruébalo gratis en WhatsApp»: van apilados. */
+  .b2b-hero-actions { grid-template-columns: 1fr; }
+  .b2b-button { white-space: normal; text-align: center; }
+  .b2b-hero-note span { white-space: normal; }
+}
+
+/* ---------- base de las secciones nuevas ---------- */
+.lp {
+  --lp-ink: #151515; --lp-muted: #5f625f; --lp-soft: #8a8c88; --lp-blue: #315fef; --lp-line: #dedbd2;
+  --lp-cream: #f3f1ea; --lp-paper: #fbfaf6;
+  --wa-bg: #0b141a; --wa-in: #202c33; --wa-out: #005c4b; --wa-green: #00a884;
+  --ok: #127a52; --soon: #5b3fd1;
+  --d-ok: #3ecf8e; --d-warn: #f2c14e; --d-bad: #ff6b6b; --d-soon: #c9b4ff;
+  --ease: cubic-bezier(.16, 1, .3, 1);
+  /* Los carriles arrancan donde arranca el texto: el mismo margen que .padding-global
+     (1.88rem; 1.25rem en móvil) y el tope de .container-large (90rem). */
+  --gutter: 1.88rem;
+  --rail-pad: max(var(--gutter), calc((100vw - 90rem) / 2));
+  position: relative; z-index: 3;
+  color: var(--lp-ink);
+  font-family: "Neuehaasunicaw 1 G", Inter, system-ui, sans-serif;
+  font-size: 1.0625rem; line-height: 1.55;
+}
+.lp *, .lp *::before, .lp *::after { box-sizing: border-box; }
+.lp p { margin: 0; }
+.lp q { quotes: "«" "»"; }
+.lp svg { max-width: 100%; }
+.lp-section { position: relative; padding: clamp(4.5rem, 9vw, 7.5rem) 0; overflow: hidden; scroll-margin-top: calc(var(--nav-height, 5rem) + .5rem); }
+.lp-cream {
+  background-color: var(--lp-cream);
+  background-image: linear-gradient(rgba(21, 21, 21, .045) 1px, transparent 1px), linear-gradient(90deg, rgba(21, 21, 21, .045) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+.lp-paper { background: var(--lp-paper); }
+.lp-dark {
+  color: #fff;
+  background-color: #0a0a0a;
+  background-image:
+    radial-gradient(circle at 82% 28%, rgba(49, 95, 239, .18), transparent 40%),
+    linear-gradient(rgba(255, 255, 255, .045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, .045) 1px, transparent 1px);
+  background-size: auto, 40px 40px, 40px 40px;
+}
+.lp h2, .lp h3 { margin: 0; color: inherit; text-wrap: balance; }
+.lp h2 { font-family: "Neuehaasunicaw 1 G", Inter, sans-serif; font-weight: 500; font-size: clamp(2.1rem, 3.6vw, 3.25rem); line-height: 1.08; letter-spacing: -.025em; }
+.lp h3 { font-family: Neuemachina, "Space Grotesk", Inter, sans-serif; font-weight: 600; letter-spacing: -.02em; line-height: 1.1; }
+.lp-head { text-align: center; max-width: 50rem; margin: 0 auto 3rem; }
+.lp-head.is-left { text-align: left; margin: 0; }
+.lp-eyebrow { display: inline-block; margin-bottom: 1rem; font: 500 .72rem/1 "Jetbrainsmono Variable", ui-monospace, monospace; letter-spacing: .1em; text-transform: uppercase; color: var(--lp-blue); }
+.lp-dark .lp-eyebrow { color: #6b93ff; }
+.lp-sub { margin-top: 1rem !important; font-size: clamp(1.05rem, 1.4vw, 1.25rem); line-height: 1.45; color: var(--lp-blue); text-wrap: pretty; }
+.lp-dark .lp-sub { color: #6b93ff; }
+.lp-lede { margin-top: 1rem !important; font-size: clamp(1.05rem, 1.4vw, 1.2rem); color: var(--lp-muted); text-wrap: pretty; }
+
+/* ---------- sellos ---------- */
+.lp .badge { display: inline-flex; align-items: center; gap: .45rem; font: 500 .7rem/1 "Jetbrainsmono Variable", ui-monospace, monospace; letter-spacing: .04em; padding: .42rem .65rem; border-radius: 999px; white-space: nowrap; }
+.lp .badge::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
+.lp .badge.ok { color: var(--ok); background: rgba(18, 122, 82, .08); border: 1px solid rgba(18, 122, 82, .25); }
+.lp .badge.soon { color: var(--soon); background: rgba(91, 63, 209, .07); border: 1px solid rgba(91, 63, 209, .25); }
+.lp .badge.soon::before { background: transparent; border: 1.5px dashed currentColor; }
+.lp-dark .badge.soon { color: var(--d-soon); background: rgba(155, 123, 255, .1); border-color: rgba(155, 123, 255, .3); }
+
+/* ---------- chat de WhatsApp en miniatura ---------- */
+.lp .mini-chat { background: var(--wa-bg) radial-gradient(rgba(255, 255, 255, .035) 1px, transparent 1px) 0 0 / 14px 14px; border-radius: 1rem; padding: .9rem .65rem; display: flex; flex-direction: column; justify-content: center; gap: .5rem; border: 1px solid #1c2a31; }
+.lp .msg { display: flex; }
+.lp .msg.me { justify-content: flex-end; }
+.lp .bubble { max-width: 92%; padding: .5rem .65rem 1.15rem; border-radius: .75rem; font: 400 .86rem/1.4 "Neuehaasunicaw 1 G", Inter, sans-serif; color: #e9edef; position: relative; text-wrap: pretty; }
+.lp .bubble b { font-weight: 600; }
+.lp .me .bubble { background: var(--wa-out); border-top-right-radius: 3px; }
+.lp .bot .bubble { background: var(--wa-in); border-top-left-radius: 3px; }
+.lp .bubble time { position: absolute; right: .5rem; bottom: .25rem; font-size: .62rem; color: rgba(233, 237, 239, .6); }
+.lp .bubble.confirm { display: flex; flex-direction: column; gap: .5rem; }
+.lp .bubble.confirm span { align-self: flex-start; font: 600 .68rem/1 "Jetbrainsmono Variable", monospace; letter-spacing: .05em; color: #53bdeb; border: 1px solid rgba(83, 189, 235, .4); border-radius: .5rem; padding: .38rem .5rem; }
+
+/* ---------- equipo de agentes ---------- */
+.lp-agents { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.25rem; }
+.lp-agent { background: #fff; border: 1px solid var(--lp-line); border-radius: 1.4rem; padding: 1.6rem; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); gap: 1.5rem; box-shadow: 0 24px 50px -40px rgba(21, 21, 21, .35); }
+.lp-agent.is-soon { background: repeating-linear-gradient(135deg, #fbfaf7 0 14px, #f5f3ee 14px 28px); border-style: dashed; border-color: #cdc6de; box-shadow: none; }
+.lp-agent-meta { display: flex; flex-direction: column; min-width: 0; }
+.lp-agent-top { display: flex; align-items: center; justify-content: space-between; gap: .75rem; }
+.lp-agent-icon { width: 3rem; height: 3rem; border-radius: .9rem; display: grid; place-items: center; background: rgba(49, 95, 239, .1); color: var(--lp-blue); flex: none; }
+.lp-agent.is-soon .lp-agent-icon { background: rgba(91, 63, 209, .1); color: var(--soon); }
+.lp-agent-icon svg { width: 1.75rem; height: 1.75rem; }
+.lp-agent h3 { font-size: 1.75rem; margin: 1rem 0 .5rem; }
+.lp-agent p { color: var(--lp-muted); }
+.lp-agent .foot { margin-top: auto; padding-top: 1rem; font: 500 .74rem/1.45 "Jetbrainsmono Variable", monospace; color: var(--lp-soft); }
+.lp-soon-note { margin-top: 2.25rem !important; text-align: center; color: var(--lp-muted); }
+.lp-soon-note .badge { margin-left: .5rem; vertical-align: middle; }
+
+/* ---------- carriles con botones (métricas) ---------- */
+.lp-slider-head { display: flex; justify-content: space-between; align-items: flex-end; gap: 2rem; margin-bottom: 2.5rem; }
+.lp .slider-btns { display: flex; gap: .5rem; flex: none; }
+.lp .slider-btns button { width: 2.75rem; height: 2.75rem; border-radius: 50%; border: 1px solid rgba(255, 255, 255, .22); background: transparent; color: #fff; display: grid; place-items: center; cursor: pointer; transition: border-color .2s, background .2s; }
+.lp .slider-btns button:hover { border-color: rgba(255, 255, 255, .5); background: rgba(255, 255, 255, .06); }
+.lp .slider-btns button:disabled { opacity: .35; cursor: default; }
+.lp .slider-btns svg { width: 1.1rem; height: 1.1rem; }
+.lp .rail { display: flex; gap: 1.1rem; overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding-inline: var(--rail-pad); padding: 0 var(--rail-pad) 1.5rem; scrollbar-width: none; }
+.lp .rail::-webkit-scrollbar { display: none; }
+.lp .rail:focus-visible { outline: 2px solid #6b93ff; outline-offset: -2px; }
+
+/* ---------- métricas con semáforo ---------- */
+.lp .metric { scroll-snap-align: start; flex: 0 0 18.75rem; background: rgba(255, 255, 255, .04); border: 1px solid rgba(255, 255, 255, .12); border-radius: 1.25rem; padding: 1.4rem; display: flex; flex-direction: column; min-height: 21rem; }
+.lp .metric-top { display: flex; justify-content: space-between; align-items: center; gap: .6rem; }
+.lp .metric-name { font: 500 .8rem/1.2 "Jetbrainsmono Variable", monospace; letter-spacing: .06em; color: #a3a6a3; text-transform: uppercase; }
+.lp .metric-value { font: 600 3rem/1 Neuemachina, "Space Grotesk", sans-serif; letter-spacing: -.04em; color: #fff; margin: 1.4rem 0 .4rem; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.lp .metric-value small { font: 500 .9rem/1 "Jetbrainsmono Variable", monospace; color: #8a8d8a; margin-left: .35rem; letter-spacing: 0; }
+.lp .metric-value small.pre { margin: 0 .3rem 0 0; }
+.lp .metric-viz { margin: auto 0 1.1rem; }
+.lp .metric-viz svg { display: block; width: 100%; height: 56px; overflow: visible; }
+.lp .viz-cap { margin-top: .5rem !important; font: 500 .74rem/1.35 "Jetbrainsmono Variable", monospace; color: #8a8d8a; }
+.lp .viz-cap .ok { color: var(--d-ok); } .lp .viz-cap .warn { color: var(--d-warn); } .lp .viz-cap .bad { color: var(--d-bad); } .lp .viz-cap .blue { color: #7f9dff; }
+.lp .metric .desc { color: #b9bbb9; font-size: .95rem; }
+.lp .lights { display: flex; gap: 6px; }
+.lp .light { width: 12px; height: 12px; border-radius: 50%; background: #3a444b; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .08); transition: background .5s var(--ease), box-shadow .5s var(--ease); }
+.lp .light.bad { background: var(--d-bad); box-shadow: 0 0 10px rgba(255, 107, 107, .55); }
+.lp .light.warn { background: var(--d-warn); box-shadow: 0 0 10px rgba(242, 193, 78, .5); }
+.lp .light.ok { background: var(--d-ok); box-shadow: 0 0 10px rgba(62, 207, 142, .5); }
+html:not(.js) .lp .light[data-to="bad"] { background: var(--d-bad); }
+html:not(.js) .lp .light[data-to="warn"] { background: var(--d-warn); }
+html:not(.js) .lp .light[data-to="ok"] { background: var(--d-ok); }
+html:not(.js) .lp .slider-btns { display: none; }
+.lp .metric.is-soon { border-style: dashed; border-color: rgba(155, 123, 255, .35); background: rgba(155, 123, 255, .05); }
+.lp .metric.is-soon .metric-value { color: #8d86a8; }
+.lp .metrics-foot { margin-top: 1rem !important; font: 500 .76rem/1.45 "Jetbrainsmono Variable", monospace; color: #8a8d8a; }
+
+/* ---------- precios ---------- */
+.lp .pricing-bar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1rem 2rem; }
+.lp .trial-line { display: inline-flex; align-items: center; gap: .55rem; font-weight: 600; color: var(--lp-ink); }
+.lp .trial-line svg { width: 18px; height: 18px; color: #0b7a61; flex: none; }
+.lp .billing { display: inline-flex; padding: 4px; border-radius: 999px; background: #ecEAE3; border: 1px solid var(--lp-line); }
+.lp .billing button { font: 600 .9rem/1 "Neuehaasunicaw 1 G", Inter, sans-serif; border: 0; background: transparent; color: var(--lp-muted); padding: .62rem 1rem; border-radius: 999px; cursor: pointer; display: inline-flex; align-items: center; gap: .45rem; transition: background .2s, color .2s; }
+.lp .billing button[aria-pressed="true"] { background: #fff; color: var(--lp-ink); box-shadow: 0 2px 6px -2px rgba(0, 0, 0, .18); }
+.lp .billing button span { font: 500 .66rem/1 "Jetbrainsmono Variable", monospace; letter-spacing: .03em; color: #0b7a61; background: rgba(0, 168, 132, .12); padding: .28rem .42rem; border-radius: 999px; }
+.lp .plans { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; margin-top: 2.4rem; }
+.lp .plan { background: #fff; border: 1px solid var(--lp-line); border-radius: 1.25rem; padding: 1.5rem 1.35rem; display: flex; flex-direction: column; gap: 1rem; position: relative; }
+.lp .plan.star { background: #151515; color: #fff; border-color: #151515; box-shadow: 0 30px 60px -30px rgba(21, 21, 21, .55); transform: translateY(-10px); }
+.lp .plan-tag { position: absolute; top: -11px; right: 18px; background: var(--lp-blue); color: #fff; font: 500 .68rem/1 "Jetbrainsmono Variable", monospace; letter-spacing: .06em; padding: 6px 9px; border-radius: 999px; text-transform: uppercase; }
+.lp .plan-name { font-size: 1.1rem; }
+.lp .plan-result { font: 600 1.3rem/1.2 Neuemachina, "Space Grotesk", sans-serif; letter-spacing: -.02em; min-height: 3.2rem; text-wrap: balance; }
+.lp .plan-price { font: 600 2.7rem/1 Neuemachina, "Space Grotesk", sans-serif; letter-spacing: -.04em; white-space: nowrap; }
+.lp .plan-price small { font: 500 .85rem/1 "Jetbrainsmono Variable", monospace; color: var(--lp-muted); letter-spacing: 0; margin-left: .25rem; }
+.lp .plan.star .plan-price small, .lp .plan.star .plan-year { color: #a3a3a3; }
+.lp .plan-year { margin-top: -.6rem !important; min-height: 1.1rem; font: 500 .76rem/1.4 "Jetbrainsmono Variable", monospace; color: var(--lp-muted); }
+.lp .plan ul { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: .5rem; font-size: .93rem; }
+.lp .plan li { display: grid; grid-template-columns: 18px 1fr; gap: .5rem; align-items: start; }
+.lp .plan li svg { width: 16px; height: 16px; margin-top: 3px; color: #127a52; }
+.lp .plan.star li svg { color: var(--d-ok); }
+.lp .plan li.soon { color: var(--lp-muted); }
+.lp .plan.star li.soon { color: #a3a3a3; }
+.lp .plan li.soon svg { color: var(--soon); }
+.lp .plan.star li.soon svg { color: var(--d-soon); }
+.lp .plan li .badge { margin-top: .35rem; font-size: .62rem; padding: .32rem .5rem; }
+.lp .plan.star li .badge.soon { color: var(--d-soon); background: rgba(155, 123, 255, .12); border-color: rgba(155, 123, 255, .35); }
+.lp .plan-limits { margin-top: auto !important; padding-top: .9rem; border-top: 1px solid var(--lp-line); font: 500 .76rem/1.7 "Jetbrainsmono Variable", monospace; color: var(--lp-muted); }
+.lp .plan.star .plan-limits { border-color: #2a2a2a; color: #a3a3a3; }
+.lp .btn { display: inline-flex; align-items: center; justify-content: center; gap: .55rem; min-height: 3.1rem; padding: .8rem 1.2rem; border-radius: 999px; font: 650 .95rem/1.1 "Neuehaasunicaw 1 G", Inter, sans-serif; text-decoration: none; border: 1px solid transparent; cursor: pointer; text-align: center; transition: transform .2s ease, background .2s ease, color .2s ease; }
+.lp .btn:hover { transform: translateY(-2px); }
+.lp .plan .btn { width: 100%; }
+.lp .btn-dark { background: #151515; color: #fff; }
+.lp .btn-dark:hover { background: var(--lp-blue); }
+.lp .plan.star .btn-dark { background: #fff; color: #151515; }
+.lp .plan.star .btn-dark:hover { background: var(--lp-blue); color: #fff; }
+.lp .pricing-extras { display: flex; flex-wrap: wrap; justify-content: center; gap: .35rem 1.5rem; margin-top: 1.75rem; font-size: .95rem; color: var(--lp-muted); text-align: center; }
+.lp .pricing-extras a, .lp .pricing-crm-link a { color: var(--lp-ink); font-weight: 650; }
+.lp .pricing-crm-link { margin-top: 2rem !important; text-align: center; color: var(--lp-muted); }
+.lp .plans-noscript { margin-top: 2rem; font-size: 1.1rem; text-align: center; }
+
+/* ---------- módulo CRM y calculadora ---------- */
+.lp-crm { padding-top: 0; }
+.lp-crm-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, .9fr); gap: clamp(2rem, 6vw, 5rem); align-items: center; border-top: 1px solid var(--lp-line); padding-top: clamp(4rem, 8vw, 6rem); }
+.lp-crm-list { list-style: none; padding: 0; margin: 1.8rem 0 0; display: flex; flex-direction: column; gap: .8rem; }
+.lp-crm-list li { display: grid; grid-template-columns: 22px 1fr; gap: .7rem; color: #3c3a35; }
+.lp-crm-list svg { width: 18px; height: 18px; margin-top: 4px; color: #127a52; }
+.lp-crm-list q { font-style: normal; color: var(--lp-ink); font-weight: 600; }
+.lp-crm-list li.soon svg { color: var(--soon); }
+.lp-crm-links { margin-top: 1.8rem !important; font-weight: 650; }
+.lp-crm-links a { color: var(--lp-ink); }
+.lp .calc { background: #fff; border: 1px solid var(--lp-line); border-radius: 1.4rem; padding: 1.6rem; box-shadow: 0 24px 50px -32px rgba(0, 0, 0, .3); }
+.lp .calc h3 { font-size: 1.3rem; margin-bottom: 1.2rem; }
+.lp .field { display: flex; flex-direction: column; gap: .45rem; margin-bottom: 1.1rem; }
+.lp .field label { font: 500 .72rem/1 "Jetbrainsmono Variable", monospace; letter-spacing: .06em; color: var(--lp-muted); text-transform: uppercase; margin: 0; }
+.lp .field select, .lp .field input[type=range] { width: 100%; }
+.lp .field select { appearance: none; -webkit-appearance: none; height: auto; background: #f7f6f2 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='none' stroke='%23111' stroke-width='1.6'%3E%3Cpath d='m2 4 4 4 4-4'/%3E%3C/svg%3E") no-repeat right 14px center; border: 1px solid var(--lp-line); border-radius: .75rem; padding: .8rem 1rem; font: 500 1rem/1.2 "Neuehaasunicaw 1 G", Inter, sans-serif; color: var(--lp-ink); }
+.lp .field input[type=range] { accent-color: #151515; }
+.lp .range-row { display: flex; justify-content: space-between; font: 500 .8rem/1 "Jetbrainsmono Variable", monospace; color: var(--lp-muted); }
+.lp .range-row [data-contacts] { color: var(--lp-ink); font-weight: 600; }
+.lp .calc-out { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; padding-top: 1.2rem; border-top: 1px solid var(--lp-line); }
+.lp .calc-out .plan-price { font-size: 2.5rem; }
+.lp .calc-note { font-size: .82rem; color: var(--lp-muted); margin-top: .8rem !important; }
+
+/* ---------- preguntas frecuentes ---------- */
+.lp-faq-grid { display: grid; grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); gap: clamp(2rem, 6vw, 6rem); }
+.lp details { border-bottom: 1px solid var(--lp-line); }
+.lp details:first-of-type { border-top: 1px solid var(--lp-line); }
+.lp summary { list-style: none; cursor: pointer; padding: 1.25rem 2.5rem 1.25rem 0; position: relative; font: 600 1.1rem/1.35 Neuemachina, "Space Grotesk", sans-serif; letter-spacing: -.01em; }
+.lp summary::-webkit-details-marker { display: none; }
+.lp summary::after { content: ""; position: absolute; right: 6px; top: 50%; width: 11px; height: 11px; margin-top: -8px; border-right: 1.6px solid #777; border-bottom: 1.6px solid #777; transform: rotate(45deg); transition: transform .3s var(--ease); }
+.lp details[open] summary::after { transform: rotate(-135deg); margin-top: -2px; }
+.lp details p { padding: 0 0 1.3rem; color: var(--lp-muted); max-width: 60ch; }
+
+/* ---------- cierre ---------- */
+.lp-final { text-align: center; }
+.lp-final h2 { max-width: 18ch; margin: 0 auto; font-size: clamp(2.3rem, 4.6vw, 4rem); }
+.lp-final .b2b-hero-actions { justify-content: center; margin-top: 2rem; }
+.lp-final .b2b-button.is-primary { background: #fff; color: #151515; border-color: #fff; }
+.lp-final .b2b-button.is-primary:hover { background: var(--lp-blue); color: #fff; border-color: var(--lp-blue); }
+.lp .trust { margin-top: 2.75rem !important; display: flex; flex-wrap: wrap; gap: .75rem 2rem; justify-content: center; font: 500 .82rem/1.4 "Jetbrainsmono Variable", monospace; color: #b9bbb9; }
+.lp .trust span { display: inline-flex; align-items: center; gap: .5rem; }
+.lp .trust svg { width: 16px; height: 16px; color: var(--d-ok); flex: none; }
+
+/* ---------- responsive ---------- */
+@media (max-width: 991px) {
+  .lp-agents { grid-template-columns: minmax(0, 1fr); }
+  .lp .plans { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .lp .plan.star { transform: none; }
+  .lp-crm-grid, .lp-faq-grid { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 767px) {
+  .lp { --gutter: 1.25rem; font-size: 1rem; }
+  .lp-head { margin-bottom: 2.25rem; }
+  .lp-slider-head { flex-direction: column; align-items: flex-start; gap: 1.25rem; }
+  /* Agentes: carrusel con toque, una tarjeta y el borde de la siguiente. */
+  .lp-agents { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; gap: .85rem; margin: 0 calc(-1 * var(--gutter)); padding: 0 var(--gutter) 1rem; scroll-padding-inline: var(--gutter); scrollbar-width: none; }
+  .lp-agents::-webkit-scrollbar { display: none; }
+  .lp-agent { flex: 0 0 86%; grid-template-columns: minmax(0, 1fr); scroll-snap-align: start; padding: 1.3rem; gap: 1.1rem; }
+  .lp-agent h3 { font-size: 1.55rem; }
+  .lp .metric { flex-basis: 82%; min-height: 0; }
+  .lp .plans { grid-template-columns: minmax(0, 1fr); }
+  .lp .pricing-bar { flex-direction: column; align-items: flex-start; }
+  .lp .calc { padding: 1.25rem; }
+  .lp .trust { flex-direction: column; align-items: center; gap: .6rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .lp *, .lp *::before, .lp *::after { transition: none !important; animation: none !important; }
+}
