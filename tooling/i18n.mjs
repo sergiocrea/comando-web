@@ -131,7 +131,8 @@ function translate(rawHtml, dictionary, missing) {
       missing.add(key);
       return value;
     }
-    return value.replace(key, replacement);
+    // Con función: una traducción con «US$&nbsp;» llevaría «$&», que como texto de reemplazo pega lo encontrado.
+    return value.replace(key, () => replacement);
   };
   return segments(html)
     .map((part) => {
