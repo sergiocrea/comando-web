@@ -4,8 +4,8 @@
     "sha": "5c5fb97213bddd5f"
   },
   "app/auth.js": {
-    "v": "19",
-    "sha": "0c1b4189b65677c4"
+    "v": "20",
+    "sha": "8da6518f86e96f35"
   },
   "app/dashboard/dashboard.css": {
     "v": "1",
@@ -40,32 +40,32 @@
     "sha": "91b5ec1923dcccbf"
   },
   "app/panel/api.js": {
-    "v": "17",
-    "sha": "7d4c77d753961517"
+    "v": "18",
+    "sha": "72c66708a5179cf3"
   },
   "app/panel/chat.js": {
-    "v": "4",
-    "sha": "8e6b1366d15b10d0"
+    "v": "5",
+    "sha": "7a80d975d09d4040"
   },
   "app/panel/hoja.js": {
-    "v": "4",
-    "sha": "5ce73db8ad205542"
+    "v": "5",
+    "sha": "5f995e19c8692675"
   },
   "app/panel/mock-data.js": {
-    "v": "12",
-    "sha": "80f117e20422b900"
+    "v": "13",
+    "sha": "938b9157c2c4c8a7"
   },
   "app/panel/panel.css": {
     "v": "19",
     "sha": "a25e840e58819333"
   },
   "app/panel/panel.js": {
-    "v": "30",
-    "sha": "fe2f67ac7de2b527"
+    "v": "31",
+    "sha": "406f662ddd43ce8d"
   },
   "app/panel/sections.js": {
-    "v": "28",
-    "sha": "06a385e3b6d5bf26"
+    "v": "29",
+    "sha": "2c322be0aeec31f1"
   },
   "app/panel/setup.js": {
     "v": "12",
@@ -80,8 +80,8 @@
     "sha": "643bc4a65b2bd765"
   },
   "app/strings.js": {
-    "v": "20",
-    "sha": "0ed7e13af4a0b382"
+    "v": "21",
+    "sha": "d784f5a8ba08b808"
   },
   "assets/img/og-image.jpg": {
     "v": "4",
@@ -91,6 +91,10 @@
     "v": "186",
     "sha": "bbc2460dd1f485e9"
   },
+  "css/landing.css": {
+    "v": "1",
+    "sha": "2a08e294ce2e4392"
+  },
   "css/legal.css": {
     "v": "1",
     "sha": "dc784537042c69cd"
@@ -99,28 +103,20 @@
     "v": "2",
     "sha": "56278e0bc8807ff3"
   },
-  "js/demo.js": {
-    "v": "4",
-    "sha": "90e67e59a3f0e669"
-  },
-  "js/hero2d.js": {
-    "v": "5",
-    "sha": "f6383aee5795ac1d"
+  "js/landing.js": {
+    "v": "1",
+    "sha": "4381f12f63145f06"
   },
   "js/main.js": {
     "v": "34",
     "sha": "6d27ba8503cb6830"
   },
   "js/pricing.js": {
-    "v": "36",
-    "sha": "7d5443d0c2f1c5a7"
+    "v": "37",
+    "sha": "16fc5442ff1cfbf2"
   },
   "js/screens.js": {
     "v": "16",
     "sha": "2a4c11cc05f2a3b1"
-  },
-  "js/usecases.js": {
-    "v": "48",
-    "sha": "3bf85f5d6cf22272"
   }
 }
