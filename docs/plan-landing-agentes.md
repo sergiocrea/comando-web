@@ -201,7 +201,7 @@ Una cuenta publicitaria extra cuesta ≈ 0,014 USD/mes; de 15 a 100 campañas po
 |---|---|---|---|
 | A · Mensaje y estructura | Textos finales y orden (§1–§2) | Titular, agentes, competencia, Google/TikTok | **Aprobada 15-sep** |
 | B · Precios | Planes Meta + precio mínimo del módulo CRM + diagnóstico en Gratis + voz | Precios | **Cerrada 15-sep** |
-| C · Diseño | Mocks de hero, agentes, métricas y casos (móvil y escritorio) | Estilo visual | Pendiente |
+| C · Diseño | Mocks de hero, agentes, métricas y casos (móvil y escritorio) | Estilo visual | **Mocks listos para revisión** (§C) |
 | D · Implementación | Rama `operador/landing-agentes`, es/en/pt, comprobaciones | Revisión en local | Pendiente |
 | E · Motor | Catálogo Meta-first, alta Meta primero, diagnóstico en Gratis, reporte programado | Despliegue del motor | Pendiente |
 | F · Lanzamiento | Motor → web; App Review aprobado | OK final | Pendiente |
@@ -242,3 +242,50 @@ Una cuenta publicitaria extra cuesta ≈ 0,014 USD/mes; de 15 a 100 campañas po
 | 15-sep | Diagnóstico (Estratega) en Gratis | **Sí** (sin IA, casi no cuesta; es el «aha») |
 | 15-sep | Notas de voz | **En todos los planes** (≈ 0,003 USD por gratis al mes) |
 | 15-sep | Módulo «Conversa con tu CRM» | **Desde US$ 9 al mes**; la calculadora sube el precio en CRM lentos o muy grandes |
+
+---
+
+## C. Mocks de diseño (fase C, 15-sep)
+
+**Dónde:** `mocks/landing-agentes/` (`index.html`, `mocks.css`, `mocks.js`, arte SVG inline) · capturas en `mocks/landing-agentes/capturas/`.
+No toca las páginas de producción (`index.html`, `en/`, `pt/`, `js/`, `css/`).
+
+**Cómo abrirlo en local:**
+
+```sh
+cd ~/Documents/comando/comando-web && python3 -m http.server 8765
+# http://127.0.0.1:8765/mocks/landing-agentes/                      → con animaciones y scroll horizontal
+# http://127.0.0.1:8765/mocks/landing-agentes/?static=1             → página completa sin pin ni animación
+# http://127.0.0.1:8765/mocks/landing-agentes/?static=1&only=equipo&x=50 → una sección aislada (capturas)
+```
+
+**Qué incluye (en el orden de §1):** hero con chat de WhatsApp animado (pregunta → «escribiendo» → tarjeta con semáforo →
+respuesta) · problema · «Tu equipo» con 4 agentes en scroll horizontal fijado (GSAP ScrollTrigger del repo) y carrusel con
+scroll-snap en móvil · métricas (7 tarjetas con semáforo, contador y mini-visualización propia de cada métrica) · casos (3 mini chats
+con «Decisión») · por qué WhatsApp + franja de confianza · precios §2.7 · módulo CRM con calculadora de ejemplo (CRM + contactos →
+«desde US$ 9») · FAQ · CTA final.
+
+**Decisiones de diseño:**
+- Mismo mundo que la landing actual: fondo casi negro, azul `#4d7cff`, Space Grotesk (títulos), Inter (texto), JetBrains Mono solo para datos.
+- **Verde de WhatsApp (`#00a884`) como color de acción** (botones «Pruébalo gratis») para anclar el diferencial; el azul queda para marca y elementos de producto.
+- **Sin eyebrows** («META ADS · WHATSAPP», «EL PROBLEMA»…): se quitaron por la regla de oficio de la skill de diseño; cada título carga el mensaje solo.
+- Precios y módulo CRM sobre fondo claro («papel»), como la sección de precios actual: cambia el ritmo y separa lo comercial.
+- Sellos: «Disponible» verde sólido; «Próximamente» violeta con punto discontinuo y tarjetas rayadas para que se lea como futuro sin esconderlo.
+- Iconos SVG propios con un solo trazo (1,7) y peso; nada de emoji como iconos.
+- Números ilustrativos marcados como «Ejemplo ilustrativo» / «Valores de ejemplo».
+- `prefers-reduced-motion`: sin pin ni animación; sin JS se lee todo (mensajes visibles, carriles con scroll nativo). JS nuevo ≈ 6 kB.
+
+**Capturas:** `escritorio-pagina-completa`, `escritorio-hero`, `escritorio-hero-animacion-1` y `-2` (fotogramas del chat),
+`escritorio-equipo-00` / `-50` / `-100` (scroll horizontal), `escritorio-metricas`, `escritorio-casos`, `escritorio-porque`,
+`escritorio-precios`, `escritorio-crm`; `movil-pagina-completa`, `movil-hero`, `movil-equipo`, `movil-metricas`, `movil-casos`,
+`movil-porque`, `movil-precios`, `movil-crm` (móvil a 390 px dentro de un marco, porque Chrome de escritorio no baja de ~500 px).
+
+**Preguntas de diseño para Sergio:**
+1. ¿Verde de WhatsApp como color de acción o volver al azul de la marca en los botones?
+2. Ilustración: ¿se queda el estilo «producto real» (teléfono y chats) o suma personajes/ilustración para los agentes?
+3. Iconos de agentes (barras, brújula, deslizadores, nodos): ¿van o prefieres avatares con nombre?
+4. Precios en fondo claro: ¿mantener el contraste o todo oscuro?
+5. Métricas: ¿7 tarjetas en slider o reducir a 4 (ROAS, costo por resultado, frecuencia, embudo) para acortar la página?
+6. La prueba de 14 días del plan Equipo (decidida después de la fase B) aún no aparece en el hero ni en precios: ¿dónde se dice?
+
+**Desvíos respecto a §2:** sin eyebrows (ver arriba); los títulos de sección y textos son los de §2 sin cambios.
