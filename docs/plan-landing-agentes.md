@@ -184,7 +184,7 @@ Una cuenta publicitaria extra cuesta ≈ 0,014 USD/mes; de 15 a 100 campañas po
 
 | Tema | Por qué bloquea | Acción |
 |---|---|---|
-| App Review Meta (`ads_read`) | Sin él, clientes externos no conectan | Enviar (borrador del 9-sep) |
+| ~~App Review Meta (`ads_read`)~~ | **Resuelto 15-sep:** la app ya tiene `ads_read` aprobado | — (`ads_management` solo para el Comprador de medios, más adelante) |
 | Planes Meta-first en el motor | `operador/planes` tiene planes centrados en CRM | Nueva versión del catálogo |
 | Módulo CRM variable | No existe cobro de add-ons recurrentes | Módulo en catálogo y Stripe |
 | Alta Meta-first | El panel pide CRM en el paso 3 | Meta primero, CRM opcional |
@@ -203,8 +203,8 @@ Una cuenta publicitaria extra cuesta ≈ 0,014 USD/mes; de 15 a 100 campañas po
 | B · Precios | Planes Meta + precio mínimo del módulo CRM + diagnóstico en Gratis + voz | Precios | **Cerrada 15-sep** |
 | C · Diseño | Mocks de hero, agentes, métricas y casos (móvil y escritorio) | Estilo visual | **Aprobada 15-sep** (§C) |
 | D · Implementación | Rama `operador/landing-agentes`, es/en/pt, comprobaciones | Revisión en local | **Lista para revisión en local** (§D) |
-| E · Motor | Catálogo Meta-first, alta Meta primero, diagnóstico en Gratis, reporte programado | Despliegue del motor | Pendiente |
-| F · Lanzamiento | Motor → web; App Review aprobado | OK final | Pendiente |
+| E · Motor | Catálogo Meta-first, alta Meta primero, diagnóstico en Gratis, reporte programado | Despliegue del motor | **Catálogo listo** en `operador/catalogo-meta` (sin desplegar); alta Meta primero y reporte programado pendientes |
+| F · Lanzamiento | Motor → Stripe → web (App Review `ads_read` ya aprobado) | OK final | Pendiente |
 
 ---
 
@@ -324,14 +324,14 @@ cd ~/Documents/comando/comando-web && python3 -m http.server 8765
 **Desvíos:**
 - Sin Lenis: el scroll fijado va con ScrollTrigger solo, como en los mocks aprobados.
 - Google Sheets no está en la tabla de proveedores de la calculadora: se aproxima con Pipedrive (dato conservador). Da US$ 9 igual.
-- Se quitó el formulario de interesados «enterprise» y el paquete de +500 comandos de la landing: no están en el catálogo Meta-first.
+- Se quitó el formulario de interesados «enterprise». El paquete de +500 preguntas por US$ 8 **volvió** (decisión del 15-sep) y enterprise quedó como enlace «¿Más de 20 cuentas publicitarias? Habla con nosotros» (`mailto:hola@comando.pro`; no hay número de WhatsApp de ventas).
 - Sin JS, las tarjetas de precios se reemplazan por una línea `<noscript>` con los cuatro precios (segunda copia de los números, solo para ese caso).
 - Las cifras dentro de las mini-visualizaciones de métricas pasaron de texto SVG a leyendas HTML para que se traduzcan.
 
 **Pendiente para lanzar (fase F):**
 1. Desplegar el motor de la fase E (catálogo Meta-first, módulo CRM, `GET /v1/public/crm-quote`) y que `node tooling/plans-check.mjs` cuadre contra producción (hoy falla: el motor no publica analista/equipo/agencia).
 2. Precios de Stripe para Analista, Equipo y Agencia (mensual y anual) y para el módulo CRM.
-3. App Review de Meta con `ads_read`.
+3. ~~App Review de Meta con `ads_read`~~ — resuelto: la app ya lo tiene (15-sep).
 4. Alta Meta primero en el panel (hoy pide CRM en el paso 3; fuera del alcance de la fase D).
 5. Reporte de Meta programado por WhatsApp (en la web va como «Próximamente»).
 6. Revisión de Sergio en local; después, empujar con la cadena `?v=` registrada.
