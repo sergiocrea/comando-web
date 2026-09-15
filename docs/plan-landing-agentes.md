@@ -3,7 +3,7 @@
 Iniciado el 15-sep-2026. Documento vivo: cada iteración marca lo decidido en §8.
 Rama: `operador/landing-agentes` (desde `operador/web`). Nada se empuja a `main` (= producción) sin OK.
 
-**Estado:** fase A (mensaje y estructura) con textos cerrados para revisión · fase B (precios) pendiente.
+**Estado:** fase A (mensaje y estructura) aprobada · fase B (precios) cerrada · siguiente: fase C (diseño).
 
 ---
 
@@ -125,7 +125,25 @@ Referencia: adadvisor.ai («Autopilot for all your paid advertising», agentes c
 - **Eyebrow:** PRECIOS
 - **Título:** Menos de lo que cuesta un almuerzo.
 - **Bajada:** Una agencia te cobra el 15 % de lo que inviertes. Comando, un precio fijo.
-- **Tarjetas:** _se cierran en la fase B_ (punto de partida: Gratis · Analista 9 USD · Equipo 19–29 USD).
+- **Tarjetas (fase B cerrada el 15-sep; el plan lo define la cantidad de cuentas publicitarias de Meta, no las campañas):**
+
+| | **Gratis** | **Analista** | **Equipo** ★ | **Agencia** |
+|---|---|---|---|---|
+| Precio | 0 | **US$ 9/mes** | **US$ 29/mes** | **US$ 49/mes** |
+| Para quién | Probar con tu cuenta | Un negocio que pauta | Varias marcas o equipo | Agencia con clientes |
+| Resultado | Pregúntale a tus anuncios | Tu analista y estratega cada día | Todo tu marketing en un chat | Todos tus clientes en un chat |
+| Cuentas publicitarias de Meta | 1 | 2 | 10 | 20 |
+| Datos actualizados | 1 vez al día | Cada hora | Cada hora | Cada hora |
+| Preguntas al mes | 30 | 300 | 1.500 | 3.000 |
+| Analista (métricas) | ✓ | ✓ | ✓ | ✓ |
+| Estratega (diagnóstico con semáforo) | ✓ | ✓ | ✓ | ✓ |
+| Notas de voz | ✓ | ✓ | ✓ | ✓ |
+| Comprador de medios / Atribución | Próximamente | Próximamente | Próximamente (primero) | Próximamente (primero) |
+| Costo estimado / margen | ≈ 0,02 USD | 2,01 · **78 %** | 5,65 · **81 %** | 9,32 · **81 %** |
+
+Costos de `modelo-meta-simple.xlsx` (sincronización cada hora sin Temporal, capas 2 y 3 incluidas como estimado, Stripe e impuestos; uso del 60 % del cupo).
+Una cuenta publicitaria extra cuesta ≈ 0,014 USD/mes; de 15 a 100 campañas por cuenta, ≈ 0,09 USD/mes.
+- **Debajo de las tarjetas:** «¿Tienes CRM? Suma *Conversa con tu CRM* desde US$ 9 al mes.» (enlace a §2.8)
 
 ### 2.8 Conversa con tu CRM
 - **Eyebrow:** ¿TIENES CRM?
@@ -181,8 +199,8 @@ Referencia: adadvisor.ai («Autopilot for all your paid advertising», agentes c
 
 | Fase | Entregable | Revisión de Sergio | Estado |
 |---|---|---|---|
-| A · Mensaje y estructura | Textos finales y orden (§1–§2) | Titular, agentes, competencia, Google/TikTok | **Textos listos para revisión** |
-| B · Precios | Planes Meta + precio mínimo del módulo CRM + diagnóstico en Gratis + voz | Precios | Pendiente |
+| A · Mensaje y estructura | Textos finales y orden (§1–§2) | Titular, agentes, competencia, Google/TikTok | **Aprobada 15-sep** |
+| B · Precios | Planes Meta + precio mínimo del módulo CRM + diagnóstico en Gratis + voz | Precios | **Cerrada 15-sep** |
 | C · Diseño | Mocks de hero, agentes, métricas y casos (móvil y escritorio) | Estilo visual | Pendiente |
 | D · Implementación | Rama `operador/landing-agentes`, es/en/pt, comprobaciones | Revisión en local | Pendiente |
 | E · Motor | Catálogo Meta-first, alta Meta primero, diagnóstico en Gratis, reporte programado | Despliegue del motor | Pendiente |
@@ -218,6 +236,9 @@ Referencia: adadvisor.ai («Autopilot for all your paid advertising», agentes c
 | 15-sep | Agentes | **Analista, Estratega, Comprador de medios y Atribución**, por rol; los dos últimos con sello «Próximamente» (interpretación de «los tres con todo y atribución», por confirmar) |
 | 15-sep | Competencia | **Sin comparación** |
 | 15-sep | Google / TikTok | **Visibles como «Próximamente»** |
-| — | Precios Meta | _pendiente (fase B)_ |
-| — | Precio mínimo módulo CRM | _pendiente (fase B)_ |
-| — | Diagnóstico en Gratis / voz solo pago | _pendiente (fase B)_ |
+| 15-sep | Fase A | **Aprobada:** textos de §2 y tono; cuatro agentes confirmados; se mantiene «Desde US$ 9 al mes» en el hero; casos de §2.5 sin cambios |
+| 15-sep | Precios Meta | **Por cuentas publicitarias de Meta: Gratis (1) · Analista US$ 9 (2) · Equipo US$ 29 (10) · Agencia US$ 49 (20).** Aclarado: son cuentas publicitarias, no campañas; el costo casi no depende de ellas (≈ 0,014 USD por cuenta), la escalera es por valor |
+| 15-sep | Motor | Los nombres y precios Meta-first **no coinciden** con el catálogo de `operador/planes` (Asistente/Operador/Escala 9/29/79 centrados en CRM): hay que rehacer esa versión del catálogo en la fase E |
+| 15-sep | Diagnóstico (Estratega) en Gratis | **Sí** (sin IA, casi no cuesta; es el «aha») |
+| 15-sep | Notas de voz | **En todos los planes** (≈ 0,003 USD por gratis al mes) |
+| 15-sep | Módulo «Conversa con tu CRM» | **Desde US$ 9 al mes**; la calculadora sube el precio en CRM lentos o muy grandes |
