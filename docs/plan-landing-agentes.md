@@ -3,7 +3,7 @@
 Iniciado el 15-sep-2026. Documento vivo: cada iteración marca lo decidido en §8.
 Rama: `operador/landing-agentes` (desde `operador/web`). Nada se empuja a `main` (= producción) sin OK.
 
-**Estado:** fase A aprobada · fase B cerrada · fase C aprobada · siguiente: fase D (implementación) · fase E (motor) en curso en `operador/catalogo-meta`.
+**Estado:** fase A aprobada · fase B cerrada · fase C aprobada · fase D **lista para revisión en local** (§D) · fase E (motor) en curso en `operador/catalogo-meta`.
 
 ---
 
@@ -202,7 +202,7 @@ Una cuenta publicitaria extra cuesta ≈ 0,014 USD/mes; de 15 a 100 campañas po
 | A · Mensaje y estructura | Textos finales y orden (§1–§2) | Titular, agentes, competencia, Google/TikTok | **Aprobada 15-sep** |
 | B · Precios | Planes Meta + precio mínimo del módulo CRM + diagnóstico en Gratis + voz | Precios | **Cerrada 15-sep** |
 | C · Diseño | Mocks de hero, agentes, métricas y casos (móvil y escritorio) | Estilo visual | **Aprobada 15-sep** (§C) |
-| D · Implementación | Rama `operador/landing-agentes`, es/en/pt, comprobaciones | Revisión en local | Pendiente |
+| D · Implementación | Rama `operador/landing-agentes`, es/en/pt, comprobaciones | Revisión en local | **Lista para revisión en local** (§D) |
 | E · Motor | Catálogo Meta-first, alta Meta primero, diagnóstico en Gratis, reporte programado | Despliegue del motor | Pendiente |
 | F · Lanzamiento | Motor → web; App Review aprobado | OK final | Pendiente |
 
@@ -251,6 +251,7 @@ Una cuenta publicitaria extra cuesta ≈ 0,014 USD/mes; de 15 a 100 campañas po
 
 **Dónde:** `mocks/landing-agentes/` (`index.html`, `mocks.css`, `mocks.js`, arte SVG inline) · capturas en `mocks/landing-agentes/capturas/`.
 No toca las páginas de producción (`index.html`, `en/`, `pt/`, `js/`, `css/`).
+**Quitados del repo en la fase D:** la carpeta `mocks/` ya no existe; los mocks y sus capturas siguen en el historial (commit `5910a8c`).
 
 **Cómo abrirlo en local:**
 
@@ -291,3 +292,43 @@ con «Decisión») · por qué WhatsApp + franja de confianza · precios §2.7 �
 6. La prueba de 14 días del plan Equipo (decidida después de la fase B) aún no aparece en el hero ni en precios: ¿dónde se dice?
 
 **Desvíos respecto a §2:** sin eyebrows (ver arriba); los títulos de sección y textos son los de §2 sin cambios.
+
+---
+
+## D. Implementación (fase D, 15-sep)
+
+**Rama:** `operador/landing-agentes`, sin empujar. **Estado:** lista para revisión en local.
+
+**Cómo verla en local:**
+
+```sh
+cd ~/Documents/comando/comando-web && python3 -m http.server 8765
+# http://127.0.0.1:8765/      castellano (fuente)
+# http://127.0.0.1:8765/en/   inglés (generado)   · http://127.0.0.1:8765/pt/  portugués (generado)
+# http://127.0.0.1:8765/conectores.html  conectores con «Próximamente»
+```
+
+**Qué hay:**
+- `index.html` nueva en el orden de §1 (hero con chat animado, problema, equipo con scroll horizontal fijado, 7 métricas, 3 casos, por qué WhatsApp + confianza, precios, «Conversa con tu CRM» con calculadora, FAQ, CTA final, pie). Hojas y JS propios: `css/landing.css`, `js/landing.js`; GSAP + ScrollTrigger del repo. Sin Webflow ni preloader en la landing (conectores y legales siguen con los suyos).
+- Hero: nota «14 días de Equipo gratis · Sin tarjeta · Conecta Meta en 2 minutos». Precios: línea «Empiezas con 14 días del plan Equipo, sin tarjeta» y selector mensual/anual (anual = 10 meses).
+- `js/pricing.js`: única copia de los números (`PLAN_LADDER` free/analista/equipo/agencia, `TRIAL {14, equipo}`, `ADDONS.crm` desde US$ 9 variable, `CRM_QUOTE`), textos en es/en/pt. Enlaces de compra `/app/?plan=<código>&interval=monthly|annual`.
+- Calculadora CRM: tabla estática `docs/crm-precios.json` generada con la calculadora CRM → Meta (estrategia 3, mínimo US$ 9); con esa estrategia el costo es de centavos y todos los tramos dan US$ 9. Gancho marcado para `GET /v1/public/crm-quote`.
+- `tooling/plans-check.mjs`: contrato Meta-first (cuentas publicitarias, minutos de actualización, precios `month`/`year`, capacidades `coming_soon`, prueba, módulos) y forma vieja; `--fixture` contra `tooling/fixtures/public-plans-meta.json`.
+- Panel/registro: nombres Analista/Equipo/Agencia en es/en/pt (los códigos viejos siguen con su nombre), subtítulo del registro con la prueba de Equipo, datos de ejemplo del panel con la escalera nueva.
+- `conectores.html`: solo HubSpot, Salesforce y Google Sheets sin sello; el resto «Próximamente».
+- `tooling/i18n.mjs`: arreglado un fallo que duplicaba texto cuando una traducción llevaba «US$&nbsp;» (`$&` en el reemplazo).
+
+**Desvíos:**
+- Sin Lenis: el scroll fijado va con ScrollTrigger solo, como en los mocks aprobados.
+- Google Sheets no está en la tabla de proveedores de la calculadora: se aproxima con Pipedrive (dato conservador). Da US$ 9 igual.
+- Se quitó el formulario de interesados «enterprise» y el paquete de +500 comandos de la landing: no están en el catálogo Meta-first.
+- Sin JS, las tarjetas de precios se reemplazan por una línea `<noscript>` con los cuatro precios (segunda copia de los números, solo para ese caso).
+- Las cifras dentro de las mini-visualizaciones de métricas pasaron de texto SVG a leyendas HTML para que se traduzcan.
+
+**Pendiente para lanzar (fase F):**
+1. Desplegar el motor de la fase E (catálogo Meta-first, módulo CRM, `GET /v1/public/crm-quote`) y que `node tooling/plans-check.mjs` cuadre contra producción (hoy falla: el motor no publica analista/equipo/agencia).
+2. Precios de Stripe para Analista, Equipo y Agencia (mensual y anual) y para el módulo CRM.
+3. App Review de Meta con `ads_read`.
+4. Alta Meta primero en el panel (hoy pide CRM en el paso 3; fuera del alcance de la fase D).
+5. Reporte de Meta programado por WhatsApp (en la web va como «Próximamente»).
+6. Revisión de Sergio en local; después, empujar con la cadena `?v=` registrada.
