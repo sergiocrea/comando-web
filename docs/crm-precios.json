@@ -1,0 +1,117 @@
+{
+  "_about": "Tabla estática del módulo «Conversa con tu CRM» para la calculadora de la landing. Generada con calcularCrmMeta (comando-pro, rama operador/calculadora, libs/billing/src/lib/crm-meta-calculator.ts, el mismo cálculo que modelo-economico/build_calc_crm.py) con la estrategia 3 (buscar los leads de Meta en el CRM) y los valores por defecto del modelo, más el mínimo comercial de US$ 9. Google Sheets no está en la tabla de proveedores del modelo: se usa Pipedrive (1 valor por búsqueda) como aproximación conservadora. La web no la pide en tiempo real; cuando el motor publique GET /v1/public/crm-quote, la calculadora debe pasar a usarlo.",
+  "generatedAt": "2026-09-15",
+  "strategy": 3,
+  "currency": "USD",
+  "minPrice": 9,
+  "contacts": [
+    1000,
+    5000,
+    10000,
+    25000,
+    50000,
+    100000,
+    200000
+  ],
+  "providers": {
+    "hubspot": {
+      "label": "HubSpot",
+      "modelProvider": "HubSpot",
+      "priceByCost": [
+        0.1399,
+        0.1399,
+        0.1399,
+        0.1399,
+        0.1399,
+        0.1399,
+        0.1399
+      ],
+      "price": [
+        9,
+        9,
+        9,
+        9,
+        9,
+        9,
+        9
+      ],
+      "waitMinutes": [
+        0.12,
+        0.12,
+        0.12,
+        0.12,
+        0.12,
+        0.12,
+        0.12
+      ]
+    },
+    "salesforce": {
+      "label": "Salesforce",
+      "modelProvider": "Salesforce",
+      "priceByCost": [
+        0.1395,
+        0.1395,
+        0.1395,
+        0.1395,
+        0.1395,
+        0.1395,
+        0.1395
+      ],
+      "price": [
+        9,
+        9,
+        9,
+        9,
+        9,
+        9,
+        9
+      ],
+      "waitMinutes": [
+        0.07,
+        0.07,
+        0.07,
+        0.07,
+        0.07,
+        0.07,
+        0.07
+      ]
+    },
+    "sheets": {
+      "label": "Google Sheets",
+      "modelProvider": "Pipedrive",
+      "priceByCost": [
+        0.3294,
+        0.3294,
+        0.3294,
+        0.3294,
+        0.3294,
+        0.3294,
+        0.3294
+      ],
+      "price": [
+        9,
+        9,
+        9,
+        9,
+        9,
+        9,
+        9
+      ],
+      "waitMinutes": [
+        11.25,
+        11.25,
+        11.25,
+        11.25,
+        11.25,
+        11.25,
+        11.25
+      ]
+    }
+  },
+  "soon": [
+    "Zoho CRM",
+    "Pipedrive",
+    "Kommo",
+    "HighLevel"
+  ]
+}

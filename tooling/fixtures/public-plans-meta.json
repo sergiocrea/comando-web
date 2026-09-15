@@ -1,0 +1,46 @@
+{
+  "_about": "Forma esperada de GET /v1/public/plans con el catálogo Meta-first (fase E, rama operador/catalogo-meta de comando-pro, migración 000173). Producción todavía sirve el catálogo viejo: `node tooling/plans-check.mjs --fixture` compara la página con esto.",
+  "plans": [
+    {
+      "code": "free", "displayName": "Gratis", "name": "Gratis", "billingInterval": "none",
+      "commandLimit": 30, "commandPeriod": "monthly", "commandBlocking": true, "currency": null, "amountMinor": null,
+      "prices": [],
+      "limits": { "commands": { "limit": 30, "period": "monthly", "blocking": true }, "adsAccounts": 1, "adsRefreshMinutes": 1440 },
+      "capabilities": { "adsRead": true, "adsDiagnosis": true, "voice": true, "mediaBuyer": "coming_soon", "attribution": "coming_soon", "googleAds": "coming_soon", "tiktokAds": "coming_soon" },
+      "trial": { "days": 14, "plan": "equipo" }
+    },
+    {
+      "code": "analista", "displayName": "Analista", "name": "Analista", "billingInterval": "monthly",
+      "commandLimit": 300, "commandPeriod": "monthly", "commandBlocking": false, "currency": "USD", "amountMinor": 900,
+      "prices": [
+        { "interval": "month", "currency": "USD", "amountMinor": 900, "status": "ready" },
+        { "interval": "year", "currency": "USD", "amountMinor": 9000, "status": "ready" }
+      ],
+      "limits": { "commands": { "limit": 300, "period": "monthly", "blocking": false }, "adsAccounts": 2, "adsRefreshMinutes": 60 },
+      "capabilities": { "adsRead": true, "adsDiagnosis": true, "voice": true, "mediaBuyer": "coming_soon", "attribution": "coming_soon", "googleAds": "coming_soon", "tiktokAds": "coming_soon" }
+    },
+    {
+      "code": "equipo", "displayName": "Equipo", "name": "Equipo", "billingInterval": "monthly",
+      "commandLimit": 1500, "commandPeriod": "monthly", "commandBlocking": false, "currency": "USD", "amountMinor": 2900,
+      "prices": [
+        { "interval": "month", "currency": "USD", "amountMinor": 2900, "status": "ready" },
+        { "interval": "year", "currency": "USD", "amountMinor": 29000, "status": "ready" }
+      ],
+      "limits": { "commands": { "limit": 1500, "period": "monthly", "blocking": false }, "adsAccounts": 10, "adsRefreshMinutes": 60 },
+      "capabilities": { "adsRead": true, "adsDiagnosis": true, "voice": true, "mediaBuyer": "coming_soon", "attribution": "coming_soon", "googleAds": "coming_soon", "tiktokAds": "coming_soon" }
+    },
+    {
+      "code": "agencia", "displayName": "Agencia", "name": "Agencia", "billingInterval": "monthly",
+      "commandLimit": 3000, "commandPeriod": "monthly", "commandBlocking": false, "currency": "USD", "amountMinor": 4900,
+      "prices": [
+        { "interval": "month", "currency": "USD", "amountMinor": 4900, "status": "ready" },
+        { "interval": "year", "currency": "USD", "amountMinor": 49000, "status": "ready" }
+      ],
+      "limits": { "commands": { "limit": 3000, "period": "monthly", "blocking": false }, "adsAccounts": 20, "adsRefreshMinutes": 60 },
+      "capabilities": { "adsRead": true, "adsDiagnosis": true, "voice": true, "mediaBuyer": "coming_soon", "attribution": "coming_soon", "googleAds": "coming_soon", "tiktokAds": "coming_soon" }
+    }
+  ],
+  "addons": [
+    { "code": "crm", "name": "Conversa con tu CRM", "pricing": "variable", "priceFrom": { "currency": "USD", "amountMinor": 900 } }
+  ]
+}
