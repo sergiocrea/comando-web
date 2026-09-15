@@ -17,7 +17,7 @@ export const MOCK = {
     status: 'ok',
     tenantId: 'tenant-demo',
     operatorId: 'op-demo',
-    plan: 'operador',
+    plan: 'equipo',
     role: 'owner',
     locale: 'es',
     name: 'Sergio',
@@ -44,7 +44,7 @@ export const MOCK = {
   ],
 
   quota: {
-    plan: { code: 'operador', name: 'Operador', interval: 'monthly', price: { amountMinor: 2900, currency: 'USD', source: 'subscription' } },
+    plan: { code: 'equipo', name: 'Equipo', interval: 'monthly', price: { amountMinor: 2900, currency: 'USD', source: 'subscription' } },
     subscription: { provider: 'stripe', status: 'active', canChangePlan: true, hasPortal: true },
     addons: [{ code: 'extra_commands_500', name: '+500 comandos', units: 500, price: { amountMinor: 800, currency: 'USD' } }],
     period: { key: '2026-09', kind: 'monthly', start: at(-12), end: at(18), resetAt: at(18) },
@@ -61,17 +61,18 @@ export const MOCK = {
   },
 
   plans: [
-    // La escalera del 14-sep-2026 (operador de ventas y marketing). Lleva los
-    // campos del contrato viejo (`commandLimit`…) y los del nuevo (`limits`,
-    // `trial`), porque el panel lee los dos mientras el motor cambia.
-    { code: 'free', displayName: 'Gratis', billingInterval: 'none', currency: null, amountMinor: null, commandLimit: 30, contactLimit: 1_000, connectionLimit: 1,
-      limits: { commands: { limit: 30, period: 'monthly', blocking: true }, mirrorRecords: 1_000, crmAccounts: 1, adsAccounts: 1, bulkMaxRecords: 10 }, trial: { days: 14, plan: 'operador' } },
-    { code: 'asistente', displayName: 'Asistente', billingInterval: 'monthly', currency: 'USD', amountMinor: 900, commandLimit: 300, contactLimit: 10_000, connectionLimit: 1,
-      limits: { commands: { limit: 300, period: 'monthly', blocking: false }, mirrorRecords: 10_000, crmAccounts: 1, adsAccounts: 1, bulkMaxRecords: 100 } },
-    { code: 'operador', displayName: 'Operador', billingInterval: 'monthly', currency: 'USD', amountMinor: 2900, commandLimit: 1500, contactLimit: 50_000, connectionLimit: 2,
-      limits: { commands: { limit: 1500, period: 'monthly', blocking: false }, mirrorRecords: 50_000, crmAccounts: 2, adsAccounts: 3, bulkMaxRecords: null } },
-    { code: 'escala', displayName: 'Escala', billingInterval: 'monthly', currency: 'USD', amountMinor: 7900, commandLimit: 5000, contactLimit: 200_000, connectionLimit: null,
-      limits: { commands: { limit: 5000, period: 'monthly', blocking: false }, mirrorRecords: 200_000, crmAccounts: null, adsAccounts: null, bulkMaxRecords: null } },
+    // La escalera Meta-first del 15-sep-2026 (docs/plan-landing-agentes.md §2.7):
+    // por cuentas publicitarias, prueba de 14 días de Equipo. Lleva los campos
+    // del contrato viejo (`commandLimit`…) y los del nuevo (`limits`, `trial`),
+    // porque el panel lee los dos mientras el motor cambia.
+    { code: 'free', displayName: 'Gratis', billingInterval: 'none', currency: null, amountMinor: null, commandLimit: 30, contactLimit: null, connectionLimit: null,
+      limits: { commands: { limit: 30, period: 'monthly', blocking: true }, adsAccounts: 1, adsRefreshMinutes: 1440 }, trial: { days: 14, plan: 'equipo' } },
+    { code: 'analista', displayName: 'Analista', billingInterval: 'monthly', currency: 'USD', amountMinor: 900, commandLimit: 300, contactLimit: null, connectionLimit: null,
+      limits: { commands: { limit: 300, period: 'monthly', blocking: false }, adsAccounts: 2, adsRefreshMinutes: 60 } },
+    { code: 'equipo', displayName: 'Equipo', billingInterval: 'monthly', currency: 'USD', amountMinor: 2900, commandLimit: 1500, contactLimit: null, connectionLimit: null,
+      limits: { commands: { limit: 1500, period: 'monthly', blocking: false }, adsAccounts: 10, adsRefreshMinutes: 60 } },
+    { code: 'agencia', displayName: 'Agencia', billingInterval: 'monthly', currency: 'USD', amountMinor: 4900, commandLimit: 3000, contactLimit: null, connectionLimit: null,
+      limits: { commands: { limit: 3000, period: 'monthly', blocking: false }, adsAccounts: 20, adsRefreshMinutes: 60 } },
   ],
 
   /* Sales intelligence: recomendaciones vigentes (skill deal_health / next_best_action). */

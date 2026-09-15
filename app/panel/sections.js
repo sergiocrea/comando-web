@@ -7,7 +7,7 @@
    - una sola acción principal por fila; lo demás va dentro de «más»;
    - vocabulario del operador (plata en juego, parado, sin dueño, repetidos), nunca del sistema. */
 
-import { isPending } from './api.js?v=17';
+import { isPending } from './api.js?v=18';
 import { crmBlock, crmActions, whatsappStep, NAMES as PROVIDER_NAMES } from './setup.js?v=12';
 import {
   esc, num, money, pct, fmtTime, fmtDate, fmtDateTime, monthName, dayLabel, sameDay, rel, isToday, isPast, isoDay,
@@ -15,8 +15,8 @@ import {
   personName, personEmail, highValueAmount, SYMBOL, setAccountCurrency,
 } from './ui.js?v=12';
 import { t, tn, localeTag } from '../i18n.js?v=1';
-import { chatActions, awaitsWord } from './chat.js?v=4';
-import { hoja } from './hoja.js?v=4';
+import { chatActions, awaitsWord } from './chat.js?v=5';
+import { hoja } from './hoja.js?v=5';
 
 /** Renderiza una parte según el estado de su dato. */
 function part(v, fn, opts = {}) {
@@ -875,7 +875,7 @@ function q3card(m) {
   if (a.available === false && a.reason === 'plan') {
     /* El plan que desbloquea el diagnóstico llega como código del motor
        (`operador`); se enseña con su nombre, en el idioma del panel. */
-    const unlocks = { asistente: 'plan.asistente', operador: 'plan.operador', escala: 'plan.escala', pro: 'plan.pro', business: 'plan.enterprise', enterprise: 'plan.enterprise' }[String(a.requiredPlan || 'operador').toLowerCase()];
+    const unlocks = { analista: 'plan.analista', equipo: 'plan.equipo', agencia: 'plan.agencia', asistente: 'plan.asistente', operador: 'plan.operador', escala: 'plan.escala', pro: 'plan.pro', business: 'plan.enterprise', enterprise: 'plan.enterprise' }[String(a.requiredPlan || 'operador').toLowerCase()];
     body = `<p class="note accent">${esc(t('mk.q3.locked', { plan: unlocks ? t(unlocks) : String(a.requiredPlan) }))}</p>`;
   } else if (a.available === false) {
     if (a.reason === 'sin_conexion') return '';
@@ -1304,7 +1304,7 @@ const cuenta = {
   load: (api) => ({ me: api.me(), quota: api.quota(), plans: api.publicPlans(), connections: api.connections(), sheets: api.sheets(), meta: api.metaStatus(), team: api.team(), agent: api.agent(), health: api.health(), history: api.history() }),
   view(d, ctx) {
     const me = val(d.me, {});
-    const PLAN = { gratis: 'plan.gratis', free: 'plan.gratis', asistente: 'plan.asistente', operador: 'plan.operador', escala: 'plan.escala', basico: 'plan.basico', starter: 'plan.starter', pro: 'plan.pro', enterprise: 'plan.enterprise' };
+    const PLAN = { gratis: 'plan.gratis', free: 'plan.gratis', analista: 'plan.analista', equipo: 'plan.equipo', agencia: 'plan.agencia', asistente: 'plan.asistente', operador: 'plan.operador', escala: 'plan.escala', basico: 'plan.basico', starter: 'plan.starter', pro: 'plan.pro', enterprise: 'plan.enterprise' };
     const planName = (raw) => { const key = PLAN[String(raw || '').toLowerCase()]; return key ? t(key) : raw || t('common.dash'); };
     const logo = (p) => `<img class="logo-sm" src="../../assets/img/logos/${p === 'google-ads' ? 'automation' : esc(p)}.svg" alt="">`;
 

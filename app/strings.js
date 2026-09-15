@@ -775,7 +775,7 @@ register({
     'cuenta.noSessionInMock': 'En modo de prueba no hay sesión.',
     'cuenta.inviteToast': 'Cada persona se registra con su propio WhatsApp en comando.pro/app. Te copiamos el enlace.',
     'cuenta.waLinked': 'WhatsApp vinculado.',
-    'plan.gratis': 'Gratis', 'plan.asistente': 'Asistente', 'plan.operador': 'Operador', 'plan.escala': 'Escala', 'plan.basico': 'Básico', 'plan.starter': 'Starter', 'plan.pro': 'Pro', 'plan.enterprise': 'Enterprise',
+    'plan.gratis': 'Gratis', 'plan.analista': 'Analista', 'plan.equipo': 'Equipo', 'plan.agencia': 'Agencia', 'plan.asistente': 'Asistente', 'plan.operador': 'Operador', 'plan.escala': 'Escala', 'plan.basico': 'Básico', 'plan.starter': 'Starter', 'plan.pro': 'Pro', 'plan.enterprise': 'Enterprise',
   },
 });
 
@@ -1088,7 +1088,7 @@ register({
     'cuenta.noSessionInMock': 'There is no session in demo mode.',
     'cuenta.inviteToast': 'Each person signs up with their own WhatsApp at comando.pro/app. We copied the link for you.',
     'cuenta.waLinked': 'WhatsApp linked.',
-    'plan.gratis': 'Free', 'plan.asistente': 'Assistant', 'plan.operador': 'Operator', 'plan.escala': 'Scale', 'plan.basico': 'Basic', 'plan.starter': 'Starter', 'plan.pro': 'Pro', 'plan.enterprise': 'Enterprise',
+    'plan.gratis': 'Free', 'plan.analista': 'Analyst', 'plan.equipo': 'Team', 'plan.agencia': 'Agency', 'plan.asistente': 'Assistant', 'plan.operador': 'Operator', 'plan.escala': 'Scale', 'plan.basico': 'Basic', 'plan.starter': 'Starter', 'plan.pro': 'Pro', 'plan.enterprise': 'Enterprise',
   },
 });
 
@@ -1401,7 +1401,7 @@ register({
     'cuenta.noSessionInMock': 'No modo de teste não há sessão.',
     'cuenta.inviteToast': 'Cada pessoa se cadastra com o próprio WhatsApp em comando.pro/app. Copiamos o link para você.',
     'cuenta.waLinked': 'WhatsApp vinculado.',
-    'plan.gratis': 'Grátis', 'plan.asistente': 'Assistente', 'plan.operador': 'Operador', 'plan.escala': 'Escala', 'plan.basico': 'Básico', 'plan.starter': 'Starter', 'plan.pro': 'Pro', 'plan.enterprise': 'Enterprise',
+    'plan.gratis': 'Grátis', 'plan.analista': 'Analista', 'plan.equipo': 'Equipe', 'plan.agencia': 'Agência', 'plan.asistente': 'Assistente', 'plan.operador': 'Operador', 'plan.escala': 'Escala', 'plan.basico': 'Básico', 'plan.starter': 'Starter', 'plan.pro': 'Pro', 'plan.enterprise': 'Enterprise',
   },
 });
 
@@ -1590,8 +1590,8 @@ register({
     'clerk.email': 'Correo electrónico', 'clerk.emailShort': 'Correo', 'clerk.emailPlaceholder': 'tu@correo.com',
     'clerk.firstName': 'Nombre', 'clerk.lastName': 'Apellido', 'clerk.optional': 'Opcional', 'clerk.back': 'Volver',
     'clerk.signUpTitle': 'Crea tu cuenta gratis',
-    'clerk.signUpSub': '{d} días de Operador, sin tarjeta. Después sigues gratis con {n} comandos al mes.',
-    'clerk.signUpSubNoLimit': 'Empiezas con Operador completo, sin tarjeta. Después sigues gratis.',
+    'clerk.signUpSub': '{d} días del plan Equipo, sin tarjeta. Después sigues gratis con {n} preguntas al mes.',
+    'clerk.signUpSubNoLimit': 'Empiezas con el plan Equipo, sin tarjeta. Después sigues gratis.',
     'clerk.haveAccount': '¿Ya tienes cuenta?', 'clerk.signInLink': 'Inicia sesión',
     'clerk.checkEmail': 'Revisa tu correo', 'clerk.codeSent': 'Escribe el código que te enviamos',
     'clerk.codeTitle': 'Código de verificación', 'clerk.codeSub': 'Escribe el código enviado a tu correo',
@@ -1625,8 +1625,8 @@ register({
     'clerk.email': 'Email address', 'clerk.emailShort': 'Email', 'clerk.emailPlaceholder': 'you@email.com',
     'clerk.firstName': 'First name', 'clerk.lastName': 'Last name', 'clerk.optional': 'Optional', 'clerk.back': 'Back',
     'clerk.signUpTitle': 'Create your free account',
-    'clerk.signUpSub': '{d} days of Operator, no card. Then you stay free with {n} commands a month.',
-    'clerk.signUpSubNoLimit': 'You start with the full Operator plan, no card. Then you stay free.',
+    'clerk.signUpSub': '{d} days of the Team plan, no card. Then you stay free with {n} questions a month.',
+    'clerk.signUpSubNoLimit': 'You start with the Team plan, no card. Then you stay free.',
     'clerk.haveAccount': 'Already have an account?', 'clerk.signInLink': 'Sign in',
     'clerk.checkEmail': 'Check your email', 'clerk.codeSent': 'Type the code we sent you',
     'clerk.codeTitle': 'Verification code', 'clerk.codeSub': 'Type the code sent to your email',
@@ -1660,8 +1660,8 @@ register({
     'clerk.email': 'E-mail', 'clerk.emailShort': 'E-mail', 'clerk.emailPlaceholder': 'voce@email.com',
     'clerk.firstName': 'Nome', 'clerk.lastName': 'Sobrenome', 'clerk.optional': 'Opcional', 'clerk.back': 'Voltar',
     'clerk.signUpTitle': 'Crie sua conta grátis',
-    'clerk.signUpSub': '{d} dias de Operador, sem cartão. Depois você continua grátis com {n} comandos por mês.',
-    'clerk.signUpSubNoLimit': 'Você começa com o Operador completo, sem cartão. Depois continua grátis.',
+    'clerk.signUpSub': '{d} dias do plano Equipe, sem cartão. Depois você continua grátis com {n} perguntas por mês.',
+    'clerk.signUpSubNoLimit': 'Você começa com o plano Equipe, sem cartão. Depois continua grátis.',
     'clerk.haveAccount': 'Já tem conta?', 'clerk.signInLink': 'Entrar',
     'clerk.checkEmail': 'Veja seu e-mail', 'clerk.codeSent': 'Escreva o código que enviamos',
     'clerk.codeTitle': 'Código de verificação', 'clerk.codeSub': 'Escreva o código enviado para seu e-mail',
