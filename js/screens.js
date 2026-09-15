@@ -192,7 +192,8 @@
   const open = (card) => {
     const img = card.querySelector('.connector-logo'); const h = card.querySelector('.card_specification-heading'); const d = card.querySelector('.card_specification-description');
     logo.src = img ? img.src : ''; name.textContent = h ? h.textContent.trim() : ''; desc.textContent = d ? Array.from(d.childNodes).filter((n) => !(n.nodeType === 1 && n.classList.contains('connector-chip'))).map((n) => n.textContent).join('').trim() : '';
-    const chip = card.querySelector('.connector-chip'); chipBox.innerHTML = chip ? chip.outerHTML : ''; chipBox.hidden = !chip;
+    // El sello de estado («Próximamente» o «Disponible con el módulo CRM») también se lee en la ficha.
+    const chip = card.querySelector('.connector-chip, .connector-soon, .connector-available'); chipBox.innerHTML = chip ? chip.outerHTML : ''; chipBox.hidden = !chip;
     const example = card.getAttribute('data-example'); ex.hidden = !example; bubble.textContent = example ? '«' + example + '»' : '';
     last = card; sheet.hidden = false; requestAnimationFrame(() => sheet.classList.add('is-open')); document.body.classList.add('sheet-open');
     sheet.querySelector('.connector-sheet-close').focus();
