@@ -3,7 +3,7 @@
 Iniciado el 15-sep-2026. Documento vivo: cada iteración marca lo decidido en §8.
 Rama: `operador/landing-agentes` (desde `operador/web`). Nada se empuja a `main` (= producción) sin OK.
 
-**Estado:** fase A (mensaje y estructura) aprobada · fase B (precios) cerrada · siguiente: fase C (diseño).
+**Estado:** fase A aprobada · fase B cerrada · fase C aprobada · siguiente: fase D (implementación) · fase E (motor) en curso en `operador/catalogo-meta`.
 
 ---
 
@@ -201,7 +201,7 @@ Una cuenta publicitaria extra cuesta ≈ 0,014 USD/mes; de 15 a 100 campañas po
 |---|---|---|---|
 | A · Mensaje y estructura | Textos finales y orden (§1–§2) | Titular, agentes, competencia, Google/TikTok | **Aprobada 15-sep** |
 | B · Precios | Planes Meta + precio mínimo del módulo CRM + diagnóstico en Gratis + voz | Precios | **Cerrada 15-sep** |
-| C · Diseño | Mocks de hero, agentes, métricas y casos (móvil y escritorio) | Estilo visual | **Mocks listos para revisión** (§C) |
+| C · Diseño | Mocks de hero, agentes, métricas y casos (móvil y escritorio) | Estilo visual | **Aprobada 15-sep** (§C) |
 | D · Implementación | Rama `operador/landing-agentes`, es/en/pt, comprobaciones | Revisión en local | Pendiente |
 | E · Motor | Catálogo Meta-first, alta Meta primero, diagnóstico en Gratis, reporte programado | Despliegue del motor | Pendiente |
 | F · Lanzamiento | Motor → web; App Review aprobado | OK final | Pendiente |
@@ -242,6 +242,7 @@ Una cuenta publicitaria extra cuesta ≈ 0,014 USD/mes; de 15 a 100 campañas po
 | 15-sep | Diagnóstico (Estratega) en Gratis | **Sí** (sin IA, casi no cuesta; es el «aha») |
 | 15-sep | Notas de voz | **En todos los planes** (≈ 0,003 USD por gratis al mes) |
 | 15-sep | Módulo «Conversa con tu CRM» | **Desde US$ 9 al mes**; la calculadora sube el precio en CRM lentos o muy grandes |
+| 15-sep | Diseño (fase C) | **Aprobado:** botones de acción en **verde WhatsApp** (`#00a884`); **7 tarjetas de métricas**; agentes con **iconos simples** (estilo producto real, sin personajes); **precios y CRM en fondo claro**. Se mantienen sin eyebrows |
 | 15-sep | Prueba de 14 días | **Del plan Equipo** («Equipo, déjalo así»); al terminar, Gratis. «Operador» ya no es un plan. Propuesta para la web (pendiente de revisión en fase C): nota del hero «14 días de Equipo gratis · Sin tarjeta · Conecta Meta en 2 minutos» y una línea sobre las tarjetas de precios «Empiezas con 14 días del plan Equipo, sin tarjeta» |
 
 ---
