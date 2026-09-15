@@ -187,7 +187,7 @@ Una cuenta publicitaria extra cuesta ≈ 0,014 USD/mes; de 15 a 100 campañas po
 | ~~App Review Meta (`ads_read`)~~ | **Resuelto 15-sep:** la app ya tiene `ads_read` aprobado | — (`ads_management` solo para el Comprador de medios, más adelante) |
 | Planes Meta-first en el motor | `operador/planes` tiene planes centrados en CRM | Nueva versión del catálogo |
 | Módulo CRM variable | No existe cobro de add-ons recurrentes | Módulo en catálogo y Stripe |
-| Alta Meta-first | El panel pide CRM en el paso 3 | Meta primero, CRM opcional |
+| ~~Alta Meta-first~~ | **Hecho 15-sep** (`operador/alta-meta`): el paso 3 del panel es Meta Ads, con «Saltar por ahora»; el CRM queda en Cuenta como módulo | — |
 | Diagnóstico en Gratis | Hoy Gratis solo da números; el Estratega aparece como disponible | Decidir en fase B |
 | Reporte programado de Meta | Las reglas no incluyen MARKETING_REPORT | Próximamente (así va en §2.6) o construir |
 | Notas de voz | Costeo supuso solo pago; la web las muestra | Decidir en fase B |
@@ -329,9 +329,9 @@ cd ~/Documents/comando/comando-web && python3 -m http.server 8765
 - Las cifras dentro de las mini-visualizaciones de métricas pasaron de texto SVG a leyendas HTML para que se traduzcan.
 
 **Pendiente para lanzar (fase F):**
-1. Desplegar el motor de la fase E (catálogo Meta-first, módulo CRM, `GET /v1/public/crm-quote`) y que `node tooling/plans-check.mjs` cuadre contra producción (hoy falla: el motor no publica analista/equipo/agencia).
+1. ~~Desplegar el motor de la fase E~~ — hecho 15-sep (comando-pro `3baf61f`): `node tooling/plans-check.mjs` cuadra contra producción y la landing está publicada.
 2. Precios de Stripe para Analista, Equipo y Agencia (mensual y anual) y para el módulo CRM.
 3. ~~App Review de Meta con `ads_read`~~ — resuelto: la app ya lo tiene (15-sep).
-4. Alta Meta primero en el panel (hoy pide CRM en el paso 3; fuera del alcance de la fase D).
+4. ~~Alta Meta primero en el panel~~ — hecho 15-sep en `operador/alta-meta`: tras WhatsApp, el paso 3 es Meta Ads (conectar o saltar); solo a quien no tiene Meta ni CRM, y no interrumpe la vuelta de Meta, de un pago o un plan elegido. Probado en `?mock=1&crm=sin&mk=sin` (es/en/pt, escritorio y móvil).
 5. Reporte de Meta programado por WhatsApp (en la web va como «Próximamente»).
 6. Revisión de Sergio en local; después, empujar con la cadena `?v=` registrada.

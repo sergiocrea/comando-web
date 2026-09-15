@@ -7,16 +7,16 @@
    - una sola acción principal por fila; lo demás va dentro de «más»;
    - vocabulario del operador (plata en juego, parado, sin dueño, repetidos), nunca del sistema. */
 
-import { isPending } from './api.js?v=18';
-import { crmBlock, crmActions, whatsappStep, NAMES as PROVIDER_NAMES } from './setup.js?v=12';
+import { isPending } from './api.js?v=19';
+import { crmBlock, crmActions, whatsappStep, NAMES as PROVIDER_NAMES } from './setup.js?v=13';
 import {
   esc, num, money, pct, fmtTime, fmtDate, fmtDateTime, monthName, dayLabel, sameDay, rel, isToday, isPast, isoDay,
   wa, waBtn, waLink, askLine, chip, statusChip, bar, spark, kpi, card, row, moreBox, empty, soon, skeleton, toast, preguntar, ICON, SIGNAL_PHRASE,
   personName, personEmail, highValueAmount, SYMBOL, setAccountCurrency,
 } from './ui.js?v=12';
 import { t, tn, localeTag } from '../i18n.js?v=1';
-import { chatActions, awaitsWord } from './chat.js?v=5';
-import { hoja } from './hoja.js?v=5';
+import { chatActions, awaitsWord } from './chat.js?v=6';
+import { hoja } from './hoja.js?v=6';
 
 /** Renderiza una parte según el estado de su dato. */
 function part(v, fn, opts = {}) {

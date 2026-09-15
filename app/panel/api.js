@@ -158,6 +158,8 @@ export function createMockApi() {
   else if (source === 'account') { me.currency = 'USD'; me.currencySource = 'account'; }
   else if (source === 'crm') { me.currency = 'PEN'; me.currencySource = 'crm'; }
   if (params.get('rol')) me.role = params.get('rol');
+  // `&crm=sin`: una cuenta Meta primero, sin CRM. Con `&mk=sin` aparece el paso 3.
+  if (params.get('crm') === 'sin') me.crmConnected = false;
   /* El «worker» de mentira, para poder ver el ciclo entero de la consola sin
      engine: encola, tarda un par de segundos en planear, y una pregunta se
      responde sola mientras que una escritura queda esperando el CONFIRMAR. */

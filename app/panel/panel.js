@@ -6,12 +6,12 @@
      aún no exista en el engine no tumba la página.
    - Tres piezas fijas: el menú arriba, la página en el centro y el chat con
      Comando a la derecha (en móvil, un cajón que se abre desde la barra de abajo). */
-import { createApi, createMockApi } from './api.js?v=18';
-import { SECTIONS, globalActions } from './sections.js?v=29';
-import { chatView, paintChat, loadHistory, openChat, closeChat, chatPreference } from './chat.js?v=5';
-import { whatsappStep, resumePendingConnection } from './setup.js?v=12';
+import { createApi, createMockApi } from './api.js?v=19';
+import { SECTIONS, globalActions } from './sections.js?v=30';
+import { chatView, paintChat, loadHistory, openChat, closeChat, chatPreference } from './chat.js?v=6';
+import { whatsappStep, metaStep, metaStepPending, resumePendingConnection } from './setup.js?v=13';
 import { esc, setWaBase, setAccountCurrency, wa, skeleton, toast, ICON, personName, isToday, isPast } from './ui.js?v=12';
-import '../strings.js?v=21';
+import '../strings.js?v=22';
 import { initLocale, adoptAccountLocale, mountLanguagePicker, onLocaleChange, locale, t } from '../i18n.js?v=1';
 
 initLocale();
@@ -216,18 +216,39 @@ async function start() {
     $('wa-top').href = wa(t('wa.whatMattersToday'));
     const name = personName(me, ctx);
     $('user-button').innerHTML = `<span class="avatar" title="${esc(name)}">${esc(name.slice(0, 1).toUpperCase())}</span>`;
+    /* Paso 3, Meta primero: el catálogo cobra por cuentas publicitarias y el
+       CRM es un módulo aparte. Conectar lleva a Meta y vuelve con ?meta=…;
+       saltar se recuerda en este navegador y lleva a Cuenta. */
+    const showMetaStep = () => {
+      document.body.classList.add('is-setup');
+      metaStep($('page'), ctx, (outcome) => {
+        document.body.classList.remove('is-setup');
+        ctx.cache = {};
+        location.hash = outcome === 'connected' ? '#/marketing' : '#/cuenta';
+        route(true);
+      });
+    };
     const needsWa = !me.whatsapp || me.whatsapp.status !== 'verified' || params.get('wa') === 'pending';
     if (needsWa) {
       document.body.classList.add('is-setup');
-      whatsappStep($('page'), ctx, (s) => {
+      whatsappStep($('page'), ctx, async (s) => {
         document.body.classList.remove('is-setup');
         if (s.waLink || s.comandoNumber) setWaBase(s.waLink || 'https://wa.me/' + String(s.comandoNumber).replace(/\D/g, ''));
         toast(t('boot.waLinked'), 'ok');
         ctx.cache = {};
         mountChat();
-        location.hash = s.crmConnected ? '#/hoja' : '#/cuenta';
+        if (!s.crmConnected && metaStepPending(s, await ctx.api.metaStatus().catch(() => null))) { showMetaStep(); return; }
+        location.hash = s.crmConnected ? '#/hoja' : '#/marketing';
         route(true);
       });
+      return;
+    }
+    // Quien dejó el paso 3 a medias vuelve a él, salvo que llegue de Meta, de
+    // un pago o con un plan elegido en el landing: eso manda.
+    if (!me.crmConnected && !params.get('meta') && !params.get('plan') && !params.get('checkout')
+      && metaStepPending(me, await ctx.api.metaStatus().catch(() => null))) {
+      mountChat();
+      showMetaStep();
       return;
     }
     resumePendingConnection(ctx, () => { ctx.cache = {}; route(true); });

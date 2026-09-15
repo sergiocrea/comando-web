@@ -1,8 +1,13 @@
-/* Puesta en marcha dentro del panel: vincular WhatsApp y conectar el CRM.
+/* Puesta en marcha dentro del panel: vincular WhatsApp y conectar Meta Ads.
    Es el antiguo onboarding de /app/ (pasos 2 y 3) viviendo en el panel, para que el
    operador no aprenda dos pantallas distintas. El paso 1 (cuenta) es /app/ con Clerk.
 
+   Meta primero (15-sep-2026): el catálogo cobra por cuentas publicitarias y el CRM
+   es un módulo aparte, así que el paso 3 es Meta Ads y el CRM queda en Cuenta.
+
    - `whatsappStep(root, ctx, onVerified)`: número → código VERIFICAR → sondeo hasta verificado.
+   - `metaStep(root, ctx, onDone)`: conectar Meta Ads (vuelve con ?meta=…) o saltarlo.
+   - `metaStepPending(me, meta)`: ¿toca enseñar el paso 3?
    - `crmBlock(ctx, connections, sheets)`: rejilla de conectores con estado (HubSpot,
      Google Sheets, Salesforce listos; el resto «próximamente»), desconectar, recuperar, purgar.
    - `crmActions`: los manejadores de esos botones (OAuth por Nango en ventana emergente,
@@ -96,6 +101,53 @@ export function whatsappStep(root, ctx, onVerified) {
   });
   $('wa-change').addEventListener('click', () => { stop(); $('wa-verify').hidden = true; $('wa-form').hidden = false; });
   return stop;
+}
+
+/* ============================================================== Meta Ads */
+const META_SKIP_KEY = 'comando.metaStepSkipped';
+const metaSkipped = () => { try { return localStorage.getItem(META_SKIP_KEY) === '1'; } catch { return false; } };
+
+/* Solo a quien no tiene nada que medir todavía: sin Meta y sin CRM. Quien ya
+   conectó un CRM (clientes de antes del catálogo Meta-first) no recibe una
+   pantalla de bloqueo por algo que no le hace falta. `meta` sin `status` es un
+   engine sin el conector: tampoco se pregunta. */
+export function metaStepPending(me, meta) {
+  if (metaSkipped() || !me || me.crmConnected) return false;
+  return Boolean(meta && meta.status && meta.status !== 'active');
+}
+
+export function metaStep(root, ctx, onDone) {
+  root.innerHTML = `<div class="setup">
+    <div class="card setup-card">
+      <div class="setup-steps"><span class="is-done">${esc(t('setup.step1'))}</span><span class="is-done">${esc(t('setup.step2'))}</span><span class="is-on">${esc(t('setup.step3'))}</span></div>
+      <h2>${esc(t('setup.meta.title'))}</h2>
+      <p class="hint">${esc(t('setup.meta.hint'))}</p>
+      <div class="inline-list" style="margin-top:16px;align-items:center">
+        <button type="button" class="btn primary" id="meta-connect"><img class="logo-sm" src="../../assets/img/logos/meta.svg" alt=""> ${esc(t('mk.metaConnect'))}</button>
+        <button type="button" class="btn ghost" id="meta-skip">${esc(t('setup.meta.skip'))}</button>
+      </div>
+      <p class="hint" style="margin-top:12px">${esc(t('setup.meta.readOnly'))}</p>
+      <p class="form-msg bad" id="meta-error"></p>
+    </div>
+    <p class="hint" style="text-align:center">${esc(t('setup.meta.foot'))}</p>
+  </div>`;
+  const $ = (id) => root.querySelector('#' + id);
+  $('meta-connect').addEventListener('click', async (ev) => {
+    const btn = ev.currentTarget; btn.disabled = true; $('meta-error').textContent = '';
+    try {
+      if (ctx.api.mode === 'mock') { toast(t('mk.metaOk'), 'ok'); onDone('connected'); return; }
+      const r = await ctx.api.metaConnect();
+      // Meta devuelve al panel con ?meta=connected|failed y el arranque lo avisa.
+      if (r && r.authorizationUrl) { location.href = r.authorizationUrl; return; }
+      $('meta-error').textContent = t('mk.connectSoon');
+    } catch (e) {
+      $('meta-error').textContent = e.status === 404 || e.status === 501 ? t('mk.connectSoon') : e.message;
+    } finally { btn.disabled = false; }
+  });
+  $('meta-skip').addEventListener('click', () => {
+    try { localStorage.setItem(META_SKIP_KEY, '1'); } catch { /* sin almacenamiento: se volverá a preguntar */ }
+    onDone('skipped');
+  });
 }
 
 /* =================================================================== CRM */
