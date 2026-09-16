@@ -108,7 +108,7 @@ const PRICING_TEXT = {
     trial: () => 'Empiezas gratis, sin tarjeta',
     pack: (n, p) => `¿Te quedaste sin preguntas? Suma ${n} por ${p} para este mes.`,
     more: (n) => `¿Más de ${n} cuentas publicitarias?`, talk: 'Habla con nosotros',
-    caps: { analyst: 'Agente Analista', strategist: 'Agente Estratega', mediaBuyer: 'Agente Media Buyer', mediaBuyerLimited: 'Agente Media Buyer', mediaBuyerNote: (n) => `${n} cambios al mes`, attribution: 'Agente de Atribución', metrics: 'Métricas & KPIs', reports: { advanced: 'Reportes Avanzados', custom: 'Reportes Personalizados' } },
+    caps: { analyst: 'Agente Analista', strategist: 'Agente Estratega', mediaBuyer: 'Agente Media Buyer', mediaBuyerLimited: 'Agente Media Buyer', mediaBuyerNote: (n) => `${n} cambios al mes`, attribution: 'Agente de Atribución (CRM)', metrics: 'Métricas & KPIs', reports: { advanced: 'Reportes Avanzados', custom: 'Reportes Personalizados' } },
     limits: {
       accounts: (n, f) => (n === 1 ? '1 cuenta publicitaria' : `${f(n)} cuentas publicitarias`),
       refresh: (min) => (min >= 1440 ? 'Datos 1 vez al día' : 'Datos cada hora'),
@@ -128,7 +128,7 @@ const PRICING_TEXT = {
     trial: () => 'You start free, no card',
     pack: (n, p) => `Out of questions? Add ${n} for ${p} this month.`,
     more: (n) => `More than ${n} ad accounts?`, talk: 'Talk to us',
-    caps: { analyst: 'Analyst Agent', strategist: 'Strategist Agent', mediaBuyer: 'Media Buyer Agent', mediaBuyerLimited: 'Media Buyer Agent', mediaBuyerNote: (n) => `${n} changes a month`, attribution: 'Attribution Agent', metrics: 'Metrics & KPIs', reports: { advanced: 'Advanced Reports', custom: 'Custom Reports' } },
+    caps: { analyst: 'Analyst Agent', strategist: 'Strategist Agent', mediaBuyer: 'Media Buyer Agent', mediaBuyerLimited: 'Media Buyer Agent', mediaBuyerNote: (n) => `${n} changes a month`, attribution: 'Attribution Agent (CRM)', metrics: 'Metrics & KPIs', reports: { advanced: 'Advanced Reports', custom: 'Custom Reports' } },
     limits: {
       accounts: (n, f) => (n === 1 ? '1 ad account' : `${f(n)} ad accounts`),
       refresh: (min) => (min >= 1440 ? 'Data once a day' : 'Data every hour'),
@@ -148,7 +148,7 @@ const PRICING_TEXT = {
     trial: () => 'Você começa grátis, sem cartão',
     pack: (n, p) => `Ficou sem perguntas? Some ${n} por ${p} para este mês.`,
     more: (n) => `Mais de ${n} contas de anúncios?`, talk: 'Fale com a gente',
-    caps: { analyst: 'Agente Analista', strategist: 'Agente Estrategista', mediaBuyer: 'Agente Comprador de mídia', mediaBuyerLimited: 'Agente Comprador de mídia', mediaBuyerNote: (n) => `${n} alterações por mês`, attribution: 'Agente de Atribuição', metrics: 'Métricas e KPIs', reports: { advanced: 'Relatórios Avançados', custom: 'Relatórios Personalizados' } },
+    caps: { analyst: 'Agente Analista', strategist: 'Agente Estrategista', mediaBuyer: 'Agente Comprador de mídia', mediaBuyerLimited: 'Agente Comprador de mídia', mediaBuyerNote: (n) => `${n} alterações por mês`, attribution: 'Agente de Atribuição (CRM)', metrics: 'Métricas e KPIs', reports: { advanced: 'Relatórios Avançados', custom: 'Relatórios Personalizados' } },
     limits: {
       accounts: (n, f) => (n === 1 ? '1 conta de anúncios' : `${f(n)} contas de anúncios`),
       refresh: (min) => (min >= 1440 ? 'Dados 1 vez por dia' : 'Dados a cada hora'),
