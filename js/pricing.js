@@ -97,8 +97,8 @@ const ADDONS = {
 const PRICING_CONFIG = {
   annualMonths: 10,           // anual = 10 meses: 2 gratis
   signup: '/app/',
-  // Más cuentas que el plan mayor: sin formulario. No hay número de WhatsApp de ventas publicado; correo del sitio.
-  contact: 'mailto:hola@comando.pro?subject=M%C3%A1s%20cuentas%20publicitarias',
+  // Plan personalizado (más que el plan mayor): sin formulario. No hay número de WhatsApp de ventas publicado; correo del sitio.
+  contact: 'mailto:hola@comando.pro?subject=Plan%20personalizado',
 };
 
 /* Las palabras, por idioma. Los números entran por función para que cada idioma los
@@ -108,7 +108,7 @@ const PRICING_TEXT = {
     billing: 'Facturación', monthly: 'Mensual', annual: 'Anual', freeMonths: '2 meses gratis',
     perMonth: '/mes', perYear: (a) => `${a} al año`, recommended: 'Recomendado', soon: 'Próximamente',
     trial: () => 'Empiezas gratis, sin tarjeta',
-    more: (n) => `¿Más de ${n} cuentas publicitarias?`, talk: 'Habla con nosotros',
+    more: 'Plan personalizado', talk: 'Habla con nosotros',
     caps: { analyst: 'Agente Analista', strategist: 'Agente Estratega', mediaBuyer: 'Agente Media Buyer', mediaBuyerLimited: 'Agente Media Buyer', mediaBuyerNote: (n) => `${n} cambios al mes`, attribution: 'Agente de Atribución (CRM)', metrics: 'Métricas & KPIs', metricsBasic: 'básicas', reports: { advanced: 'Reportes Avanzados', custom: 'Reportes Personalizados' } },
     limits: {
       accounts: (n, f) => (n === 1 ? '1 cuenta publicitaria' : `${f(n)} cuentas publicitarias`),
@@ -128,7 +128,7 @@ const PRICING_TEXT = {
     billing: 'Billing', monthly: 'Monthly', annual: 'Annual', freeMonths: '2 months free',
     perMonth: '/mo', perYear: (a) => `${a} a year`, recommended: 'Recommended', soon: 'Coming soon',
     trial: () => 'You start free, no card',
-    more: (n) => `More than ${n} ad accounts?`, talk: 'Talk to us',
+    more: 'Custom plan', talk: 'Talk to us',
     caps: { analyst: 'Analyst Agent', strategist: 'Strategist Agent', mediaBuyer: 'Media Buyer Agent', mediaBuyerLimited: 'Media Buyer Agent', mediaBuyerNote: (n) => `${n} changes a month`, attribution: 'Attribution Agent (CRM)', metrics: 'Metrics & KPIs', metricsBasic: 'basic', reports: { advanced: 'Advanced Reports', custom: 'Custom Reports' } },
     limits: {
       accounts: (n, f) => (n === 1 ? '1 ad account' : `${f(n)} ad accounts`),
@@ -148,7 +148,7 @@ const PRICING_TEXT = {
     billing: 'Cobrança', monthly: 'Mensal', annual: 'Anual', freeMonths: '2 meses grátis',
     perMonth: '/mês', perYear: (a) => `${a} por ano`, recommended: 'Recomendado', soon: 'Em breve',
     trial: () => 'Você começa grátis, sem cartão',
-    more: (n) => `Mais de ${n} contas de anúncios?`, talk: 'Fale com a gente',
+    more: 'Plano personalizado', talk: 'Fale com a gente',
     caps: { analyst: 'Agente Analista', strategist: 'Agente Estrategista', mediaBuyer: 'Agente Comprador de mídia', mediaBuyerLimited: 'Agente Comprador de mídia', mediaBuyerNote: (n) => `${n} alterações por mês`, attribution: 'Agente de Atribuição (CRM)', metrics: 'Métricas e KPIs', metricsBasic: 'básicas', reports: { advanced: 'Relatórios Avançados', custom: 'Relatórios Personalizados' } },
     limits: {
       accounts: (n, f) => (n === 1 ? '1 conta de anúncios' : `${f(n)} contas de anúncios`),
@@ -221,7 +221,7 @@ const PRICING_TEXT = {
       </div>
       <div class="plans">${PLAN_LADDER.map((plan, i) => renderPlan(plan, i)).join('')}</div>
       <div class="pricing-extras">
-        <p>${esc(T.more(int(PLAN_LADDER[PLAN_LADDER.length - 1].adsAccounts)))} <a href="${PRICING_CONFIG.contact}">${esc(T.talk)}</a></p>
+        <p>${esc(T.more)} · <a href="${PRICING_CONFIG.contact}">${esc(T.talk)}</a></p>
       </div>`;
     root.querySelectorAll('.billing button').forEach((button) => button.addEventListener('click', () => {
       state.annual = button.dataset.annual === '1';
