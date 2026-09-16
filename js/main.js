@@ -687,14 +687,43 @@ function initHeroTyping() {
   if (!wrap || !out) return;
   const words = (wrap.dataset.words || '').split('|').map((w) => w.trim()).filter(Boolean);
   if (words.length && out.textContent.trim() !== words[0]) out.textContent = words[0];
+  /* La rueda: a la derecha de la palabra grande, la anterior arriba y la
+     siguiente abajo, pequeñas y desvanecidas, para que se lea que las tres se
+     turnan. Se pega al ancho REAL de la palabra visible (no al de la reserva),
+     y se esconde si no cabe en la línea (móvil, portugués). */
+  const wheel = wrap.querySelector('.b2b-hero-wheel');
+  const prev = wheel && wheel.querySelector('.is-prev');
+  const next = wheel && wheel.querySelector('.is-next');
   let i = 0;
-  const pintar = () => { out.textContent = words[i]; };
+  const colocar = () => {
+    if (!wheel) return;
+    // Solo el ANCHO sale del texto medido: la palabra puede estar a media
+    // animación (desplazada en vertical), y el alto lo da la caja de la línea.
+    const range = document.createRange();
+    range.selectNodeContents(out);
+    const rects = range.getClientRects();
+    if (!rects.length) return;
+    const box = wrap.getBoundingClientRect();
+    const left = rects[rects.length - 1].right - box.left;
+    wheel.style.setProperty('--wheel-left', `${left}px`);
+    const room = wrap.parentElement.getBoundingClientRect().right - box.left - left;
+    wheel.classList.toggle('is-hidden', rects.length > 1 || room < wheel.scrollWidth + 16);
+  };
+  const pintar = () => {
+    out.textContent = words[i];
+    if (prev) prev.textContent = words[(i - 1 + words.length) % words.length];
+    if (next) next.textContent = words[(i + 1) % words.length];
+    colocar();
+  };
   pintar();
+  if (wheel && window.ResizeObserver) new ResizeObserver(colocar).observe(wrap);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(colocar);
   // Sin rotación con movimiento reducido: se queda la primera palabra, entera.
   if (words.length < 2 || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   const FUNDIDO = 280;
   const relevo = () => {
     out.classList.add('is-changing');
+    if (wheel) wheel.classList.add('is-changing');
     setTimeout(() => {
       i = (i + 1) % words.length;
       pintar();
@@ -706,8 +735,10 @@ function initHeroTyping() {
          animación cuando la palabra se releva antes de que termine. */
       out.classList.remove('is-changing');
       out.classList.remove('is-entrando');
+      if (wheel) { wheel.classList.remove('is-changing'); wheel.classList.remove('is-entrando'); }
       void out.offsetWidth;
       out.classList.add('is-entrando');
+      if (wheel) wheel.classList.add('is-entrando');
       // Las tres se quedan lo mismo: ya no hay sello que leer en ninguna.
       setTimeout(relevo, 2600);
     }, FUNDIDO);
