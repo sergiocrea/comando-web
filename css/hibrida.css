@@ -114,19 +114,23 @@
 }
 /* Los logos van en un solo tono: la franja dice «hay empresas detrás», no
    compite con el titular. `brightness(0)` los deja en negro sea cual sea su
-   color y la opacidad los baja a gris. La altura se ajusta por marca para que
-   pesen lo mismo a la vista: un logotipo fino y ancho (Ripley, Falabella) pide
-   menos alto que uno compacto (AWS). */
-.hero-trust-row li { --h: 1.6rem; display: flex; align-items: center; gap: .45rem; height: 2.25rem; white-space: nowrap; opacity: .55; }
+   color y la opacidad los baja a gris. Ripley es la excepción: su logo ES la
+   caja negra con rayas, y en negro plano quedaba un bloque; va en grises.
+   Cada SVG está recortado a su tinta real y la altura de cada uno se calculó
+   para que todos ocupen la misma área visible (alto² × proporción × √densidad
+   constante): un logotipo ancho y fino pide menos alto que uno compacto. */
+.hero-trust-row li { --h: 1.6rem; display: flex; align-items: center; gap: .5rem; height: 2.6rem; white-space: nowrap; opacity: .6; }
 .hero-trust-row img { display: block; height: var(--h); width: auto; filter: brightness(0); }
 .hero-trust-row li span { font: 500 .95rem/1 "Neuehaasunicaw 1 G", Inter, sans-serif; color: #151515; letter-spacing: -.01em; }
-.hero-trust-row .is-aws { --h: 2.1rem; }
-.hero-trust-row .is-hubspot { --h: 1.7rem; }
-.hero-trust-row .is-entel { --h: 1.55rem; }
-.hero-trust-row .is-nestle { --h: 1.5rem; }
-.hero-trust-row .is-falabella { --h: 1.35rem; }
-.hero-trust-row .is-ripley { --h: 1.05rem; }
-.hero-trust-row .is-ibm { --h: 1.75rem; }
+.hero-trust-row .is-microsoft { --h: 1.6rem; }
+.hero-trust-row .is-aws { --h: 2.6rem; }
+.hero-trust-row .is-hubspot { --h: 1.78rem; }
+.hero-trust-row .is-entel { --h: 1.6rem; }
+.hero-trust-row .is-nestle { --h: 1.62rem; }
+.hero-trust-row .is-falabella { --h: 2.2rem; }
+.hero-trust-row .is-ripley { --h: 1.85rem; }
+.hero-trust-row .is-ibm { --h: 2.0rem; }
+.hero-trust-row .is-ripley img { filter: grayscale(1) contrast(1.1); }
 @keyframes hero-trust-scroll { to { transform: translateX(-100%); } }
 .hero-trust:hover .hero-trust-row { animation-play-state: paused; }
 @media (prefers-reduced-motion: reduce) { .hero-trust-row { animation: none; } }
@@ -141,8 +145,8 @@
   .hero-trust { padding: 1rem 0 1.25rem; background: rgba(243, 241, 234, .96); border-top-color: rgba(21, 21, 21, .08); }
   .hero-trust-label { margin-bottom: .75rem; font-size: .64rem; }
   .hero-trust-row { gap: 2rem; animation-duration: 30s; }
-  .hero-trust-row li { height: 1.75rem; }
-  .hero-trust-row img { height: calc(var(--h) * .78); }
+  .hero-trust-row li { height: 2rem; }
+  .hero-trust-row img { height: calc(var(--h) * .72); }
   .hero-trust-row li span { font-size: .78rem; }
 }
 
