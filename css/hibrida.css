@@ -526,3 +526,10 @@ html:not(.js) .lp .slider-btns { display: none; }
 @media (min-width: 768px) and (max-width: 991px) {
   .b2b-hero { min-height: min(100vh, 62rem); min-height: min(100svh, 62rem); }
 }
+
+/* Precios: en móvil se oculta la línea «Empiezas gratis, sin tarjeta» (16-sep). */
+@media (max-width: 767px) {
+  .lp .trial-line { display: none; }
+  /* El selector Mensual/Anual va centrado en móvil. */
+  .lp .pricing-bar { align-items: center; }
+}

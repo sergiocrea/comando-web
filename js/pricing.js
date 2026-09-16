@@ -92,7 +92,7 @@ const PRICING_TEXT = {
   es: {
     billing: 'Facturación', monthly: 'Mensual', annual: 'Anual', freeMonths: '2 meses gratis',
     perMonth: '/mes', perYear: (a) => `${a} al año`, recommended: 'Recomendado', soon: 'Próximamente',
-    trial: (days) => `Empiezas con ${days} días del plan Equipo, sin tarjeta`,
+    trial: () => 'Empiezas gratis, sin tarjeta',
     pack: (n, p) => `¿Te quedaste sin preguntas? Suma ${n} por ${p} para este mes.`,
     more: (n) => `¿Más de ${n} cuentas publicitarias?`, talk: 'Habla con nosotros',
     caps: { team: 'Analista y estratega', voice: 'Notas de voz' },
@@ -111,7 +111,7 @@ const PRICING_TEXT = {
   en: {
     billing: 'Billing', monthly: 'Monthly', annual: 'Annual', freeMonths: '2 months free',
     perMonth: '/mo', perYear: (a) => `${a} a year`, recommended: 'Recommended', soon: 'Coming soon',
-    trial: (days) => `You start with ${days} days of the Team plan, no card`,
+    trial: () => 'You start free, no card',
     pack: (n, p) => `Out of questions? Add ${n} for ${p} this month.`,
     more: (n) => `More than ${n} ad accounts?`, talk: 'Talk to us',
     caps: { team: 'Analyst and strategist', voice: 'Voice notes' },
@@ -130,7 +130,7 @@ const PRICING_TEXT = {
   pt: {
     billing: 'Cobrança', monthly: 'Mensal', annual: 'Anual', freeMonths: '2 meses grátis',
     perMonth: '/mês', perYear: (a) => `${a} por ano`, recommended: 'Recomendado', soon: 'Em breve',
-    trial: (days) => `Você começa com ${days} dias do plano Equipe, sem cartão`,
+    trial: () => 'Você começa grátis, sem cartão',
     pack: (n, p) => `Ficou sem perguntas? Some ${n} por ${p} para este mês.`,
     more: (n) => `Mais de ${n} contas de anúncios?`, talk: 'Fale com a gente',
     caps: { team: 'Analista e estrategista', voice: 'Notas de voz' },
