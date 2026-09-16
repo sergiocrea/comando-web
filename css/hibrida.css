@@ -128,7 +128,7 @@
 .hero-trust-row {
   flex: 0 0 auto; display: flex; align-items: center; gap: clamp(2.5rem, 5vw, 4.5rem);
   margin: 0; padding: 0 clamp(1.25rem, 2.5vw, 2.25rem) 0 0; list-style: none;
-  animation: hero-trust-scroll 40s linear infinite;
+  animation: hero-trust-scroll 70s linear infinite;
 }
 /* Los logos van en un solo tono: la franja dice «hay empresas detrás», no
    compite con el titular. `brightness(0)` los deja en negro sea cual sea su
@@ -137,7 +137,7 @@
    Cada SVG está recortado a su tinta real y la altura de cada uno se calculó
    para que todos ocupen la misma área visible (alto² × proporción × √densidad
    constante): un logotipo ancho y fino pide menos alto que uno compacto. */
-.hero-trust-row li { --h: 1.6rem; display: flex; align-items: center; gap: .5rem; height: 2.6rem; white-space: nowrap; opacity: .6; }
+.hero-trust-row li { --h: 1.6rem; display: flex; align-items: center; gap: .5rem; height: 2.75rem; white-space: nowrap; opacity: .6; }
 .hero-trust-row img { display: block; height: var(--h); width: auto; filter: brightness(0); }
 .hero-trust-row li span { font: 500 .95rem/1 "Neuehaasunicaw 1 G", Inter, sans-serif; color: #151515; letter-spacing: -.01em; }
 .hero-trust-row .is-domestika { --h: 1.45rem; }
@@ -148,7 +148,16 @@
 .hero-trust-row .is-falabella { --h: 2.2rem; }
 .hero-trust-row .is-ripley { --h: 1.85rem; }
 .hero-trust-row .is-ibm { --h: 2.0rem; }
-.hero-trust-row .is-ripley img { filter: grayscale(1) contrast(1.1); }
+.hero-trust-row .is-popeyes { --h: 1.38rem; }
+.hero-trust-row .is-marriott { --h: 2.15rem; }
+.hero-trust-row .is-planetfitness { --h: 2.4rem; }
+.hero-trust-row .is-alamo { --h: 1.85rem; }
+.hero-trust-row .is-miniso { --h: 2.6rem; }
+.hero-trust-row .is-wallstreetenglish { --h: 2.45rem; }
+/* Alamo y Miniso son letras blancas sobre caja de color, como Ripley: en grises. */
+.hero-trust-row :is(.is-ripley, .is-alamo, .is-miniso) img { filter: grayscale(1) contrast(1.1); }
+/* El azul de Alamo queda muy claro en grises: más oscuro y con contraste. */
+.hero-trust-row .is-alamo img { filter: grayscale(1) brightness(.62) contrast(1.6); }
 @keyframes hero-trust-scroll { to { transform: translateX(-100%); } }
 .hero-trust:hover .hero-trust-row { animation-play-state: paused; }
 @media (prefers-reduced-motion: reduce) { .hero-trust-row { animation: none; } }
@@ -170,8 +179,8 @@
   /* En móvil la franja sigue a la hoja del texto, del mismo crema. */
   .hero-trust { padding: 1rem 0 1.25rem; background: rgba(243, 241, 234, .96); border-top-color: rgba(21, 21, 21, .08); }
   .hero-trust-label { margin-bottom: .75rem; font-size: .64rem; }
-  .hero-trust-row { gap: 2rem; animation-duration: 30s; }
-  .hero-trust-row li { height: 2rem; }
+  .hero-trust-row { gap: 2rem; animation-duration: 55s; }
+  .hero-trust-row li { height: 2.1rem; }
   .hero-trust-row img { height: calc(var(--h) * .72); }
   .hero-trust-row li span { font-size: .78rem; }
 }
