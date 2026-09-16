@@ -42,7 +42,7 @@
     <link rel="preload" as="image" href="/assets/img/benefits-superpowers-poster-v5.jpg" />
     <link href="/assets/css/webflow.css" rel="stylesheet" type="text/css" />
     <link href="/css/custom.css?v=188" rel="stylesheet" type="text/css" />
-    <link href="/css/hibrida.css?v=12" rel="stylesheet" type="text/css" />
+    <link href="/css/hibrida.css?v=14" rel="stylesheet" type="text/css" />
     <script>/* La landing se monta desde arriba: sus animaciones por scroll se miden al cargar. Si el navegador restaura la posicion, ScrollTrigger calcula progresos con medidas a medio asentar. */if("scrollRestoration" in history)history.scrollRestoration="manual";</script>
     <script type="text/javascript">!(function(o,c){var n=c.documentElement,t=" w-mod-";((n.className+=t+"js"),("ontouchstart" in o||(o.DocumentTouch&&c instanceof DocumentTouch))&&(n.className+=t+"touch"));})(window,document);</script>
   </head>
@@ -510,12 +510,15 @@
                     <div class="msg bot"><div class="bubble confirm">Agora está em US$&nbsp;32 por dia. Aplico?<span>RESPONDA CONFIRMAR</span><time>12:30</time></div></div>
                   </div>
                 </article>
-                <article class="lp-agent">
+                <!-- Atribución, la tarjeta premium (16-sep, pedido de Sergio): ocupa el
+                     ancho entero, en oscuro, con borde en degradado y los logos del
+                     cruce CRM → Meta en vez del rótulo de texto. -->
+                <article class="lp-agent is-premium">
                   <div class="lp-agent-meta">
-                    <div class="lp-agent-top"><span class="lp-agent-icon"><svg aria-hidden="true"><use href="#i-atribucion"/></svg></span></div>
+                    <div class="lp-agent-top"><span class="lp-agent-icon"><svg aria-hidden="true"><use href="#i-atribucion"/></svg></span><span class="lp-premium-tag">Premium</span></div>
                     <h3>Atribuição</h3>
                     <p>Cruza suas vendas do CRM com a Meta para trazer mais compradores como os seus.</p>
-                    <p class="foot">CRM → Meta</p>
+                    <p class="foot lp-flow"><span class="lp-flow-side"><img src="/assets/img/logos/hubspot.svg" alt="HubSpot" width="18" height="18"/><img src="/assets/img/logos/salesforce.svg" alt="Salesforce" width="18" height="18"/>CRM</span><span class="lp-flow-arrow" aria-hidden="true"></span><span class="lp-flow-side"><img src="/assets/img/logos/meta.svg" alt="" width="18" height="18"/>Meta</span></p>
                   </div>
                   <div class="mini-chat" role="group" aria-label="Exemplo de conversa">
                     <div class="msg me"><div class="bubble">Quantas vendas a Meta trouxe este mês?<time>18:05</time></div></div>
