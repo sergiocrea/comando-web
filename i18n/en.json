@@ -143,7 +143,6 @@
   "Solo lectura en tus anuncios": "Read-only on your ads",
   "Nada cambia sin tu CONFIRMAR": "Nothing changes without your CONFIRM",
   "Tus datos siguen siendo tuyos": "Your data stays yours",
-  "Menos de lo que cuesta un almuerzo.": "Less than the cost of a lunch.",
   "Una agencia te cobra el 15&nbsp;% de lo que inviertes. Comando, un precio fijo.": "An agency charges you 15&nbsp;% of what you invest. Comando, a fixed price.",
   "Gratis, Analista US$&nbsp;9, Equipo US$&nbsp;29 y Agencia US$&nbsp;49 al mes.": "Free, Analyst US$&nbsp;9, Team US$&nbsp;29 and Agency US$&nbsp;49 a month.",
   "Empieza gratis": "Start free",
@@ -446,5 +445,6 @@
   "Nestlé": "Nestlé",
   "Falabella": "Falabella",
   "Ripley": "Ripley",
-  "IBM": "IBM"
+  "IBM": "IBM",
+  "Cuesta menos que una hora de agencia.": "Costs less than an hour of agency time."
 }
