@@ -60,21 +60,26 @@ const ADDONS = {
 };
 
 /**
- * Tabla de la calculadora del módulo CRM. Copia de `docs/crm-precios.json`
- * (calculadora CRM → Meta, estrategia 3, mínimo comercial US$ 9): con esa
- * estrategia el costo es de centavos y todos los tramos quedan en el mínimo.
+ * El módulo CRM, con lo único que de verdad cambia: la ESPERA.
  *
- * GANCHO para el motor: cuando esté desplegado `GET /v1/public/crm-quote`
- * (fase E), la calculadora debe pedirle el precio a él y usar esta tabla solo
- * como respaldo si no contesta. Hoy no se pide nada en tiempo real.
+ * Había un deslizador de contactos y prometía una precisión que no existe: el
+ * precio es US$ 9 en los siete tramos y con los tres CRM —lo confirma el motor
+ * en `GET /v1/public/crm-quote`, que cotiza 900 céntimos siempre—, porque con
+ * la estrategia 3 el costo real es de centavos y todo queda en el mínimo
+ * comercial. Mover el deslizador no movía el número, y la nota insinuaba
+ * subidas que no llegan.
+ *
+ * Lo que sí cambia con el CRM es cuánto tarda en contestarte, y por mucho:
+ * Salesforce responde en segundos y una hoja de Google puede tardar minutos.
+ * Los minutos salen de `docs/crm-precios.json` (mismo origen que los precios).
  */
 const CRM_QUOTE = {
-  minPrice: 9,
-  contacts: [1000, 5000, 10000, 25000, 50000, 100000, 200000],
+  price: 9,
+  maxContacts: 200000,
   providers: {
-    hubspot: [9, 9, 9, 9, 9, 9, 9],
-    salesforce: [9, 9, 9, 9, 9, 9, 9],
-    sheets: [9, 9, 9, 9, 9, 9, 9],
+    hubspot: { waitMinutes: 0.12 },
+    salesforce: { waitMinutes: 0.07 },
+    sheets: { waitMinutes: 11.25 },
   },
 };
 
@@ -102,6 +107,10 @@ const PRICING_TEXT = {
     pack: (n, p) => `¿Te quedaste sin preguntas? Suma ${n} por ${p} para este mes.`,
     more: (n) => `¿Más de ${n} cuentas publicitarias?`, talk: 'Habla con nosotros',
     caps: { team: 'Analista y estratega', voice: 'Notas de voz', soon: 'Comprador de medios y atribución', soonFirst: 'Primero en recibir comprador de medios y atribución' },
+    calc: {
+      seconds: (n) => (n === 1 ? '1 segundo' : `${n} segundos`),
+      minutes: (n) => (n === 1 ? '1 minuto' : `${n} minutos`),
+    },
     limits: {
       accounts: (n, f) => (n === 1 ? '1 cuenta publicitaria' : `${f(n)} cuentas publicitarias`),
       refresh: (min) => (min >= 1440 ? 'Datos 1 vez al día' : 'Datos cada hora'),
@@ -121,6 +130,10 @@ const PRICING_TEXT = {
     pack: (n, p) => `Out of questions? Add ${n} for ${p} this month.`,
     more: (n) => `More than ${n} ad accounts?`, talk: 'Talk to us',
     caps: { team: 'Analyst and strategist', voice: 'Voice notes', soon: 'Media buyer and attribution', soonFirst: 'First to get media buyer and attribution' },
+    calc: {
+      seconds: (n) => (n === 1 ? '1 second' : `${n} seconds`),
+      minutes: (n) => (n === 1 ? '1 minute' : `${n} minutes`),
+    },
     limits: {
       accounts: (n, f) => (n === 1 ? '1 ad account' : `${f(n)} ad accounts`),
       refresh: (min) => (min >= 1440 ? 'Data once a day' : 'Data every hour'),
@@ -140,6 +153,10 @@ const PRICING_TEXT = {
     pack: (n, p) => `Ficou sem perguntas? Some ${n} por ${p} para este mês.`,
     more: (n) => `Mais de ${n} contas de anúncios?`, talk: 'Fale com a gente',
     caps: { team: 'Analista e estrategista', voice: 'Notas de voz', soon: 'Comprador de mídia e atribuição', soonFirst: 'Primeiro a receber comprador de mídia e atribuição' },
+    calc: {
+      seconds: (n) => (n === 1 ? '1 segundo' : `${n} segundos`),
+      minutes: (n) => (n === 1 ? '1 minuto' : `${n} minutos`),
+    },
     limits: {
       accounts: (n, f) => (n === 1 ? '1 conta de anúncios' : `${f(n)} contas de anúncios`),
       refresh: (min) => (min >= 1440 ? 'Dados 1 vez por dia' : 'Dados a cada hora'),
@@ -219,26 +236,25 @@ const PRICING_TEXT = {
     if (window.ScrollTrigger) window.ScrollTrigger.refresh();
   }
 
-  /* Calculadora: CRM + contactos → «desde US$ X al mes». */
+  /* El módulo CRM: precio fijo y, según el CRM, cuánto tarda en contestar. */
   function mountCalc() {
     const calc = document.querySelector('[data-crm-calc]');
     if (!calc) return;
     const select = calc.querySelector('select');
-    const range = calc.querySelector('input[type=range]');
-    const contacts = calc.querySelector('[data-contacts]');
     const out = calc.querySelector('[data-price]');
-    calc.querySelectorAll('[data-contacts-min]').forEach((el) => { el.textContent = int(CRM_QUOTE.contacts[0]); });
-    calc.querySelectorAll('[data-contacts-max]').forEach((el) => { el.textContent = int(CRM_QUOTE.contacts[CRM_QUOTE.contacts.length - 1]); });
-    range.max = String(CRM_QUOTE.contacts.length - 1);
+    const espera = calc.querySelector('[data-wait]');
+    calc.querySelectorAll('[data-max-contacts]').forEach((el) => { el.textContent = int(CRM_QUOTE.maxContacts); });
+    /* Por debajo del minuto se dice en segundos: «0,1 minutos» no se lee como
+       una espera, y es justo el caso de los CRM rápidos. */
+    const enPalabras = (minutos) => (minutos < 1
+      ? T.calc.seconds(Math.max(1, Math.round(minutos * 60)))
+      : T.calc.minutes(Math.round(minutos)));
     const update = () => {
-      const i = +range.value;
-      const row = CRM_QUOTE.providers[select.value] || [];
-      contacts.textContent = int(CRM_QUOTE.contacts[i]);
-      range.setAttribute('aria-valuetext', int(CRM_QUOTE.contacts[i]));
-      out.textContent = money(Math.max(CRM_QUOTE.minPrice, row[i] ?? CRM_QUOTE.minPrice));
+      out.textContent = money(CRM_QUOTE.price);
+      const proveedor = CRM_QUOTE.providers[select.value];
+      if (espera) espera.textContent = proveedor ? enPalabras(proveedor.waitMinutes) : '';
     };
     select.addEventListener('change', update);
-    range.addEventListener('input', update);
     calc.addEventListener('submit', (event) => event.preventDefault());
     update();
   }

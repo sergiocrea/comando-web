@@ -255,8 +255,10 @@ html:not(.js) .lp .slider-btns { display: none; }
 .lp .field select, .lp .field input[type=range] { width: 100%; }
 .lp .field select { appearance: none; -webkit-appearance: none; height: auto; background: #f7f6f2 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='none' stroke='%23111' stroke-width='1.6'%3E%3Cpath d='m2 4 4 4 4-4'/%3E%3C/svg%3E") no-repeat right 14px center; border: 1px solid var(--lp-line); border-radius: .75rem; padding: .8rem 1rem; font: 500 1rem/1.2 "Neuehaasunicaw 1 G", Inter, sans-serif; color: var(--lp-ink); }
 .lp .field input[type=range] { accent-color: #151515; }
-.lp .range-row { display: flex; justify-content: space-between; font: 500 .8rem/1 "Jetbrainsmono Variable", monospace; color: var(--lp-muted); }
-.lp .range-row [data-contacts] { color: var(--lp-ink); font-weight: 600; }
+/* La espera, que es lo único que cambia al elegir CRM: el precio es el mismo
+   con los tres. Va debajo del precio y con el mismo peso visual que él. */
+.lp .calc-wait { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; margin-top: .9rem; font-size: .92rem; color: var(--lp-muted); }
+.lp .calc-wait strong { font: 600 1.25rem/1 "Jetbrainsmono Variable", ui-monospace, monospace; color: var(--lp-ink); }
 .lp .calc-out { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; padding-top: 1.2rem; border-top: 1px solid var(--lp-line); }
 .lp .calc-out .plan-price { font-size: 2.5rem; }
 .lp .calc-note { font-size: .82rem; color: var(--lp-muted); margin-top: .8rem !important; }

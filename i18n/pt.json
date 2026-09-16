@@ -166,11 +166,9 @@
   "Zoho CRM · próximamente": "Zoho CRM · em breve",
   "Pipedrive · próximamente": "Pipedrive · em breve",
   "Kommo · próximamente": "Kommo · em breve",
-  "Contactos": "Contatos",
   "Desde": "A partir de",
   "US$&nbsp;9": "US$&nbsp;9",
   "/mes": "/mês",
-  "Estimación del módulo. Se suma a tu plan de Meta. El precio puede subir en CRM lentos o muy grandes.": "Estimativa do módulo. Soma-se ao seu plano da Meta. O preço pode subir em CRMs lentos ou muito grandes.",
   "Preguntas frecuentes.": "Perguntas frequentes.",
   "¿Tengo que instalar algo?": "Preciso instalar alguma coisa?",
   "No. Usas tu WhatsApp y conectas tu cuenta de Meta en 2 minutos.": "Não. Você usa seu WhatsApp e conecta sua conta da Meta em 2 minutos.",
@@ -430,5 +428,9 @@
   "US$ 96 sin leads · frecuencia 4,8": "US$ 96 sem leads · frequência 4,8",
   "Qué hacer, con el motivo": "O que fazer, com o motivo",
   "Cambia el creativo antes de subir presupuesto": "Mude o criativo antes de aumentar o orçamento",
-  "Ver el detalle": "Ver o detalhe"
+  "Ver el detalle": "Ver o detalhe",
+  "Te contesta en": "Ele responde em",
+  "7 segundos": "7 segundos",
+  "Mismo precio con cualquiera de los tres, hasta": "Mesmo preço com qualquer um dos três, até",
+  "contactos. Se suma a tu plan de Meta. Lo que cambia es la espera: una hoja de Google tarda más que un CRM de verdad.": "contatos. Soma ao seu plano do Meta. O que muda é a espera: uma planilha do Google demora mais que um CRM de verdade."
 }
