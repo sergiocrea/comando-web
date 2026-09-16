@@ -178,7 +178,6 @@
   "¿Sirve para Google Ads o TikTok Ads?": "Serve para Google Ads ou TikTok Ads?",
   "¿Qué cuenta como pregunta?": "O que conta como pergunta?",
   "Cada mensaje en el que le pides algo a Comando. Las confirmaciones no cuentan.": "Cada mensagem em que você pede algo ao Comando. As confirmações não contam.",
-  "Tu analista de Meta Ads te espera en WhatsApp.": "Seu analista de Meta Ads te espera no WhatsApp.",
   "Pruébalo gratis": "Teste grátis",
   "Comando · Tu equipo de marketing en WhatsApp.": "Comando · Sua equipe de marketing no WhatsApp.",
   "Instagram": "Instagram",
@@ -405,11 +404,9 @@
   "Reglas que te avisan y actúan en tu CRM cuando algo cambia.": "Regras que avisam você e agem no seu CRM quando algo muda.",
   "LOADING": "CARREGANDO",
   "EQUIPO": "EQUIPE",
-  "Tu analista, estratega y media buyer de Meta Ads, en WhatsApp": "Seu analista, estrategista e comprador de mídia de Meta Ads, no WhatsApp",
   "Tu": "Seu",
   "analista|estratega|media buyer": "analista|estrategista|comprador de mídia",
   "analista": "analista",
-  "de Meta Ads, en WhatsApp.": "de Meta Ads, no WhatsApp.",
   "&nbsp;·": "&nbsp;·",
   "Meta Ads": "Meta Ads",
   "Dynamics 365": "Dynamics 365",
@@ -432,5 +429,8 @@
   "Mismo precio con cualquiera de los tres, hasta": "Mesmo preço com qualquer um dos três, até",
   "contactos. Se suma a tu plan de Meta. Lo que cambia es la espera: una hoja de Google tarda más que un CRM de verdad.": "contatos. Soma ao seu plano do Meta. O que muda é a espera: uma planilha do Google demora mais que um CRM de verdade.",
   "Tu equipo trabaja con Meta Ads y TikTok Ads. Google Ads": "Sua equipe trabalha com Meta Ads e TikTok Ads. Google Ads",
-  "Funciona con Meta (Facebook e Instagram) y con TikTok Ads. Google Ads llega pronto.": "Funciona com o Meta (Facebook e Instagram) e com o TikTok Ads. O Google Ads chega em breve."
+  "Funciona con Meta (Facebook e Instagram) y con TikTok Ads. Google Ads llega pronto.": "Funciona com o Meta (Facebook e Instagram) e com o TikTok Ads. O Google Ads chega em breve.",
+  "Tu analista, estratega y media buyer de Meta y TikTok Ads, en WhatsApp": "Seu analista, estrategista e comprador de mídia de Meta e TikTok Ads, no WhatsApp",
+  "de Meta y TikTok Ads, en WhatsApp.": "de Meta e TikTok Ads, no WhatsApp.",
+  "Tu analista de Meta y TikTok Ads te espera en WhatsApp.": "Seu analista de Meta e TikTok Ads espera por você no WhatsApp."
 }
