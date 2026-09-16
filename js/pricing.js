@@ -36,15 +36,19 @@
  * `'coming_soon'` y la página entera se corrige sola.
  *
  * EXCEPCIÓN VIVA (16-sep-2026, decisión de Sergio): los planes se presentan por
- * CAPACIDADES, un agente más por plan (`agents`), y el tercero pasa a US$ 19
- * (anual 190) SOLO EN LA WEB. El motor sigue cobrando US$ 29 y dando las mismas
+ * CAPACIDADES, un agente más por plan (`agents`), y el tercero pasa a US$ 24
+ * (anual 240) SOLO EN LA WEB. El motor sigue cobrando US$ 29 y dando las mismas
  * capacidades a todos, así que `tooling/plans-check.mjs` (y el flujo diario
  * «Los precios anunciados siguen siendo los que se cobran») queda en rojo hasta
  * que el catálogo se cambie en la consola de administración. Además, la web
  * anuncia reportes por plan (`reports`: avanzados en Growth; avanzados y
  * personalizados en Scale), que el catálogo del motor no distingue, y ya no nombra las notas de voz.
- * Starter anuncia el Media Buyer limitado (`mediaBuyerChanges`: 10 cambios al
- * mes), un límite que el motor todavía no aplica. Gratis incluye Analista y
+ * El Media Buyer anuncia cambios al mes (`mediaBuyerChanges`: 10 en Starter,
+ * 100 en Growth, 200 en Scale), un límite que el motor todavía no aplica.
+ * Preguntas al mes (16-sep, modelo económico): Starter 150, Growth 400,
+ * Scale 500 compartidas entre 3 números de WhatsApp (`whatsappNumbers`); los
+ * reportes con IA descuentan del mismo cupo. El motor sigue con los cupos del
+ * catálogo del 15-sep y un solo número por cuenta. Gratis incluye Analista y
  * Estratega con 30 preguntas al crear la cuenta, válidas 30 días y sin renovación
  * (`commandsOnceDays`); en el motor el cupo de Gratis todavía se renueva cada mes.
  */
@@ -56,17 +60,17 @@ const PLAN_LADDER = [
   },
   {
     id: 'analista', code: 'analista', price: { month: 9, year: 90 }, agents: ['analyst', 'strategist', 'mediaBuyerLimited'], mediaBuyerChanges: 10, metrics: true,
-    adsAccounts: 2, adsRefreshMinutes: 60, commands: 300,
+    adsAccounts: 2, adsRefreshMinutes: 60, commands: 150,
     capabilities: { adsRead: true, adsDiagnosis: true, voice: false, mediaBuyer: 'coming_soon', attribution: 'coming_soon', googleAds: 'coming_soon', tiktokAds: true },
   },
   {
-    id: 'equipo', code: 'equipo', price: { month: 19, year: 190 }, featured: true, agents: ['analyst', 'strategist', 'mediaBuyer'], reports: ['advanced'], metrics: true,
-    adsAccounts: 10, adsRefreshMinutes: 60, commands: 1500,
+    id: 'equipo', code: 'equipo', price: { month: 24, year: 240 }, featured: true, agents: ['analyst', 'strategist', 'mediaBuyer'], mediaBuyerChanges: 100, reports: ['advanced'], metrics: true,
+    adsAccounts: 10, adsRefreshMinutes: 60, commands: 400,
     capabilities: { adsRead: true, adsDiagnosis: true, voice: true, mediaBuyer: 'coming_soon', attribution: 'coming_soon', googleAds: 'coming_soon', tiktokAds: true },
   },
   {
-    id: 'agencia', code: 'agencia', price: { month: 49, year: 490 }, agents: ['analyst', 'strategist', 'mediaBuyer', 'attribution'], reports: ['advanced', 'custom'], metrics: true,
-    adsAccounts: 20, adsRefreshMinutes: 60, commands: 3000,
+    id: 'agencia', code: 'agencia', price: { month: 49, year: 490 }, agents: ['analyst', 'strategist', 'mediaBuyer', 'attribution'], mediaBuyerChanges: 200, reports: ['advanced', 'custom'], metrics: true,
+    adsAccounts: 20, adsRefreshMinutes: 60, commands: 500, whatsappNumbers: 3,
     capabilities: { adsRead: true, adsDiagnosis: true, voice: true, mediaBuyer: 'coming_soon', attribution: 'coming_soon', googleAds: 'coming_soon', tiktokAds: true },
   },
 ];
@@ -114,6 +118,7 @@ const PRICING_TEXT = {
       refresh: (min) => (min >= 1440 ? 'Datos 1 vez al día' : 'Datos cada hora'),
       questions: (n, f) => `${f(n)} preguntas al mes`,
       questionsOnce: (n, d, f) => `${f(n)} preguntas para empezar (${d} días)`,
+      whatsapp: (n) => `${n} números de WhatsApp`,
     },
     plans: {
       gratis: { name: 'Gratis', result: 'Pregúntale a tus anuncios', cta: 'Empezar gratis' },
@@ -134,6 +139,7 @@ const PRICING_TEXT = {
       refresh: (min) => (min >= 1440 ? 'Data once a day' : 'Data every hour'),
       questions: (n, f) => `${f(n)} questions a month`,
       questionsOnce: (n, d, f) => `${f(n)} questions to start (${d} days)`,
+      whatsapp: (n) => `${n} WhatsApp numbers`,
     },
     plans: {
       gratis: { name: 'Free', result: 'Ask your ads', cta: 'Start free' },
@@ -154,6 +160,7 @@ const PRICING_TEXT = {
       refresh: (min) => (min >= 1440 ? 'Dados 1 vez por dia' : 'Dados a cada hora'),
       questions: (n, f) => `${f(n)} perguntas por mês`,
       questionsOnce: (n, d, f) => `${f(n)} perguntas para começar (${d} dias)`,
+      whatsapp: (n) => `${n} números de WhatsApp`,
     },
     plans: {
       gratis: { name: 'Grátis', result: 'Pergunte aos seus anúncios', cta: 'Começar grátis' },
@@ -198,11 +205,11 @@ const PRICING_TEXT = {
       <p class="plan-price">${price}</p>
       <p class="plan-year">${year}</p>
       <ul>
-        ${plan.agents.map((a) => `<li class="${prev && !prev.agents.includes(a) ? 'is-new' : ''}">${icon('i-check')}<span>${esc(T.caps[a])}${a === 'mediaBuyerLimited' ? `<small class="plan-note">${esc(T.caps.mediaBuyerNote(plan.mediaBuyerChanges))}</small>` : ''}</span></li>`).join('')}
+        ${plan.agents.map((a) => `<li class="${prev && !prev.agents.includes(a) ? 'is-new' : ''}">${icon('i-check')}<span>${esc(T.caps[a])}${(a === 'mediaBuyer' || a === 'mediaBuyerLimited') && plan.mediaBuyerChanges ? `<small class="plan-note">${esc(T.caps.mediaBuyerNote(plan.mediaBuyerChanges))}</small>` : ''}</span></li>`).join('')}
         ${plan.metrics ? `<li>${icon('i-check')}<span>${esc(T.caps.metrics)}${plan.metrics === 'basic' ? `<small class="plan-note">${esc(T.caps.metricsBasic)}</small>` : ''}</span></li>` : ''}
         ${(plan.reports || []).map((r) => `<li>${icon('i-check')}<span>${esc(T.caps.reports[r])}</span></li>`).join('')}
       </ul>
-      <p class="plan-limits">${esc(T.limits.accounts(plan.adsAccounts, int))}<br />${esc(T.limits.refresh(plan.adsRefreshMinutes))}<br />${esc(plan.commandsOnceDays ? T.limits.questionsOnce(plan.commands, plan.commandsOnceDays, int) : T.limits.questions(plan.commands, int))}</p>
+      <p class="plan-limits">${esc(T.limits.accounts(plan.adsAccounts, int))}<br />${esc(T.limits.refresh(plan.adsRefreshMinutes))}<br />${esc(plan.commandsOnceDays ? T.limits.questionsOnce(plan.commands, plan.commandsOnceDays, int) : T.limits.questions(plan.commands, int))}${plan.whatsappNumbers > 1 ? `<br />${esc(T.limits.whatsapp(plan.whatsappNumbers))}` : ''}</p>
       <a class="btn btn-dark" href="${href}">${esc(words.cta)}</a>
     </article>`;
   }
