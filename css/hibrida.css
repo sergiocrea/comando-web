@@ -538,3 +538,9 @@ html:not(.js) .lp .slider-btns { display: none; }
    de Atribución en vez de blanco; la capacidad que suma cada plan, en negrita. */
 .lp .plan:not(.star) { background: #fffdf8; }
 .lp .plan li.is-new span { font-weight: 650; }
+
+/* Tu equipo (16-sep): las tres tarjetas normales toman el papel cálido y el ícono
+   en bloque negro de la de Atribución; esa sigue distinguiéndose por su borde en
+   tinta y el sello Premium. */
+.lp-agent:not(.is-premium) { background: #fffdf8; }
+.lp-agent:not(.is-premium) .lp-agent-icon { background: #151515; color: #fff; }
