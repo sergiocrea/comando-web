@@ -102,7 +102,7 @@ const PRICING_TEXT = {
     trial: () => 'Empiezas gratis, sin tarjeta',
     pack: (n, p) => `¿Te quedaste sin preguntas? Suma ${n} por ${p} para este mes.`,
     more: (n) => `¿Más de ${n} cuentas publicitarias?`, talk: 'Habla con nosotros',
-    caps: { analyst: 'Analista', strategist: 'Estratega', mediaBuyer: 'Media Buyer', attribution: 'Atribución', voice: 'Notas de voz' },
+    caps: { analyst: 'Agente Analista', strategist: 'Agente Estratega', mediaBuyer: 'Agente Media Buyer', attribution: 'Atribución', voice: 'Notas de voz' },
     limits: {
       accounts: (n, f) => (n === 1 ? '1 cuenta publicitaria' : `${f(n)} cuentas publicitarias`),
       refresh: (min) => (min >= 1440 ? 'Datos 1 vez al día' : 'Datos cada hora'),
@@ -121,7 +121,7 @@ const PRICING_TEXT = {
     trial: () => 'You start free, no card',
     pack: (n, p) => `Out of questions? Add ${n} for ${p} this month.`,
     more: (n) => `More than ${n} ad accounts?`, talk: 'Talk to us',
-    caps: { analyst: 'Analyst', strategist: 'Strategist', mediaBuyer: 'Media Buyer', attribution: 'Attribution', voice: 'Voice notes' },
+    caps: { analyst: 'Analyst Agent', strategist: 'Strategist Agent', mediaBuyer: 'Media Buyer Agent', attribution: 'Attribution', voice: 'Voice notes' },
     limits: {
       accounts: (n, f) => (n === 1 ? '1 ad account' : `${f(n)} ad accounts`),
       refresh: (min) => (min >= 1440 ? 'Data once a day' : 'Data every hour'),
@@ -140,7 +140,7 @@ const PRICING_TEXT = {
     trial: () => 'Você começa grátis, sem cartão',
     pack: (n, p) => `Ficou sem perguntas? Some ${n} por ${p} para este mês.`,
     more: (n) => `Mais de ${n} contas de anúncios?`, talk: 'Fale com a gente',
-    caps: { analyst: 'Analista', strategist: 'Estrategista', mediaBuyer: 'Comprador de mídia', attribution: 'Atribuição', voice: 'Notas de voz' },
+    caps: { analyst: 'Agente Analista', strategist: 'Agente Estrategista', mediaBuyer: 'Agente Comprador de mídia', attribution: 'Atribuição', voice: 'Notas de voz' },
     limits: {
       accounts: (n, f) => (n === 1 ? '1 conta de anúncios' : `${f(n)} contas de anúncios`),
       refresh: (min) => (min >= 1440 ? 'Dados 1 vez por dia' : 'Dados a cada hora'),
