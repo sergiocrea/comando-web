@@ -603,11 +603,6 @@
             <div class="padding-global"><div class="container-large"><p class="metrics-foot">Valores de ejemplo. El semáforo usa los umbrales de la metodología y tu objetivo.</p></div></div>
           </section>
         </div>
-        <div id="dia" class="section_usecases section_dia">
-          <div class="padding-global">
-            <div class="container-large"><div id="usecases-root"></div></div>
-          </div>
-        </div>
         <div class="lp">
           <section class="lp-section lp-paper" id="precios" aria-labelledby="precios-title">
             <div class="padding-global"><div class="container-large">
@@ -623,7 +618,17 @@
               <p class="pricing-crm-link">¿Tienes CRM? Suma <a href="#crm">Conversa con tu CRM</a> desde US$&nbsp;9 al mes.</p>
             </div></div>
           </section>
-
+        </div>
+        <!-- El ejemplo del CRM va DESPUÉS de precios: primero se ve lo que cuesta
+             Meta y luego para qué sirve el módulo que se suma aparte. Queda FUERA
+             de `.lp` a propósito: usa el sistema anterior (`section_usecases`),
+             no la tipografía ni los carriles de las secciones nuevas. -->
+        <div id="dia" class="section_usecases section_dia">
+          <div class="padding-global">
+            <div class="container-large"><div id="usecases-root"></div></div>
+          </div>
+        </div>
+        <div class="lp">
           <section class="lp-section lp-paper lp-crm" id="crm" aria-labelledby="crm-title">
             <div class="padding-global"><div class="container-large">
               <div class="lp-crm-grid">
