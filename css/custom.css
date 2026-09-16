@@ -559,7 +559,8 @@ body.sheet-open { overflow: hidden; }
 /* features: tighter vertical rhythm (12 rows now) */
 @media (min-width: 768px) { #trigger-1.section-dummy { min-height: 120svh; } }
 .section_clip-path-wrap { padding-bottom: 0; }
-#specs .home_specification-component { padding-top: 3rem; }
+/* specs is the first block on the connectors page and the nav floats over it: reserve its height */
+#specs .home_specification-component { padding-top: 5.5rem; }
 .section_clip-path-wrap { min-height: 0 !important; }
 .section_clip-path-wrap, #features-padding, .section_home-features { background-color: #060606; }
 /* mobile hero: let it grow so the phone sits under the nav and the text follows */
@@ -576,7 +577,7 @@ body.sheet-open { overflow: hidden; }
   .home_features-card .home_icon-text-wrapper { gap: .6rem; }
   .home_features-card .connector-logo { width: 2.6rem; height: 2.6rem; }
   .home_features-card-component { gap: .5rem; }
-  #specs .home_specification-component { padding-top: 4rem; padding-bottom: 1rem; }
+  #specs .home_specification-component { padding-top: 5rem; padding-bottom: 1rem; }
   .home_getupdate-component { padding-top: 1rem; }
   .pricing-head { padding-top: .5rem; }
 }
