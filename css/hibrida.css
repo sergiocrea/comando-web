@@ -35,11 +35,28 @@
 .b2b-hero-soon[hidden] { display: inline-block; visibility: hidden; }
 .b2b-button svg { width: 1.15rem; height: 1.15rem; flex: none; }
 @media (max-width: 767px) {
-  .b2b-hero-soon { margin-top: .7rem; }
+  .b2b-hero-soon { margin-top: .45rem; }
   /* Dos botones en una fila no caben con «Pruébalo gratis en WhatsApp»: van apilados. */
   .b2b-hero-actions { grid-template-columns: 1fr; }
   .b2b-button { white-space: normal; text-align: center; }
   .b2b-hero-note span { white-space: normal; }
+  /* El hero ya no ocupa la pantalla entera con la tarjeta pegada abajo.
+     `justify-content: flex-end` sobre un hero de 100 % dejaba 245 px (29 % de
+     un 390×844) de vídeo SIN texto encima, y encima enseñaba el techo de la
+     oficina. Ahora la franja de vídeo es fija —lo que se quiere ver— y la
+     tarjeta empieza justo después, así que el alto lo manda el contenido y no
+     el tamaño de la pantalla. */
+  .b2b-hero { min-height: 0; }
+  .b2b-hero-padding { justify-content: flex-start; padding-top: calc(var(--nav-height, 4.5rem) + 8.5rem); padding-bottom: 0; }
+  /* La caja del vídeo mide la FRANJA, no el hero entero, y ahí está la clave:
+     el vídeo de móvil es 720×1280 y en una caja de 390×731 encajaba por altura
+     —lo que sobraba era el ancho—, así que `object-position` vertical no movía
+     nada y la tira siempre caía en el techo y las tuberías. Acotada la caja,
+     sobra alto y el encuadre sí elige: al 35 % se ve a la persona con el
+     teléfono (al 20 % se le corta la cabeza; del 50 % en adelante, solo torso,
+     suelo y sillas). */
+  .b2b-hero-media { height: 15rem; bottom: auto; }
+  .b2b-hero-media video { object-position: 50% 35%; }
 }
 
 /* ---------- base de las secciones nuevas ---------- */
