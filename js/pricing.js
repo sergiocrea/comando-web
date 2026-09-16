@@ -46,7 +46,7 @@
  * El Media Buyer anuncia cambios al mes (`mediaBuyerChanges`: 10 en Starter,
  * 100 en Growth, 200 en Scale), un límite que el motor todavía no aplica.
  * Preguntas al mes (16-sep, modelo económico): Starter 150, Growth 350,
- * Scale 500 compartidas entre 3 números de WhatsApp (`whatsappNumbers`); los
+ * Scale 500 compartidas entre 2 números de WhatsApp (`whatsappNumbers`); los
  * reportes con IA descuentan del mismo cupo. El motor sigue con los cupos del
  * catálogo del 15-sep y un solo número por cuenta. Gratis incluye Analista y
  * Estratega con 30 preguntas al crear la cuenta, válidas 30 días y sin renovación
@@ -70,7 +70,7 @@ const PLAN_LADDER = [
   },
   {
     id: 'agencia', code: 'agencia', price: { month: 49, year: 490 }, agents: ['analyst', 'strategist', 'mediaBuyer', 'attribution'], mediaBuyerChanges: 200, reports: ['advanced', 'custom'], metrics: true,
-    adsAccounts: 20, adsRefreshMinutes: 60, commands: 500, whatsappNumbers: 3,
+    adsAccounts: 20, adsRefreshMinutes: 60, commands: 500, whatsappNumbers: 2,
     capabilities: { adsRead: true, adsDiagnosis: true, voice: true, mediaBuyer: 'coming_soon', attribution: 'coming_soon', googleAds: 'coming_soon', tiktokAds: true },
   },
 ];
