@@ -40,18 +40,20 @@
  * (anual 190) SOLO EN LA WEB. El motor sigue cobrando US$ 29 y dando las mismas
  * capacidades a todos, así que `tooling/plans-check.mjs` (y el flujo diario
  * «Los precios anunciados siguen siendo los que se cobran») queda en rojo hasta
- * que el catálogo se cambie en la consola de administración.
+ * que el catálogo se cambie en la consola de administración. Lo mismo con las
+ * notas de voz: la web las muestra solo en Growth y Scale (`voice: false` en
+ * Gratis y Starter) aunque el motor las da en todos los planes.
  */
 const PLAN_LADDER = [
   {
     id: 'gratis', code: 'free', price: { month: 0, year: 0 }, agents: ['analyst'],
     adsAccounts: 1, adsRefreshMinutes: 1440, commands: 30,
-    capabilities: { adsRead: true, adsDiagnosis: true, voice: true, mediaBuyer: 'coming_soon', attribution: 'coming_soon', googleAds: 'coming_soon', tiktokAds: true },
+    capabilities: { adsRead: true, adsDiagnosis: true, voice: false, mediaBuyer: 'coming_soon', attribution: 'coming_soon', googleAds: 'coming_soon', tiktokAds: true },
   },
   {
     id: 'analista', code: 'analista', price: { month: 9, year: 90 }, agents: ['analyst', 'strategist'],
     adsAccounts: 2, adsRefreshMinutes: 60, commands: 300,
-    capabilities: { adsRead: true, adsDiagnosis: true, voice: true, mediaBuyer: 'coming_soon', attribution: 'coming_soon', googleAds: 'coming_soon', tiktokAds: true },
+    capabilities: { adsRead: true, adsDiagnosis: true, voice: false, mediaBuyer: 'coming_soon', attribution: 'coming_soon', googleAds: 'coming_soon', tiktokAds: true },
   },
   {
     id: 'equipo', code: 'equipo', price: { month: 19, year: 190 }, featured: true, agents: ['analyst', 'strategist', 'mediaBuyer'],
@@ -102,7 +104,7 @@ const PRICING_TEXT = {
     trial: () => 'Empiezas gratis, sin tarjeta',
     pack: (n, p) => `¿Te quedaste sin preguntas? Suma ${n} por ${p} para este mes.`,
     more: (n) => `¿Más de ${n} cuentas publicitarias?`, talk: 'Habla con nosotros',
-    caps: { analyst: 'Agente Analista', strategist: 'Agente Estratega', mediaBuyer: 'Agente Media Buyer', attribution: 'Agente de Atribución', voice: 'Notas de voz' },
+    caps: { analyst: 'Agente Analista', strategist: 'Agente Estratega', mediaBuyer: 'Agente Media Buyer', attribution: 'Agente de Atribución', voice: 'Notas de voz (iOS - Apple)' },
     limits: {
       accounts: (n, f) => (n === 1 ? '1 cuenta publicitaria' : `${f(n)} cuentas publicitarias`),
       refresh: (min) => (min >= 1440 ? 'Datos 1 vez al día' : 'Datos cada hora'),
@@ -121,7 +123,7 @@ const PRICING_TEXT = {
     trial: () => 'You start free, no card',
     pack: (n, p) => `Out of questions? Add ${n} for ${p} this month.`,
     more: (n) => `More than ${n} ad accounts?`, talk: 'Talk to us',
-    caps: { analyst: 'Analyst Agent', strategist: 'Strategist Agent', mediaBuyer: 'Media Buyer Agent', attribution: 'Attribution Agent', voice: 'Voice notes' },
+    caps: { analyst: 'Analyst Agent', strategist: 'Strategist Agent', mediaBuyer: 'Media Buyer Agent', attribution: 'Attribution Agent', voice: 'Voice notes (iOS - Apple)' },
     limits: {
       accounts: (n, f) => (n === 1 ? '1 ad account' : `${f(n)} ad accounts`),
       refresh: (min) => (min >= 1440 ? 'Data once a day' : 'Data every hour'),
@@ -140,7 +142,7 @@ const PRICING_TEXT = {
     trial: () => 'Você começa grátis, sem cartão',
     pack: (n, p) => `Ficou sem perguntas? Some ${n} por ${p} para este mês.`,
     more: (n) => `Mais de ${n} contas de anúncios?`, talk: 'Fale com a gente',
-    caps: { analyst: 'Agente Analista', strategist: 'Agente Estrategista', mediaBuyer: 'Agente Comprador de mídia', attribution: 'Agente de Atribuição', voice: 'Notas de voz' },
+    caps: { analyst: 'Agente Analista', strategist: 'Agente Estrategista', mediaBuyer: 'Agente Comprador de mídia', attribution: 'Agente de Atribuição', voice: 'Notas de voz (iOS - Apple)' },
     limits: {
       accounts: (n, f) => (n === 1 ? '1 conta de anúncios' : `${f(n)} contas de anúncios`),
       refresh: (min) => (min >= 1440 ? 'Dados 1 vez por dia' : 'Dados a cada hora'),
@@ -188,7 +190,7 @@ const PRICING_TEXT = {
       <p class="plan-year">${year}</p>
       <ul>
         ${plan.agents.map((a, n) => `<li class="${n === plan.agents.length - 1 && n > 0 ? 'is-new' : ''}">${icon('i-check')}<span>${esc(T.caps[a])}</span></li>`).join('')}
-        <li>${icon('i-check')}<span>${esc(T.caps.voice)}</span></li>
+        ${plan.capabilities.voice === true ? `<li>${icon('i-check')}<span>${esc(T.caps.voice)}</span></li>` : ''}
       </ul>
       <p class="plan-limits">${esc(T.limits.accounts(plan.adsAccounts, int))}<br />${esc(T.limits.refresh(plan.adsRefreshMinutes))}<br />${esc(T.limits.questions(plan.commands, int))}</p>
       <a class="btn btn-dark" href="${href}">${esc(words.cta)}</a>
