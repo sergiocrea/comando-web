@@ -405,7 +405,6 @@
   "LOADING": "LOADING",
   "EQUIPO": "TEAM",
   "Tu": "Your",
-  "analista|estratega|media buyer": "analyst|strategist|media buyer",
   "analista": "analyst",
   "&nbsp;·": "&nbsp;·",
   "Meta Ads": "Meta Ads",
@@ -413,7 +412,6 @@
   "TikTok Ads": "TikTok Ads",
   "Módulo CRM": "CRM module",
   "FAQ": "FAQ",
-  "media buyer": "media buyer",
   "Una pregunta por WhatsApp revisa tus campañas de Meta, encuentra la que gasta sin traer leads y dice qué cambiar": "One WhatsApp question reviews your Meta campaigns, finds the one spending without leads and says what to change",
   "¿Qué campaña me está gastando sin traer leads?": "Which campaign is spending without bringing leads?",
   "Una pregunta y esto ya está revisado": "One question and this is already checked",
@@ -430,7 +428,9 @@
   "contactos. Se suma a tu plan de Meta. Lo que cambia es la espera: una hoja de Google tarda más que un CRM de verdad.": "contacts. It adds to your Meta plan. What changes is the wait: a Google sheet takes longer than a real CRM.",
   "Tu equipo trabaja con Meta Ads y TikTok Ads. Google Ads": "Your team works with Meta Ads and TikTok Ads. Google Ads",
   "Funciona con Meta (Facebook e Instagram) y con TikTok Ads. Google Ads llega pronto.": "It works with Meta (Facebook and Instagram) and with TikTok Ads. Google Ads is coming soon.",
-  "Tu analista, estratega y media buyer de Meta y TikTok Ads, en WhatsApp": "Your analyst, strategist and media buyer for Meta and TikTok Ads, on WhatsApp",
-  "de Meta y TikTok Ads, en WhatsApp.": "for Meta and TikTok Ads, on WhatsApp.",
-  "Tu analista de Meta y TikTok Ads te espera en WhatsApp.": "Your Meta and TikTok Ads analyst is waiting on WhatsApp."
+  "Tu analista de Meta y TikTok Ads te espera en WhatsApp.": "Your Meta and TikTok Ads analyst is waiting on WhatsApp.",
+  "Analista, estratega y media buyer de Meta y TikTok Ads, en tu WhatsApp": "Analyst, strategist and media buyer for Meta and TikTok Ads, on your WhatsApp",
+  "Media buyer": "Media buyer",
+  "Analista|Estratega|Media buyer": "Analyst|Strategist|Media buyer",
+  "de Meta y TikTok Ads, en tu WhatsApp.": "for Meta and TikTok Ads, on your WhatsApp."
 }
