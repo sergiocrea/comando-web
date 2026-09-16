@@ -489,3 +489,7 @@ html:not(.js) .lp .slider-btns { display: none; }
   .b2b-hero-media video { object-position: 50% 42%; }
   .b2b-hero-padding { padding-top: calc(var(--nav-height, 4rem) + 14.5rem); }
 }
+
+/* Casos de Meta: en móvil el subtítulo azul («Pregúntale y te lo cuenta con el dato
+   delante.») sobra bajo el titular y retrasa el teléfono (16-sep, pedido de Sergio). */
+@media (max-width: 767px) { .section_metaads .uc-subtitle { display: none; } }
