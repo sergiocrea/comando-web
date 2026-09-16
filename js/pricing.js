@@ -36,8 +36,8 @@
  * `'coming_soon'` y la página entera se corrige sola.
  *
  * EXCEPCIÓN VIVA (16-sep-2026, decisión de Sergio): los planes se presentan por
- * CAPACIDADES, un agente más por plan (`agents`), y el tercero pasa a US$ 24
- * (anual 240) SOLO EN LA WEB. El motor sigue cobrando US$ 29 y dando las mismas
+ * CAPACIDADES, un agente más por plan (`agents`), y el tercero pasa a US$ 19
+ * (anual 190) SOLO EN LA WEB. El motor sigue cobrando US$ 29 y dando las mismas
  * capacidades a todos, así que `tooling/plans-check.mjs` (y el flujo diario
  * «Los precios anunciados siguen siendo los que se cobran») queda en rojo hasta
  * que el catálogo se cambie en la consola de administración. Además, la web
@@ -45,7 +45,7 @@
  * personalizados en Scale), que el catálogo del motor no distingue, y ya no nombra las notas de voz.
  * El Media Buyer anuncia cambios al mes (`mediaBuyerChanges`: 10 en Starter,
  * 100 en Growth, 200 en Scale), un límite que el motor todavía no aplica.
- * Preguntas al mes (16-sep, modelo económico): Starter 150, Growth 400,
+ * Preguntas al mes (16-sep, modelo económico): Starter 150, Growth 350,
  * Scale 500 compartidas entre 3 números de WhatsApp (`whatsappNumbers`); los
  * reportes con IA descuentan del mismo cupo. El motor sigue con los cupos del
  * catálogo del 15-sep y un solo número por cuenta. Gratis incluye Analista y
@@ -64,8 +64,8 @@ const PLAN_LADDER = [
     capabilities: { adsRead: true, adsDiagnosis: true, voice: false, mediaBuyer: 'coming_soon', attribution: 'coming_soon', googleAds: 'coming_soon', tiktokAds: true },
   },
   {
-    id: 'equipo', code: 'equipo', price: { month: 24, year: 240 }, featured: true, agents: ['analyst', 'strategist', 'mediaBuyer'], mediaBuyerChanges: 100, reports: ['advanced'], metrics: true,
-    adsAccounts: 10, adsRefreshMinutes: 60, commands: 400,
+    id: 'equipo', code: 'equipo', price: { month: 19, year: 190 }, featured: true, agents: ['analyst', 'strategist', 'mediaBuyer'], mediaBuyerChanges: 100, reports: ['advanced'], metrics: true,
+    adsAccounts: 10, adsRefreshMinutes: 60, commands: 350,
     capabilities: { adsRead: true, adsDiagnosis: true, voice: true, mediaBuyer: 'coming_soon', attribution: 'coming_soon', googleAds: 'coming_soon', tiktokAds: true },
   },
   {
