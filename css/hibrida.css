@@ -93,6 +93,24 @@
     linear-gradient(180deg, transparent 55%, rgba(248, 247, 243, .55) 100%);
 }
 
+/* La respuesta de Comando como burbuja entrante de WhatsApp (modo oscuro, igual
+   que la pregunta): es lo que el operador recibe de verdad, no una tarjeta. */
+.b2b-hero-grid.is-short .power-context { width: 82%; }
+.b2b-hero-grid.is-short .power-context p { font-size: .88rem; }
+.power-reply {
+  position: relative; width: 94%; margin-top: .7rem; padding: .8rem .95rem 1.5rem;
+  color: #e9edef; background: #202c33; border-radius: .25rem 1rem 1rem 1rem;
+  box-shadow: 0 18px 44px rgba(9, 20, 30, .3);
+  font-family: "Neuehaasunicaw 1 G", Inter, sans-serif; font-size: .92rem; line-height: 1.42;
+  animation: pw-in .55s ease-out .45s both;
+}
+.power-reply p { margin: 0; text-wrap: pretty; }
+.power-reply p + p { margin-top: .15rem; }
+.power-reply p:last-of-type { margin-top: .75rem; }
+.power-reply b { font-weight: 650; color: #fff; }
+.power-reply time { position: absolute; right: .7rem; bottom: .35rem; font-size: .62rem; color: rgba(233, 237, 239, .58); }
+@media (prefers-reduced-motion: reduce) { .power-reply { animation: none; } }
+
 .hero-trust {
   position: relative; z-index: 2;
   padding: 1.35rem 0 1.6rem;
