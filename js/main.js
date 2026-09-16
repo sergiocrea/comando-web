@@ -686,64 +686,79 @@ function initHeroTyping() {
   const out = document.getElementById('hero-typed');
   if (!wrap || !out) return;
   const words = (wrap.dataset.words || '').split('|').map((w) => w.trim()).filter(Boolean);
-  if (words.length && out.textContent.trim() !== words[0]) out.textContent = words[0];
-  /* La rueda: a la derecha de la palabra grande, la anterior arriba y la
-     siguiente abajo, pequeñas y desvanecidas, para que se lea que las tres se
-     turnan. Se pega al ancho REAL de la palabra visible (no al de la reserva),
-     y se esconde si no cabe en la línea (móvil, portugués). */
-  const wheel = wrap.querySelector('.b2b-hero-wheel');
-  const prev = wheel && wheel.querySelector('.is-prev');
-  const next = wheel && wheel.querySelector('.is-next');
+  if (words.length < 3) return;
+  /* Carrusel (16-sep): las tres palabras son piezas que se mueven. La actual va
+     grande; la anterior, pequeña y desvanecida arriba a la derecha; la siguiente,
+     abajo a la derecha. Al girar, la de abajo crece hasta ocupar el sitio grande,
+     la grande se encoge hacia arriba y la de arriba sale por arriba y vuelve a
+     entrar por abajo. Nunca hay un momento sin palabra. */
+  const reel = document.createElement('span');
+  reel.className = 'b2b-hero-reel';
+  const pieces = words.map((w) => { const s = document.createElement('span'); s.textContent = w; reel.appendChild(s); return s; });
+  wrap.appendChild(reel);
+  wrap.classList.add('has-reel');
+
   let i = 0;
-  const colocar = () => {
-    if (!wheel) return;
-    // Solo el ANCHO sale del texto medido: la palabra puede estar a media
-    // animación (desplazada en vertical), y el alto lo da la caja de la línea.
-    const range = document.createRange();
-    range.selectNodeContents(out);
-    const rects = range.getClientRects();
-    if (!rects.length) return;
-    const box = wrap.getBoundingClientRect();
-    const left = rects[rects.length - 1].right - box.left;
-    wheel.style.setProperty('--wheel-left', `${left}px`);
-    const room = wrap.parentElement.getBoundingClientRect().right - box.left - left;
-    wheel.classList.toggle('is-hidden', rects.length > 1 || room < wheel.scrollWidth + 16);
+  const idx = (n) => (n + words.length) % words.length;
+  const geo = () => {
+    const F = parseFloat(getComputedStyle(wrap).fontSize);
+    const H = wrap.offsetHeight;
+    const S = Math.max(0.22, 11 / F);
+    const widths = pieces.map((p) => p.offsetWidth);
+    const x = widths[i] + 0.2 * F;
+    const room = wrap.parentElement.clientWidth;
+    const fits = x + S * Math.max(...widths) <= room;
+    return { H, S, x, fits, top: 0.06 * H, bottom: H - S * H - 0.04 * H };
   };
-  const pintar = () => {
-    out.textContent = words[i];
-    if (prev) prev.textContent = words[(i - 1 + words.length) % words.length];
-    if (next) next.textContent = words[(i + 1) % words.length];
-    colocar();
+  const place = (p, state, g) => {
+    const small = `translate(${g.x}px, %ypx) scale(${g.S})`;
+    const map = {
+      cur: ['translate(0px, 0px) scale(1)', 1],
+      prev: [small.replace('%y', g.top), g.fits ? 0.3 : 0],
+      next: [small.replace('%y', g.bottom), g.fits ? 0.5 : 0],
+      out: [small.replace('%y', g.top - 0.45 * g.H), 0],
+      in: [small.replace('%y', g.bottom + 0.18 * g.H), 0],
+    };
+    p.style.transform = map[state][0];
+    p.style.opacity = map[state][1];
   };
-  pintar();
-  if (wheel && window.ResizeObserver) new ResizeObserver(colocar).observe(wrap);
-  if (document.fonts && document.fonts.ready) document.fonts.ready.then(colocar);
-  // Sin rotación con movimiento reducido: se queda la primera palabra, entera.
-  if (words.length < 2 || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-  const FUNDIDO = 280;
-  const relevo = () => {
-    out.classList.add('is-changing');
-    if (wheel) wheel.classList.add('is-changing');
+  const layout = (instant) => {
+    const g = geo();
+    if (instant) reel.classList.add('is-instant');
+    pieces.forEach((p, n) => place(p, n === i ? 'cur' : n === idx(i - 1) ? 'prev' : 'next', g));
+    if (instant) { void reel.offsetWidth; reel.classList.remove('is-instant'); }
+  };
+  layout(true);
+  if (window.ResizeObserver) new ResizeObserver(() => layout(true)).observe(wrap.parentElement);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => layout(true));
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  const PASO = 2800, SALIDA = 380;
+  const girar = () => {
+    const leaving = pieces[idx(i - 1)];
+    i = idx(i + 1);
+    const g = geo();
+    pieces[i].dataset.state = 'cur';
+    place(pieces[i], 'cur', g);
+    const shrinking = pieces[idx(i - 1)];
+    shrinking.classList.add('is-shrinking');
+    place(shrinking, 'prev', g);
+    setTimeout(() => shrinking.classList.remove('is-shrinking'), 760);
+    // La que estaba arriba sale por arriba y reaparece por abajo.
+    leaving.classList.add('is-leaving');
+    place(leaving, 'out', g);
     setTimeout(() => {
-      i = (i + 1) % words.length;
-      pintar();
-      /* La palabra nueva entra desde abajo con una ANIMACIÓN, no con una
-         transición entre clases: esa vía exigía que el navegador pintara un
-         frame intermedio y no lo hacía, así que la nueva bajaba desde arriba
-         terminando el gesto de la anterior (medido: 40 muestras, todas con
-         desplazamiento negativo). El `offsetWidth` de en medio reinicia la
-         animación cuando la palabra se releva antes de que termine. */
-      out.classList.remove('is-changing');
-      out.classList.remove('is-entrando');
-      if (wheel) { wheel.classList.remove('is-changing'); wheel.classList.remove('is-entrando'); }
-      void out.offsetWidth;
-      out.classList.add('is-entrando');
-      if (wheel) wheel.classList.add('is-entrando');
-      // Las tres se quedan lo mismo: ya no hay sello que leer en ninguna.
-      setTimeout(relevo, 2600);
-    }, FUNDIDO);
+      leaving.classList.remove('is-leaving');
+      leaving.classList.add('is-jump');
+      const g2 = geo();
+      place(leaving, 'in', g2);
+      void leaving.offsetWidth;
+      leaving.classList.remove('is-jump');
+      place(leaving, 'next', g2);
+    }, SALIDA);
+    setTimeout(girar, PASO);
   };
-  setTimeout(relevo, 2600);
+  setTimeout(girar, PASO);
 }
 
 /* ============================================================
