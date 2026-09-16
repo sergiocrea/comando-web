@@ -73,12 +73,20 @@
    empresas que confían. Sin panel a la derecha: el vídeo respira. */
 .b2b-hero { min-height: 100vh; min-height: 100svh; display: flex; flex-direction: column; }
 .b2b-hero-padding { flex: 1; display: flex; flex-direction: column; justify-content: flex-end; padding-top: calc(var(--nav-height, 5rem) + 2rem); padding-bottom: clamp(2.5rem, 6vh, 4.5rem); }
-.b2b-hero-grid.is-copy-only .b2b-hero-copy { max-width: 60rem; }
-.b2b-hero-grid.is-copy-only .b2b-hero-title { max-width: none; font-size: clamp(3.6rem, 7.6vw, 7.75rem); line-height: .92; }
-.b2b-hero-grid.is-copy-only .b2b-hero-lede { max-width: 40rem; margin-top: 1.5rem; color: #3f423f; }
-.b2b-hero-grid.is-copy-only .b2b-hero-actions { margin-top: 2rem; }
-/* Sin panel a la derecha el velo ya no se corta a media pantalla: cubre la
-   columna del texto y sube desde abajo para que la franja se lea. */
+.b2b-hero-grid.is-short { grid-template-columns: minmax(0, 1.15fr) minmax(22rem, .85fr); align-items: end; gap: clamp(2rem, 5vw, 5rem); }
+.b2b-hero-grid.is-short .b2b-hero-visual { width: min(100%, 26rem); margin: 0 0 0 auto; padding-bottom: 0; }
+/* Por debajo de 992 px el panel se iría debajo del texto y empujaría la franja
+   fuera de la pantalla: el hero corto se queda solo con el texto. */
+@media (max-width: 991px) {
+  .b2b-hero-grid.is-short { grid-template-columns: minmax(0, 1fr); }
+  .b2b-hero-grid.is-short .b2b-hero-visual { display: none; }
+}
+.b2b-hero-grid.is-short .b2b-hero-copy { max-width: 44rem; }
+.b2b-hero-grid.is-short .b2b-hero-title { max-width: none; font-size: clamp(3rem, 5.4vw, 5.6rem); line-height: .94; }
+.b2b-hero-grid.is-short .b2b-hero-lede { max-width: 32rem; margin-top: 1.25rem; font-size: clamp(1rem, 1.2vw, 1.15rem); color: #3f423f; }
+.b2b-hero-grid.is-short .b2b-hero-actions { margin-top: 1.75rem; }
+/* El velo cubre la columna del texto y sube desde abajo para que la franja
+   se lea; el panel de la derecha flota sobre el vídeo con su propio fondo. */
 .b2b-hero-glow {
   background:
     linear-gradient(90deg, rgba(248, 247, 243, .92) 0%, rgba(248, 247, 243, .78) 34%, rgba(248, 247, 243, .3) 58%, rgba(248, 247, 243, 0) 78%),
@@ -105,9 +113,20 @@
   animation: hero-trust-scroll 40s linear infinite;
 }
 /* Los logos van en un solo tono: la franja dice «hay empresas detrás», no
-   compite con el titular. Con imágenes, `img` hereda la altura y el gris. */
-.hero-trust-row li { display: flex; align-items: center; height: 2rem; white-space: nowrap; font: 600 1.35rem/1 Neuemachina, "Space Grotesk", Inter, sans-serif; letter-spacing: -.03em; color: #151515; opacity: .55; }
-.hero-trust-row img { height: 100%; width: auto; filter: grayscale(1); }
+   compite con el titular. `brightness(0)` los deja en negro sea cual sea su
+   color y la opacidad los baja a gris. La altura se ajusta por marca para que
+   pesen lo mismo a la vista: un logotipo fino y ancho (Ripley, Falabella) pide
+   menos alto que uno compacto (AWS). */
+.hero-trust-row li { --h: 1.6rem; display: flex; align-items: center; gap: .45rem; height: 2.25rem; white-space: nowrap; opacity: .55; }
+.hero-trust-row img { display: block; height: var(--h); width: auto; filter: brightness(0); }
+.hero-trust-row li span { font: 500 .95rem/1 "Neuehaasunicaw 1 G", Inter, sans-serif; color: #151515; letter-spacing: -.01em; }
+.hero-trust-row .is-aws { --h: 2.1rem; }
+.hero-trust-row .is-hubspot { --h: 1.7rem; }
+.hero-trust-row .is-entel { --h: 1.55rem; }
+.hero-trust-row .is-nestle { --h: 1.5rem; }
+.hero-trust-row .is-falabella { --h: 1.35rem; }
+.hero-trust-row .is-ripley { --h: 1.05rem; }
+.hero-trust-row .is-ibm { --h: 1.75rem; }
 @keyframes hero-trust-scroll { to { transform: translateX(-100%); } }
 .hero-trust:hover .hero-trust-row { animation-play-state: paused; }
 @media (prefers-reduced-motion: reduce) { .hero-trust-row { animation: none; } }
@@ -115,14 +134,16 @@
 @media (max-width: 767px) {
   .b2b-hero { min-height: 0; }
   .b2b-hero-padding { flex: none; padding-top: calc(var(--nav-height, 4.5rem) + 8.5rem); padding-bottom: 0; }
-  .b2b-hero-grid.is-copy-only .b2b-hero-title { font-size: clamp(2.5rem, 11.5vw, 3.2rem); }
-  .b2b-hero-grid.is-copy-only .b2b-hero-lede { margin-top: .85rem; }
-  .b2b-hero-grid.is-copy-only .b2b-hero-actions { margin-top: 1.2rem; }
+  .b2b-hero-grid.is-short .b2b-hero-title { font-size: clamp(2.3rem, 10.4vw, 2.9rem); }
+  .b2b-hero-grid.is-short .b2b-hero-lede { margin-top: .85rem; }
+  .b2b-hero-grid.is-short .b2b-hero-actions { margin-top: 1.2rem; }
   /* En móvil la franja sigue a la hoja del texto, del mismo crema. */
   .hero-trust { padding: 1rem 0 1.25rem; background: rgba(243, 241, 234, .96); border-top-color: rgba(21, 21, 21, .08); }
   .hero-trust-label { margin-bottom: .75rem; font-size: .64rem; }
   .hero-trust-row { gap: 2rem; animation-duration: 30s; }
-  .hero-trust-row li { height: 1.5rem; font-size: 1.05rem; }
+  .hero-trust-row li { height: 1.75rem; }
+  .hero-trust-row img { height: calc(var(--h) * .78); }
+  .hero-trust-row li span { font-size: .78rem; }
 }
 
 /* ---------- base de las secciones nuevas ---------- */

@@ -241,7 +241,7 @@
   }
 
   const meta = document.getElementById('metaads-root');
-  if (meta) mount(meta, { data: 'metaads', pickers: false, feed: false, ads: true, version: 11 });
+  if (meta) mount(meta, { data: 'metaads', pickers: false, feed: false, ads: true, version: 12 });
   const dia = document.getElementById('usecases-root');
   // `foot: false`: el cierre y su botón se iban justo antes de precios, y ahí
   // el visitante ya tiene cuatro planes con su propio botón a un dedo.
