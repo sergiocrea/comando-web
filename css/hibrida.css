@@ -40,20 +40,10 @@
 .b2b-hero-title #hero-typed.is-entrando { animation: lp-entra-palabra .44s cubic-bezier(.16, 1, .3, 1) both; }
 @media (prefers-reduced-motion: reduce) { .b2b-hero-title #hero-typed.is-entrando { animation: none; } }
 @media (prefers-reduced-motion: reduce) { .b2b-hero-title #hero-typed { transition: none; } }
-/* El sello va DEBAJO del titular, nunca dentro de la frase: «Tu media buyer de Meta
-   Ads, en WhatsApp.» se lee de corrido y el aviso no la parte. Ocupa su línea
-   siempre —oculto es invisible, no ausente— para que nada se mueva al aparecer. */
-.b2b-hero-soon {
-  display: inline-block; margin-top: .9rem;
-  font: 500 clamp(.62rem, .85vw, .76rem)/1 "Jetbrainsmono Variable", ui-monospace, monospace;
-  font-style: normal; letter-spacing: .06em; text-transform: uppercase; white-space: nowrap;
-  color: #5b3fd1; background: rgba(247, 245, 255, .92); border: 1px solid rgba(91, 63, 209, .35);
-  border-radius: 999px; padding: .55em .8em;
-}
-.b2b-hero-soon[hidden] { display: inline-block; visibility: hidden; }
+/* El sello «Próximamente» del titular se quitó el 16-sep: el estado de cada
+   agente lo cuenta la sección del equipo, no la portada. */
 .b2b-button svg { width: 1.15rem; height: 1.15rem; flex: none; }
 @media (max-width: 767px) {
-  .b2b-hero-soon { margin-top: .45rem; }
   /* Dos botones en una fila no caben con «Pruébalo gratis en WhatsApp»: van apilados. */
   .b2b-hero-actions { grid-template-columns: 1fr; }
   .b2b-button { white-space: normal; text-align: center; }

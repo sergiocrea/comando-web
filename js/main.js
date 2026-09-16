@@ -672,14 +672,14 @@ function initAnchorOffset() {
 }
 
 /* ============================================================
-   12. Titular del hero: «Tu» + la palabra que cambia
+   12. Titular del hero: el rol que cambia
    Las palabras se RELEVAN con un fundido, no se escriben letra a letra: el
-   titular es la frase que vende, y media rotación con «Tu me de Meta Ads, en
-   WhatsApp» o con el renglón vacío se lee roto. Con el fundido, lo que hay en
-   pantalla es siempre una palabra entera.
-   `data-soon-index` marca la palabra que todavía no existe en el producto
-   (hoy «media buyer»): mientras se enseña, aparece su sello «Próximamente»,
-   que se esconde durante el relevo.
+   titular es la frase que vende, y media rotación con una palabra a medias o
+   con el renglón vacío se lee roto. Con el fundido, lo que hay en pantalla es
+   siempre una palabra entera.
+   El sello «Próximamente» que acompañaba a «Media buyer» se quitó el 16-sep a
+   petición de Sergio: quién está disponible y quién no lo sigue diciendo la
+   sección del equipo, donde cada agente lleva su estado.
    ============================================================ */
 function initHeroTyping() {
   const wrap = document.querySelector('.b2b-hero-type');
@@ -687,18 +687,14 @@ function initHeroTyping() {
   if (!wrap || !out) return;
   const words = (wrap.dataset.words || '').split('|').map((w) => w.trim()).filter(Boolean);
   if (words.length && out.textContent.trim() !== words[0]) out.textContent = words[0];
-  // El sello vive fuera del titular (debajo), para no partir la frase.
-  const soon = document.querySelector('.b2b-hero-soon');
-  const soonIndex = wrap.dataset.soonIndex === undefined ? -1 : Number(wrap.dataset.soonIndex);
   let i = 0;
-  const pintar = () => { out.textContent = words[i]; if (soon) soon.hidden = i !== soonIndex; };
+  const pintar = () => { out.textContent = words[i]; };
   pintar();
   // Sin rotación con movimiento reducido: se queda la primera palabra, entera.
   if (words.length < 2 || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   const FUNDIDO = 280;
   const relevo = () => {
     out.classList.add('is-changing');
-    if (soon) soon.hidden = true;
     setTimeout(() => {
       i = (i + 1) % words.length;
       pintar();
@@ -712,8 +708,8 @@ function initHeroTyping() {
       out.classList.remove('is-entrando');
       void out.offsetWidth;
       out.classList.add('is-entrando');
-      // La que no existe se queda más tiempo: hay que leer el sello.
-      setTimeout(relevo, i === soonIndex ? 3400 : 2600);
+      // Las tres se quedan lo mismo: ya no hay sello que leer en ninguna.
+      setTimeout(relevo, 2600);
     }, FUNDIDO);
   };
   setTimeout(relevo, 2600);
