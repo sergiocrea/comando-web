@@ -1,7 +1,7 @@
 /* ============================================================
-   pricing.js — Precios de Comando y calculadora del módulo «Conversa con tu CRM».
+   pricing.js — Precios de Comando.
 
-   Los números viven UNA vez, aquí abajo (PLAN_LADDER, TRIAL, ADDONS y CRM_QUOTE),
+   Los números viven UNA vez, aquí abajo (PLAN_LADDER, TRIAL y ADDONS),
    y los tres idiomas solo cambian las palabras (PRICING_TEXT). Un plan de US$ 29
    con 10 cuentas publicitarias es el mismo plan en castellano, inglés y portugués.
 
@@ -25,8 +25,7 @@
  * `year` (anual = 10 meses).
  *
  * Capacidades: `true` incluido hoy; `'coming_soon'` todavía no existe en el
- * producto y la página lo dice como «Próximamente». `earlyAccess` = «primero en
- * recibir» lo próximo.
+ * producto y la página lo dice como «Próximamente».
  *
  * EXCEPCIÓN VIVA (16-sep-2026, decisión de Sergio): `tiktokAds` va en `true`
  * mientras el catálogo del motor todavía dice `coming_soon`. El conector de
@@ -48,12 +47,12 @@ const PLAN_LADDER = [
     capabilities: { adsRead: true, adsDiagnosis: true, voice: true, mediaBuyer: 'coming_soon', attribution: 'coming_soon', googleAds: 'coming_soon', tiktokAds: true },
   },
   {
-    id: 'equipo', code: 'equipo', price: { month: 29, year: 290 }, featured: true, earlyAccess: true,
+    id: 'equipo', code: 'equipo', price: { month: 29, year: 290 }, featured: true,
     adsAccounts: 10, adsRefreshMinutes: 60, commands: 1500,
     capabilities: { adsRead: true, adsDiagnosis: true, voice: true, mediaBuyer: 'coming_soon', attribution: 'coming_soon', googleAds: 'coming_soon', tiktokAds: true },
   },
   {
-    id: 'agencia', code: 'agencia', price: { month: 49, year: 490 }, earlyAccess: true,
+    id: 'agencia', code: 'agencia', price: { month: 49, year: 490 },
     adsAccounts: 20, adsRefreshMinutes: 60, commands: 3000,
     capabilities: { adsRead: true, adsDiagnosis: true, voice: true, mediaBuyer: 'coming_soon', attribution: 'coming_soon', googleAds: 'coming_soon', tiktokAds: true },
   },
@@ -67,29 +66,11 @@ const ADDONS = {
   crm: { priceFrom: 9, pricing: 'variable' },
 };
 
-/**
- * El módulo CRM, con lo único que de verdad cambia: la ESPERA.
- *
- * Había un deslizador de contactos y prometía una precisión que no existe: el
- * precio es US$ 9 en los siete tramos y con los tres CRM —lo confirma el motor
- * en `GET /v1/public/crm-quote`, que cotiza 900 céntimos siempre—, porque con
- * la estrategia 3 el costo real es de centavos y todo queda en el mínimo
- * comercial. Mover el deslizador no movía el número, y la nota insinuaba
- * subidas que no llegan.
- *
- * Lo que sí cambia con el CRM es cuánto tarda en contestarte, y por mucho:
- * Salesforce responde en segundos y una hoja de Google puede tardar minutos.
- * Los minutos salen de `docs/crm-precios.json` (mismo origen que los precios).
- */
-const CRM_QUOTE = {
-  price: 9,
-  maxContacts: 200000,
-  providers: {
-    hubspot: { waitMinutes: 0.12 },
-    salesforce: { waitMinutes: 0.07 },
-    sheets: { waitMinutes: 11.25 },
-  },
-};
+/* La tabla del módulo CRM (precio y espera por proveedor) se retiró el 16-sep
+   con su calculadora: la página deja de anunciar ese precio mientras el CRM
+   está fuera del discurso. El motor lo sigue cotizando en
+   `GET /v1/public/crm-quote`, y los números vivos están en
+   `docs/crm-precios.json` para cuando vuelva. */
 
 /**
  * Paquete de preguntas de pago único: se suma al cupo del MES EN CURSO (no es
@@ -114,11 +95,7 @@ const PRICING_TEXT = {
     trial: (days) => `Empiezas con ${days} días del plan Equipo, sin tarjeta`,
     pack: (n, p) => `¿Te quedaste sin preguntas? Suma ${n} por ${p} para este mes.`,
     more: (n) => `¿Más de ${n} cuentas publicitarias?`, talk: 'Habla con nosotros',
-    caps: { team: 'Analista y estratega', voice: 'Notas de voz', soon: 'Comprador de medios y atribución', soonFirst: 'Primero en recibir comprador de medios y atribución' },
-    calc: {
-      seconds: (n) => (n === 1 ? '1 segundo' : `${n} segundos`),
-      minutes: (n) => (n === 1 ? '1 minuto' : `${n} minutos`),
-    },
+    caps: { team: 'Analista y estratega', voice: 'Notas de voz' },
     limits: {
       accounts: (n, f) => (n === 1 ? '1 cuenta publicitaria' : `${f(n)} cuentas publicitarias`),
       refresh: (min) => (min >= 1440 ? 'Datos 1 vez al día' : 'Datos cada hora'),
@@ -137,11 +114,7 @@ const PRICING_TEXT = {
     trial: (days) => `You start with ${days} days of the Team plan, no card`,
     pack: (n, p) => `Out of questions? Add ${n} for ${p} this month.`,
     more: (n) => `More than ${n} ad accounts?`, talk: 'Talk to us',
-    caps: { team: 'Analyst and strategist', voice: 'Voice notes', soon: 'Media buyer and attribution', soonFirst: 'First to get media buyer and attribution' },
-    calc: {
-      seconds: (n) => (n === 1 ? '1 second' : `${n} seconds`),
-      minutes: (n) => (n === 1 ? '1 minute' : `${n} minutes`),
-    },
+    caps: { team: 'Analyst and strategist', voice: 'Voice notes' },
     limits: {
       accounts: (n, f) => (n === 1 ? '1 ad account' : `${f(n)} ad accounts`),
       refresh: (min) => (min >= 1440 ? 'Data once a day' : 'Data every hour'),
@@ -160,11 +133,7 @@ const PRICING_TEXT = {
     trial: (days) => `Você começa com ${days} dias do plano Equipe, sem cartão`,
     pack: (n, p) => `Ficou sem perguntas? Some ${n} por ${p} para este mês.`,
     more: (n) => `Mais de ${n} contas de anúncios?`, talk: 'Fale com a gente',
-    caps: { team: 'Analista e estrategista', voice: 'Notas de voz', soon: 'Comprador de mídia e atribuição', soonFirst: 'Primeiro a receber comprador de mídia e atribuição' },
-    calc: {
-      seconds: (n) => (n === 1 ? '1 segundo' : `${n} segundos`),
-      minutes: (n) => (n === 1 ? '1 minuto' : `${n} minutos`),
-    },
+    caps: { team: 'Analista e estrategista', voice: 'Notas de voz' },
     limits: {
       accounts: (n, f) => (n === 1 ? '1 conta de anúncios' : `${f(n)} contas de anúncios`),
       refresh: (min) => (min >= 1440 ? 'Dados 1 vez por dia' : 'Dados a cada hora'),
@@ -201,7 +170,6 @@ const PRICING_TEXT = {
     const perMonth = state.annual ? plan.price.year / 12 : plan.price.month;
     const price = free ? money(0) : `${money(perMonth)}<small>${esc(T.perMonth)}</small>`;
     const year = !free && state.annual ? esc(T.perYear(money(plan.price.year))) : '';
-    const soonText = plan.earlyAccess ? T.caps.soonFirst : T.caps.soon;
     const href = free
       ? `${PRICING_CONFIG.signup}?plan=${plan.code}`
       : `${PRICING_CONFIG.signup}?plan=${plan.code}&interval=${state.annual ? 'annual' : 'monthly'}`;
@@ -214,7 +182,6 @@ const PRICING_TEXT = {
       <ul>
         <li>${icon('i-check')}<span>${esc(T.caps.team)}</span></li>
         <li>${icon('i-check')}<span>${esc(T.caps.voice)}</span></li>
-        <li class="soon">${icon('i-clock')}<span>${esc(soonText)}<br /><span class="badge soon">${esc(T.soon)}</span></span></li>
       </ul>
       <p class="plan-limits">${esc(T.limits.accounts(plan.adsAccounts, int))}<br />${esc(T.limits.refresh(plan.adsRefreshMinutes))}<br />${esc(T.limits.questions(plan.commands, int))}</p>
       <a class="btn btn-dark" href="${href}">${esc(words.cta)}</a>
@@ -244,29 +211,5 @@ const PRICING_TEXT = {
     if (window.ScrollTrigger) window.ScrollTrigger.refresh();
   }
 
-  /* El módulo CRM: precio fijo y, según el CRM, cuánto tarda en contestar. */
-  function mountCalc() {
-    const calc = document.querySelector('[data-crm-calc]');
-    if (!calc) return;
-    const select = calc.querySelector('select');
-    const out = calc.querySelector('[data-price]');
-    const espera = calc.querySelector('[data-wait]');
-    calc.querySelectorAll('[data-max-contacts]').forEach((el) => { el.textContent = int(CRM_QUOTE.maxContacts); });
-    /* Por debajo del minuto se dice en segundos: «0,1 minutos» no se lee como
-       una espera, y es justo el caso de los CRM rápidos. */
-    const enPalabras = (minutos) => (minutos < 1
-      ? T.calc.seconds(Math.max(1, Math.round(minutos * 60)))
-      : T.calc.minutes(Math.round(minutos)));
-    const update = () => {
-      out.textContent = money(CRM_QUOTE.price);
-      const proveedor = CRM_QUOTE.providers[select.value];
-      if (espera) espera.textContent = proveedor ? enPalabras(proveedor.waitMinutes) : '';
-    };
-    select.addEventListener('change', update);
-    calc.addEventListener('submit', (event) => event.preventDefault());
-    update();
-  }
-
   mountPlans();
-  mountCalc();
 })();

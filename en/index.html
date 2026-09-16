@@ -619,7 +619,9 @@
               <div id="pricing-root">
                 <noscript><p class="plans-noscript">Free, Analyst US$&nbsp;9, Team US$&nbsp;29 and Agency US$&nbsp;49 a month. <a href="/app/?mode=signup">Start free</a></p></noscript>
               </div>
-              <p class="pricing-crm-link">Have a CRM? Add <a href="#crm">Chat with your CRM</a> from US$&nbsp;9 a month.</p>
+              <!-- Fuera el precio del módulo CRM (16-sep): enlazaba a la sección
+                   que ahora va oculta, así que además quedaba muerto. -->
+
             </div></div>
           </section>
         </div>
@@ -627,13 +629,18 @@
              Meta y luego para qué sirve el módulo que se suma aparte. Queda FUERA
              de `.lp` a propósito: usa el sistema anterior (`section_usecases`),
              no la tipografía ni los carriles de las secciones nuevas. -->
-        <div id="dia" class="section_usecases section_dia">
+        <!-- Ocultas el 16-sep por decisión de Sergio: el módulo CRM sale del
+             discurso de la página. No se borran —el motor lo sigue vendiendo y
+             cobrando igual—, así que volver es quitar el `hidden`. -->
+        <div id="dia" class="section_usecases section_dia" hidden>
           <div class="padding-global">
             <div class="container-large"><div id="usecases-root"></div></div>
           </div>
         </div>
         <div class="lp">
-          <section class="lp-section lp-paper lp-crm" id="crm" aria-labelledby="crm-title">
+          <!-- Oculta con `#dia`, misma decisión del 16-sep: el módulo CRM y su
+               calculadora salen de la página. El marcado se queda para volver. -->
+          <section class="lp-section lp-paper lp-crm" id="crm" aria-labelledby="crm-title" hidden>
             <div class="padding-global"><div class="container-large">
               <div class="lp-crm-grid">
                 <div>
@@ -648,23 +655,9 @@
                   </ul>
                   <p class="lp-crm-links"><a href="/en/conectores.html">See connectors →</a></p>
                 </div>
-                <form class="calc" data-crm-calc aria-labelledby="calc-title">
-                  <h3 id="calc-title">How much with your CRM?</h3>
-                  <div class="field">
-                    <label for="crm-sel">Your CRM</label>
-                    <select id="crm-sel">
-                      <option value="hubspot">HubSpot</option>
-                      <option value="salesforce">Salesforce</option>
-                      <option value="sheets">Google Sheets</option>
-                      <option disabled>Zoho CRM · coming soon</option>
-                      <option disabled>Pipedrive · coming soon</option>
-                      <option disabled>Kommo · coming soon</option>
-                    </select>
-                  </div>
-                  <div class="calc-out" aria-live="polite"><span>From</span><span class="plan-price"><span data-price>US$&nbsp;9</span><small>/mo</small></span></div>
-                  <div class="calc-wait" aria-live="polite"><span>It answers you in</span><strong data-wait>7 seconds</strong></div>
-                  <p class="calc-note">Same price with any of the three, up to <span data-max-contacts>200.000</span> contacts. It adds to your Meta plan. What changes is the wait: a Google sheet takes longer than a real CRM.</p>
-                </form>
+                <!-- La calculadora del módulo CRM se quitó el 16-sep: su precio
+                     no se anuncia en la página mientras el CRM esté fuera del
+                     discurso, para que nadie lo confunda con el precio de Ads. -->
               </div>
             </div></div>
           </section>
@@ -830,7 +823,7 @@
     <script src="/assets/vendor/ScrambleTextPlugin.min.js"></script>
     <script src="/js/screens.js?v=17"></script>
     <script src="/js/usecases.js?v=50" defer></script>
-    <script src="/js/pricing.js?v=40" defer></script>
+    <script src="/js/pricing.js?v=41" defer></script>
     <script src="/js/landing.js?v=2" defer></script>
     <script type="module" src="/js/main.js?v=38"></script>
     <script src="/js/hero2d.js?v=5"></script>
