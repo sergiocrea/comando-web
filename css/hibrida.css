@@ -236,7 +236,11 @@ html:not(.js) .lp .slider-btns { display: none; }
 .lp-crm-list svg { width: 18px; height: 18px; margin-top: 4px; color: #127a52; }
 .lp-crm-list q { font-style: normal; color: var(--lp-ink); font-weight: 600; }
 .lp-crm-list li.soon svg { color: var(--soon); }
-.lp-crm-links { margin-top: 1.8rem !important; font-weight: 650; }
+/* El precio del módulo, donde el visitante lo busca. Con peso propio para que
+   no se lea como una nota al pie, pero sin cifra: lo que importa es de qué
+   depende y que es ADICIONAL al plan de anuncios. */
+.lp-crm-precio { margin-top: 1.8rem !important; font-weight: 650; color: var(--lp-ink); }
+.lp-crm-links { margin-top: 1rem !important; font-weight: 650; }
 .lp-crm-links a { color: var(--lp-ink); }
 .lp .calc { background: #fff; border: 1px solid var(--lp-line); border-radius: 1.4rem; padding: 1.6rem; box-shadow: 0 24px 50px -32px rgba(0, 0, 0, .3); }
 .lp .calc h3 { font-size: 1.3rem; margin-bottom: 1.2rem; }
