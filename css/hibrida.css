@@ -533,3 +533,8 @@ html:not(.js) .lp .slider-btns { display: none; }
   /* El selector Mensual/Anual va centrado en móvil. */
   .lp .pricing-bar { align-items: center; }
 }
+
+/* Precios (16-sep): las tarjetas claras con el papel cálido de la tarjeta premium
+   de Atribución en vez de blanco; la capacidad que suma cada plan, en negrita. */
+.lp .plan:not(.star) { background: #fffdf8; }
+.lp .plan li.is-new span { font-weight: 650; }

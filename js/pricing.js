@@ -34,25 +34,32 @@
  * que se pueda conectar. En cuanto las credenciales estén, el motor pasa a
  * publicarlo disponible y esta nota sobra; si la decisión cambia, aquí vuelve
  * `'coming_soon'` y la página entera se corrige sola.
+ *
+ * EXCEPCIÓN VIVA (16-sep-2026, decisión de Sergio): los planes se presentan por
+ * CAPACIDADES, un agente más por plan (`agents`), y el tercero pasa a US$ 19
+ * (anual 190) SOLO EN LA WEB. El motor sigue cobrando US$ 29 y dando las mismas
+ * capacidades a todos, así que `tooling/plans-check.mjs` (y el flujo diario
+ * «Los precios anunciados siguen siendo los que se cobran») queda en rojo hasta
+ * que el catálogo se cambie en la consola de administración.
  */
 const PLAN_LADDER = [
   {
-    id: 'gratis', code: 'free', price: { month: 0, year: 0 },
+    id: 'gratis', code: 'free', price: { month: 0, year: 0 }, agents: ['analyst'],
     adsAccounts: 1, adsRefreshMinutes: 1440, commands: 30,
     capabilities: { adsRead: true, adsDiagnosis: true, voice: true, mediaBuyer: 'coming_soon', attribution: 'coming_soon', googleAds: 'coming_soon', tiktokAds: true },
   },
   {
-    id: 'analista', code: 'analista', price: { month: 9, year: 90 },
+    id: 'analista', code: 'analista', price: { month: 9, year: 90 }, agents: ['analyst', 'strategist'],
     adsAccounts: 2, adsRefreshMinutes: 60, commands: 300,
     capabilities: { adsRead: true, adsDiagnosis: true, voice: true, mediaBuyer: 'coming_soon', attribution: 'coming_soon', googleAds: 'coming_soon', tiktokAds: true },
   },
   {
-    id: 'equipo', code: 'equipo', price: { month: 29, year: 290 }, featured: true,
+    id: 'equipo', code: 'equipo', price: { month: 19, year: 190 }, featured: true, agents: ['analyst', 'strategist', 'mediaBuyer'],
     adsAccounts: 10, adsRefreshMinutes: 60, commands: 1500,
     capabilities: { adsRead: true, adsDiagnosis: true, voice: true, mediaBuyer: 'coming_soon', attribution: 'coming_soon', googleAds: 'coming_soon', tiktokAds: true },
   },
   {
-    id: 'agencia', code: 'agencia', price: { month: 49, year: 490 },
+    id: 'agencia', code: 'agencia', price: { month: 49, year: 490 }, agents: ['analyst', 'strategist', 'mediaBuyer', 'attribution'],
     adsAccounts: 20, adsRefreshMinutes: 60, commands: 3000,
     capabilities: { adsRead: true, adsDiagnosis: true, voice: true, mediaBuyer: 'coming_soon', attribution: 'coming_soon', googleAds: 'coming_soon', tiktokAds: true },
   },
@@ -95,7 +102,7 @@ const PRICING_TEXT = {
     trial: () => 'Empiezas gratis, sin tarjeta',
     pack: (n, p) => `¿Te quedaste sin preguntas? Suma ${n} por ${p} para este mes.`,
     more: (n) => `¿Más de ${n} cuentas publicitarias?`, talk: 'Habla con nosotros',
-    caps: { team: 'Analista y estratega', voice: 'Notas de voz' },
+    caps: { analyst: 'Analista', strategist: 'Estratega', mediaBuyer: 'Media Buyer', attribution: 'Atribución', voice: 'Notas de voz' },
     limits: {
       accounts: (n, f) => (n === 1 ? '1 cuenta publicitaria' : `${f(n)} cuentas publicitarias`),
       refresh: (min) => (min >= 1440 ? 'Datos 1 vez al día' : 'Datos cada hora'),
@@ -103,9 +110,9 @@ const PRICING_TEXT = {
     },
     plans: {
       gratis: { name: 'Gratis', result: 'Pregúntale a tus anuncios', cta: 'Empezar gratis' },
-      analista: { name: 'Analista', result: 'Tu analista y estratega cada día', cta: 'Elegir Analista' },
-      equipo: { name: 'Equipo', result: 'Todo tu marketing en un chat', cta: 'Elegir Equipo' },
-      agencia: { name: 'Agencia', result: 'Todos tus clientes en un chat', cta: 'Elegir Agencia' },
+      analista: { name: 'Estratega', result: 'Te dice qué revisar primero', cta: 'Elegir Estratega' },
+      equipo: { name: 'Media Buyer', result: 'Pausa y mueve presupuesto con tu CONFIRMAR', cta: 'Elegir Media Buyer' },
+      agencia: { name: 'Atribución', result: 'Tus ventas del CRM, cruzadas con Meta', cta: 'Elegir Atribución' },
     },
   },
   en: {
@@ -114,7 +121,7 @@ const PRICING_TEXT = {
     trial: () => 'You start free, no card',
     pack: (n, p) => `Out of questions? Add ${n} for ${p} this month.`,
     more: (n) => `More than ${n} ad accounts?`, talk: 'Talk to us',
-    caps: { team: 'Analyst and strategist', voice: 'Voice notes' },
+    caps: { analyst: 'Analyst', strategist: 'Strategist', mediaBuyer: 'Media Buyer', attribution: 'Attribution', voice: 'Voice notes' },
     limits: {
       accounts: (n, f) => (n === 1 ? '1 ad account' : `${f(n)} ad accounts`),
       refresh: (min) => (min >= 1440 ? 'Data once a day' : 'Data every hour'),
@@ -122,9 +129,9 @@ const PRICING_TEXT = {
     },
     plans: {
       gratis: { name: 'Free', result: 'Ask your ads', cta: 'Start free' },
-      analista: { name: 'Analyst', result: 'Your analyst and strategist every day', cta: 'Choose Analyst' },
-      equipo: { name: 'Team', result: 'All your marketing in one chat', cta: 'Choose Team' },
-      agencia: { name: 'Agency', result: 'All your clients in one chat', cta: 'Choose Agency' },
+      analista: { name: 'Strategist', result: 'Tells you what to check first', cta: 'Choose Strategist' },
+      equipo: { name: 'Media Buyer', result: 'Pauses and moves budget when you CONFIRM', cta: 'Choose Media Buyer' },
+      agencia: { name: 'Attribution', result: 'Your CRM sales, matched with Meta', cta: 'Choose Attribution' },
     },
   },
   pt: {
@@ -133,7 +140,7 @@ const PRICING_TEXT = {
     trial: () => 'Você começa grátis, sem cartão',
     pack: (n, p) => `Ficou sem perguntas? Some ${n} por ${p} para este mês.`,
     more: (n) => `Mais de ${n} contas de anúncios?`, talk: 'Fale com a gente',
-    caps: { team: 'Analista e estrategista', voice: 'Notas de voz' },
+    caps: { analyst: 'Analista', strategist: 'Estrategista', mediaBuyer: 'Comprador de mídia', attribution: 'Atribuição', voice: 'Notas de voz' },
     limits: {
       accounts: (n, f) => (n === 1 ? '1 conta de anúncios' : `${f(n)} contas de anúncios`),
       refresh: (min) => (min >= 1440 ? 'Dados 1 vez por dia' : 'Dados a cada hora'),
@@ -141,9 +148,9 @@ const PRICING_TEXT = {
     },
     plans: {
       gratis: { name: 'Grátis', result: 'Pergunte aos seus anúncios', cta: 'Começar grátis' },
-      analista: { name: 'Analista', result: 'Seu analista e estrategista todo dia', cta: 'Escolher Analista' },
-      equipo: { name: 'Equipe', result: 'Todo o seu marketing em um chat', cta: 'Escolher Equipe' },
-      agencia: { name: 'Agência', result: 'Todos os seus clientes em um chat', cta: 'Escolher Agência' },
+      analista: { name: 'Estrategista', result: 'Diz o que revisar primeiro', cta: 'Escolher Estrategista' },
+      equipo: { name: 'Comprador de mídia', result: 'Pausa e move orçamento com o seu CONFIRMAR', cta: 'Escolher Comprador de mídia' },
+      agencia: { name: 'Atribuição', result: 'Suas vendas do CRM, cruzadas com a Meta', cta: 'Escolher Atribuição' },
     },
   },
 };
@@ -180,7 +187,7 @@ const PRICING_TEXT = {
       <p class="plan-price">${price}</p>
       <p class="plan-year">${year}</p>
       <ul>
-        <li>${icon('i-check')}<span>${esc(T.caps.team)}</span></li>
+        ${plan.agents.map((a, n) => `<li class="${n === plan.agents.length - 1 && n > 0 ? 'is-new' : ''}">${icon('i-check')}<span>${esc(T.caps[a])}</span></li>`).join('')}
         <li>${icon('i-check')}<span>${esc(T.caps.voice)}</span></li>
       </ul>
       <p class="plan-limits">${esc(T.limits.accounts(plan.adsAccounts, int))}<br />${esc(T.limits.refresh(plan.adsRefreshMinutes))}<br />${esc(T.limits.questions(plan.commands, int))}</p>
