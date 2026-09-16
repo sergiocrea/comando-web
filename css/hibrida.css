@@ -140,9 +140,9 @@
 .hero-trust-row li { --h: 1.6rem; display: flex; align-items: center; gap: .5rem; height: 2.6rem; white-space: nowrap; opacity: .6; }
 .hero-trust-row img { display: block; height: var(--h); width: auto; filter: brightness(0); }
 .hero-trust-row li span { font: 500 .95rem/1 "Neuehaasunicaw 1 G", Inter, sans-serif; color: #151515; letter-spacing: -.01em; }
-.hero-trust-row .is-microsoft { --h: 1.6rem; }
+.hero-trust-row .is-domestika { --h: 1.45rem; }
 .hero-trust-row .is-aws { --h: 2.6rem; }
-.hero-trust-row .is-hubspot { --h: 1.78rem; }
+.hero-trust-row .is-remax { --h: 1.3rem; }
 .hero-trust-row .is-entel { --h: 1.6rem; }
 .hero-trust-row .is-nestle { --h: 1.62rem; }
 .hero-trust-row .is-falabella { --h: 2.2rem; }
