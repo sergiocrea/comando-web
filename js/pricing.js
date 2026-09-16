@@ -89,12 +89,10 @@ const ADDONS = {
    `GET /v1/public/crm-quote`, y los números vivos están en
    `docs/crm-precios.json` para cuando vuelva. */
 
-/**
- * Paquete de preguntas de pago único: se suma al cupo del MES EN CURSO (no es
- * mensual). En el motor es el add-on de pago único de Stripe; no está en
- * `ADDONS` porque el catálogo público solo publica módulos recurrentes.
- */
-const COMMAND_PACK = { commands: 500, price: 8 };
+/* El paquete de preguntas («+500 por US$ 8») se retiró de la página el 16-sep:
+   con los cupos nuevos rompía la escalera (Starter + paquete salía mejor que
+   Growth) y dejaba 18 % de margen. El add-on sigue en el motor
+   (`extra_commands_500`) hasta que se publiquen los paquetes nuevos. */
 
 const PRICING_CONFIG = {
   annualMonths: 10,           // anual = 10 meses: 2 gratis
@@ -110,7 +108,6 @@ const PRICING_TEXT = {
     billing: 'Facturación', monthly: 'Mensual', annual: 'Anual', freeMonths: '2 meses gratis',
     perMonth: '/mes', perYear: (a) => `${a} al año`, recommended: 'Recomendado', soon: 'Próximamente',
     trial: () => 'Empiezas gratis, sin tarjeta',
-    pack: (n, p) => `¿Te quedaste sin preguntas? Suma ${n} por ${p} para este mes.`,
     more: (n) => `¿Más de ${n} cuentas publicitarias?`, talk: 'Habla con nosotros',
     caps: { analyst: 'Agente Analista', strategist: 'Agente Estratega', mediaBuyer: 'Agente Media Buyer', mediaBuyerLimited: 'Agente Media Buyer', mediaBuyerNote: (n) => `${n} cambios al mes`, attribution: 'Agente de Atribución (CRM)', metrics: 'Métricas & KPIs', metricsBasic: 'básicas', reports: { advanced: 'Reportes Avanzados', custom: 'Reportes Personalizados' } },
     limits: {
@@ -131,7 +128,6 @@ const PRICING_TEXT = {
     billing: 'Billing', monthly: 'Monthly', annual: 'Annual', freeMonths: '2 months free',
     perMonth: '/mo', perYear: (a) => `${a} a year`, recommended: 'Recommended', soon: 'Coming soon',
     trial: () => 'You start free, no card',
-    pack: (n, p) => `Out of questions? Add ${n} for ${p} this month.`,
     more: (n) => `More than ${n} ad accounts?`, talk: 'Talk to us',
     caps: { analyst: 'Analyst Agent', strategist: 'Strategist Agent', mediaBuyer: 'Media Buyer Agent', mediaBuyerLimited: 'Media Buyer Agent', mediaBuyerNote: (n) => `${n} changes a month`, attribution: 'Attribution Agent (CRM)', metrics: 'Metrics & KPIs', metricsBasic: 'basic', reports: { advanced: 'Advanced Reports', custom: 'Custom Reports' } },
     limits: {
@@ -152,7 +148,6 @@ const PRICING_TEXT = {
     billing: 'Cobrança', monthly: 'Mensal', annual: 'Anual', freeMonths: '2 meses grátis',
     perMonth: '/mês', perYear: (a) => `${a} por ano`, recommended: 'Recomendado', soon: 'Em breve',
     trial: () => 'Você começa grátis, sem cartão',
-    pack: (n, p) => `Ficou sem perguntas? Some ${n} por ${p} para este mês.`,
     more: (n) => `Mais de ${n} contas de anúncios?`, talk: 'Fale com a gente',
     caps: { analyst: 'Agente Analista', strategist: 'Agente Estrategista', mediaBuyer: 'Agente Comprador de mídia', mediaBuyerLimited: 'Agente Comprador de mídia', mediaBuyerNote: (n) => `${n} alterações por mês`, attribution: 'Agente de Atribuição (CRM)', metrics: 'Métricas e KPIs', metricsBasic: 'básicas', reports: { advanced: 'Relatórios Avançados', custom: 'Relatórios Personalizados' } },
     limits: {
@@ -226,7 +221,6 @@ const PRICING_TEXT = {
       </div>
       <div class="plans">${PLAN_LADDER.map((plan, i) => renderPlan(plan, i)).join('')}</div>
       <div class="pricing-extras">
-        <p>${esc(T.pack(int(COMMAND_PACK.commands), money(COMMAND_PACK.price)))}</p>
         <p>${esc(T.more(int(PLAN_LADDER[PLAN_LADDER.length - 1].adsAccounts)))} <a href="${PRICING_CONFIG.contact}">${esc(T.talk)}</a></p>
       </div>`;
     root.querySelectorAll('.billing button').forEach((button) => button.addEventListener('click', () => {
