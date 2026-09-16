@@ -695,14 +695,23 @@ function initHeroTyping() {
   pintar();
   // Sin rotación con movimiento reducido: se queda la primera palabra, entera.
   if (words.length < 2 || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-  const FUNDIDO = 260;
+  const FUNDIDO = 280;
   const relevo = () => {
     out.classList.add('is-changing');
     if (soon) soon.hidden = true;
     setTimeout(() => {
       i = (i + 1) % words.length;
       pintar();
+      /* La palabra nueva entra desde abajo con una ANIMACIÓN, no con una
+         transición entre clases: esa vía exigía que el navegador pintara un
+         frame intermedio y no lo hacía, así que la nueva bajaba desde arriba
+         terminando el gesto de la anterior (medido: 40 muestras, todas con
+         desplazamiento negativo). El `offsetWidth` de en medio reinicia la
+         animación cuando la palabra se releva antes de que termine. */
       out.classList.remove('is-changing');
+      out.classList.remove('is-entrando');
+      void out.offsetWidth;
+      out.classList.add('is-entrando');
       // La que no existe se queda más tiempo: hay que leer el sello.
       setTimeout(relevo, i === soonIndex ? 3400 : 2600);
     }, FUNDIDO);

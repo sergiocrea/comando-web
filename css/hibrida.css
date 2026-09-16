@@ -19,8 +19,26 @@
 /* El relevo es un fundido, no un tecleo: en pantalla hay siempre una palabra
    entera. Escribirla letra a letra dejaba el renglón vacío o a medias («Tu me
    de Meta Ads, en WhatsApp») durante buena parte del ciclo. */
-.b2b-hero-title #hero-typed { position: absolute; inset: 0; transition: opacity .26s ease; }
-.b2b-hero-title #hero-typed.is-changing { opacity: 0; }
+/* El relevo se TIENE que ver: un fundido a secas pasaba desapercibido —la
+   palabra cambiaba y nadie se enteraba de que el titular dice tres cosas—. Sale
+   hacia arriba y la siguiente entra desde abajo, que es el gesto que lee el ojo
+   como «esto se está turnando». */
+.b2b-hero-title #hero-typed {
+  position: absolute; inset: 0;
+  transition: opacity .28s ease, transform .42s cubic-bezier(.16, 1, .3, 1);
+}
+.b2b-hero-title #hero-typed.is-changing { opacity: 0; transform: translateY(-.34em); }
+/* La ENTRADA va por animación, no por transición entre clases. Con clases hacían
+   falta dos frames pintados en el orden justo y el navegador no los daba: la
+   palabra nueva terminaba el gesto de la anterior —bajando desde arriba— en vez
+   de empezar el suyo. Una animación se reinicia y corre entera, mire el
+   navegador cuando mire. */
+@keyframes lp-entra-palabra {
+  from { opacity: 0; transform: translateY(.42em); }
+  to { opacity: 1; transform: none; }
+}
+.b2b-hero-title #hero-typed.is-entrando { animation: lp-entra-palabra .44s cubic-bezier(.16, 1, .3, 1) both; }
+@media (prefers-reduced-motion: reduce) { .b2b-hero-title #hero-typed.is-entrando { animation: none; } }
 @media (prefers-reduced-motion: reduce) { .b2b-hero-title #hero-typed { transition: none; } }
 /* El sello va DEBAJO del titular, nunca dentro de la frase: «Tu media buyer de Meta
    Ads, en WhatsApp.» se lee de corrido y el aviso no la parte. Ocupa su línea
