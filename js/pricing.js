@@ -110,9 +110,9 @@ const PRICING_TEXT = {
     },
     plans: {
       gratis: { name: 'Gratis', result: 'Pregúntale a tus anuncios', cta: 'Empezar gratis' },
-      analista: { name: 'Estratega', result: 'Te dice qué revisar primero', cta: 'Elegir Estratega' },
-      equipo: { name: 'Media Buyer', result: 'Pausa y mueve presupuesto con tu CONFIRMAR', cta: 'Elegir Media Buyer' },
-      agencia: { name: 'Atribución', result: 'Tus ventas del CRM, cruzadas con Meta', cta: 'Elegir Atribución' },
+      analista: { name: 'Starter', result: 'Te dice qué revisar primero', cta: 'Elegir Starter' },
+      equipo: { name: 'Growth', result: 'Pausa y mueve presupuesto con tu CONFIRMAR', cta: 'Elegir Growth' },
+      agencia: { name: 'Scale', result: 'Tus ventas del CRM, cruzadas con Meta', cta: 'Elegir Scale' },
     },
   },
   en: {
@@ -129,9 +129,9 @@ const PRICING_TEXT = {
     },
     plans: {
       gratis: { name: 'Free', result: 'Ask your ads', cta: 'Start free' },
-      analista: { name: 'Strategist', result: 'Tells you what to check first', cta: 'Choose Strategist' },
-      equipo: { name: 'Media Buyer', result: 'Pauses and moves budget when you CONFIRM', cta: 'Choose Media Buyer' },
-      agencia: { name: 'Attribution', result: 'Your CRM sales, matched with Meta', cta: 'Choose Attribution' },
+      analista: { name: 'Starter', result: 'Tells you what to check first', cta: 'Choose Starter' },
+      equipo: { name: 'Growth', result: 'Pauses and moves budget when you CONFIRM', cta: 'Choose Growth' },
+      agencia: { name: 'Scale', result: 'Your CRM sales, matched with Meta', cta: 'Choose Scale' },
     },
   },
   pt: {
@@ -148,9 +148,9 @@ const PRICING_TEXT = {
     },
     plans: {
       gratis: { name: 'Grátis', result: 'Pergunte aos seus anúncios', cta: 'Começar grátis' },
-      analista: { name: 'Estrategista', result: 'Diz o que revisar primeiro', cta: 'Escolher Estrategista' },
-      equipo: { name: 'Comprador de mídia', result: 'Pausa e move orçamento com o seu CONFIRMAR', cta: 'Escolher Comprador de mídia' },
-      agencia: { name: 'Atribuição', result: 'Suas vendas do CRM, cruzadas com a Meta', cta: 'Escolher Atribuição' },
+      analista: { name: 'Starter', result: 'Diz o que revisar primeiro', cta: 'Escolher Starter' },
+      equipo: { name: 'Growth', result: 'Pausa e move orçamento com o seu CONFIRMAR', cta: 'Escolher Growth' },
+      agencia: { name: 'Scale', result: 'Suas vendas do CRM, cruzadas com a Meta', cta: 'Escolher Scale' },
     },
   },
 };
