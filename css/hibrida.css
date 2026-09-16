@@ -124,11 +124,15 @@
   -webkit-mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
   mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
 }
-/* Dos filas iguales que se desplazan -100%: el bucle no tiene costura. */
+/* Dos filas iguales que se desplazan -100%: el bucle no tiene costura. El relleno
+   final de cada fila es IGUAL al hueco entre logos (`--trust-gap`): con la mitad,
+   en la unión entre una vuelta y la siguiente dos logos quedaban más juntos.
+   Velocidad: ~42 px/s en escritorio y ~33 px/s en móvil (30 % más que antes). */
 .hero-trust-row {
-  flex: 0 0 auto; display: flex; align-items: center; gap: clamp(2.5rem, 5vw, 4.5rem);
-  margin: 0; padding: 0 clamp(1.25rem, 2.5vw, 2.25rem) 0 0; list-style: none;
-  animation: hero-trust-scroll 70s linear infinite;
+  --trust-gap: clamp(3.25rem, 6.5vw, 5.85rem);
+  flex: 0 0 auto; display: flex; align-items: center; gap: var(--trust-gap);
+  margin: 0; padding: 0 var(--trust-gap) 0 0; list-style: none;
+  animation: hero-trust-scroll 62s linear infinite;
 }
 /* Los logos van en un solo tono: la franja dice «hay empresas detrás», no
    compite con el titular. `brightness(0)` los deja en negro sea cual sea su
@@ -179,7 +183,7 @@
   /* En móvil la franja sigue a la hoja del texto, del mismo crema. */
   .hero-trust { padding: 1rem 0 1.25rem; background: rgba(243, 241, 234, .96); border-top-color: rgba(21, 21, 21, .08); }
   .hero-trust-label { margin-bottom: .75rem; font-size: .64rem; }
-  .hero-trust-row { gap: 2rem; animation-duration: 55s; }
+  .hero-trust-row { --trust-gap: 2.6rem; animation-duration: 47s; }
   .hero-trust-row li { height: 2.1rem; }
   .hero-trust-row img { height: calc(var(--h) * .72); }
   .hero-trust-row li span { font-size: .78rem; }
