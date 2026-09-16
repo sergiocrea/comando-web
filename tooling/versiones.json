@@ -116,15 +116,15 @@
     "sha": "9eeefebbe539b3e0"
   },
   "js/pricing.js": {
-    "v": "39",
-    "sha": "171ddb82d1034c85"
+    "v": "40",
+    "sha": "b2d8ae50265c9589"
   },
   "js/screens.js": {
     "v": "17",
     "sha": "cda2eba6f36bdbdd"
   },
   "js/usecases.js": {
-    "v": "49",
-    "sha": "ccab1503c437363b"
+    "v": "50",
+    "sha": "6c5574bf65f9abd6"
   }
 }

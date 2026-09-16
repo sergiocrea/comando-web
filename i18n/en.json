@@ -75,7 +75,6 @@
   "18 ventas de 240 leads:": "18 sales from 240 leads:",
   "US$&nbsp;72 por venta": "US$&nbsp;72 per sale",
   ". Se las envié a Meta para que busque gente parecida.": ". I sent them to Meta so it finds similar people.",
-  "Próximamente también: Google Ads y TikTok Ads": "Also coming soon: Google Ads and TikTok Ads",
   "Las métricas que importan, con semáforo.": "The metrics that matter, with a traffic light.",
   "Comando compara cada campaña con tu objetivo y te dice en qué va bien y en qué no.": "Comando compares each campaign with your goal and tells you what is going well and what isn't.",
   "Anterior": "Previous",
@@ -177,7 +176,6 @@
   "¿Qué pasa con mis datos?": "What happens to my data?",
   "Comando solo lee tus anuncios. Tu cuenta sigue siendo tuya y puedes desconectarla cuando quieras.": "Comando only reads your ads. Your account stays yours and you can disconnect it whenever you want.",
   "¿Sirve para Google Ads o TikTok Ads?": "Does it work for Google Ads or TikTok Ads?",
-  "Próximamente. Hoy funciona con Meta (Facebook e Instagram).": "Coming soon. Today it works with Meta (Facebook and Instagram).",
   "¿Qué cuenta como pregunta?": "What counts as a question?",
   "Cada mensaje en el que le pides algo a Comando. Las confirmaciones no cuentan.": "Every message where you ask Comando for something. Confirmations don't count.",
   "Tu analista de Meta Ads te espera en WhatsApp.": "Your Meta Ads analyst is waiting on WhatsApp.",
@@ -432,5 +430,7 @@
   "Te contesta en": "It answers you in",
   "7 segundos": "7 seconds",
   "Mismo precio con cualquiera de los tres, hasta": "Same price with any of the three, up to",
-  "contactos. Se suma a tu plan de Meta. Lo que cambia es la espera: una hoja de Google tarda más que un CRM de verdad.": "contacts. It adds to your Meta plan. What changes is the wait: a Google sheet takes longer than a real CRM."
+  "contactos. Se suma a tu plan de Meta. Lo que cambia es la espera: una hoja de Google tarda más que un CRM de verdad.": "contacts. It adds to your Meta plan. What changes is the wait: a Google sheet takes longer than a real CRM.",
+  "Tu equipo trabaja con Meta Ads y TikTok Ads. Google Ads": "Your team works with Meta Ads and TikTok Ads. Google Ads",
+  "Funciona con Meta (Facebook e Instagram) y con TikTok Ads. Google Ads llega pronto.": "It works with Meta (Facebook and Instagram) and with TikTok Ads. Google Ads is coming soon."
 }

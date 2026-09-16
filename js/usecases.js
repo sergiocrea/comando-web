@@ -98,7 +98,7 @@
   // El cuarto campo marca lo que todavía no existe en el producto: TikTok Ads y
   // Google Ads se quedan a la vista, pero rotulados «Próximamente» y apagados.
   // Hoy Comando solo lee Meta Ads.
-  const ADS = [['meta', 'Meta Ads', '#0081fb', false], ['tiktok', 'TikTok Ads', '#e7e9ec', true], ['googleads', 'Google Ads', '#fbbc04', true]];
+  const ADS = [['meta', 'Meta Ads', '#0081fb', false], ['tiktok', 'TikTok Ads', '#e7e9ec', false], ['googleads', 'Google Ads', '#fbbc04', true]];
   function adsHtml() {
     return `<div class="uc-feed uc-ads" aria-hidden="true">
       <div class="uc-feed-label">${esc(T.ads)}</div>

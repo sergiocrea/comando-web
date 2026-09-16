@@ -25,29 +25,37 @@
  * `year` (anual = 10 meses).
  *
  * Capacidades: `true` incluido hoy; `'coming_soon'` todavía no existe en el
- * producto y la página lo dice como «Próximamente». Nada se marca `true` si el
- * motor no lo hace hoy. `earlyAccess` = «primero en recibir» lo próximo.
+ * producto y la página lo dice como «Próximamente». `earlyAccess` = «primero en
+ * recibir» lo próximo.
+ *
+ * EXCEPCIÓN VIVA (16-sep-2026, decisión de Sergio): `tiktokAds` va en `true`
+ * mientras el catálogo del motor todavía dice `coming_soon`. El conector de
+ * TikTok está construido y desplegado, pero apagado hasta que existan las
+ * credenciales de la app de Marketing API, así que hoy la web promete antes de
+ * que se pueda conectar. En cuanto las credenciales estén, el motor pasa a
+ * publicarlo disponible y esta nota sobra; si la decisión cambia, aquí vuelve
+ * `'coming_soon'` y la página entera se corrige sola.
  */
 const PLAN_LADDER = [
   {
     id: 'gratis', code: 'free', price: { month: 0, year: 0 },
     adsAccounts: 1, adsRefreshMinutes: 1440, commands: 30,
-    capabilities: { adsRead: true, adsDiagnosis: true, voice: true, mediaBuyer: 'coming_soon', attribution: 'coming_soon', googleAds: 'coming_soon', tiktokAds: 'coming_soon' },
+    capabilities: { adsRead: true, adsDiagnosis: true, voice: true, mediaBuyer: 'coming_soon', attribution: 'coming_soon', googleAds: 'coming_soon', tiktokAds: true },
   },
   {
     id: 'analista', code: 'analista', price: { month: 9, year: 90 },
     adsAccounts: 2, adsRefreshMinutes: 60, commands: 300,
-    capabilities: { adsRead: true, adsDiagnosis: true, voice: true, mediaBuyer: 'coming_soon', attribution: 'coming_soon', googleAds: 'coming_soon', tiktokAds: 'coming_soon' },
+    capabilities: { adsRead: true, adsDiagnosis: true, voice: true, mediaBuyer: 'coming_soon', attribution: 'coming_soon', googleAds: 'coming_soon', tiktokAds: true },
   },
   {
     id: 'equipo', code: 'equipo', price: { month: 29, year: 290 }, featured: true, earlyAccess: true,
     adsAccounts: 10, adsRefreshMinutes: 60, commands: 1500,
-    capabilities: { adsRead: true, adsDiagnosis: true, voice: true, mediaBuyer: 'coming_soon', attribution: 'coming_soon', googleAds: 'coming_soon', tiktokAds: 'coming_soon' },
+    capabilities: { adsRead: true, adsDiagnosis: true, voice: true, mediaBuyer: 'coming_soon', attribution: 'coming_soon', googleAds: 'coming_soon', tiktokAds: true },
   },
   {
     id: 'agencia', code: 'agencia', price: { month: 49, year: 490 }, earlyAccess: true,
     adsAccounts: 20, adsRefreshMinutes: 60, commands: 3000,
-    capabilities: { adsRead: true, adsDiagnosis: true, voice: true, mediaBuyer: 'coming_soon', attribution: 'coming_soon', googleAds: 'coming_soon', tiktokAds: 'coming_soon' },
+    capabilities: { adsRead: true, adsDiagnosis: true, voice: true, mediaBuyer: 'coming_soon', attribution: 'coming_soon', googleAds: 'coming_soon', tiktokAds: true },
   },
 ];
 
