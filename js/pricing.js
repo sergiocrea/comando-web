@@ -41,8 +41,8 @@
  * capacidades a todos, así que `tooling/plans-check.mjs` (y el flujo diario
  * «Los precios anunciados siguen siendo los que se cobran») queda en rojo hasta
  * que el catálogo se cambie en la consola de administración. Además, la web
- * anuncia reportes por plan (`reports`: avanzados en Growth, personalizados en
- * Scale), que el catálogo del motor no distingue, y ya no nombra las notas de voz.
+ * anuncia reportes por plan (`reports`: avanzados en Growth; avanzados y
+ * personalizados en Scale), que el catálogo del motor no distingue, y ya no nombra las notas de voz.
  */
 const PLAN_LADDER = [
   {
@@ -56,12 +56,12 @@ const PLAN_LADDER = [
     capabilities: { adsRead: true, adsDiagnosis: true, voice: false, mediaBuyer: 'coming_soon', attribution: 'coming_soon', googleAds: 'coming_soon', tiktokAds: true },
   },
   {
-    id: 'equipo', code: 'equipo', price: { month: 19, year: 190 }, featured: true, agents: ['analyst', 'strategist', 'mediaBuyer'], reports: 'advanced',
+    id: 'equipo', code: 'equipo', price: { month: 19, year: 190 }, featured: true, agents: ['analyst', 'strategist', 'mediaBuyer'], reports: ['advanced'],
     adsAccounts: 10, adsRefreshMinutes: 60, commands: 1500,
     capabilities: { adsRead: true, adsDiagnosis: true, voice: true, mediaBuyer: 'coming_soon', attribution: 'coming_soon', googleAds: 'coming_soon', tiktokAds: true },
   },
   {
-    id: 'agencia', code: 'agencia', price: { month: 49, year: 490 }, agents: ['analyst', 'strategist', 'mediaBuyer', 'attribution'], reports: 'custom',
+    id: 'agencia', code: 'agencia', price: { month: 49, year: 490 }, agents: ['analyst', 'strategist', 'mediaBuyer', 'attribution'], reports: ['advanced', 'custom'],
     adsAccounts: 20, adsRefreshMinutes: 60, commands: 3000,
     capabilities: { adsRead: true, adsDiagnosis: true, voice: true, mediaBuyer: 'coming_soon', attribution: 'coming_soon', googleAds: 'coming_soon', tiktokAds: true },
   },
@@ -190,7 +190,7 @@ const PRICING_TEXT = {
       <p class="plan-year">${year}</p>
       <ul>
         ${plan.agents.map((a, n) => `<li class="${n === plan.agents.length - 1 && n > 0 ? 'is-new' : ''}">${icon('i-check')}<span>${esc(T.caps[a])}</span></li>`).join('')}
-        ${plan.reports ? `<li>${icon('i-check')}<span>${esc(T.caps.reports[plan.reports])}</span></li>` : ''}
+        ${(plan.reports || []).map((r) => `<li>${icon('i-check')}<span>${esc(T.caps.reports[r])}</span></li>`).join('')}
       </ul>
       <p class="plan-limits">${esc(T.limits.accounts(plan.adsAccounts, int))}<br />${esc(T.limits.refresh(plan.adsRefreshMinutes))}<br />${esc(T.limits.questions(plan.commands, int))}</p>
       <a class="btn btn-dark" href="${href}">${esc(words.cta)}</a>
