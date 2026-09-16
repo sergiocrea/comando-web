@@ -507,8 +507,6 @@ html:not(.js) .lp .slider-btns { display: none; }
   .lp *, .lp *::before, .lp *::after { transition: none !important; animation: none !important; }
 }
 
-}
-
 /* Casos de Meta: en móvil el subtítulo azul («Pregúntale y te lo cuenta con el dato
    delante.») sobra bajo el titular y retrasa el teléfono (16-sep, pedido de Sergio). */
 @media (max-width: 767px) { .section_metaads .uc-subtitle { display: none; } }
