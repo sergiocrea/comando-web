@@ -316,13 +316,17 @@
   font: 600 .66rem/1 "Jetbrainsmono Variable", ui-monospace, monospace; letter-spacing: .14em; text-transform: uppercase;
   color: #151515; background: transparent; border: 1px solid #151515;
 }
-/* WhatsApp en modo claro: fondo beige, saliente verde claro, entrante blanca. */
-.lp-agent.is-premium .mini-chat { padding: 1.2rem .9rem; background: #efeae2; border: 1px solid #e3ddd3; box-shadow: none; }
-.lp-agent.is-premium .bubble { font-size: .95rem; color: #111b21; box-shadow: 0 1px .5px rgba(11, 20, 26, .13); }
-.lp-agent.is-premium .me .bubble { background: #d9fdd3; }
-.lp-agent.is-premium .bot .bubble { background: #fff; }
-.lp-agent.is-premium .bubble b { color: #111b21; }
-.lp-agent.is-premium .bubble time { color: #667781; }
+/* WhatsApp en modo claro en las CUATRO tarjetas del equipo: fondo beige,
+   saliente verde claro, entrante blanca, como se ve en el teléfono. */
+.lp-agent .mini-chat { background: #efeae2; border: 1px solid #e3ddd3; box-shadow: none; }
+.lp-agent .bubble { color: #111b21; box-shadow: 0 1px .5px rgba(11, 20, 26, .13); }
+.lp-agent .me .bubble { background: #d9fdd3; }
+.lp-agent .bot .bubble { background: #fff; }
+.lp-agent .bubble b { color: #111b21; }
+.lp-agent .bubble time { color: #667781; }
+.lp-agent .bubble.confirm span { color: #027eb5; border-color: rgba(2, 126, 181, .35); }
+.lp-agent.is-premium .mini-chat { padding: 1.2rem .9rem; }
+.lp-agent.is-premium .bubble { font-size: .95rem; }
 .lp-agent.is-premium .foot.lp-flow { display: flex; align-items: center; gap: .7rem; color: #151515; letter-spacing: .06em; text-transform: uppercase; }
 .lp-flow-side { display: inline-flex; align-items: center; gap: .45rem; padding: .42rem .65rem; border: 1px solid #d6d1c6; border-radius: .3rem; background: #fff; }
 .lp-flow-side img { width: 1rem; height: 1rem; filter: brightness(0); opacity: .85; }
