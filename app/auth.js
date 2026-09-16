@@ -1,7 +1,7 @@
 /* Acceso a Comando (/app/): iniciar sesión o crear cuenta con Clerk y pasar al panel.
    Los pasos siguientes (vincular WhatsApp, conectar Meta Ads) viven dentro de /app/panel/.
    Sin build: ClerkJS se carga desde el Frontend API de la instancia. */
-import './strings.js?v=22';
+import './strings.js?v=23';
 import { initLocale, mountLanguagePicker, onLocaleChange, locale, t } from './i18n.js?v=1';
 
 initLocale();

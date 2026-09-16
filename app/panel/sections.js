@@ -7,7 +7,7 @@
    - una sola acción principal por fila; lo demás va dentro de «más»;
    - vocabulario del operador (plata en juego, parado, sin dueño, repetidos), nunca del sistema. */
 
-import { isPending } from './api.js?v=19';
+import { isPending } from './api.js?v=20';
 import { crmBlock, crmActions, whatsappStep, NAMES as PROVIDER_NAMES } from './setup.js?v=13';
 import {
   esc, num, money, pct, fmtTime, fmtDate, fmtDateTime, monthName, dayLabel, sameDay, rel, isToday, isPast, isoDay,
@@ -15,8 +15,8 @@ import {
   personName, personEmail, highValueAmount, SYMBOL, setAccountCurrency,
 } from './ui.js?v=12';
 import { t, tn, localeTag } from '../i18n.js?v=1';
-import { chatActions, awaitsWord } from './chat.js?v=6';
-import { hoja } from './hoja.js?v=6';
+import { chatActions, awaitsWord } from './chat.js?v=7';
+import { hoja } from './hoja.js?v=7';
 
 /** Renderiza una parte según el estado de su dato. */
 function part(v, fn, opts = {}) {
@@ -1301,7 +1301,12 @@ function currencyRow(me, active) {
 /* ==================================================================== CUENTA */
 const cuenta = {
   id: 'cuenta', get title() { return t('nav.cuenta'); }, get sub() { return t('sub.cuenta'); }, icon: 'user',
-  load: (api) => ({ me: api.me(), quota: api.quota(), plans: api.publicPlans(), connections: api.connections(), sheets: api.sheets(), meta: api.metaStatus(), team: api.team(), agent: api.agent(), health: api.health(), history: api.history() }),
+  /* Las tres cotizaciones se piden a la vez porque `load` corre ANTES que
+     `view`: aquí todavía no se sabe qué CRM está activo, y meter la petición en
+     el pintado rompería el `Promise.allSettled` de la sección. Son tres
+     lecturas de cálculo puro y cacheadas una hora por el motor. */
+  load: (api) => ({ me: api.me(), quota: api.quota(), plans: api.publicPlans(), connections: api.connections(), sheets: api.sheets(), meta: api.metaStatus(), team: api.team(), agent: api.agent(), health: api.health(), history: api.history(),
+    esperaHubspot: api.crmQuote('hubspot'), esperaSalesforce: api.crmQuote('salesforce'), esperaSheets: api.crmQuote('google-sheets') }),
   view(d, ctx) {
     const me = val(d.me, {});
     const PLAN = { gratis: 'plan.gratis', free: 'plan.gratis', analista: 'plan.analista', equipo: 'plan.equipo', agencia: 'plan.agencia', asistente: 'plan.asistente', operador: 'plan.operador', escala: 'plan.escala', basico: 'plan.basico', starter: 'plan.starter', pro: 'plan.pro', enterprise: 'plan.enterprise' };
@@ -1388,7 +1393,22 @@ const cuenta = {
           primary: `<a class="btn sm ghost" href="#/marketing">${esc(t('cuenta.seeCampaigns'))}</a>`,
         })).join('')
       : '';
-    const conexiones = card(t('cuenta.yourCrm'), `${active && h ? `<p class="status-line" style="margin-bottom:12px">${syncLine(h.sync)}${active.mirror ? `<span class="hint">${esc(t('cuenta.mirror', { contacts: num(active.mirror.contacts), deals: num(active.mirror.deals) }))}</span>` : ''}</p>` : ''}${crmBlock(ctx, conns, val(d.sheets, []))}`,
+    /* Cuánto tarda en contestar con el CRM conectado. Es la estimación del
+       motor por proveedor —la misma que la landing—, no una medición de esta
+       cuenta: por eso se enseña junto a la frescura del espejo y no como si
+       fuera latencia propia. Sin CRM activo, o si la ruta no contesta, no se
+       pinta nada en vez de inventar un número. */
+    const esperaDe = (provider) => val({ hubspot: d.esperaHubspot, salesforce: d.esperaSalesforce, 'google-sheets': d.esperaSheets }[provider], null);
+    const esperaChip = (() => {
+      const q = active ? esperaDe(active.provider) : null;
+      if (!q || typeof q.waitMinutes !== 'number') return '';
+      const m = q.waitMinutes;
+      const texto = m < 1
+        ? t('cuenta.waitSeconds', { n: num(Math.max(1, Math.round(m * 60))) })
+        : t('cuenta.waitMinutes', { n: num(Math.round(m)) });
+      return chip(t('cuenta.wait', { wait: texto }), m < 1 ? 'ok' : '');
+    })();
+    const conexiones = card(t('cuenta.yourCrm'), `${active && h ? `<p class="status-line" style="margin-bottom:12px">${syncLine(h.sync)}${esperaChip}${active.mirror ? `<span class="hint">${esc(t('cuenta.mirror', { contacts: num(active.mirror.contacts), deals: num(active.mirror.deals) }))}</span>` : ''}</p>` : ''}${crmBlock(ctx, conns, val(d.sheets, []))}`,
       { sub: t('cuenta.crmSub') });
     const anuncios = card(t('cuenta.adAccounts'), adRows ? `<div class="list">${adRows}</div>` : `<div class="empty"><b>${esc(t('cuenta.noAdAccounts'))}</b>${esc(t('cuenta.noAdAccountsSub'))}</div>`, { sub: t('cuenta.forMarketing'), right: `<button class="btn sm" data-act="mk:connect">${esc(t('cuenta.connect'))}</button>` });
 

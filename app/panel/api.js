@@ -133,6 +133,12 @@ export function createApi(cfg, getToken) {
        Devuelve `{targets, overview}`, la foto ya con semáforo. */
     marketingTarget: (body) => optional(() => mutate('/marketing/targets', 'PUT', body), 'marketing'),
     playbooks: () => optional(() => call('/automation-rules/playbooks'), 'playbooks'),
+    /* Cuánto tarda el módulo CRM en contestar con ESTE proveedor. Es la misma
+       estimación que publica la landing —del motor, no una medición de la
+       cuenta—, así que el número sale de un solo sitio. `optional()` porque un
+       motor anterior a la ruta no debe tumbar la sección Cuenta entera. */
+    crmQuote: (crm, contacts = 25000) =>
+      optional(() => call(`/v1/public/crm-quote?crm=${encodeURIComponent(crm)}&contacts=${contacts}`), 'crmQuote'),
     /* ---- Meta Ads: la conexión, no las campañas (plan 14) ---- */
     metaStatus: () => optional(() => call('/integrations/meta/status'), 'meta'),
     metaConnect: () => mutate('/integrations/meta/connect', 'POST'),
@@ -248,6 +254,13 @@ export function createMockApi() {
     marketingImportHistory: () => log('POST /marketing/import-history').then(() => marketingRefresh(params.get('mk'))),
     marketingTarget: (body) => log('PUT /marketing/targets', body).then(() => ({ targets: body, overview: marketingOverview(params.get('mk')) })),
     playbooks: () => wait(MOCK.playbooks),
+    // Los mismos minutos que la tabla del motor: HubSpot 0,12 · Salesforce 0,07
+    // · una hoja de Google 11,25, que es el caso que se nota.
+    crmQuote: (crm) => wait({
+      crm, status: 'available',
+      price: { currency: 'USD', amountMinor: 900, interval: 'month' },
+      waitMinutes: { hubspot: 0.12, salesforce: 0.07, 'google-sheets': 11.25 }[crm] ?? 0.12,
+    }),
     metaStatus: () => wait(metaStatus(params.get('mk'))),
     metaConnect: () => log('POST /integrations/meta/connect'),
     metaRefreshAccounts: () => wait(metaStatus(params.get('mk'))),

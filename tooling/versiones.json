@@ -4,8 +4,8 @@
     "sha": "5c5fb97213bddd5f"
   },
   "app/auth.js": {
-    "v": "21",
-    "sha": "16dffce09423c6be"
+    "v": "22",
+    "sha": "c619cc546536652c"
   },
   "app/dashboard/dashboard.css": {
     "v": "1",
@@ -40,16 +40,16 @@
     "sha": "91b5ec1923dcccbf"
   },
   "app/panel/api.js": {
-    "v": "19",
-    "sha": "f0599e83c6578a56"
+    "v": "20",
+    "sha": "6aa90d77b3d4a287"
   },
   "app/panel/chat.js": {
-    "v": "6",
-    "sha": "a0c4e988b3c4c093"
+    "v": "7",
+    "sha": "44677536b35795f3"
   },
   "app/panel/hoja.js": {
-    "v": "6",
-    "sha": "a60275c06d609d77"
+    "v": "7",
+    "sha": "4d77e3f86c562ea2"
   },
   "app/panel/mock-data.js": {
     "v": "13",
@@ -60,12 +60,12 @@
     "sha": "a25e840e58819333"
   },
   "app/panel/panel.js": {
-    "v": "32",
-    "sha": "cbc712f828693aa9"
+    "v": "33",
+    "sha": "4b9d8163764a8df6"
   },
   "app/panel/sections.js": {
-    "v": "30",
-    "sha": "d19207e5120b0539"
+    "v": "31",
+    "sha": "faaf21def65aa16e"
   },
   "app/panel/setup.js": {
     "v": "13",
@@ -80,8 +80,8 @@
     "sha": "643bc4a65b2bd765"
   },
   "app/strings.js": {
-    "v": "22",
-    "sha": "0e514cd97908213e"
+    "v": "23",
+    "sha": "e0eb4bd163f3fd22"
   },
   "assets/img/og-image.jpg": {
     "v": "4",
