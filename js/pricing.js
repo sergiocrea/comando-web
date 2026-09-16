@@ -44,11 +44,13 @@
  * anuncia reportes por plan (`reports`: avanzados en Growth; avanzados y
  * personalizados en Scale), que el catálogo del motor no distingue, y ya no nombra las notas de voz.
  * Starter anuncia el Media Buyer limitado (`mediaBuyerChanges`: 10 cambios al
- * mes), un límite que el motor todavía no aplica.
+ * mes), un límite que el motor todavía no aplica. Gratis incluye Analista y
+ * Estratega con 30 preguntas al crear la cuenta, válidas 30 días y sin renovación
+ * (`commandsOnceDays`); en el motor el cupo de Gratis todavía se renueva cada mes.
  */
 const PLAN_LADDER = [
   {
-    id: 'gratis', code: 'free', price: { month: 0, year: 0 }, agents: ['analyst'],
+    id: 'gratis', code: 'free', price: { month: 0, year: 0 }, agents: ['analyst', 'strategist'], commandsOnceDays: 30,
     adsAccounts: 1, adsRefreshMinutes: 1440, commands: 30,
     capabilities: { adsRead: true, adsDiagnosis: true, voice: false, mediaBuyer: 'coming_soon', attribution: 'coming_soon', googleAds: 'coming_soon', tiktokAds: true },
   },
@@ -111,6 +113,7 @@ const PRICING_TEXT = {
       accounts: (n, f) => (n === 1 ? '1 cuenta publicitaria' : `${f(n)} cuentas publicitarias`),
       refresh: (min) => (min >= 1440 ? 'Datos 1 vez al día' : 'Datos cada hora'),
       questions: (n, f) => `${f(n)} preguntas al mes`,
+      questionsOnce: (n, d, f) => `${f(n)} preguntas para empezar (${d} días)`,
     },
     plans: {
       gratis: { name: 'Gratis', result: 'Pregúntale a tus anuncios', cta: 'Empezar gratis' },
@@ -130,6 +133,7 @@ const PRICING_TEXT = {
       accounts: (n, f) => (n === 1 ? '1 ad account' : `${f(n)} ad accounts`),
       refresh: (min) => (min >= 1440 ? 'Data once a day' : 'Data every hour'),
       questions: (n, f) => `${f(n)} questions a month`,
+      questionsOnce: (n, d, f) => `${f(n)} questions to start (${d} days)`,
     },
     plans: {
       gratis: { name: 'Free', result: 'Ask your ads', cta: 'Start free' },
@@ -149,6 +153,7 @@ const PRICING_TEXT = {
       accounts: (n, f) => (n === 1 ? '1 conta de anúncios' : `${f(n)} contas de anúncios`),
       refresh: (min) => (min >= 1440 ? 'Dados 1 vez por dia' : 'Dados a cada hora'),
       questions: (n, f) => `${f(n)} perguntas por mês`,
+      questionsOnce: (n, d, f) => `${f(n)} perguntas para começar (${d} dias)`,
     },
     plans: {
       gratis: { name: 'Grátis', result: 'Pergunte aos seus anúncios', cta: 'Começar grátis' },
@@ -196,7 +201,7 @@ const PRICING_TEXT = {
         ${plan.agents.map((a) => `<li class="${prev && !prev.agents.includes(a) ? 'is-new' : ''}">${icon('i-check')}<span>${esc(typeof T.caps[a] === 'function' ? T.caps[a](plan.mediaBuyerChanges) : T.caps[a])}</span></li>`).join('')}
         ${(plan.reports || []).map((r) => `<li>${icon('i-check')}<span>${esc(T.caps.reports[r])}</span></li>`).join('')}
       </ul>
-      <p class="plan-limits">${esc(T.limits.accounts(plan.adsAccounts, int))}<br />${esc(T.limits.refresh(plan.adsRefreshMinutes))}<br />${esc(T.limits.questions(plan.commands, int))}</p>
+      <p class="plan-limits">${esc(T.limits.accounts(plan.adsAccounts, int))}<br />${esc(T.limits.refresh(plan.adsRefreshMinutes))}<br />${esc(plan.commandsOnceDays ? T.limits.questionsOnce(plan.commands, plan.commandsOnceDays, int) : T.limits.questions(plan.commands, int))}</p>
       <a class="btn btn-dark" href="${href}">${esc(words.cta)}</a>
     </article>`;
   }
