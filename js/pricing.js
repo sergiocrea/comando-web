@@ -43,6 +43,8 @@
  * que el catálogo se cambie en la consola de administración. Además, la web
  * anuncia reportes por plan (`reports`: avanzados en Growth; avanzados y
  * personalizados en Scale), que el catálogo del motor no distingue, y ya no nombra las notas de voz.
+ * Starter anuncia el Media Buyer limitado (`mediaBuyerChanges`: 10 cambios al
+ * mes), un límite que el motor todavía no aplica.
  */
 const PLAN_LADDER = [
   {
@@ -51,7 +53,7 @@ const PLAN_LADDER = [
     capabilities: { adsRead: true, adsDiagnosis: true, voice: false, mediaBuyer: 'coming_soon', attribution: 'coming_soon', googleAds: 'coming_soon', tiktokAds: true },
   },
   {
-    id: 'analista', code: 'analista', price: { month: 9, year: 90 }, agents: ['analyst', 'strategist'],
+    id: 'analista', code: 'analista', price: { month: 9, year: 90 }, agents: ['analyst', 'strategist', 'mediaBuyerLimited'], mediaBuyerChanges: 10,
     adsAccounts: 2, adsRefreshMinutes: 60, commands: 300,
     capabilities: { adsRead: true, adsDiagnosis: true, voice: false, mediaBuyer: 'coming_soon', attribution: 'coming_soon', googleAds: 'coming_soon', tiktokAds: true },
   },
@@ -104,7 +106,7 @@ const PRICING_TEXT = {
     trial: () => 'Empiezas gratis, sin tarjeta',
     pack: (n, p) => `¿Te quedaste sin preguntas? Suma ${n} por ${p} para este mes.`,
     more: (n) => `¿Más de ${n} cuentas publicitarias?`, talk: 'Habla con nosotros',
-    caps: { analyst: 'Agente Analista', strategist: 'Agente Estratega', mediaBuyer: 'Agente Media Buyer', attribution: 'Agente de Atribución', reports: { advanced: 'Reportes Avanzados', custom: 'Reportes Personalizados' } },
+    caps: { analyst: 'Agente Analista', strategist: 'Agente Estratega', mediaBuyer: 'Agente Media Buyer', mediaBuyerLimited: (n) => `Agente Media Buyer (${n} cambios al mes)`, attribution: 'Agente de Atribución', reports: { advanced: 'Reportes Avanzados', custom: 'Reportes Personalizados' } },
     limits: {
       accounts: (n, f) => (n === 1 ? '1 cuenta publicitaria' : `${f(n)} cuentas publicitarias`),
       refresh: (min) => (min >= 1440 ? 'Datos 1 vez al día' : 'Datos cada hora'),
@@ -123,7 +125,7 @@ const PRICING_TEXT = {
     trial: () => 'You start free, no card',
     pack: (n, p) => `Out of questions? Add ${n} for ${p} this month.`,
     more: (n) => `More than ${n} ad accounts?`, talk: 'Talk to us',
-    caps: { analyst: 'Analyst Agent', strategist: 'Strategist Agent', mediaBuyer: 'Media Buyer Agent', attribution: 'Attribution Agent', reports: { advanced: 'Advanced Reports', custom: 'Custom Reports' } },
+    caps: { analyst: 'Analyst Agent', strategist: 'Strategist Agent', mediaBuyer: 'Media Buyer Agent', mediaBuyerLimited: (n) => `Media Buyer Agent (${n} changes a month)`, attribution: 'Attribution Agent', reports: { advanced: 'Advanced Reports', custom: 'Custom Reports' } },
     limits: {
       accounts: (n, f) => (n === 1 ? '1 ad account' : `${f(n)} ad accounts`),
       refresh: (min) => (min >= 1440 ? 'Data once a day' : 'Data every hour'),
@@ -142,7 +144,7 @@ const PRICING_TEXT = {
     trial: () => 'Você começa grátis, sem cartão',
     pack: (n, p) => `Ficou sem perguntas? Some ${n} por ${p} para este mês.`,
     more: (n) => `Mais de ${n} contas de anúncios?`, talk: 'Fale com a gente',
-    caps: { analyst: 'Agente Analista', strategist: 'Agente Estrategista', mediaBuyer: 'Agente Comprador de mídia', attribution: 'Agente de Atribuição', reports: { advanced: 'Relatórios Avançados', custom: 'Relatórios Personalizados' } },
+    caps: { analyst: 'Agente Analista', strategist: 'Agente Estrategista', mediaBuyer: 'Agente Comprador de mídia', mediaBuyerLimited: (n) => `Agente Comprador de mídia (${n} alterações por mês)`, attribution: 'Agente de Atribuição', reports: { advanced: 'Relatórios Avançados', custom: 'Relatórios Personalizados' } },
     limits: {
       accounts: (n, f) => (n === 1 ? '1 conta de anúncios' : `${f(n)} contas de anúncios`),
       refresh: (min) => (min >= 1440 ? 'Dados 1 vez por dia' : 'Dados a cada hora'),
@@ -173,7 +175,9 @@ const PRICING_TEXT = {
   const icon = (id) => `<svg aria-hidden="true"><use href="#${id}"/></svg>`;
   const state = { annual: false };
 
-  function renderPlan(plan) {
+  function renderPlan(plan, index) {
+    // En negrita lo que el plan suma respecto del anterior.
+    const prev = index > 0 ? PLAN_LADDER[index - 1] : null;
     const words = T.plans[plan.id];
     const free = plan.price.month === 0;
     const perMonth = state.annual ? plan.price.year / 12 : plan.price.month;
@@ -189,7 +193,7 @@ const PRICING_TEXT = {
       <p class="plan-price">${price}</p>
       <p class="plan-year">${year}</p>
       <ul>
-        ${plan.agents.map((a, n) => `<li class="${n === plan.agents.length - 1 && n > 0 ? 'is-new' : ''}">${icon('i-check')}<span>${esc(T.caps[a])}</span></li>`).join('')}
+        ${plan.agents.map((a) => `<li class="${prev && !prev.agents.includes(a) ? 'is-new' : ''}">${icon('i-check')}<span>${esc(typeof T.caps[a] === 'function' ? T.caps[a](plan.mediaBuyerChanges) : T.caps[a])}</span></li>`).join('')}
         ${(plan.reports || []).map((r) => `<li>${icon('i-check')}<span>${esc(T.caps.reports[r])}</span></li>`).join('')}
       </ul>
       <p class="plan-limits">${esc(T.limits.accounts(plan.adsAccounts, int))}<br />${esc(T.limits.refresh(plan.adsRefreshMinutes))}<br />${esc(T.limits.questions(plan.commands, int))}</p>
@@ -207,7 +211,7 @@ const PRICING_TEXT = {
           <button type="button" data-annual="1" aria-pressed="${state.annual}">${esc(T.annual)}<span>${esc(T.freeMonths)}</span></button>
         </div>
       </div>
-      <div class="plans">${PLAN_LADDER.map(renderPlan).join('')}</div>
+      <div class="plans">${PLAN_LADDER.map((plan, i) => renderPlan(plan, i)).join('')}</div>
       <div class="pricing-extras">
         <p>${esc(T.pack(int(COMMAND_PACK.commands), money(COMMAND_PACK.price)))}</p>
         <p>${esc(T.more(int(PLAN_LADDER[PLAN_LADDER.length - 1].adsAccounts)))} <a href="${PRICING_CONFIG.contact}">${esc(T.talk)}</a></p>
