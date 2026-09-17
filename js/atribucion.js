@@ -20,6 +20,8 @@
   const steps = [...root.querySelectorAll('.attr-step')];
   // En móvil la lista enseña solo los números; el texto del paso activo se copia aquí.
   const caption = root.querySelector('.attr-caption');
+  // En móvil el texto del paso va dentro de la animación, a la derecha del anuncio azul.
+  const metaStep = root.querySelector('.attr-meta-step');
   let shownPhase = -1;
   const NS = 'http://www.w3.org/2000/svg';
   const reduce = matchMedia('(prefers-reduced-motion: reduce)');
@@ -44,15 +46,15 @@
       slots: { xs: [760, 805, 850, 895, 940], ys: [245, 305], r: 15 },
     },
     tall: {
-      w: 360, h: 416,
-      meta: { x: 12, y: 12, w: 336, h: 98 },
-      crm: { x: 12, y: 266, w: 336, h: 138 },
-      hub: { cx: 250, cy: 188, w: 126, h: 40 },
-      chipLead: { cx: 116, cy: 188, w: 128, h: 26 },
-      chipSale: { cx: 252, cy: 144, w: 144, h: 26 },
-      forward: 'M90 110 C 46 162, 46 214, 90 266',
-      back: 'M270 266 C 314 214, 314 162, 270 110',
-      slots: { xs: [60, 120, 180, 240, 300], ys: [338, 380], r: 16 },
+      w: 360, h: 510,
+      meta: { x: 12, y: 12, w: 336, h: 196 },
+      crm: { x: 12, y: 360, w: 336, h: 138 },
+      hub: { cx: 250, cy: 284, w: 126, h: 40 },
+      chipLead: { cx: 116, cy: 284, w: 128, h: 26 },
+      chipSale: { cx: 252, cy: 238, w: 144, h: 26 },
+      forward: 'M90 208 C 46 258, 46 310, 90 360',
+      back: 'M270 360 C 314 310, 314 258, 270 208',
+      slots: { xs: [60, 120, 180, 240, 300], ys: [432, 474], r: 16 },
     },
   };
 
@@ -158,6 +160,8 @@
       const s = steps[phase];
       caption.querySelector('.attr-caption-t').textContent = s.querySelector('.attr-step-t').textContent;
       caption.querySelector('.attr-caption-p').textContent = s.querySelector('p').textContent;
+      metaStep.querySelector('.attr-meta-step-t').textContent = s.querySelector('.attr-step-t').textContent;
+      metaStep.querySelector('.attr-meta-step-p').textContent = s.querySelector('p').textContent;
     }
     caption.querySelector('.attr-bar i').style.transform = steps[phase].querySelector('.attr-bar i').style.transform;
 
