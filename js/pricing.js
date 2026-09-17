@@ -36,20 +36,24 @@
  * `'coming_soon'` y la página entera se corrige sola.
  *
  * EXCEPCIÓN VIVA (16-sep-2026, decisión de Sergio): los planes se presentan por
- * CAPACIDADES, un agente más por plan (`agents`), y el tercero pasa a US$ 19
- * (anual 190) SOLO EN LA WEB. El motor sigue cobrando US$ 29 y dando las mismas
- * capacidades a todos, así que `tooling/plans-check.mjs` (y el flujo diario
+ * CAPACIDADES, un agente más por plan (`agents`). Growth vuelve a US$ 29 (anual
+ * 290), el precio del motor, pero el motor sigue dando las mismas capacidades a
+ * todos y otros cupos, así que `tooling/plans-check.mjs` (y el flujo diario
  * «Los precios anunciados siguen siendo los que se cobran») queda en rojo hasta
  * que el catálogo se cambie en la consola de administración. Además, la web
- * anuncia reportes por plan (`reports`: avanzados en Growth; avanzados y
- * personalizados en Scale), que el catálogo del motor no distingue, y ya no nombra las notas de voz.
+ * anuncia reportes por plan (`reports`), que el catálogo del motor no distingue,
+ * y ya no nombra las notas de voz.
  * El Media Buyer no anuncia límite de cambios (17-sep): ejecutar un cambio ya
  * decidido no llama a la IA ni descuenta cupo (`OperatorCommandPipeline.confirm`),
- * así que el tope real es el de comandos. Comandos al mes (16/17-sep, modelo
- * económico): Starter 150, Growth 300, Scale 500 compartidos entre 2 números de
- * WhatsApp (`whatsappNumbers`); los reportes con IA descuentan del mismo cupo.
- * Cuentas publicitarias (17-sep): Starter 2, Growth 3, Scale 10. El motor sigue
- * con los cupos y cuentas del catálogo del 15-sep y un solo número por cuenta. Gratis incluye Analista y
+ * así que el tope real es el de comandos; los reportes con IA descuentan del
+ * mismo cupo.
+ * TRES PLANES + EMPRESAS (17-sep): Scale (`agencia`) deja de publicarse y Growth
+ * absorbe lo suyo —Atribución, reportes personalizados, 2 números de WhatsApp
+ * (`whatsappNumbers`)— a US$ 29 (anual 290, lo que ya cobra el motor por
+ * `equipo`) con 5 cuentas y 500 comandos. En su lugar va la tarjeta «Empresas»
+ * (`ENTERPRISE`), sin precio: se cotiza con margen ≥ 55 % en el peor caso.
+ * Starter: 2 cuentas y 150 comandos. El motor sigue con los cupos y cuentas del
+ * catálogo del 15-sep, un solo número por cuenta y `agencia` activo. Gratis incluye Analista y
  * Estratega con 30 comandos al crear la cuenta, válidas 30 días y sin renovación
  * (`commandsOnceDays`); en el motor el cupo de Gratis todavía se renueva cada mes.
  */
@@ -65,13 +69,8 @@ const PLAN_LADDER = [
     capabilities: { adsRead: true, adsDiagnosis: true, voice: false, mediaBuyer: 'coming_soon', attribution: 'coming_soon', googleAds: 'coming_soon', tiktokAds: true },
   },
   {
-    id: 'equipo', code: 'equipo', price: { month: 19, year: 190 }, featured: true, agents: ['analyst', 'strategist', 'mediaBuyer'], reports: ['advanced'], metrics: true,
-    adsAccounts: 3, adsRefreshMinutes: 60, commands: 300,
-    capabilities: { adsRead: true, adsDiagnosis: true, voice: true, mediaBuyer: 'coming_soon', attribution: 'coming_soon', googleAds: 'coming_soon', tiktokAds: true },
-  },
-  {
-    id: 'agencia', code: 'agencia', price: { month: 49, year: 490 }, agents: ['analyst', 'strategist', 'mediaBuyer', 'attribution'], reports: ['advanced', 'custom'], metrics: true,
-    adsAccounts: 10, adsRefreshMinutes: 60, commands: 500, whatsappNumbers: 2,
+    id: 'equipo', code: 'equipo', price: { month: 29, year: 290 }, featured: true, agents: ['analyst', 'strategist', 'mediaBuyer', 'attribution'], reports: ['advanced', 'custom'], metrics: true,
+    adsAccounts: 5, adsRefreshMinutes: 60, commands: 500, whatsappNumbers: 2,
     capabilities: { adsRead: true, adsDiagnosis: true, voice: true, mediaBuyer: 'coming_soon', attribution: 'coming_soon', googleAds: 'coming_soon', tiktokAds: true },
   },
 ];
@@ -95,10 +94,13 @@ const ADDONS = {
    Growth) y dejaba 18 % de margen. El add-on sigue en el motor
    (`extra_commands_500`) hasta que se publiquen los paquetes nuevos. */
 
+/** La cuarta tarjeta: planes a medida para empresas. Sin precio ni cupos publicados. */
+const ENTERPRISE = { from: 'equipo' };
+
 const PRICING_CONFIG = {
   annualMonths: 10,           // anual = 10 meses: 2 gratis
   signup: '/app/',
-  // Plan personalizado (más que el plan mayor): sin formulario. No hay número de WhatsApp de ventas publicado; correo del sitio.
+  // Plan Empresas (más que el plan mayor): sin formulario. No hay número de WhatsApp de ventas publicado; correo del sitio.
   contact: 'mailto:hola@comando.pro?subject=Plan%20personalizado',
 };
 
@@ -109,7 +111,8 @@ const PRICING_TEXT = {
     billing: 'Facturación', monthly: 'Mensual', annual: 'Anual', freeMonths: '2 meses gratis',
     perMonth: '/mes', perYear: (a) => `${a} al año`, recommended: 'Recomendado', soon: 'Próximamente',
     trial: () => 'Empiezas gratis, sin tarjeta',
-    more: 'Plan personalizado', talk: 'Habla con nosotros',
+    talk: 'Habla con nosotros',
+    enterprise: { name: 'Empresas', result: 'A la medida de tu operación', price: 'Hablemos', items: (plan, n) => [`Todo lo de ${plan}`, `Más de ${n} cuentas publicitarias`, 'Comandos y números de WhatsApp a medida', 'Tu CRM y atribución a escala', 'Soporte prioritario'], limits: 'Precio según cuentas y uso' },
     caps: { analyst: 'Agente Analista', strategist: 'Agente Estratega', mediaBuyer: 'Agente Media Buyer', attribution: 'Agente de Atribución (CRM)', metrics: 'Métricas & KPIs', metricsBasic: 'básicas', reports: { advanced: 'Reportes Avanzados', custom: 'Reportes Personalizados' } },
     limits: {
       accounts: (n, f) => (n === 1 ? '1 cuenta publicitaria' : `${f(n)} cuentas publicitarias`),
@@ -122,14 +125,14 @@ const PRICING_TEXT = {
       gratis: { name: 'Gratis', result: 'Pregúntale a tus anuncios', cta: 'Empezar gratis' },
       analista: { name: 'Starter', result: 'Te dice qué revisar primero', cta: 'Elegir Starter' },
       equipo: { name: 'Growth', result: 'Pausa y mueve presupuesto', cta: 'Elegir Growth' },
-      agencia: { name: 'Scale', result: 'Tus ventas del CRM, cruzadas con Meta', cta: 'Elegir Scale' },
     },
   },
   en: {
     billing: 'Billing', monthly: 'Monthly', annual: 'Annual', freeMonths: '2 months free',
     perMonth: '/mo', perYear: (a) => `${a} a year`, recommended: 'Recommended', soon: 'Coming soon',
     trial: () => 'You start free, no card',
-    more: 'Custom plan', talk: 'Talk to us',
+    talk: 'Talk to us',
+    enterprise: { name: 'Enterprise', result: 'Built around your operation', price: "Let's talk", items: (plan, n) => [`Everything in ${plan}`, `More than ${n} ad accounts`, 'Commands and WhatsApp numbers to fit', 'Your CRM and attribution at scale', 'Priority support'], limits: 'Priced by accounts and usage' },
     caps: { analyst: 'Analyst Agent', strategist: 'Strategist Agent', mediaBuyer: 'Media Buyer Agent', attribution: 'Attribution Agent (CRM)', metrics: 'Metrics & KPIs', metricsBasic: 'basic', reports: { advanced: 'Advanced Reports', custom: 'Custom Reports' } },
     limits: {
       accounts: (n, f) => (n === 1 ? '1 ad account' : `${f(n)} ad accounts`),
@@ -142,14 +145,14 @@ const PRICING_TEXT = {
       gratis: { name: 'Free', result: 'Ask your ads', cta: 'Start free' },
       analista: { name: 'Starter', result: 'Tells you what to check first', cta: 'Choose Starter' },
       equipo: { name: 'Growth', result: 'Pauses and moves budget', cta: 'Choose Growth' },
-      agencia: { name: 'Scale', result: 'Your CRM sales, matched with Meta', cta: 'Choose Scale' },
     },
   },
   pt: {
     billing: 'Cobrança', monthly: 'Mensal', annual: 'Anual', freeMonths: '2 meses grátis',
     perMonth: '/mês', perYear: (a) => `${a} por ano`, recommended: 'Recomendado', soon: 'Em breve',
     trial: () => 'Você começa grátis, sem cartão',
-    more: 'Plano personalizado', talk: 'Fale com a gente',
+    talk: 'Fale com a gente',
+    enterprise: { name: 'Empresas', result: 'Sob medida para a sua operação', price: 'A combinar', items: (plan, n) => [`Tudo do ${plan}`, `Mais de ${n} contas de anúncios`, 'Comandos e números de WhatsApp sob medida', 'Seu CRM e atribuição em escala', 'Suporte prioritário'], limits: 'Preço conforme contas e uso' },
     caps: { analyst: 'Agente Analista', strategist: 'Agente Estrategista', mediaBuyer: 'Agente Comprador de mídia', attribution: 'Agente de Atribuição (CRM)', metrics: 'Métricas e KPIs', metricsBasic: 'básicas', reports: { advanced: 'Relatórios Avançados', custom: 'Relatórios Personalizados' } },
     limits: {
       accounts: (n, f) => (n === 1 ? '1 conta de anúncios' : `${f(n)} contas de anúncios`),
@@ -162,7 +165,6 @@ const PRICING_TEXT = {
       gratis: { name: 'Grátis', result: 'Pergunte aos seus anúncios', cta: 'Começar grátis' },
       analista: { name: 'Starter', result: 'Diz o que revisar primeiro', cta: 'Escolher Starter' },
       equipo: { name: 'Growth', result: 'Pausa e move orçamento', cta: 'Escolher Growth' },
-      agencia: { name: 'Scale', result: 'Suas vendas do CRM, cruzadas com a Meta', cta: 'Escolher Scale' },
     },
   },
 };
@@ -210,6 +212,22 @@ const PRICING_TEXT = {
     </article>`;
   }
 
+  function renderEnterprise() {
+    const base = PLAN_LADDER.find((p) => p.id === ENTERPRISE.from);
+    const words = T.enterprise;
+    return `<article class="plan plan-enterprise" data-plan="enterprise">
+      <h3 class="plan-name">${esc(words.name)}</h3>
+      <p class="plan-result">${esc(words.result)}</p>
+      <p class="plan-price">${esc(words.price)}</p>
+      <p class="plan-year"></p>
+      <ul>
+        ${words.items(T.plans[base.id].name, int(base.adsAccounts)).map((item) => `<li>${icon('i-check')}<span>${esc(item)}</span></li>`).join('')}
+      </ul>
+      <p class="plan-limits">${esc(words.limits)}</p>
+      <a class="btn btn-dark" href="${PRICING_CONFIG.contact}">${esc(T.talk)}</a>
+    </article>`;
+  }
+
   function mountPlans() {
     const root = document.getElementById('pricing-root');
     if (!root) return;
@@ -220,10 +238,7 @@ const PRICING_TEXT = {
           <button type="button" data-annual="1" aria-pressed="${state.annual}">${esc(T.annual)}<span>${esc(T.freeMonths)}</span></button>
         </div>
       </div>
-      <div class="plans">${PLAN_LADDER.map((plan, i) => renderPlan(plan, i)).join('')}</div>
-      <div class="pricing-extras">
-        <p>${esc(T.more)} · <a href="${PRICING_CONFIG.contact}">${esc(T.talk)}</a></p>
-      </div>`;
+      <div class="plans">${PLAN_LADDER.map((plan, i) => renderPlan(plan, i)).join('')}${renderEnterprise()}</div>`;
     root.querySelectorAll('.billing button').forEach((button) => button.addEventListener('click', () => {
       state.annual = button.dataset.annual === '1';
       mountPlans();
