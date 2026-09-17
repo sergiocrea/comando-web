@@ -119,7 +119,6 @@ const PRICING_TEXT = {
     caps: { analystStrategist: 'Agentes Analista y Estratega', mediaBuyer: 'Agente Media Buyer', attribution: 'Agente de Atribución (CRM)', metrics: 'Métricas & KPIs', metricsBasic: 'básicas', metricsTipLabel: '¿Cada cuánto se actualizan los datos?', metricsTip: (min) => (min >= 1440 ? 'Los datos de Meta se sincronizan 1 vez al día.' : 'Los datos de Meta se sincronizan cada hora.'), reports: { advanced: 'Reportes Avanzados', custom: 'Reportes Personalizados' } },
     limits: {
       accounts: (n, f) => (n === 1 ? '1 cuenta publicitaria' : `${f(n)} cuentas publicitarias`),
-      refresh: (min) => (min >= 1440 ? 'Datos 1 vez al día' : 'Datos cada hora'),
       questions: (n, f) => `${f(n)} comandos al mes`,
       questionsOnce: (n, d, f) => `${f(n)} comandos para empezar (${d} días)`,
       users: (n) => `${n} usuarios`,
@@ -139,7 +138,6 @@ const PRICING_TEXT = {
     caps: { analystStrategist: 'Analyst & Strategist Agents', mediaBuyer: 'Media Buyer Agent', attribution: 'Attribution Agent (CRM)', metrics: 'Metrics & KPIs', metricsBasic: 'basic', metricsTipLabel: 'How often is the data updated?', metricsTip: (min) => (min >= 1440 ? 'Meta data syncs once a day.' : 'Meta data syncs every hour.'), reports: { advanced: 'Advanced Reports', custom: 'Custom Reports' } },
     limits: {
       accounts: (n, f) => (n === 1 ? '1 ad account' : `${f(n)} ad accounts`),
-      refresh: (min) => (min >= 1440 ? 'Data once a day' : 'Data every hour'),
       questions: (n, f) => `${f(n)} commands a month`,
       questionsOnce: (n, d, f) => `${f(n)} commands to start (${d} days)`,
       users: (n) => `${n} users`,
@@ -159,7 +157,6 @@ const PRICING_TEXT = {
     caps: { analystStrategist: 'Agentes Analista e Estrategista', mediaBuyer: 'Agente Comprador de mídia', attribution: 'Agente de Atribuição (CRM)', metrics: 'Métricas e KPIs', metricsBasic: 'básicas', metricsTipLabel: 'Com que frequência os dados são atualizados?', metricsTip: (min) => (min >= 1440 ? 'Os dados da Meta são sincronizados 1 vez por dia.' : 'Os dados da Meta são sincronizados a cada hora.'), reports: { advanced: 'Relatórios Avançados', custom: 'Relatórios Personalizados' } },
     limits: {
       accounts: (n, f) => (n === 1 ? '1 conta de anúncios' : `${f(n)} contas de anúncios`),
-      refresh: (min) => (min >= 1440 ? 'Dados 1 vez por dia' : 'Dados a cada hora'),
       questions: (n, f) => `${f(n)} comandos por mês`,
       questionsOnce: (n, d, f) => `${f(n)} comandos para começar (${d} dias)`,
       users: (n) => `${n} usuários`,
@@ -210,7 +207,7 @@ const PRICING_TEXT = {
         ${plan.metrics ? `<li>${icon('i-check')}<span>${esc(T.caps.metrics)}<span class="plan-tip"><button type="button" aria-label="${esc(T.caps.metricsTipLabel)}" aria-describedby="tip-metrics-${plan.code}">?</button><span class="plan-tip-text" role="tooltip" id="tip-metrics-${plan.code}">${esc(T.caps.metricsTip(plan.adsRefreshMinutes))}</span></span>${plan.metrics === 'basic' ? `<small class="plan-note">${esc(T.caps.metricsBasic)}</small>` : ''}</span></li>` : ''}
         ${(plan.reports || []).map((r) => `<li>${icon('i-check')}<span>${esc(T.caps.reports[r])}</span></li>`).join('')}
       </ul>
-      <p class="plan-limits">${esc(T.limits.accounts(plan.adsAccounts, int))}<br />${esc(T.limits.refresh(plan.adsRefreshMinutes))}<br />${esc(plan.commandsOnceDays ? T.limits.questionsOnce(plan.commands, plan.commandsOnceDays, int) : T.limits.questions(plan.commands, int))}${plan.users > 1 ? `<br />${esc(T.limits.users(plan.users))}` : ''}</p>
+      <p class="plan-limits">${esc(T.limits.accounts(plan.adsAccounts, int))}<br />${esc(plan.commandsOnceDays ? T.limits.questionsOnce(plan.commands, plan.commandsOnceDays, int) : T.limits.questions(plan.commands, int))}${plan.users > 1 ? `<br />${esc(T.limits.users(plan.users))}` : ''}</p>
       <a class="btn btn-dark" href="${href}">${esc(words.cta)}</a>
     </article>`;
   }
