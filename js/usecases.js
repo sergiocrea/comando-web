@@ -250,7 +250,9 @@
   }
 
   const meta = document.getElementById('metaads-root');
-  if (meta) mount(meta, { data: 'metaads', pickers: false, feed: false, ads: true, version: 17 });
+  // `foot: false` (17-sep): el botón «Conecta tu Meta Ads» se quitó de aquí; el
+  // registro ya está en el menú y en precios.
+  if (meta) mount(meta, { data: 'metaads', pickers: false, feed: false, ads: true, foot: false, version: 17 });
   const dia = document.getElementById('usecases-root');
   // `foot: false`: el cierre y su botón se iban justo antes de precios, y ahí
   // el visitante ya tiene cuatro planes con su propio botón a un dedo.
