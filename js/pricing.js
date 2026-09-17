@@ -117,7 +117,7 @@ const PRICING_TEXT = {
     perMonth: '/mes', perYear: (a) => `${a} al año`, recommended: 'Recomendado', soon: 'Próximamente',
     trial: () => 'Empiezas gratis, sin tarjeta',
     talk: 'Habla con nosotros',
-    enterprise: { name: 'Empresas', result: 'A la medida de tu operación', items: (plan, n) => [`Todo lo de ${plan}`, `Más de ${n} cuentas publicitarias`, 'Comandos y usuarios a medida', 'Tu CRM y atribución a escala', 'Reportes Personalizados', 'Soporte prioritario'], limits: 'Precio según cuentas y uso' },
+    enterprise: { name: 'Empresas', result: 'A la medida de tu operación', items: (plan, n) => [`Todo lo de ${plan}`, `Más de ${n} cuentas publicitarias`, 'Comandos y usuarios a medida', 'Reportes Personalizados', 'Soporte prioritario'], limits: 'Precio según cuentas y uso' },
     caps: { analystStrategist: 'Agentes Analista y Estratega', mediaBuyer: 'Agente Media Buyer', attribution: 'Agente de Atribución (CRM)', metrics: 'Métricas & KPIs', metricsBasic: 'básicas', metricsTipLabel: '¿Cada cuánto se actualizan los datos?', metricsTip: (min) => (min >= 1440 ? 'Los datos de Meta se sincronizan 1 vez al día.' : 'Los datos de Meta se sincronizan cada hora.'), reports: { advanced: 'Reportes Avanzados', custom: 'Reportes Personalizados' } },
     limits: {
       accounts: (n, f) => (n === 1 ? '1 cuenta publicitaria' : `${f(n)} cuentas publicitarias`),
@@ -135,7 +135,7 @@ const PRICING_TEXT = {
     perMonth: '/mo', perYear: (a) => `${a} a year`, recommended: 'Recommended', soon: 'Coming soon',
     trial: () => 'You start free, no card',
     talk: 'Talk to us',
-    enterprise: { name: 'Enterprise', result: 'Built around your operation', items: (plan, n) => [`Everything in ${plan}`, `More than ${n} ad accounts`, 'Commands and users to fit', 'Your CRM and attribution at scale', 'Custom Reports', 'Priority support'], limits: 'Priced by accounts and usage' },
+    enterprise: { name: 'Enterprise', result: 'Built around your operation', items: (plan, n) => [`Everything in ${plan}`, `More than ${n} ad accounts`, 'Commands and users to fit', 'Custom Reports', 'Priority support'], limits: 'Priced by accounts and usage' },
     caps: { analystStrategist: 'Analyst & Strategist Agents', mediaBuyer: 'Media Buyer Agent', attribution: 'Attribution Agent (CRM)', metrics: 'Metrics & KPIs', metricsBasic: 'basic', metricsTipLabel: 'How often is the data updated?', metricsTip: (min) => (min >= 1440 ? 'Meta data syncs once a day.' : 'Meta data syncs every hour.'), reports: { advanced: 'Advanced Reports', custom: 'Custom Reports' } },
     limits: {
       accounts: (n, f) => (n === 1 ? '1 ad account' : `${f(n)} ad accounts`),
@@ -153,7 +153,7 @@ const PRICING_TEXT = {
     perMonth: '/mês', perYear: (a) => `${a} por ano`, recommended: 'Recomendado', soon: 'Em breve',
     trial: () => 'Você começa grátis, sem cartão',
     talk: 'Fale com a gente',
-    enterprise: { name: 'Empresas', result: 'Sob medida para a sua operação', items: (plan, n) => [`Tudo do ${plan}`, `Mais de ${n} contas de anúncios`, 'Comandos e usuários sob medida', 'Seu CRM e atribuição em escala', 'Relatórios Personalizados', 'Suporte prioritário'], limits: 'Preço conforme contas e uso' },
+    enterprise: { name: 'Empresas', result: 'Sob medida para a sua operação', items: (plan, n) => [`Tudo do ${plan}`, `Mais de ${n} contas de anúncios`, 'Comandos e usuários sob medida', 'Relatórios Personalizados', 'Suporte prioritário'], limits: 'Preço conforme contas e uso' },
     caps: { analystStrategist: 'Agentes Analista e Estrategista', mediaBuyer: 'Agente Comprador de mídia', attribution: 'Agente de Atribuição (CRM)', metrics: 'Métricas e KPIs', metricsBasic: 'básicas', metricsTipLabel: 'Com que frequência os dados são atualizados?', metricsTip: (min) => (min >= 1440 ? 'Os dados da Meta são sincronizados 1 vez por dia.' : 'Os dados da Meta são sincronizados a cada hora.'), reports: { advanced: 'Relatórios Avançados', custom: 'Relatórios Personalizados' } },
     limits: {
       accounts: (n, f) => (n === 1 ? '1 conta de anúncios' : `${f(n)} contas de anúncios`),
