@@ -22,6 +22,18 @@
   const caption = root.querySelector('.attr-caption');
   // En móvil el texto del paso va dentro de la animación, a la derecha del anuncio azul.
   const metaStep = root.querySelector('.attr-meta-step');
+  // Los pasos también dentro de la caja, en móvil: números unidos por una línea.
+  const stepper = root.querySelector('[data-attr-stepper]');
+  const dots = steps.map((_, i) => {
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'attr-dotstep';
+    b.tabIndex = -1;
+    b.innerHTML = `<span>${i + 1}</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+    b.addEventListener('click', () => steps[i].querySelector('button').click());
+    stepper.appendChild(b);
+    return b;
+  });
   let shownPhase = -1;
   const NS = 'http://www.w3.org/2000/svg';
   const reduce = matchMedia('(prefers-reduced-motion: reduce)');
@@ -147,7 +159,10 @@
       const bar = s.querySelector('.attr-bar i');
       bar.style.transform = `scaleX(${i < phase ? 1 : i === phase ? prog(t, PHASES[i], PHASES[i + 1] - PHASES[i]).toFixed(3) : 0})`;
       s.querySelector('button').setAttribute('aria-current', i === phase ? 'step' : 'false');
+      dots[i].classList.toggle('is-active', i === phase);
+      dots[i].classList.toggle('is-done', i < phase);
     });
+    stepper.style.setProperty('--attr-done', String(phase / (steps.length - 1)));
 
     if (phase !== shownPhase) {
       shownPhase = phase;

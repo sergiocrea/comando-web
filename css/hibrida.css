@@ -771,3 +771,26 @@ html:not(.js) .lp .attr-step p { display: block; }
 }
 /* Sin el objetivo de Meta debajo del anuncio (17-sep): el anuncio ocupa la tarjeta. */
 .lp .attr-goal { display: none; }
+
+/* Pasos dentro de la caja (solo móvil): números unidos por una línea, en grafito
+   con el azul de marca en el que va. Los de la columna quedan para lector de
+   pantalla y teclado (fuera de la vista, no `display: none`). */
+.lp .attr-stepper { display: none; }
+@media (max-width: 767px) {
+  .lp .attr-stepper { display: flex; position: relative; align-items: center; justify-content: space-between; gap: 0; padding: 1.1rem clamp(1.6rem, 9vw, 2.75rem) .3rem; }
+  .lp .attr-stepper::before, .lp .attr-stepper::after { content: ""; position: absolute; left: clamp(2.6rem, 12vw, 3.9rem); right: clamp(2.6rem, 12vw, 3.9rem); top: calc(1.1rem + 1.1rem); height: 2px; border-radius: 2px; }
+  .lp .attr-stepper::before { background: var(--gl-1); }
+  .lp .attr-stepper::after { right: auto; width: calc((100% - clamp(5.2rem, 24vw, 7.8rem) - 2.2rem) * var(--attr-done, 0)); background: var(--accent, #315fef); transition: width .4s var(--ease); }
+  .lp .attr-dotstep { all: unset; position: relative; z-index: 1; display: grid; place-items: center; width: 2.2rem; height: 2.2rem; border-radius: 50%; box-sizing: border-box; background: var(--g-900); border: 1.5px solid var(--gl-2); color: var(--gt-3); font: 600 .85rem/1 "Jetbrainsmono Variable", monospace; cursor: pointer; transition: background .3s, border-color .3s, color .3s, transform .3s; }
+  .lp .attr-dotstep svg { display: none; width: 1.1rem; height: 1.1rem; }
+  .lp .attr-dotstep.is-done { border-color: var(--accent, #315fef); color: var(--accent, #315fef); }
+  .lp .attr-dotstep.is-done span { display: none; }
+  .lp .attr-dotstep.is-done svg { display: block; }
+  .lp .attr-dotstep.is-active { background: var(--accent, #315fef); border-color: var(--accent, #315fef); color: #fff; transform: scale(1.12); box-shadow: 0 0 0 4px rgba(49, 95, 239, .22); }
+  /* La lista de la columna: accesible pero fuera de la vista. */
+  .lp .attr.is-tall .attr-steps { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+  .lp .attr.is-tall .attr-side { order: 0; }
+}
+@media (max-width: 767px) and (prefers-reduced-motion: reduce) {
+  .lp .attr-dotstep, .lp .attr-stepper::after { transition: none; }
+}
