@@ -582,12 +582,13 @@ html:not(.js) .lp .slider-btns { display: none; }
 .lp .attr-card-top { display: flex; align-items: center; gap: .4rem; margin: 0 !important; font: 600 clamp(.66rem, 1vw, .8rem)/1 "Jetbrainsmono Variable", monospace; letter-spacing: .04em; text-transform: uppercase; color: #e4e5e4; }
 .lp .attr-card-top img { width: 1.1em; height: 1.1em; }
 .lp .attr-ad { flex: 1; display: flex; flex-direction: column; gap: .4rem; min-height: 0; }
-.lp .attr-ad-img { flex: 1; min-height: 0; border-radius: .6rem; background: linear-gradient(135deg, #2c4fb8, #6b93ff 60%, #9db4ff); display: flex; align-items: flex-start; padding: .6rem .7rem; }
+.lp .attr-ad-img { flex: 1; min-height: 0; border-radius: .6rem; background: linear-gradient(135deg, #2c4fb8, #6b93ff 60%, #9db4ff); display: flex; flex-direction: column; justify-content: space-between; align-items: stretch; gap: .5rem; padding: .6rem .7rem; }
 /* «Meta Ads» va dentro del anuncio: en tinta clara sobre el azul, con el logo en blanco. */
 .lp .attr-ad-img .attr-card-top { color: #fff; text-shadow: 0 1px 2px rgba(0, 0, 0, .25); }
 .lp .attr-ad-img .attr-card-top img { filter: brightness(0) invert(1); }
-.lp .attr-ad-line { height: .45rem; border-radius: 99px; background: #3b3f47; }
-.lp .attr-ad-line.is-short { width: 60%; }
+.lp .attr-ad-lines { display: flex; flex-direction: column; gap: .35rem; }
+.lp .attr-ad-line { height: .45rem; border-radius: 99px; background: rgba(255, 255, 255, .55); }
+.lp .attr-ad-line.is-short { width: 60%; background: rgba(255, 255, 255, .35); }
 .lp .attr-goal { position: relative; margin: 0 !important; min-height: 2.6em; font: 500 clamp(.8rem, 1.15vw, .95rem)/1.3 "Neuehaasunicaw 1 G", Inter, sans-serif; color: #e4e5e4; }
 .lp .attr-goal span { position: absolute; inset: 0; transition: opacity .5s; }
 .lp .attr-goal-b { opacity: 0; color: var(--d-ok); }
@@ -651,7 +652,8 @@ html:not(.js) .lp .attr-step p { display: block; }
   .lp .attr.is-tall .attr-card { flex-direction: row; flex-wrap: wrap; align-items: center; }
   .lp .attr.is-tall .attr-ad { flex: 0 0 44%; align-self: stretch; }
   .lp .attr.is-tall .attr-ad-img { padding: .45rem .55rem; }
-  .lp .attr.is-tall .attr-ad-line { height: .35rem; }
+  .lp .attr.is-tall .attr-ad-line { height: .3rem; }
+  .lp .attr.is-tall .attr-ad-lines { gap: .25rem; }
   .lp .attr.is-tall .attr-goal { flex: 1; align-self: stretch; margin-left: .75rem !important; font-size: .95rem; font-weight: 600; min-height: 2.6em; }
   .lp .attr.is-tall .attr-goal span { display: flex; align-items: center; justify-content: center; text-align: center; text-wrap: balance; }
   .lp .attr.is-tall .attr-crm { align-content: flex-start; }
