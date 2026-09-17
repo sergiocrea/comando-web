@@ -72,7 +72,7 @@ const PLAN_LADDER = [
     capabilities: { adsRead: true, adsDiagnosis: true, voice: false, mediaBuyer: 'coming_soon', attribution: 'coming_soon', googleAds: 'coming_soon', tiktokAds: true },
   },
   {
-    id: 'equipo', code: 'equipo', price: { month: 29, year: 290 }, featured: true, agents: ['analystStrategist', 'mediaBuyer', 'attribution'], reports: ['advanced', 'custom'], metrics: true,
+    id: 'equipo', code: 'equipo', price: { month: 29, year: 290 }, featured: true, agents: ['analystStrategist', 'mediaBuyer', 'attribution'], reports: ['advanced'], metrics: true,
     adsAccounts: 3, adsRefreshMinutes: 60, commands: 300, users: 2,
     capabilities: { adsRead: true, adsDiagnosis: true, voice: true, mediaBuyer: 'coming_soon', attribution: 'coming_soon', googleAds: 'coming_soon', tiktokAds: true },
   },
@@ -115,8 +115,8 @@ const PRICING_TEXT = {
     perMonth: '/mes', perYear: (a) => `${a} al año`, recommended: 'Recomendado', soon: 'Próximamente',
     trial: () => 'Empiezas gratis, sin tarjeta',
     talk: 'Habla con nosotros',
-    enterprise: { name: 'Empresas', result: 'A la medida de tu operación', price: 'Hablemos', items: (plan, n) => [`Todo lo de ${plan}`, `Más de ${n} cuentas publicitarias`, 'Comandos y usuarios a medida', 'Tu CRM y atribución a escala', 'Soporte prioritario'], limits: 'Precio según cuentas y uso' },
-    caps: { analystStrategist: 'Agentes Analista y Estratega', mediaBuyer: 'Agente Media Buyer', attribution: 'Agente de Atribución (CRM)', metrics: 'Métricas & KPIs', metricsBasic: 'básicas', reports: { advanced: 'Reportes Avanzados', custom: 'Reportes Personalizados' } },
+    enterprise: { name: 'Empresas', result: 'A la medida de tu operación', price: 'Hablemos', items: (plan, n) => [`Todo lo de ${plan}`, `Más de ${n} cuentas publicitarias`, 'Comandos y usuarios a medida', 'Tu CRM y atribución a escala', 'Reportes Personalizados', 'Soporte prioritario'], limits: 'Precio según cuentas y uso' },
+    caps: { analystStrategist: 'Agentes Analista y Estratega', mediaBuyer: 'Agente Media Buyer', attribution: 'Agente de Atribución (CRM)', metrics: 'Métricas & KPIs', metricsBasic: 'básicas', metricsTipLabel: '¿Cada cuánto se actualizan los datos?', metricsTip: (min) => (min >= 1440 ? 'Los datos de Meta se sincronizan 1 vez al día.' : 'Los datos de Meta se sincronizan cada hora.'), reports: { advanced: 'Reportes Avanzados', custom: 'Reportes Personalizados' } },
     limits: {
       accounts: (n, f) => (n === 1 ? '1 cuenta publicitaria' : `${f(n)} cuentas publicitarias`),
       refresh: (min) => (min >= 1440 ? 'Datos 1 vez al día' : 'Datos cada hora'),
@@ -135,8 +135,8 @@ const PRICING_TEXT = {
     perMonth: '/mo', perYear: (a) => `${a} a year`, recommended: 'Recommended', soon: 'Coming soon',
     trial: () => 'You start free, no card',
     talk: 'Talk to us',
-    enterprise: { name: 'Enterprise', result: 'Built around your operation', price: "Let's talk", items: (plan, n) => [`Everything in ${plan}`, `More than ${n} ad accounts`, 'Commands and users to fit', 'Your CRM and attribution at scale', 'Priority support'], limits: 'Priced by accounts and usage' },
-    caps: { analystStrategist: 'Analyst & Strategist Agents', mediaBuyer: 'Media Buyer Agent', attribution: 'Attribution Agent (CRM)', metrics: 'Metrics & KPIs', metricsBasic: 'basic', reports: { advanced: 'Advanced Reports', custom: 'Custom Reports' } },
+    enterprise: { name: 'Enterprise', result: 'Built around your operation', price: "Let's talk", items: (plan, n) => [`Everything in ${plan}`, `More than ${n} ad accounts`, 'Commands and users to fit', 'Your CRM and attribution at scale', 'Custom Reports', 'Priority support'], limits: 'Priced by accounts and usage' },
+    caps: { analystStrategist: 'Analyst & Strategist Agents', mediaBuyer: 'Media Buyer Agent', attribution: 'Attribution Agent (CRM)', metrics: 'Metrics & KPIs', metricsBasic: 'basic', metricsTipLabel: 'How often is the data updated?', metricsTip: (min) => (min >= 1440 ? 'Meta data syncs once a day.' : 'Meta data syncs every hour.'), reports: { advanced: 'Advanced Reports', custom: 'Custom Reports' } },
     limits: {
       accounts: (n, f) => (n === 1 ? '1 ad account' : `${f(n)} ad accounts`),
       refresh: (min) => (min >= 1440 ? 'Data once a day' : 'Data every hour'),
@@ -155,8 +155,8 @@ const PRICING_TEXT = {
     perMonth: '/mês', perYear: (a) => `${a} por ano`, recommended: 'Recomendado', soon: 'Em breve',
     trial: () => 'Você começa grátis, sem cartão',
     talk: 'Fale com a gente',
-    enterprise: { name: 'Empresas', result: 'Sob medida para a sua operação', price: 'A combinar', items: (plan, n) => [`Tudo do ${plan}`, `Mais de ${n} contas de anúncios`, 'Comandos e usuários sob medida', 'Seu CRM e atribuição em escala', 'Suporte prioritário'], limits: 'Preço conforme contas e uso' },
-    caps: { analystStrategist: 'Agentes Analista e Estrategista', mediaBuyer: 'Agente Comprador de mídia', attribution: 'Agente de Atribuição (CRM)', metrics: 'Métricas e KPIs', metricsBasic: 'básicas', reports: { advanced: 'Relatórios Avançados', custom: 'Relatórios Personalizados' } },
+    enterprise: { name: 'Empresas', result: 'Sob medida para a sua operação', price: 'A combinar', items: (plan, n) => [`Tudo do ${plan}`, `Mais de ${n} contas de anúncios`, 'Comandos e usuários sob medida', 'Seu CRM e atribuição em escala', 'Relatórios Personalizados', 'Suporte prioritário'], limits: 'Preço conforme contas e uso' },
+    caps: { analystStrategist: 'Agentes Analista e Estrategista', mediaBuyer: 'Agente Comprador de mídia', attribution: 'Agente de Atribuição (CRM)', metrics: 'Métricas e KPIs', metricsBasic: 'básicas', metricsTipLabel: 'Com que frequência os dados são atualizados?', metricsTip: (min) => (min >= 1440 ? 'Os dados da Meta são sincronizados 1 vez por dia.' : 'Os dados da Meta são sincronizados a cada hora.'), reports: { advanced: 'Relatórios Avançados', custom: 'Relatórios Personalizados' } },
     limits: {
       accounts: (n, f) => (n === 1 ? '1 conta de anúncios' : `${f(n)} contas de anúncios`),
       refresh: (min) => (min >= 1440 ? 'Dados 1 vez por dia' : 'Dados a cada hora'),
@@ -207,7 +207,7 @@ const PRICING_TEXT = {
       <p class="plan-year">${year}</p>
       <ul>
         ${plan.agents.map((a) => `<li class="${prev && !prev.agents.includes(a) ? 'is-new' : ''}">${icon('i-check')}<span>${esc(T.caps[a])}</span></li>`).join('')}
-        ${plan.metrics ? `<li>${icon('i-check')}<span>${esc(T.caps.metrics)}${plan.metrics === 'basic' ? `<small class="plan-note">${esc(T.caps.metricsBasic)}</small>` : ''}</span></li>` : ''}
+        ${plan.metrics ? `<li>${icon('i-check')}<span>${esc(T.caps.metrics)}<span class="plan-tip"><button type="button" aria-label="${esc(T.caps.metricsTipLabel)}" aria-describedby="tip-metrics-${plan.code}">?</button><span class="plan-tip-text" role="tooltip" id="tip-metrics-${plan.code}">${esc(T.caps.metricsTip(plan.adsRefreshMinutes))}</span></span>${plan.metrics === 'basic' ? `<small class="plan-note">${esc(T.caps.metricsBasic)}</small>` : ''}</span></li>` : ''}
         ${(plan.reports || []).map((r) => `<li>${icon('i-check')}<span>${esc(T.caps.reports[r])}</span></li>`).join('')}
       </ul>
       <p class="plan-limits">${esc(T.limits.accounts(plan.adsAccounts, int))}<br />${esc(T.limits.refresh(plan.adsRefreshMinutes))}<br />${esc(plan.commandsOnceDays ? T.limits.questionsOnce(plan.commands, plan.commandsOnceDays, int) : T.limits.questions(plan.commands, int))}${plan.users > 1 ? `<br />${esc(T.limits.users(plan.users))}` : ''}</p>
