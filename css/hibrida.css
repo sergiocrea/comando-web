@@ -711,10 +711,10 @@ html:not(.js) .lp .attr-step p { display: block; }
 
 /* ---------- hero de escritorio (17-sep): tarjeta blanca + vídeo vertical ----------
    A la izquierda el copy en una tarjeta clara; a la derecha el vídeo de móvil en su
-   marco, con las burbujas de WhatsApp montadas sobre su borde. Por debajo de 992 px
+   marco, con las burbujas de WhatsApp montadas sobre su borde. Desde 768 px (tableta incluida); por debajo
    sigue el hero anterior (vídeo de fondo). */
 .hero-video { display: none; }
-@media (min-width: 992px) {
+@media (min-width: 768px) {
   .b2b-hero {
     background-color: #f3f1ea;
     background-image: linear-gradient(rgba(21, 21, 21, .045) 1px, transparent 1px), linear-gradient(90deg, rgba(21, 21, 21, .045) 1px, transparent 1px);
@@ -748,7 +748,7 @@ html:not(.js) .lp .attr-step p { display: block; }
   .b2b-hero-grid.is-short .power-context p { font-size: .82rem; }
   .b2b-hero-grid.is-short .power-reply { font-size: .82rem; padding: .7rem .85rem 1.35rem; }
 }
-@media (min-width: 992px) and (prefers-reduced-motion: reduce) { .hero-video video { display: none; } }
+@media (min-width: 768px) and (prefers-reduced-motion: reduce) { .hero-video video { display: none; } }
 
 /* Móvil: el texto del paso activo va dentro de la tarjeta de Meta, a la derecha del
    anuncio azul, en lugar de la tarjeta blanca de abajo y del objetivo de Meta. */
