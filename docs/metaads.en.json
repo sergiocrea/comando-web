@@ -23,27 +23,27 @@
    "rol": "Meta Ads",
    "vertical": "Numbers and diagnosis",
    "titulo": "",
-   "proactivo": "☀️ Yesterday: *US$ 214* · *38 leads* · US$ 5.60 each\n12 % cheaper than last week.\n\"Remarketing\" has spent 3 days without a single lead.\n\nWant the detail?\nReply *SEE*",
+   "proactivo": "☀️ Yesterday: *US$ 214* · *38 leads*\nUS$ 5.60 per lead · 12 % cheaper than last week\n\"Remarketing\": 3 days spending without a lead\n\nWant the detail?\nReply *SEE*",
    "comandos": [
     {
      "u": "Which campaign brought the most leads yesterday, and what did each one cost me?",
-     "r": "*September leads*: 21 leads at *US$ 4.10*\n\"Catalog\": 11 leads at US$ 7.30\nThe other three campaigns: 6 leads in total."
+     "r": "🏆 *September leads*: 21 leads at *US$ 4.10*\n\"Catalog\": 11 leads at US$ 7.30\nOther three campaigns: 6 leads\n\nShall I move budget to the one that works?\nReply *MOVE*"
     },
     {
      "u": "Compare this week with last week: spend, leads and cost per lead.",
-     "r": "This week: *265 leads* at *US$ 5.58*\nSpend US$ 1,480 (+6 %) · leads +19 % · cost −11 %\nThe jump comes from \"September leads\": it doubled leads on the same budget."
+     "r": "📈 This week: *265 leads* at *US$ 5.58*\nSpend US$ 1,480 · +6 %\nLeads +19 % · cost per lead −11 %\n\nThe jump is \"September leads\": it doubled leads on the same budget."
     },
     {
      "u": "Which ad is spending and bringing nothing?",
-     "r": "🔴 \"Remarketing\": *US$ 96* in 3 days and *0 leads*\nFrequency 4.8: the same people have seen it too often.\n\nShall I pause it or wait until Monday?\nReply *PAUSE* · *WAIT*"
+     "r": "🔴 *\"Remarketing\"*: *US$ 96* in 3 days, 0 leads\nFrequency 4.8: the same people have seen it too often\n\nShall I pause it or wait until Monday?\nReply *PAUSE* · *WAIT*"
     },
     {
      "u": "Why did the cost per lead of \"Catalog\" go up?",
-     "r": "\"Catalog\": cost per lead went up\nCPM *+22 %* and clicks fell from *1.4 % to 0.9 %*.\nThe creative is spent: check it before the budget."
+     "r": "🟡 *\"Catalog\"*: the lead went up to *US$ 7.30*\nCPM +22 %\nClicks from 1.4 % to 0.9 %\n\nThe creative is spent: change it before touching the budget."
     },
     {
      "u": "How much have I spent this month and how many results so far?",
-     "r": "September: *US$ 3,120* · *571 results* · US$ 5.46\n\"September leads\" takes 48 % of the spend and brings 61 % of the results."
+     "r": "💰 September: *US$ 3,120* · *571 results*\nUS$ 5.46 per result\n\"September leads\": 48 % of the spend and 61 % of the results\n\nIt is your most efficient campaign this month."
     }
    ],
    "resultado": "",
