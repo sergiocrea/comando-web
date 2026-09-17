@@ -26,24 +26,24 @@
    "proactivo": "☀️ Ontem: *US$ 214* · *38 leads*\nUS$ 5,60 por lead · 12 % mais barato que na semana passada\n«Remarketing»: 3 dias gastando sem um lead\n\nQuer o detalhe?\nResponda *VER*",
    "comandos": [
     {
-     "u": "Qual campanha trouxe mais leads ontem e quanto me custou cada um?",
-     "r": "🏆 *Leads setembro*: 21 leads a *US$ 4,10*\n«Catálogo»: 11 leads a US$ 7,30\nOutras três campanhas: 6 leads\n\nMovo orçamento para a que rende?\nResponda *MOVER*"
+     "u": "Se eu mover US$ 20 por dia de «Catálogo» para «Leads setembro», quantos leads mais eu trago?",
+     "r": "📊 Mover *US$ 20 por dia* para «Leads setembro»\nAo custo de hoje: *+4 ou 5 leads por dia*\n«Catálogo» perderia uns 2, mas a US$ 7,30 cada\n\nAplico?\nResponda *APLICAR* · *ESPERAR*"
     },
     {
      "u": "Compare esta semana com a anterior: investimento, leads e custo por lead.",
      "r": "📈 Esta semana: *265 leads* a *US$ 5,58*\nInvestimento US$ 1.480 · +6 %\nLeads +19 % · custo por lead −11 %\n\nO salto é de «Leads setembro»: dobrou os leads com o mesmo orçamento."
     },
     {
-     "u": "Qual anúncio está gastando e não traz nada?",
-     "r": "🔴 *«Remarketing»*: *US$ 96* em 3 dias, 0 leads\nFrequência 4,8: as mesmas pessoas já viram demais\n\nPauso ou esperamos até segunda?\nResponda *PAUSAR* · *ESPERAR*"
+     "u": "Quais anúncios já estão desgastados e vale renovar esta semana?",
+     "r": "🎨 Dois anúncios desgastados\n«Remarketing»: frequência *4,8* · cliques −36 %\n«Catálogo v2»: frequência *3,9* · cliques −22 %\n\nRenove primeiro «Remarketing»: gasta o dobro."
     },
     {
      "u": "Por que subiu o custo por lead de «Catálogo»?",
      "r": "🟡 *«Catálogo»*: o lead subiu para *US$ 7,30*\nCPM +22 %\nCliques de 1,4 % para 0,9 %\n\nO criativo se gastou: troque antes de mexer no orçamento."
     },
     {
-     "u": "Quanto já gastei este mês e quantos resultados vieram?",
-     "r": "💰 Setembro: *US$ 3.120* · *571 resultados*\nUS$ 5,46 por resultado\n«Leads setembro»: 48 % do investimento e 61 % dos resultados\n\nÉ sua campanha mais eficiente do mês."
+     "u": "Dos leads deste mês, quantos compraram segundo meu CRM?",
+     "r": "🧾 *18 vendas* de 240 leads neste mês\nUS$ *72* por venda · ticket médio US$ 410\n«Leads setembro» trouxe 12 das 18\n\nJá mandei para a Meta procurar gente parecida."
     }
    ],
    "resultado": "",

@@ -26,24 +26,24 @@
    "proactivo": "☀️ Yesterday: *US$ 214* · *38 leads*\nUS$ 5.60 per lead · 12 % cheaper than last week\n\"Remarketing\": 3 days spending without a lead\n\nWant the detail?\nReply *SEE*",
    "comandos": [
     {
-     "u": "Which campaign brought the most leads yesterday, and what did each one cost me?",
-     "r": "🏆 *September leads*: 21 leads at *US$ 4.10*\n\"Catalog\": 11 leads at US$ 7.30\nOther three campaigns: 6 leads\n\nShall I move budget to the one that works?\nReply *MOVE*"
+     "u": "If I move US$ 20 a day from \"Catalog\" to \"September leads\", how many more leads do I get?",
+     "r": "📊 Moving *US$ 20 a day* to \"September leads\"\nAt today's cost: *+4 or 5 leads a day*\n\"Catalog\" would lose about 2, but at US$ 7.30 each\n\nShall I apply it?\nReply *APPLY* · *WAIT*"
     },
     {
      "u": "Compare this week with last week: spend, leads and cost per lead.",
      "r": "📈 This week: *265 leads* at *US$ 5.58*\nSpend US$ 1,480 · +6 %\nLeads +19 % · cost per lead −11 %\n\nThe jump is \"September leads\": it doubled leads on the same budget."
     },
     {
-     "u": "Which ad is spending and bringing nothing?",
-     "r": "🔴 *\"Remarketing\"*: *US$ 96* in 3 days, 0 leads\nFrequency 4.8: the same people have seen it too often\n\nShall I pause it or wait until Monday?\nReply *PAUSE* · *WAIT*"
+     "u": "Which ads are burned out and worth refreshing this week?",
+     "r": "🎨 Two burned-out ads\n\"Remarketing\": frequency *4.8* · clicks −36 %\n\"Catalog v2\": frequency *3.9* · clicks −22 %\n\nRefresh \"Remarketing\" first: it spends twice as much."
     },
     {
      "u": "Why did the cost per lead of \"Catalog\" go up?",
      "r": "🟡 *\"Catalog\"*: the lead went up to *US$ 7.30*\nCPM +22 %\nClicks from 1.4 % to 0.9 %\n\nThe creative is spent: change it before touching the budget."
     },
     {
-     "u": "How much have I spent this month and how many results so far?",
-     "r": "💰 September: *US$ 3,120* · *571 results*\nUS$ 5.46 per result\n\"September leads\": 48 % of the spend and 61 % of the results\n\nIt is your most efficient campaign this month."
+     "u": "Of this month's leads, how many bought according to my CRM?",
+     "r": "🧾 *18 sales* out of 240 leads this month\nUS$ *72* per sale · average ticket US$ 410\n\"September leads\" brought 12 of the 18\n\nI already sent them to Meta so it looks for similar people."
     }
    ],
    "resultado": "",
