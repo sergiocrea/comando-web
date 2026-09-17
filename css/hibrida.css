@@ -594,9 +594,11 @@ html:not(.js) .lp .slider-btns { display: none; }
 .lp .attr-count { margin: 0 !important; display: flex; align-items: baseline; gap: .35rem; font: 500 clamp(.66rem, 1vw, .8rem)/1 "Jetbrainsmono Variable", monospace; color: #c2c5c2; }
 .lp .attr-count b { font: 600 clamp(1.6rem, 3.2vw, 2.6rem)/1 Neuemachina, "Space Grotesk", sans-serif; letter-spacing: -.03em; color: var(--d-ok); font-variant-numeric: tabular-nums; }
 .lp .attr-count small { color: #8a8d8a; font-size: 1em; }
-.lp .attr-hub { display: flex; align-items: center; justify-content: center; gap: .45rem; border-radius: 999px; background: #1f3a8a; border: 1px solid #6b93ff; font: 600 clamp(.66rem, 1.05vw, .85rem)/1 "Neuehaasunicaw 1 G", Inter, sans-serif; color: #fff; transition: box-shadow .25s, transform .25s; }
-.lp .attr-hub-mark { font: 700 .9em/1 "Jetbrainsmono Variable", monospace; color: #9db4ff; }
-.lp .attr-hub.is-hot { box-shadow: 0 0 0 6px rgba(62, 207, 142, .2), 0 0 28px rgba(62, 207, 142, .55); transform: scale(1.05); border-color: var(--d-ok); }
+/* El logo de Comando va encima del SVG (z-index) para que las rutas pasen por detrás. */
+.lp .attr-hub { z-index: 2; display: flex; align-items: center; justify-content: center; border-radius: 999px; background: #0b0c0f; border: 1px solid rgba(157, 180, 255, .45); box-shadow: 0 0 0 6px #0f1115, 0 10px 30px -10px rgba(0, 0, 0, .9); transition: box-shadow .25s, transform .25s, border-color .25s; }
+.lp .attr-hub-logo { font-size: clamp(1rem, 1.8vw, 1.45rem); white-space: nowrap; }
+.lp .attr-hub-logo .cmd-o { animation: none; }
+.lp .attr-hub.is-hot { box-shadow: 0 0 0 6px #0f1115, 0 0 0 9px rgba(62, 207, 142, .35), 0 0 34px rgba(62, 207, 142, .55); transform: scale(1.05); border-color: var(--d-ok); }
 .lp .attr-chip { display: flex; align-items: center; justify-content: center; margin: 0 !important; border-radius: 999px; font: 600 clamp(.58rem, .9vw, .74rem)/1 "Jetbrainsmono Variable", monospace; white-space: nowrap; opacity: 0; transform: translateY(6px); transition: opacity .35s, transform .35s; }
 .lp .attr-chip-lead { background: #2a2e36; color: #e4e5e4; border: 1px solid rgba(255, 255, 255, .2); }
 .lp .attr-chip-sale { background: rgba(62, 207, 142, .16); color: var(--d-ok); border: 1px solid rgba(62, 207, 142, .55); }
@@ -679,3 +681,8 @@ html:not(.js) .lp .attr-step p { display: block; }
 /* «Agente de Atribución» destacado: sello en tinta con su icono, como los iconos de los agentes. */
 .lp-eyebrow.is-badge { display: inline-flex; align-items: center; gap: .6rem; padding: .7rem 1.1rem .7rem .8rem; border-radius: 999px; background: #151515; color: #fff; font-size: .85rem; letter-spacing: .12em; box-shadow: 0 14px 30px -18px rgba(21, 21, 21, .6); margin-bottom: 1.75rem !important; }
 .lp-eyebrow.is-badge svg { width: 1.35rem; height: 1.35rem; color: #9db4ff; }
+/* Tarjetas de agentes: el icono y el nombre en la misma línea. */
+.lp-agent-meta { display: grid; grid-template-columns: auto minmax(0, 1fr); column-gap: .9rem; align-items: center; }
+.lp-agent-meta > :not(.lp-agent-top):not(h3) { grid-column: 1 / -1; }
+.lp-agent-meta > h3 { margin: 0 !important; }
+.lp-agent-meta > h3 + p { margin-top: 1rem !important; }
