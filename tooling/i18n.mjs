@@ -26,7 +26,7 @@ const LOCALES = ['en', 'pt'];
  * conservan en los tres idiomas —`/en/privacidad.html`— porque son la
  * identidad de la página y cambiarlos rompería enlaces ya publicados.
  */
-const PAGES = ['index.html', 'conectores.html', 'privacidad.html', 'terminos.html', 'eliminar-datos.html'];
+const PAGES = ['index.html', 'conectores.html', 'privacidad.html', 'terminos.html', 'eliminar-datos.html', 'sobre-nosotros.html'];
 /** Un enlace a una de estas se queda dentro del idioma; el resto va a la raíz. */
 const LOCAL_PAGES = new Set(PAGES);
 
