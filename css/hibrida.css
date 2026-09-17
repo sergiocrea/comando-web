@@ -339,13 +339,13 @@
   .lp-flow-arrow { width: 1.4rem; }
 }
 
-/* Con la premium a todo el ancho, las otras tres van en una fila de tres, con
+/* Los tres agentes van en una fila de tres (la tarjeta de Atribución pasó a ser la animación de #atribucion), con
    el chat debajo del texto: en dos columnas quedaba un hueco junto a la tercera. */
 @media (min-width: 992px) {
-  .lp-agents:has(.is-premium) { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-  .lp-agents:has(.is-premium) .lp-agent:not(.is-premium) { grid-template-columns: minmax(0, 1fr); gap: 1.25rem; }
-  .lp-agents:has(.is-premium) .lp-agent:not(.is-premium) .foot { padding-top: .75rem; }
-  .lp-agents:has(.is-premium) .lp-agent:not(.is-premium) .mini-chat { margin-top: auto; }
+  .lp-agents { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .lp-agents .lp-agent { grid-template-columns: minmax(0, 1fr); gap: 1.25rem; }
+  .lp-agents .lp-agent .foot { padding-top: .75rem; }
+  .lp-agents .lp-agent .mini-chat { margin-top: auto; }
 }
 @media (max-width: 991px) {
   .lp-agent.is-premium { grid-template-columns: minmax(0, 1fr); }
@@ -672,3 +672,6 @@ html:not(.js) .lp .attr-step p { display: block; }
 @media (prefers-reduced-motion: reduce) {
   .lp .attr-card, .lp .attr-hub, .lp .attr-chip, .lp .attr-goal span, .lp .attr-path.is-back { transition: none; }
 }
+
+/* Atribución sigue a «Tu equipo» con el mismo fondo: sin el hueco doble entre las dos. */
+.lp-section.is-continued { padding-top: 0; }
