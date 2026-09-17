@@ -646,7 +646,7 @@ body.sheet-open { overflow: hidden; }
 .uc-status-icons { font-size: .62rem; letter-spacing: -.05em; }
 .uc-wa-head { display: flex; align-items: center; gap: .6rem; padding: .5rem .9rem .7rem; background: #1f2c34; color: #fff; font-family: "Neuehaasunicaw 1 G", Inter, sans-serif; }
 .uc-wa-back { font-size: 1.5rem; line-height: 1; color: #8fa3ad; }
-.uc-wa-avatar { width: 2rem; height: 2rem; border-radius: 50%; background: #0b0b0b; padding: .25rem; }
+.uc-wa-avatar { width: 2rem; height: 2rem; border-radius: 50%; display: block; flex: none; }
 .uc-wa-name { flex: 1; font-size: .95rem; font-weight: 600; line-height: 1.1; }
 .uc-wa-name small { display: block; font-weight: 400; font-size: .7rem; color: #8fa3ad; margin-top: .15rem; }
 .uc-wa-more { color: #8fa3ad; }

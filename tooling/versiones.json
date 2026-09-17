@@ -139,13 +139,17 @@
     "v": "2",
     "sha": "c28dee41e94baa85"
   },
+  "assets/img/comando-avatar.svg": {
+    "v": "1",
+    "sha": "3b61bfcb862be09b"
+  },
   "assets/img/og-image.jpg": {
     "v": "4",
     "sha": "9487f74b6a3f63e4"
   },
   "css/custom.css": {
-    "v": "190",
-    "sha": "92d9258beac48eae"
+    "v": "191",
+    "sha": "ba9452aca351fc2f"
   },
   "css/hibrida.css": {
     "v": "57",
@@ -184,7 +188,7 @@
     "sha": "cda2eba6f36bdbdd"
   },
   "js/usecases.js": {
-    "v": "54",
-    "sha": "196b384a7efc4d8a"
+    "v": "55",
+    "sha": "18b9b77db85c3d99"
   }
 }

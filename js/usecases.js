@@ -195,7 +195,7 @@
           <div class="uc-phone" role="img" aria-label="${esc(T.chat)}">
             <div class="uc-phone-screen">
               <div class="uc-status"><span>9:41</span><span class="uc-status-icons">●●● ▲ ▮</span></div>
-              <div class="uc-wa-head"><span class="uc-wa-back">‹</span><img src="/assets/img/comando-mark.svg" alt="" class="uc-wa-avatar"/><div class="uc-wa-name">Comando<small>${esc(T.online)}</small></div><span class="uc-wa-more">⋮</span></div>
+              <div class="uc-wa-head"><span class="uc-wa-back">‹</span><img src="/assets/img/comando-avatar.svg?v=1" alt="" class="uc-wa-avatar"/><div class="uc-wa-name">Comando<small>${esc(T.online)}</small></div><span class="uc-wa-more">⋮</span></div>
               <div class="uc-chat" aria-live="polite">${chatHtml(c)}</div>
               <div class="uc-wa-input"><span>${esc(T.write)}</span><i>🎤</i></div>
             </div>
