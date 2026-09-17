@@ -769,3 +769,5 @@ html:not(.js) .lp .attr-step p { display: block; }
   .b2b-hero { background: #f3f1ea; }
   .b2b-hero-media { background: #d9d6cc url("../assets/img/hero-poster-tres-v6.jpg") 50% 35% / cover no-repeat; }
 }
+/* Sin el objetivo de Meta debajo del anuncio (17-sep): el anuncio ocupa la tarjeta. */
+.lp .attr-goal { display: none; }
