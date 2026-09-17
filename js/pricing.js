@@ -48,8 +48,8 @@
  * así que el tope real es el de comandos. Comandos al mes (16/17-sep, modelo
  * económico): Starter 150, Growth 300, Scale 500 compartidos entre 2 números de
  * WhatsApp (`whatsappNumbers`); los reportes con IA descuentan del mismo cupo.
- * El motor sigue con los cupos del catálogo del 15-sep y un solo número por
- * cuenta. Gratis incluye Analista y
+ * Cuentas publicitarias (17-sep): Starter 2, Growth 3, Scale 10. El motor sigue
+ * con los cupos y cuentas del catálogo del 15-sep y un solo número por cuenta. Gratis incluye Analista y
  * Estratega con 30 comandos al crear la cuenta, válidas 30 días y sin renovación
  * (`commandsOnceDays`); en el motor el cupo de Gratis todavía se renueva cada mes.
  */
@@ -66,12 +66,12 @@ const PLAN_LADDER = [
   },
   {
     id: 'equipo', code: 'equipo', price: { month: 19, year: 190 }, featured: true, agents: ['analyst', 'strategist', 'mediaBuyer'], reports: ['advanced'], metrics: true,
-    adsAccounts: 10, adsRefreshMinutes: 60, commands: 300,
+    adsAccounts: 3, adsRefreshMinutes: 60, commands: 300,
     capabilities: { adsRead: true, adsDiagnosis: true, voice: true, mediaBuyer: 'coming_soon', attribution: 'coming_soon', googleAds: 'coming_soon', tiktokAds: true },
   },
   {
     id: 'agencia', code: 'agencia', price: { month: 49, year: 490 }, agents: ['analyst', 'strategist', 'mediaBuyer', 'attribution'], reports: ['advanced', 'custom'], metrics: true,
-    adsAccounts: 20, adsRefreshMinutes: 60, commands: 500, whatsappNumbers: 2,
+    adsAccounts: 10, adsRefreshMinutes: 60, commands: 500, whatsappNumbers: 2,
     capabilities: { adsRead: true, adsDiagnosis: true, voice: true, mediaBuyer: 'coming_soon', attribution: 'coming_soon', googleAds: 'coming_soon', tiktokAds: true },
   },
 ];
