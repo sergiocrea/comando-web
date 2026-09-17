@@ -47,6 +47,8 @@
  * decidido no llama a la IA ni descuenta cupo (`OperatorCommandPipeline.confirm`),
  * así que el tope real es el de comandos; los reportes con IA descuentan del
  * mismo cupo.
+ * CUPOS (17-sep, tarde): Esencial 100 comandos y Comando Pro 250 (antes 150 y 300).
+ *
  * NOMBRES (17-sep): Gratis · Esencial (`analista`) · Comando Pro (`equipo`) · Empresas;
  * antes Starter y Growth. El motor sigue diciendo Analista y Equipo.
  *
@@ -68,12 +70,12 @@ const PLAN_LADDER = [
   },
   {
     id: 'analista', code: 'analista', price: { month: 9, year: 90 }, agents: ['analystStrategist', 'mediaBuyer'], metrics: true,
-    adsAccounts: 2, adsRefreshMinutes: 60, commands: 150,
+    adsAccounts: 2, adsRefreshMinutes: 60, commands: 100,
     capabilities: { adsRead: true, adsDiagnosis: true, voice: false, mediaBuyer: 'coming_soon', attribution: 'coming_soon', googleAds: 'coming_soon', tiktokAds: true },
   },
   {
     id: 'equipo', code: 'equipo', price: { month: 29, year: 290 }, featured: true, agents: ['analystStrategist', 'mediaBuyer', 'attribution'], reports: ['advanced'], metrics: true,
-    adsAccounts: 3, adsRefreshMinutes: 60, commands: 300, users: 2,
+    adsAccounts: 3, adsRefreshMinutes: 60, commands: 250, users: 2,
     capabilities: { adsRead: true, adsDiagnosis: true, voice: true, mediaBuyer: 'coming_soon', attribution: 'coming_soon', googleAds: 'coming_soon', tiktokAds: true },
   },
 ];
