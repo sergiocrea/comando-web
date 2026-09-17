@@ -4,7 +4,7 @@
      1. Los anuncios de Meta traen 10 contactos al CRM.
      2. En el CRM, 3 compran (verde); el resto se apaga.
      3. Comando manda esas ventas de vuelta a Meta.
-     4. Meta busca gente parecida: llegan 10 contactos nuevos y compran 6.
+     4. Meta busca gente parecida: llegan 10 contactos nuevos y compran 5.
    Todo sale de `render(t)`: una función pura del segundo del bucle. Así un clic
    en un paso, la pausa y `prefers-reduced-motion` solo cambian `t`.
    Los textos están en index.html (los traduce tooling/i18n.mjs); aquí solo se
@@ -29,7 +29,7 @@
   const LOOP = 19.5;
   const PHASES = [0, 4.5, 9, 13.5, LOOP];
   const SALES_A = [1, 4, 7];
-  const SALES_B = [0, 2, 3, 5, 7, 8];
+  const SALES_B = [0, 2, 5, 7, 8];
 
   // Geometría en unidades del viewBox. Las cajas HTML usan los mismos números.
   const LAYOUTS = {
