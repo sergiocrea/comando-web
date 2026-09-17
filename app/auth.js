@@ -8,10 +8,14 @@
      POST /v1/auth/password/forgot  { email } → siempre 202
    La contraseña nueva se pone en /app/nueva-contrasena/ con el token del correo.
    Sin build. */
-import '/app/strings.js?v=26';
+import '/app/strings.js?v=27';
 import { initLocale, mountLanguagePicker, onLocaleChange, t } from '/app/i18n.js?v=1';
+import { guionAnuncios, montarTelefono } from '/app/auth-phone.js?v=1';
 
 initLocale();
+
+/** El teléfono de la columna, cuando ya está montado. */
+let telefono = null;
 
 /** El texto de la página, en el idioma resuelto. Se llama al cargar y al cambiarlo. */
 function paint() {
@@ -20,6 +24,7 @@ function paint() {
     const [attr, key] = el.dataset.i18nAttr.split(':');
     el.setAttribute(attr, t(key));
   });
+  if (telefono) telefono.repintar(guionAnuncios());
   const terms = document.getElementById('auth-terms');
   if (terms) {
     terms.innerHTML = t('auth.foot', {
@@ -133,6 +138,9 @@ function paint() {
   });
 
   mountLanguagePicker(document.getElementById('lang-host'), { compact: true });
+  // El teléfono cuenta la misma historia que la lista de al lado: el aviso de la
+  // mañana, la campaña que gasta sin traer, la propuesta y el CONFIRMAR.
+  telefono = montarTelefono(document.querySelector('.auth-phone'), guionAnuncios());
   paint();
   onLocaleChange(paint);
   $('login-email').focus();

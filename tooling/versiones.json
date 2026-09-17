@@ -1,11 +1,15 @@
 {
+  "app/auth-phone.js": {
+    "v": "1",
+    "sha": "fde67050947136aa"
+  },
   "app/auth.css": {
-    "v": "4",
-    "sha": "b0c2e0198ed8653a"
+    "v": "5",
+    "sha": "43444d69c602132a"
   },
   "app/auth.js": {
-    "v": "25",
-    "sha": "2b548fdb5bad7ddc"
+    "v": "26",
+    "sha": "04b62677bf19149a"
   },
   "app/dashboard/dashboard.css": {
     "v": "1",
@@ -36,8 +40,8 @@
     "sha": "d5840242432dc134"
   },
   "app/nueva-contrasena/reset.js": {
-    "v": "2",
-    "sha": "7ee41c5ce60175f4"
+    "v": "3",
+    "sha": "8d1aedbd258351ae"
   },
   "app/onboarding.css": {
     "v": "7",
@@ -64,8 +68,8 @@
     "sha": "a25e840e58819333"
   },
   "app/panel/panel.js": {
-    "v": "34",
-    "sha": "15e4ae6a60e5df51"
+    "v": "35",
+    "sha": "55df9fd0584852d4"
   },
   "app/panel/sections.js": {
     "v": "31",
@@ -84,8 +88,8 @@
     "sha": "643bc4a65b2bd765"
   },
   "app/strings.js": {
-    "v": "26",
-    "sha": "c08a25c63534f81b"
+    "v": "27",
+    "sha": "d8587f8083f4ebba"
   },
   "assets/img/clientes/alamo.svg": {
     "v": "2",

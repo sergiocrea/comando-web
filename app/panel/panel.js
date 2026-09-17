@@ -11,7 +11,7 @@ import { SECTIONS, globalActions } from './sections.js?v=31';
 import { chatView, paintChat, loadHistory, openChat, closeChat, chatPreference } from './chat.js?v=7';
 import { whatsappStep, metaStep, metaStepPending, resumePendingConnection } from './setup.js?v=13';
 import { esc, setWaBase, setAccountCurrency, wa, skeleton, toast, ICON, personName, isToday, isPast } from './ui.js?v=12';
-import '../strings.js?v=26';
+import '../strings.js?v=27';
 import { initLocale, adoptAccountLocale, mountLanguagePicker, onLocaleChange, locale, t } from '../i18n.js?v=1';
 
 initLocale();

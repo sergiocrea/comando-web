@@ -9,7 +9,7 @@
 <link rel="icon" href="/assets/img/favicon-32.png?v=2">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@700&display=swap" rel="stylesheet">
-<link href="/app/auth.css?v=4" rel="stylesheet">
+<link href="/app/auth.css?v=5" rel="stylesheet">
 <!-- Config publica. Desde el 17-sep el acceso es correo + contrasena contra el
      motor (/v1/auth/*): ya no se carga Clerk. -->
 <script>
@@ -24,22 +24,24 @@
     <div class="auth-side-inner">
       <a class="cmd-wordmark" href="/" aria-label="Comando"><span aria-hidden="true">comand</span><span class="cmd-o" aria-hidden="true"></span></a>
       <div class="eyebrow" data-i18n="auth.eyebrow">LO QUE PUEDES PEDIRLE</div>
-      <div class="auth-phone" aria-hidden="true"><canvas class="screen-loop" width="360" height="684"></canvas></div>
-      <h1 data-i18n="auth.h1">Actualiza, avisa y da seguimiento desde WhatsApp.</h1>
-      <p class="lead" data-i18n="auth.lead">Le escribes a Comando como a una persona. Él interpreta, te muestra qué va a hacer, espera tu CONFIRMAR y lo ejecuta en tu CRM.</p>
+      <!-- El teléfono lo monta app/auth-phone.js dentro de este hueco. Vacío y
+           oculto a propósito: sin JS no queda un cuadro negro sin nada. -->
+      <div class="auth-phone" hidden></div>
+      <h1 data-i18n="auth.h1">Pregúntale a tus anuncios y cambia lo que no funciona.</h1>
+      <p class="lead" data-i18n="auth.lead">Le escribes a Comando como a una persona. Te responde con los números de Meta y TikTok, te dice qué revisar y, con tu CONFIRMAR, aplica el cambio.</p>
       <ol class="cmd-list">
-        <li><span class="n">01</span><div><h3 data-i18n="auth.i1t">El CRM queda al día</h3><p class="cmd" data-i18n="auth.i1c">Cuando entre un lead nuevo, avísame por aquí.</p></div></li>
-        <li><span class="n">02</span><div><h3 data-i18n="auth.i2t">Ningún lead espera</h3><p class="cmd" data-i18n="auth.i2c">Si un lead lleva 15 minutos sin contacto, avisa al supervisor.</p></div></li>
-        <li><span class="n">03</span><div><h3 data-i18n="auth.i3t">Una sola versión de la verdad</h3><p class="cmd" data-i18n="auth.i3c">Cada mañana a las 7 dime qué leads entraron ayer y quién no los ha tocado.</p></div></li>
-        <li><span class="n">04</span><div><h3 data-i18n="auth.i4t">Ningún seguimiento se pierde</h3><p class="cmd" data-i18n="auth.i4c">A quien no responda la cotización, recuérdamelo a los 3, 5 y 7 días con el mensaje listo.</p></div></li>
-        <li><span class="n">05</span><div><h3 data-i18n="auth.i5t">Cada lead entra listo para trabajar</h3><p class="cmd" data-i18n="auth.i5c">Apenas llegue un lead de Meta, avísame y déjame la bienvenida lista para enviar.</p></div></li>
-        <li><span class="n">06</span><div><h3 data-i18n="auth.i6t">Entérate antes de que se enfríe</h3><p class="cmd" data-i18n="auth.i6c">Si se pierde un deal de más de 20 000, avísame con el motivo.</p></div></li>
-        <li><span class="n">07</span><div><h3 data-i18n="auth.i7t">Cada oportunidad tiene responsable</h3><p class="cmd" data-i18n="auth.i7c">Reparte los leads de la zona norte entre Ana y Luis; si nadie los toma, dímelo.</p></div></li>
-        <li><span class="n">08</span><div><h3 data-i18n="auth.i8t">La próxima acción siempre clara</h3><p class="cmd" data-i18n="auth.i8c">Un día antes de cada cita, pásame el recordatorio para el cliente y avísame si no confirma.</p></div></li>
-        <li><span class="n">09</span><div><h3 data-i18n="auth.i9t">Recupera oportunidades a tiempo</h3><p class="cmd" data-i18n="auth.i9c">Si alguien abandona el carrito, en una hora pásame el mensaje con el enlace para recuperarlo.</p></div></li>
-        <li><span class="n">10</span><div><h3 data-i18n="auth.i10t">Decide sin perseguir reportes</h3><p class="cmd" data-i18n="auth.i10c">Cada viernes envíame los KPIs de la semana por vendedor.</p></div></li>
+        <li><span class="n">01</span><div><h3 data-i18n="auth.i1t">Sabes cómo va el día</h3><p class="cmd" data-i18n="auth.i1c">¿Cuánto gasté hoy y cuántos leads entraron?</p></div></li>
+        <li><span class="n">02</span><div><h3 data-i18n="auth.i2t">Encuentras lo que gasta sin traer</h3><p class="cmd" data-i18n="auth.i2c">¿Qué campaña está gastando y no trae nada?</p></div></li>
+        <li><span class="n">03</span><div><h3 data-i18n="auth.i3t">Entiendes por qué subió el costo</h3><p class="cmd" data-i18n="auth.i3c">¿Por qué subió mi costo por lead esta semana?</p></div></li>
+        <li><span class="n">04</span><div><h3 data-i18n="auth.i4t">Comparas sin abrir el Ads Manager</h3><p class="cmd" data-i18n="auth.i4c">Compara esta semana con la anterior: inversión, leads y costo.</p></div></li>
+        <li><span class="n">05</span><div><h3 data-i18n="auth.i5t">Pausas lo que no rinde</h3><p class="cmd" data-i18n="auth.i5c">Pausa «Remarketing» y avísame cuando esté hecho.</p></div></li>
+        <li><span class="n">06</span><div><h3 data-i18n="auth.i6t">Mueves presupuesto al que gana</h3><p class="cmd" data-i18n="auth.i6c">Sube «Leads septiembre» a US$ 40 al día.</p></div></li>
+        <li><span class="n">07</span><div><h3 data-i18n="auth.i7t">Cuidas el creativo antes de quemarlo</h3><p class="cmd" data-i18n="auth.i7c">¿Qué anuncios ya cansaron a la audiencia?</p></div></li>
+        <li><span class="n">08</span><div><h3 data-i18n="auth.i8t">El reporte llega sin pedirlo</h3><p class="cmd" data-i18n="auth.i8c">Cada lunes mándame el resumen de la semana.</p></div></li>
+        <li><span class="n">09</span><div><h3 data-i18n="auth.i9t">Mides ventas reales, no solo leads</h3><p class="cmd" data-i18n="auth.i9c">¿Cuántas ventas trajo Meta este mes según mi CRM?</p></div></li>
+        <li><span class="n">10</span><div><h3 data-i18n="auth.i10t">Meta busca más compradores como tuyos</h3><p class="cmd" data-i18n="auth.i10c">Manda las ventas de mi CRM a Meta.</p></div></li>
       </ol>
-      <p class="auth-side-foot"><span data-i18n="auth.sideFoot">Funciona con el CRM que ya usas. Nada cambia en tu CRM sin que confirmes.</span> <a href="/#precios" data-i18n="auth.seePlans">Ver planes</a></p>
+      <p class="auth-side-foot"><span data-i18n="auth.sideFoot">Funciona con Meta y TikTok Ads, y con tu CRM. Nada se cambia en tus campañas sin que confirmes.</span> <a href="/#precios" data-i18n="auth.seePlans">Ver planes</a></p>
     </div>
   </aside>
 
@@ -72,11 +74,10 @@
       </form>
       <p id="auth-ok" class="auth-ok" role="status" hidden></p>
       <p id="auth-error" class="auth-error" role="alert" hidden></p>
-      <p class="auth-foot" id="auth-terms">Al continuar aceptas los <a href="/terminos.html">términos</a> y la <a href="/privacidad.html">política de privacidad</a>. Después vinculas tu WhatsApp y, si quieres, tu CRM.</p>
+      <p class="auth-foot" id="auth-terms">Al continuar aceptas los <a href="/terminos.html">términos</a> y la <a href="/privacidad.html">política de privacidad</a>. Después vinculas tu WhatsApp y conectas tus anuncios.</p>
     </div>
   </main>
 </div>
-<script src="/js/screens.js"></script>
-<script type="module" src="/app/auth.js?v=25"></script>
+<script type="module" src="/app/auth.js?v=26"></script>
 </body>
 </html>

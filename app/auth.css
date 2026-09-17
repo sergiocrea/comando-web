@@ -37,8 +37,10 @@ a { color: var(--primary-dark); }
 .eyebrow { font-family: ui-monospace, "JetBrains Mono", Menlo, monospace; font-size: 11px; letter-spacing: .12em; color: var(--primary-light); margin-bottom: 12px; }
 .auth-side h1 { font-size: 28px; line-height: 1.2; font-weight: 700; margin: 0 0 20px; letter-spacing: -.01em; }
 .auth-side .lead { color: rgba(255, 255, 255, .72); font-size: 15px; line-height: 1.6; margin: 0 0 24px; }
+/* El hueco del teléfono. Va vacío en el HTML y con `hidden`: lo llena
+   app/auth-phone.js, así que sin JS no queda un recuadro negro esperando. */
 .auth-phone { display: none; }
-.auth-phone canvas { width: 100%; height: auto; display: block; filter: drop-shadow(0 24px 40px rgba(0, 0, 0, .45)); }
+.auth-phone-canvas { width: 100%; height: auto; display: block; filter: drop-shadow(0 24px 40px rgba(0, 0, 0, .45)); }
 .cmd-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
 .cmd-list li { display: grid; grid-template-columns: auto 1fr; gap: 14px; align-items: start; background: rgba(255, 255, 255, .05); border: 1px solid rgba(255, 255, 255, .08); border-radius: 14px; padding: 14px 16px; }
 .cmd-list .n { font-family: ui-monospace, "JetBrains Mono", Menlo, monospace; font-size: 12px; color: var(--primary-light); background: rgba(0, 167, 111, .14); border-radius: 8px; padding: 6px 8px; line-height: 1; margin-top: 2px; }
@@ -54,7 +56,7 @@ a { color: var(--primary-dark); }
   .auth-side { order: 0; padding: 40px 56px 64px; }
   .auth-side .cmd-wordmark { margin-bottom: 48px; display: inline-flex; }
   .auth-side h1 { font-size: 40px; }
-  .auth-phone { display: block; float: right; width: 220px; margin: -20px 0 24px 32px; shape-outside: margin-box; }
+  .auth-phone { display: block; float: right; width: 236px; margin: -20px 0 24px 36px; shape-outside: margin-box; }
   /* El costado derecho deja aire para lo que Clerk dibuja fuera de la tarjeta. */
   .auth-main { order: 1; position: sticky; top: 0; height: 100vh; justify-content: center; padding: 40px 72px; }
   .auth-brand { position: absolute; top: 28px; right: 56px; left: 56px; }
@@ -66,6 +68,20 @@ a { color: var(--primary-dark); }
   .auth-side { order: 1; }
   .auth-side .cmd-wordmark { display: none; }
   .auth-side h1 { font-size: 24px; }
+}
+/* Entre 1024 y 1279 la columna es estrecha: con el titular a 40 px no quedaba
+   sitio al lado del teléfono y el titular caía debajo. */
+@media (min-width: 1024px) and (max-width: 1279px) {
+  .auth-side { padding: 40px 40px 56px; }
+  .auth-side h1 { font-size: 32px; }
+  .auth-phone { width: 216px; margin: -12px 0 20px 28px; }
+  .auth-brand { right: 40px; left: 40px; }
+}
+/* Entre 760 y 1023 la columna ocupa todo el ancho y el teléfono cabe al lado
+   del titular. Por debajo de eso se queda fuera: a 200 px no se lee. */
+@media (min-width: 760px) and (max-width: 1023px) {
+  .auth-phone { display: block; float: right; width: 228px; margin: 0 0 20px 28px; shape-outside: margin-box; }
+  .cmd-list { clear: both; }
 }
 
 /* El selector de idioma junto al enlace de vuelta, arriba de la caja de acceso. */
