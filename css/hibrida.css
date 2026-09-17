@@ -571,7 +571,7 @@ html:not(.js) .lp .slider-btns { display: none; }
 @media (prefers-reduced-motion: reduce) { .lp .plan-tip-text { transition: none; } }
 
 /* ---------- atribución (17-sep): animación 2D en cuatro pasos (js/atribucion.js) ---------- */
-.lp .attr { display: grid; grid-template-columns: minmax(0, 1.65fr) minmax(0, 1fr); gap: clamp(1.5rem, 3vw, 2.75rem); align-items: center; }
+.lp .attr { display: grid; grid-template-columns: minmax(0, 1.65fr) minmax(0, 1fr); gap: clamp(1.5rem, 3vw, 2.75rem); align-items: start; }
 .lp .attr-stage { position: relative; width: 100%; aspect-ratio: 1000 / 500; border-radius: 1.5rem; overflow: hidden; color: #fff;
   background-color: #0f1115;
   background-image: radial-gradient(circle at 50% 110%, rgba(62, 207, 142, .12), transparent 55%), linear-gradient(rgba(255, 255, 255, .04) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, .04) 1px, transparent 1px);
