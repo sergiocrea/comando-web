@@ -1774,12 +1774,12 @@ html { scroll-behavior: smooth; }
      —de ahí los z-index de la maqueta—: la oclusión es lo que convierte «hay
      cables» en «esto entra AHÍ». */
   background-image: repeating-linear-gradient(90deg,
-    rgba(77, 124, 255, .95) 0 9px, rgba(77, 124, 255, 0) 9px 17px);
+    var(--uc-rail, rgba(77, 124, 255, .95)) 0 9px, transparent 9px 17px);
   background-size: 17px 100%;
   /* Un halo del propio azul: sobre el crema del fondo, una línea fina sin halo
      se pierde en cuanto la pantalla tiene brillo. Cuesta un box-shadow fijo,
      no se anima. */
-  box-shadow: 0 0 6px rgba(77, 124, 255, .55);
+  box-shadow: var(--uc-rail-glow, 0 0 6px rgba(77, 124, 255, .55));
   /* El desvanecido hacia el origen ya no puede vivir en el degradado del fondo
      —ahora lo ocupan los guiones—, así que pasa a máscara: el riel nace de la
      nada junto a la columna y llega entero al teléfono. */
@@ -1805,9 +1805,9 @@ html { scroll-behavior: smooth; }
        anuncios: dos secciones seguidas con la misma señal a dos grosores se
        leían como dos ideas distintas. */
     background-image: repeating-linear-gradient(90deg,
-      rgba(77, 124, 255, .95) 0 11px, rgba(77, 124, 255, 0) 11px 19px);
+      var(--uc-rail, rgba(77, 124, 255, .95)) 0 11px, transparent 11px 19px);
     background-size: 19px 100%;
-    box-shadow: 0 0 8px rgba(77, 124, 255, .55);
+    box-shadow: var(--uc-rail-glow, 0 0 8px rgba(77, 124, 255, .55));
     animation-name: uc-flow-card;
   }
   .uc-wire i:nth-child(1) { transform: rotate(-13deg); }
@@ -1835,7 +1835,7 @@ html { scroll-behavior: smooth; }
     /* Aquí el origen es la tira (abajo) y el destino el teléfono (arriba): el
        patrón y su desvanecido giran con el riel, y los guiones suben. */
     background-image: repeating-linear-gradient(0deg,
-      rgba(77, 124, 255, .95) 0 9px, rgba(77, 124, 255, 0) 9px 17px);
+      var(--uc-rail, rgba(77, 124, 255, .95)) 0 9px, transparent 9px 17px);
     background-size: 100% 17px;
     -webkit-mask-image: linear-gradient(0deg, transparent, #000 28%);
     mask-image: linear-gradient(0deg, transparent, #000 28%);
@@ -1868,36 +1868,52 @@ html { scroll-behavior: smooth; }
    guionados entran de ellas al teléfono.
    ============================================================ */
 .section_metaads {
-  color: #fff;
-  background-color: #0a0a0a;
+  /* Paleta grafito (17-sep), la misma que #metricas en hibrida.css: neutros
+     cálidos primos de la tinta y el crema; un solo acento, el azul de marca
+     sólido, reservado a la acción (botón) y a lo activo o a lo que dice Comando
+     (tarjeta y punto activos, aviso de las 7:30). Sin halos ni lavanda. */
+  --g-950: #0c0c0b; --g-900: #141413; --g-850: #1a1a18; --g-700: #3a3935; --g-600: #75726b;
+  --gl-grid: rgba(243, 241, 234, .035); --gl-1: rgba(243, 241, 234, .10); --gl-2: rgba(243, 241, 234, .18); --gl-3: rgba(243, 241, 234, .30);
+  --gt-1: #f5f4ef; --gt-2: #c9c6bd; --gt-3: #9a978f;
+  --accent: #315fef; --accent-ring: rgba(49, 95, 239, .30);
+  --uc-rail: rgba(243, 241, 234, .34); --uc-rail-glow: none;
+  color: var(--gt-1);
+  background-color: var(--g-950);
   background-image:
-    radial-gradient(circle at 18% 45%, rgba(0, 129, 251, .18), transparent 38%),
-    linear-gradient(rgba(255, 255, 255, .045) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, .045) 1px, transparent 1px);
+    linear-gradient(var(--gl-grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--gl-grid) 1px, transparent 1px);
+  background-size: 40px 40px, 40px 40px;
   scroll-margin-top: calc(var(--nav-height, 5rem) + .5rem);
 }
-.section_metaads .section_features-heading { color: #fff; }
-.section_metaads .uc-subtitle { color: #6b93ff; }
-.section_metaads .uc-card-meta, .section_metaads .uc-step-time { color: #6b93ff; }
-.section_metaads .uc-card-title, .section_metaads .uc-close { color: #fff; }
-.section_metaads .uc-step { border-color: rgba(255, 255, 255, .12); color: #a3a6a3; background: rgba(255, 255, 255, .04); }
-.section_metaads .uc-step:hover { border-color: rgba(255, 255, 255, .24); color: #e6e6e6; }
-.section_metaads .uc-step.is-on { border-color: rgba(107, 147, 255, .6); background: rgba(77, 124, 255, .12); color: #fff; }
-.section_metaads .uc-result { color: #e6e6e6; }
-.section_metaads .uc-phone { box-shadow: 0 0 0 1px rgba(255, 255, 255, .06), 0 34px 70px -30px rgba(0, 129, 251, .45); }
-.section_metaads .btn-primary { color: #fff; background: #315fef; box-shadow: 0 12px 30px rgba(49, 95, 239, .35); }
-.section_metaads .btn-primary:hover { background: #fff; color: #0a0a0a; }
-/* Línea de tiempo del móvil sobre negro */
-.section_metaads .uc-timeline li:not(:last-child)::before { background: rgba(255, 255, 255, .16); }
-.section_metaads .uc-dot { color: #7a7d7a; }
-.section_metaads .uc-dot i { border-color: rgba(255, 255, 255, .28); background: #0a0a0a; }
-.section_metaads .uc-dot.is-past i, .section_metaads .uc-dot.is-pro i { border-color: #6b93ff; }
-.section_metaads .uc-dot.is-past { color: #a3a6a3; }
-.section_metaads .uc-dot.is-on i { border-color: #6b93ff; background: #6b93ff; box-shadow: 0 0 0 4px rgba(107, 147, 255, .25); }
-.section_metaads .uc-dot.is-on { color: #fff; }
+.section_metaads .section_features-heading { color: var(--gt-1); }
+.section_metaads .uc-subtitle { color: var(--gt-2); }
+.section_metaads .uc-card-meta, .section_metaads .uc-step-time { color: var(--gt-3); }
+.section_metaads .uc-card-title, .section_metaads .uc-close { color: var(--gt-1); }
+.section_metaads .uc-step { border-color: var(--gl-1); color: var(--gt-3); background: rgba(243, 241, 234, .025); }
+.section_metaads .uc-step:hover { border-color: var(--gl-2); color: var(--gt-2); }
+.section_metaads .uc-step.is-on { border-color: var(--gl-3); background: rgba(243, 241, 234, .06); color: var(--gt-1); }
+.section_metaads .uc-step.is-on .uc-step-time { color: var(--gt-2); }
+.section_metaads .uc-step-pro b { color: var(--gt-1); }
+.section_metaads .uc-step:focus-visible { outline-color: var(--gt-1); }
+.section_metaads .uc-result { color: var(--gt-2); border-color: var(--accent); }
+.section_metaads .uc-phone { border-color: #2a2a27; box-shadow: 0 0 0 1px rgba(243, 241, 234, .05), 0 40px 80px -40px rgba(0, 0, 0, .95); }
+.section_metaads .uc-msg.is-proactive .uc-bubble { border-left-color: var(--accent); }
+.section_metaads .uc-pro-tag { color: #aebac1; }
+.section_metaads .btn-primary, .section_metaads .uc-cta { color: #fff; background: var(--accent); box-shadow: 0 1px 0 rgba(255, 255, 255, .14) inset, 0 10px 24px -14px rgba(0, 0, 0, .9); }
+.section_metaads .btn-primary:hover { background: var(--gt-1); color: #0c0c0b; box-shadow: none; }
+/* Línea de tiempo del móvil sobre grafito */
+.section_metaads .uc-timeline li:not(:last-child)::before { background: var(--gl-2); }
+.section_metaads .uc-dot { color: #8a877f; }
+.section_metaads .uc-dot span { background: var(--g-950); }
+.section_metaads .uc-dot i { border-color: var(--gl-3); background: var(--g-950); }
+.section_metaads .uc-dot.is-past i, .section_metaads .uc-dot.is-pro i { border-color: var(--gt-3); }
+.section_metaads .uc-dot.is-past { color: var(--gt-3); }
+.section_metaads .uc-dot.is-on i { border-color: var(--accent); background: var(--accent); box-shadow: 0 0 0 4px var(--accent-ring); }
+.section_metaads .uc-dot.is-on { color: var(--gt-1); }
+.section_metaads .uc-dot:focus-visible i { outline-color: var(--gt-1); }
 /* Las dos tarjetas de pauta. Ocupan el hueco de la columna de sistemas y
    heredan su sitio en la maqueta y sus rieles por la clase `uc-feed`. */
-.uc-ads .uc-feed-label { color: #7a7d7a; }
+.uc-ads .uc-feed-label { color: var(--gt-3, #7a7d7a); }
 .uc-ads-cards { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: .7rem; }
 /* Logo arriba y nombre abajo, como en la columna de sistemas: la tarjeta se
    lee por la marca y el nombre lo confirma. `position: relative` porque el
@@ -1906,7 +1922,7 @@ html { scroll-behavior: smooth; }
   position: relative;
   display: flex; flex-direction: column; align-items: center; gap: .55rem;
   padding: .95rem .8rem; border-radius: .85rem; text-align: center;
-  background: #131316; border: 1px solid rgba(255, 255, 255, .14);
+  background: var(--g-900, #131316); border: 1px solid var(--gl-2, rgba(255, 255, 255, .14));
   box-shadow: 0 18px 40px -28px rgba(0, 0, 0, .9);
 }
 /* Las tres tarjetas van iguales. Meta llevaba borde y halo azules por ser la
@@ -1917,7 +1933,7 @@ html { scroll-behavior: smooth; }
 .uc-ads-cards span {
   display: flex; flex-direction: column; align-items: center; gap: .15rem; min-width: 0;
   font-family: "Jetbrainsmono Variable", ui-monospace, monospace;
-  font-size: .72rem; font-weight: 500; letter-spacing: .06em; text-transform: uppercase; color: #f2f4f8; white-space: nowrap;
+  font-size: .72rem; font-weight: 500; letter-spacing: .06em; text-transform: uppercase; color: var(--gt-1, #f2f4f8); white-space: nowrap;
 }
 @media (min-width: 992px) {
   /* La columna de tarjetas es más ancha que la de sistemas: cabe el nombre y
@@ -1972,9 +1988,9 @@ html { scroll-behavior: smooth; }
     left: 100%; top: 50%; width: 8.5rem; height: 4px; margin-top: -2px;
     border-radius: 3px; transform-origin: 0 50%;
     background-image: repeating-linear-gradient(90deg,
-      rgba(77, 124, 255, .95) 0 11px, rgba(77, 124, 255, 0) 11px 19px);
+      var(--uc-rail, rgba(77, 124, 255, .95)) 0 11px, transparent 11px 19px);
     background-size: 19px 100%;
-    box-shadow: 0 0 8px rgba(77, 124, 255, .55);
+    box-shadow: var(--uc-rail-glow, 0 0 8px rgba(77, 124, 255, .55));
     animation: uc-flow-card .9s linear infinite;
   }
   .uc-ads-cards li:nth-child(1) .uc-wire-card { transform: rotate(13deg); }
@@ -1991,9 +2007,9 @@ html { scroll-behavior: smooth; }
     left: 50%; bottom: 100%; top: auto; width: 4px; height: 4.5rem; margin-left: -2px;
     border-radius: 3px; transform-origin: 50% 100%;
     background-image: repeating-linear-gradient(0deg,
-      rgba(77, 124, 255, .95) 0 11px, rgba(77, 124, 255, 0) 11px 19px);
+      var(--uc-rail, rgba(77, 124, 255, .95)) 0 11px, transparent 11px 19px);
     background-size: 100% 19px;
-    box-shadow: 0 0 8px rgba(77, 124, 255, .55);
+    box-shadow: var(--uc-rail-glow, 0 0 8px rgba(77, 124, 255, .55));
     animation: uc-flow-card-up .9s linear infinite;
   }
   .uc-ads-cards li:nth-child(1) .uc-wire-card { transform: rotate(14deg); }

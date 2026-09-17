@@ -220,7 +220,15 @@
   --lp-cream: #f3f1ea; --lp-paper: #fbfaf6;
   --wa-bg: #0b141a; --wa-in: #202c33; --wa-out: #005c4b; --wa-green: #00a884;
   --ok: #127a52; --soon: #5b3fd1;
-  --d-ok: #3ecf8e; --d-warn: #f2c14e; --d-bad: #ff6b6b; --d-soon: #c9b4ff;
+  --d-ok: #3fbf84; --d-warn: #e9b949; --d-bad: #f06a64; --d-soon: #c9b4ff;
+  /* Grafito (17-sep): las superficies oscuras son neutros cálidos, primos de la
+     tinta #151515 y del crema #f3f1ea. Nada de azul-lavanda ni de halos: el único
+     acento es el azul de marca, sólido, y sólo marca acción o «esto lo hace Comando».
+     --g-*: fondos · --gl-*: líneas (crema translúcido) · --gt-*: texto. */
+  --g-950: #0c0c0b; --g-900: #141413; --g-850: #1a1a18; --g-800: #242421; --g-700: #3a3935; --g-600: #75726b;
+  --gl-grid: rgba(243, 241, 234, .035); --gl-1: rgba(243, 241, 234, .10); --gl-2: rgba(243, 241, 234, .18); --gl-3: rgba(243, 241, 234, .30);
+  --gt-1: #f5f4ef; --gt-2: #c9c6bd; --gt-3: #9a978f;
+  --accent: #315fef;
   --ease: cubic-bezier(.16, 1, .3, 1);
   /* Los carriles arrancan donde arranca el texto: el mismo margen que .padding-global
      (1.88rem; 1.25rem en móvil) y el tope de .container-large (90rem). */
@@ -244,12 +252,11 @@
 .lp-paper { background: var(--lp-paper); }
 .lp-dark {
   color: #fff;
-  background-color: #0a0a0a;
+  background-color: var(--g-950);
   background-image:
-    radial-gradient(circle at 82% 28%, rgba(49, 95, 239, .18), transparent 40%),
-    linear-gradient(rgba(255, 255, 255, .045) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, .045) 1px, transparent 1px);
-  background-size: auto, 40px 40px, 40px 40px;
+    linear-gradient(var(--gl-grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--gl-grid) 1px, transparent 1px);
+  background-size: 40px 40px, 40px 40px;
 }
 .lp h2, .lp h3 { margin: 0; color: inherit; text-wrap: balance; }
 .lp h2 { font-family: "Neuehaasunicaw 1 G", Inter, sans-serif; font-weight: 500; font-size: clamp(2.1rem, 3.6vw, 3.25rem); line-height: 1.08; letter-spacing: -.025em; }
@@ -257,9 +264,9 @@
 .lp-head { text-align: center; max-width: 50rem; margin: 0 auto 3rem; }
 .lp-head.is-left { text-align: left; margin: 0; }
 .lp-eyebrow { display: inline-block; margin-bottom: 1rem; font: 500 .72rem/1 "Jetbrainsmono Variable", ui-monospace, monospace; letter-spacing: .1em; text-transform: uppercase; color: var(--lp-blue); }
-.lp-dark .lp-eyebrow { color: #6b93ff; }
+.lp-dark .lp-eyebrow { color: var(--gt-3); }
 .lp-sub { margin-top: 1rem !important; font-size: clamp(1.05rem, 1.4vw, 1.25rem); line-height: 1.45; color: var(--lp-blue); text-wrap: pretty; }
-.lp-dark .lp-sub { color: #6b93ff; }
+.lp-dark .lp-sub { color: var(--gt-2); }
 .lp-lede { margin-top: 1rem !important; font-size: clamp(1.05rem, 1.4vw, 1.2rem); color: var(--lp-muted); text-wrap: pretty; }
 
 /* ---------- sellos ---------- */
@@ -268,7 +275,7 @@
 .lp .badge.ok { color: var(--ok); background: rgba(18, 122, 82, .08); border: 1px solid rgba(18, 122, 82, .25); }
 .lp .badge.soon { color: var(--soon); background: rgba(91, 63, 209, .07); border: 1px solid rgba(91, 63, 209, .25); }
 .lp .badge.soon::before { background: transparent; border: 1.5px dashed currentColor; }
-.lp-dark .badge.soon { color: var(--d-soon); background: rgba(155, 123, 255, .1); border-color: rgba(155, 123, 255, .3); }
+.lp-dark .badge.soon { color: var(--gt-2); background: rgba(243, 241, 234, .05); border-color: var(--gl-2); }
 
 /* ---------- chat de WhatsApp en miniatura ---------- */
 .lp .mini-chat { background: var(--wa-bg) radial-gradient(rgba(255, 255, 255, .035) 1px, transparent 1px) 0 0 / 14px 14px; border-radius: 1rem; padding: .9rem .65rem; display: flex; flex-direction: column; justify-content: center; gap: .5rem; border: 1px solid #1c2a31; }
@@ -368,44 +375,44 @@
 .lp .slider-btns svg { width: 1.1rem; height: 1.1rem; }
 .lp .rail { display: flex; gap: 1.1rem; overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding-inline: var(--rail-pad); padding: 0 var(--rail-pad) 1.5rem; scrollbar-width: none; }
 .lp .rail::-webkit-scrollbar { display: none; }
-.lp .rail:focus-visible { outline: 2px solid #6b93ff; outline-offset: -2px; }
+.lp .rail:focus-visible { outline: 2px solid var(--gt-1); outline-offset: -2px; }
 
 /* ---------- métricas con semáforo ---------- */
 /* Un color, un significado: el nombre del KPI va en neutro (qué se mide) y el
    estado sale una sola vez, junto al número, con luces + palabra (cómo va).
    Así el estado no depende solo del color y la fila no parece un arcoíris. */
-#metricas .lp-lede { color: #c2c5c2; max-width: 40rem; }
-.lp .metric { scroll-snap-align: start; flex: 0 0 18.75rem; background: linear-gradient(180deg, #1a1c21, #141519); border: 1px solid rgba(255, 255, 255, .16); border-radius: 1.25rem; padding: 1.4rem; display: flex; flex-direction: column; min-height: 22rem; box-shadow: 0 1px 0 rgba(255, 255, 255, .06) inset, 0 18px 40px -24px rgba(0, 0, 0, .8); }
+#metricas .lp-lede { color: var(--gt-2); max-width: 40rem; }
+.lp .metric { scroll-snap-align: start; flex: 0 0 18.75rem; background: linear-gradient(180deg, var(--g-850), var(--g-900)); border: 1px solid var(--gl-1); border-radius: 1.25rem; padding: 1.4rem; display: flex; flex-direction: column; min-height: 22rem; box-shadow: 0 1px 0 rgba(243, 241, 234, .05) inset, 0 18px 40px -24px rgba(0, 0, 0, .8); }
 .lp .metric-top { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: .6rem; min-height: 2.1rem; }
-.lp .metric-name { display: inline-flex; align-items: center; padding: .42rem .7rem; border-radius: .5rem; font: 600 .86rem/1.15 "Jetbrainsmono Variable", monospace; letter-spacing: .05em; color: #fff; text-transform: uppercase; white-space: nowrap; background: rgba(255, 255, 255, .08); border: 1px solid rgba(255, 255, 255, .24); }
-.lp .metric-value { font: 600 3rem/1 Neuemachina, "Space Grotesk", sans-serif; letter-spacing: -.04em; color: #fff; margin: 1.3rem 0 .75rem; font-variant-numeric: tabular-nums; white-space: nowrap; }
-.lp .metric-value small { font: 500 .9rem/1 "Jetbrainsmono Variable", monospace; color: #c2c5c2; margin-left: .35rem; letter-spacing: 0; }
+.lp .metric-name { display: inline-flex; align-items: center; padding: .42rem .7rem; border-radius: .5rem; font: 600 .86rem/1.15 "Jetbrainsmono Variable", monospace; letter-spacing: .05em; color: var(--gt-1); text-transform: uppercase; white-space: nowrap; background: rgba(243, 241, 234, .05); border: 1px solid var(--gl-2); }
+.lp .metric-value { font: 600 3rem/1 Neuemachina, "Space Grotesk", sans-serif; letter-spacing: -.04em; color: var(--gt-1); margin: 1.3rem 0 .75rem; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.lp .metric-value small { font: 500 .9rem/1 "Jetbrainsmono Variable", monospace; color: var(--gt-3); margin-left: .35rem; letter-spacing: 0; }
 .lp .metric-value small.pre { margin: 0 .3rem 0 0; }
-.lp .metric-state { --tone: #c2c5c2; align-self: flex-start; display: inline-flex; align-items: center; gap: .55rem; padding: .3rem .7rem .3rem .5rem; border-radius: 999px; font: 600 .8rem/1 "Jetbrainsmono Variable", monospace; letter-spacing: .03em; color: var(--tone); background: color-mix(in srgb, var(--tone) 12%, transparent); border: 1px solid color-mix(in srgb, var(--tone) 40%, transparent); }
+.lp .metric-state { --tone: var(--gt-2); align-self: flex-start; display: inline-flex; align-items: center; gap: .55rem; padding: .3rem .7rem .3rem .5rem; border-radius: 999px; font: 600 .8rem/1 "Jetbrainsmono Variable", monospace; letter-spacing: .03em; color: var(--tone); background: color-mix(in srgb, var(--tone) 12%, transparent); border: 1px solid color-mix(in srgb, var(--tone) 40%, transparent); }
 .lp .metric-state.is-ok { --tone: var(--d-ok); } .lp .metric-state.is-warn { --tone: var(--d-warn); } .lp .metric-state.is-bad { --tone: var(--d-bad); }
 .lp .metric-viz { margin: auto 0 1.1rem; padding-top: 1.4rem; }
 .lp .metric-viz svg { display: block; width: 100%; height: 56px; overflow: visible; }
 /* Pistas vacías de los gráficos: el #262626 del HTML se perdía sobre la tarjeta. */
-.lp .metric-viz [fill="#262626"] { fill: #4a4f58; }
-.lp .viz-cap { margin-top: .55rem !important; font: 500 .8rem/1.4 "Jetbrainsmono Variable", monospace; color: #c2c5c2; }
-.lp .viz-cap .ok { color: var(--d-ok); } .lp .viz-cap .warn { color: var(--d-warn); } .lp .viz-cap .bad { color: var(--d-bad); } .lp .viz-cap .blue { color: #9db4ff; }
-.lp .metric .desc { color: #e4e5e4; font-size: .95rem; }
+.lp .metric-viz [fill="#262626"] { fill: var(--g-700); }
+.lp .viz-cap { margin-top: .55rem !important; font: 500 .8rem/1.4 "Jetbrainsmono Variable", monospace; color: var(--gt-2); }
+.lp .viz-cap .ok { color: var(--d-ok); } .lp .viz-cap .warn { color: var(--d-warn); } .lp .viz-cap .bad { color: var(--d-bad); } .lp .viz-cap .blue { color: var(--gt-1); }
+.lp .metric .desc { color: var(--gt-2); font-size: .95rem; }
 .lp .lights { display: flex; gap: 6px; }
-.lp .light { width: 12px; height: 12px; border-radius: 50%; background: #3a444b; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .08); transition: background .5s var(--ease), box-shadow .5s var(--ease); }
+.lp .light { width: 12px; height: 12px; border-radius: 50%; background: var(--g-700); box-shadow: inset 0 0 0 1px rgba(243, 241, 234, .08); transition: background .5s var(--ease), box-shadow .5s var(--ease); }
 /* En la pastilla de estado las luces apagadas son aros (se distinguen de la encendida por forma, no solo por color). */
 .lp .metric-state .lights { gap: 4px; }
-.lp .metric-state .light { width: 10px; height: 10px; background: transparent; box-shadow: inset 0 0 0 1.5px #6b727a; }
-.lp .light.bad, .lp .metric-state .light.bad { background: var(--d-bad); box-shadow: 0 0 10px rgba(255, 107, 107, .55); }
-.lp .light.warn, .lp .metric-state .light.warn { background: var(--d-warn); box-shadow: 0 0 10px rgba(242, 193, 78, .5); }
-.lp .light.ok, .lp .metric-state .light.ok { background: var(--d-ok); box-shadow: 0 0 10px rgba(62, 207, 142, .5); }
+.lp .metric-state .light { width: 10px; height: 10px; background: transparent; box-shadow: inset 0 0 0 1.5px var(--g-600); }
+.lp .light.bad, .lp .metric-state .light.bad { background: var(--d-bad); box-shadow: 0 0 0 3px rgba(240, 106, 100, .16); }
+.lp .light.warn, .lp .metric-state .light.warn { background: var(--d-warn); box-shadow: 0 0 0 3px rgba(233, 185, 73, .16); }
+.lp .light.ok, .lp .metric-state .light.ok { background: var(--d-ok); box-shadow: 0 0 0 3px rgba(63, 191, 132, .16); }
 html:not(.js) .lp .light[data-to="bad"] { background: var(--d-bad); box-shadow: none; }
 html:not(.js) .lp .light[data-to="warn"] { background: var(--d-warn); box-shadow: none; }
 html:not(.js) .lp .light[data-to="ok"] { background: var(--d-ok); box-shadow: none; }
 html:not(.js) .lp .slider-btns { display: none; }
-.lp .metric.is-soon { border-style: dashed; border-color: rgba(155, 123, 255, .35); background: rgba(155, 123, 255, .05); }
-.lp .metric.is-soon .metric-name { border-color: rgba(201, 180, 255, .3); background: rgba(155, 123, 255, .08); }
-.lp .metric.is-soon .metric-value { color: #8d86a8; }
-.lp .metrics-foot { margin-top: 1rem !important; font: 500 .76rem/1.45 "Jetbrainsmono Variable", monospace; color: #b3b6b3; }
+.lp .metric.is-soon { border-style: dashed; border-color: var(--gl-2); background: rgba(243, 241, 234, .02); }
+.lp .metric.is-soon .metric-name { border-color: var(--gl-1); background: rgba(243, 241, 234, .03); }
+.lp .metric.is-soon .metric-value { color: var(--g-600); }
+.lp .metrics-foot { margin-top: 1rem !important; font: 500 .76rem/1.45 "Jetbrainsmono Variable", monospace; color: var(--gt-3); }
 
 /* ---------- precios ---------- */
 .lp .pricing-bar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1rem 2rem; }
@@ -573,16 +580,16 @@ html:not(.js) .lp .slider-btns { display: none; }
 /* ---------- atribución (17-sep): animación 2D en cuatro pasos (js/atribucion.js) ---------- */
 .lp .attr { display: grid; grid-template-columns: minmax(0, 1.65fr) minmax(0, 1fr); gap: clamp(1.5rem, 3vw, 2.75rem); align-items: start; }
 .lp .attr-stage { position: relative; width: 100%; aspect-ratio: 1000 / 500; border-radius: 1.5rem; overflow: hidden; color: #fff;
-  background-color: #0f1115;
-  background-image: radial-gradient(circle at 50% 110%, rgba(62, 207, 142, .12), transparent 55%), linear-gradient(rgba(255, 255, 255, .04) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, .04) 1px, transparent 1px);
-  background-size: auto, 28px 28px, 28px 28px; box-shadow: 0 40px 80px -50px rgba(21, 21, 21, .55); }
+  background-color: var(--g-950);
+  background-image: linear-gradient(var(--gl-grid) 1px, transparent 1px), linear-gradient(90deg, var(--gl-grid) 1px, transparent 1px);
+  background-size: 28px 28px, 28px 28px; box-shadow: 0 40px 80px -50px rgba(21, 21, 21, .55); }
 .lp .attr-svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; }
 .lp .attr-card, .lp .attr-hub, .lp .attr-chip { position: absolute; box-sizing: border-box; }
-.lp .attr-card { background: #1a1d23; border: 1px solid rgba(255, 255, 255, .14); border-radius: 1rem; padding: clamp(.6rem, 1.4vw, 1rem); display: flex; flex-direction: column; gap: .6rem; transition: border-color .5s, box-shadow .5s; }
+.lp .attr-card { background: var(--g-850); border: 1px solid var(--gl-1); border-radius: 1rem; padding: clamp(.6rem, 1.4vw, 1rem); display: flex; flex-direction: column; gap: .6rem; transition: border-color .5s, box-shadow .5s; }
 .lp .attr-card-top { display: flex; align-items: center; gap: .4rem; margin: 0 !important; font: 600 clamp(.66rem, 1vw, .8rem)/1 "Jetbrainsmono Variable", monospace; letter-spacing: .04em; text-transform: uppercase; color: #e4e5e4; }
 .lp .attr-card-top img { width: 1.1em; height: 1.1em; }
 .lp .attr-ad { flex: 1; display: flex; flex-direction: column; gap: .4rem; min-height: 0; }
-.lp .attr-ad-img { flex: 1; min-height: 0; border-radius: .6rem; background: linear-gradient(135deg, #2c4fb8, #6b93ff 60%, #9db4ff); display: flex; flex-direction: column; justify-content: space-between; align-items: stretch; gap: .5rem; padding: .6rem .7rem; }
+.lp .attr-ad-img { flex: 1; min-height: 0; border-radius: .6rem; background: linear-gradient(160deg, #3a66f0, #2448c8); display: flex; flex-direction: column; justify-content: space-between; align-items: stretch; gap: .5rem; padding: .6rem .7rem; }
 /* «Meta Ads» va dentro del anuncio: en tinta clara sobre el azul, con el logo en blanco. */
 .lp .attr-ad-img .attr-card-top { color: #fff; text-shadow: 0 1px 2px rgba(0, 0, 0, .25); }
 .lp .attr-ad-img .attr-card-top img { filter: brightness(0) invert(1); }
@@ -594,29 +601,29 @@ html:not(.js) .lp .slider-btns { display: none; }
 .lp .attr-goal-b { opacity: 0; color: var(--d-ok); }
 .lp .attr.meta-learned .attr-goal-a { opacity: 0; }
 .lp .attr.meta-learned .attr-goal-b { opacity: 1; }
-.lp .attr.meta-learned .attr-meta { border-color: rgba(62, 207, 142, .7); box-shadow: 0 0 0 4px rgba(62, 207, 142, .12), 0 0 40px -8px rgba(62, 207, 142, .45); }
+.lp .attr.meta-learned .attr-meta { border-color: rgba(63, 191, 132, .7); box-shadow: 0 0 0 4px rgba(63, 191, 132, .12); }
 .lp .attr-count { margin: 0 !important; display: flex; align-items: baseline; gap: .35rem; font: 500 clamp(.66rem, 1vw, .8rem)/1 "Jetbrainsmono Variable", monospace; color: #c2c5c2; }
 .lp .attr-count b { font: 600 clamp(1.6rem, 3.2vw, 2.6rem)/1 Neuemachina, "Space Grotesk", sans-serif; letter-spacing: -.03em; color: var(--d-ok); font-variant-numeric: tabular-nums; }
 .lp .attr-count small { color: #8a8d8a; font-size: 1em; }
 /* El logo de Comando va encima del SVG (z-index) para que las rutas pasen por detrás. */
-.lp .attr-hub { z-index: 2; display: flex; align-items: center; justify-content: center; border-radius: 999px; background: #0b0c0f; border: 1px solid rgba(157, 180, 255, .45); box-shadow: 0 0 0 6px #0f1115, 0 10px 30px -10px rgba(0, 0, 0, .9); transition: box-shadow .25s, transform .25s, border-color .25s; }
+.lp .attr-hub { z-index: 2; display: flex; align-items: center; justify-content: center; border-radius: 999px; background: var(--g-950); border: 1px solid var(--gl-2); box-shadow: 0 0 0 6px var(--g-950), 0 10px 30px -10px rgba(0, 0, 0, .9); transition: box-shadow .25s, transform .25s, border-color .25s; }
 .lp .attr-hub-logo { font-size: clamp(1rem, 1.8vw, 1.45rem); white-space: nowrap; }
 .lp .attr-hub-logo .cmd-o { animation: none; }
-.lp .attr-hub.is-hot { box-shadow: 0 0 0 6px #0f1115, 0 0 0 9px rgba(62, 207, 142, .35), 0 0 34px rgba(62, 207, 142, .55); transform: scale(1.05); border-color: var(--d-ok); }
+.lp .attr-hub.is-hot { box-shadow: 0 0 0 6px var(--g-950), 0 0 0 8px rgba(63, 191, 132, .45); transform: scale(1.05); border-color: var(--d-ok); }
 .lp .attr-chip { display: flex; align-items: center; justify-content: center; margin: 0 !important; border-radius: 999px; font: 600 clamp(.58rem, .9vw, .74rem)/1 "Jetbrainsmono Variable", monospace; white-space: nowrap; opacity: 0; transform: translateY(6px); transition: opacity .35s, transform .35s; }
-.lp .attr-chip-lead { background: #2a2e36; color: #e4e5e4; border: 1px solid rgba(255, 255, 255, .2); }
+.lp .attr-chip-lead { background: var(--g-800); color: var(--gt-1); border: 1px solid var(--gl-2); }
 .lp .attr-chip-sale { background: rgba(62, 207, 142, .16); color: var(--d-ok); border: 1px solid rgba(62, 207, 142, .55); }
 .lp .attr.show-lead .attr-chip-lead, .lp .attr.show-sale .attr-chip-sale { opacity: 1; transform: none; }
-.lp .attr-path { fill: none; stroke: rgba(157, 180, 255, .35); stroke-width: 2; stroke-dasharray: 6 7; vector-effect: non-scaling-stroke; }
+.lp .attr-path { fill: none; stroke: var(--gl-3); stroke-width: 2; stroke-dasharray: 6 7; vector-effect: non-scaling-stroke; }
 .lp .attr-path.is-back { stroke: rgba(62, 207, 142, .25); transition: stroke .4s; }
 .lp .attr.is-back .attr-path.is-back { stroke: rgba(62, 207, 142, .75); }
 .lp .attr-slot { fill: rgba(255, 255, 255, .03); stroke: rgba(255, 255, 255, .14); stroke-width: 1; stroke-dasharray: 3 3; }
-.lp .attr-dot { fill: #9aa3b5; }
-.lp .attr-tick { fill: none; stroke: #0f1115; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; opacity: 0; }
+.lp .attr-dot { fill: var(--g-600); }
+.lp .attr-tick { fill: none; stroke: var(--g-950); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; opacity: 0; }
 .lp .attr-ring { fill: none; stroke: var(--d-ok); stroke-width: 2; opacity: 0; }
 .lp .attr-person.is-sale .attr-dot { fill: var(--d-ok); }
 .lp .attr-person.is-sale .attr-tick { opacity: 1; }
-.lp .attr-signal { fill: var(--d-ok); filter: drop-shadow(0 0 6px rgba(62, 207, 142, .9)); }
+.lp .attr-signal { fill: var(--d-ok); }
 .lp .attr.is-fading .attr-count b { opacity: .5; transition: opacity .4s; }
 
 .lp .attr-steps { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: .35rem; counter-reset: none; }
@@ -678,7 +685,7 @@ html:not(.js) .lp .attr-step p { display: block; }
 .lp-subsection { margin-top: clamp(4.5rem, 9vw, 7.5rem); scroll-margin-top: calc(var(--nav-height, 5rem) + .5rem); }
 /* «Agente de Atribución» destacado: sello en tinta con su icono, como los iconos de los agentes. */
 .lp-eyebrow.is-badge { display: inline-flex; align-items: center; gap: .6rem; padding: .7rem 1.1rem .7rem .8rem; border-radius: 999px; background: #151515; color: #fff; font-size: .85rem; letter-spacing: .12em; box-shadow: 0 14px 30px -18px rgba(21, 21, 21, .6); margin-bottom: 1.75rem !important; }
-.lp-eyebrow.is-badge svg { width: 1.35rem; height: 1.35rem; color: #9db4ff; }
+.lp-eyebrow.is-badge svg { width: 1.35rem; height: 1.35rem; color: var(--gt-2); }
 /* Tarjetas de agentes: el icono y el nombre en la misma línea. */
 .lp-agent-meta { display: grid; grid-template-columns: auto minmax(0, 1fr); column-gap: .9rem; align-items: center; }
 .lp-agent-meta > :not(.lp-agent-top):not(h3) { grid-column: 1 / -1; }
