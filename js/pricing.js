@@ -72,12 +72,12 @@ const PLAN_LADDER = [
     capabilities: { adsRead: true, adsDiagnosis: true, voice: false, mediaBuyer: 'coming_soon', attribution: 'coming_soon', googleAds: 'coming_soon', tiktokAds: true },
   },
   {
-    id: 'analista', code: 'analista', price: { month: 9, year: 90 }, agents: ['analystStrategist', 'mediaBuyer'], reports: ['basic'], metrics: true,
+    id: 'analista', code: 'analista', price: { month: 9, year: 90 }, launch: { month: 14, year: 140 }, agents: ['analystStrategist', 'mediaBuyer'], reports: ['basic'], metrics: true,
     adsAccounts: 2, adsRefreshMinutes: 60, commands: 100,
     capabilities: { adsRead: true, adsDiagnosis: true, voice: false, mediaBuyer: 'coming_soon', attribution: 'coming_soon', googleAds: 'coming_soon', tiktokAds: true },
   },
   {
-    id: 'equipo', code: 'equipo', price: { month: 29, year: 290 }, featured: true, agents: ['analystStrategist', 'mediaBuyer', 'attribution'], reports: ['advanced'], metrics: true,
+    id: 'equipo', code: 'equipo', price: { month: 29, year: 290 }, launch: { month: 39, year: 390 }, featured: true, agents: ['analystStrategist', 'mediaBuyer', 'attribution'], reports: ['advanced'], metrics: true,
     adsAccounts: 3, adsRefreshMinutes: 60, commands: 250, users: 2,
     capabilities: { adsRead: true, adsDiagnosis: true, voice: true, mediaBuyer: 'coming_soon', attribution: 'coming_soon', googleAds: 'coming_soon', tiktokAds: true },
   },
@@ -118,6 +118,7 @@ const PRICING_TEXT = {
   es: {
     billing: 'Facturación', monthly: 'Mensual', annual: 'Anual', freeMonths: '2 meses gratis',
     perMonth: '/mes', perYear: (a) => `${a} al año`, recommended: 'Recomendado', soon: 'Próximamente',
+    launchTag: (pct) => `Lanzamiento −${pct}\u00a0%`, launchAfter: (p) => `Después ${p}`,
     trial: () => 'Empiezas gratis, sin tarjeta',
     talk: 'Habla con nosotros',
     enterprise: { name: 'Empresas', result: 'Todas tus cuentas, a tu medida', items: (plan, n) => [`Todo lo de ${plan}`, `Más de ${n} cuentas publicitarias`, 'Comandos y usuarios a medida', 'Reportes Personalizados', 'Soporte prioritario'], limits: 'Precio según cuentas y uso' },
@@ -136,6 +137,7 @@ const PRICING_TEXT = {
   en: {
     billing: 'Billing', monthly: 'Monthly', annual: 'Annual', freeMonths: '2 months free',
     perMonth: '/mo', perYear: (a) => `${a} a year`, recommended: 'Recommended', soon: 'Coming soon',
+    launchTag: (pct) => `Launch −${pct}\u00a0%`, launchAfter: (p) => `Then ${p}`,
     trial: () => 'You start free, no card',
     talk: 'Talk to us',
     enterprise: { name: 'Enterprise', result: 'All your accounts, tailored to you', items: (plan, n) => [`Everything in ${plan}`, `More than ${n} ad accounts`, 'Commands and users to fit', 'Custom Reports', 'Priority support'], limits: 'Priced by accounts and usage' },
@@ -154,6 +156,7 @@ const PRICING_TEXT = {
   pt: {
     billing: 'Cobrança', monthly: 'Mensal', annual: 'Anual', freeMonths: '2 meses grátis',
     perMonth: '/mês', perYear: (a) => `${a} por ano`, recommended: 'Recomendado', soon: 'Em breve',
+    launchTag: (pct) => `Lançamento −${pct}\u00a0%`, launchAfter: (p) => `Depois ${p}`,
     trial: () => 'Você começa grátis, sem cartão',
     talk: 'Fale com a gente',
     enterprise: { name: 'Empresas', result: 'Todas as suas contas, sob medida', items: (plan, n) => [`Tudo do ${plan}`, `Mais de ${n} contas de anúncios`, 'Comandos e usuários sob medida', 'Relatórios Personalizados', 'Suporte prioritário'], limits: 'Preço conforme contas e uso' },
@@ -195,6 +198,14 @@ const PRICING_TEXT = {
     const perMonth = state.annual ? plan.price.year / 12 : plan.price.month;
     const price = free ? money(0) : `${money(perMonth)}<small>${esc(T.perMonth)}</small>`;
     const year = !free && state.annual ? esc(T.perYear(money(plan.price.year))) : '';
+    /* Precio de lanzamiento (17-sep): NO se tacha un precio que nadie pagó
+       —eso es un precio de referencia falso y está sancionado (FTC, Omnibus)—.
+       Se dice el precio de hoy y cuánto costará después, que es verdad y deja
+       subirlo sin sorpresa. `launch` es el precio de después, no un «antes». */
+    const launchPer = plan.launch ? (state.annual ? plan.launch.year / 12 : plan.launch.month) : 0;
+    const launch = launchPer
+      ? `<span class="plan-launch"><b>${esc(T.launchTag(Math.round((1 - perMonth / launchPer) * 100)))}</b> ${esc(T.launchAfter(money(launchPer) + T.perMonth))}</span>`
+      : '';
     const href = free
       ? `${PRICING_CONFIG.signup}?plan=${plan.code}`
       : `${PRICING_CONFIG.signup}?plan=${plan.code}&interval=${state.annual ? 'annual' : 'monthly'}`;
@@ -203,7 +214,7 @@ const PRICING_TEXT = {
       <h3 class="plan-name">${esc(words.name)}</h3>
       <p class="plan-result">${esc(words.result)}</p>
       <p class="plan-price">${price}</p>
-      <p class="plan-year">${year}</p>
+      <p class="plan-year">${year}${launch}</p>
       <ul>
         ${plan.agents.map((a) => `<li class="${prev && !prev.agents.includes(a) ? 'is-new' : ''}">${icon('i-check')}<span>${esc(T.caps[a])}</span></li>`).join('')}
         ${plan.metrics ? `<li>${icon('i-check')}<span>${esc(T.caps.metrics)}<span class="plan-tip"><button type="button" aria-label="${esc(T.caps.metricsTipLabel)}" aria-describedby="tip-metrics-${plan.code}">?</button><span class="plan-tip-text" role="tooltip" id="tip-metrics-${plan.code}">${esc(T.caps.metricsTip(plan.adsRefreshMinutes))}</span></span>${plan.metrics === 'basic' ? `<small class="plan-note">${esc(T.caps.metricsBasic)}</small>` : ''}</span></li>` : ''}

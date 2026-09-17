@@ -794,3 +794,9 @@ html:not(.js) .lp .attr-step p { display: block; }
 @media (max-width: 767px) and (prefers-reduced-motion: reduce) {
   .lp .attr-dotstep, .lp .attr-stepper::after { transition: none; }
 }
+/* Precio de lanzamiento: el sello y el precio de después, bajo el precio. */
+.lp .plan-launch { display: block; margin-top: .35rem; font: 500 .74rem/1.5 "Jetbrainsmono Variable", monospace; color: var(--lp-muted); }
+.lp .plan-launch b { display: inline-block; margin-right: .4rem; padding: .18rem .45rem; border-radius: .35rem; background: rgba(49, 95, 239, .1); color: var(--lp-blue); font-weight: 600; }
+.lp .plan.star .plan-launch { color: #a3a3a3; }
+.lp .plan.star .plan-launch b { background: rgba(157, 180, 255, .16); color: #b9c8ff; }
+.lp .plan-year:has(.plan-launch) { min-height: 0; }
