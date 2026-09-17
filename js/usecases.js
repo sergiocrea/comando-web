@@ -177,12 +177,14 @@
       root.querySelectorAll('.uc-step').forEach((b) => b.classList.toggle('is-on', +b.dataset.step === step));
       root.querySelectorAll('.uc-dot').forEach((b) => { const k = +b.dataset.step; b.classList.toggle('is-on', k === step); b.classList.toggle('is-past', k < step); });
 
-      if (fromUser === true) restartTimer(9000); else restartTimer();
+      if (fromUser === true) restartTimer(14000); else restartTimer();
     }
     function restartTimer(delay) {
       clearInterval(timer); timer = null;
       if (!visible) return;
-      timer = setInterval(() => { const c = current(); showStep(step + 1 < c.comandos.length ? step + 1 : firstStep(c), false); }, delay || 4200);
+      // 7 s por mensaje (antes 4,2): las respuestas de ahora son de tres o cuatro
+      // líneas y no se leían enteras antes de que pasara al siguiente comando.
+      timer = setInterval(() => { const c = current(); showStep(step + 1 < c.comandos.length ? step + 1 : firstStep(c), false); }, delay || 7000);
     }
     function bindSteps() { root.querySelectorAll('.uc-step, .uc-dot').forEach((b) => b.addEventListener('click', () => showStep(+b.dataset.step, true))); }
     function pickersHtml() {
@@ -225,7 +227,7 @@
       const c = current(); step = firstStep(c); const chat = root.querySelector('.uc-chat'), out = root.querySelector('.uc-outcome'), layout = root.querySelector('.uc-layout');
       layout.classList.remove('is-in'); chat.innerHTML = chatHtml(c); out.innerHTML = outcomeHtml(c); root.querySelector('.uc-timeline').innerHTML = timelineHtml(c); bindSteps(); showStep(step, 'init');
       requestAnimationFrame(() => requestAnimationFrame(() => layout.classList.add('is-in')));
-      restartTimer(6000);
+      restartTimer(8000);
       if (typeof ScrollTrigger !== 'undefined') ScrollTrigger.refresh();
     }
     // Los datos van por idioma: /docs/<data>.en.json y .pt.json. Si el idioma
