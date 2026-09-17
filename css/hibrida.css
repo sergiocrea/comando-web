@@ -705,10 +705,10 @@ html:not(.js) .lp .attr-step p { display: block; }
   }
   .b2b-hero-media, .b2b-hero-glow { display: none; }
   /* La franja de logos entra en la primera pantalla: el vídeo toma el alto que queda
-     (pantalla − menú − márgenes − franja ≈ 15,5 rem), entre 20 y 42 rem. Si la pantalla
+     (pantalla − menú − márgenes − franja ≈ 12 rem), entre 20 y 48 rem. Si la pantalla
      es más baja que eso, la franja queda debajo y no pasa nada. */
-  .b2b-hero { --hero-media-h: clamp(20rem, calc(100svh - var(--nav-height, 5rem) - 15.5rem), 42rem); }
-  .b2b-hero-padding { justify-content: center; padding-top: calc(var(--nav-height, 5rem) + 1.5rem); padding-bottom: 1.5rem; }
+  .b2b-hero { --hero-media-h: clamp(20rem, calc(100svh - var(--nav-height, 5rem) - 12rem), 48rem); }
+  .b2b-hero-padding { justify-content: center; padding-top: calc(var(--nav-height, 5rem) + 1rem); padding-bottom: 1rem; }
   .b2b-hero-grid.is-short { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: center; gap: clamp(2rem, 4vw, 4rem); }
   /* Sin tarjeta (17-sep, tarde): una caja clara al lado del marco del vídeo eran dos
      rectángulos compitiendo. El copy va directo sobre la cuadrícula, más grande. */
