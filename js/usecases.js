@@ -153,7 +153,7 @@
       // cuentan los mensajes. `meta` del JSON manda si viene.
       return `<div class="uc-card-meta">${esc(c.meta || T.commands)}</div>
         <ol class="uc-steps">${c.proactivo ? `<li><button type="button" class="uc-step uc-step-pro${step === -1 ? ' is-on' : ''}" data-step="-1"><span class="uc-step-time">${PRO_TIME}</span><span class="uc-step-text"><b>${esc(T.proStep)}</b> ${esc(c.proactivo)}</span></button></li>` : ''}${c.comandos.map((m, i) => `<li><button type="button" class="uc-step${i === step ? ' is-on' : ''}" data-step="${i}"><span class="uc-step-time">${TIMES[i] || ''}</span><span class="uc-step-text">${esc(m.u)}</span></button></li>`).join('')}</ol>
-        <div class="uc-result">${esc(c.resultado)}</div>
+        ${c.resultado ? `<div class="uc-result">${esc(c.resultado)}</div>` : ''}
   `;
     }
     // El teléfono muestra SOLO el momento que está encendido en la línea de
@@ -188,7 +188,7 @@
       root.innerHTML = `
         <div class="section_features-header-component"><div class="section_features-eyebrow">${esc(D.seccion.eyebrow || '')}</div>
           ${D.seccion.titulo ? `<h2 class="section_features-heading">${esc(D.seccion.titulo)}</h2>` : ''}
-          <p class="uc-subtitle">${esc(D.seccion.subtitulo)}</p></div>
+          ${D.seccion.subtitulo ? `<p class="uc-subtitle">${esc(D.seccion.subtitulo)}</p>` : ''}</div>
         ${opts.anchor ? `<span id="${esc(opts.anchor)}" class="uc-anchor" aria-hidden="true"></span>` : ''}
         ${pickersHtml()}
         <div class="uc-layout">
@@ -241,7 +241,7 @@
   }
 
   const meta = document.getElementById('metaads-root');
-  if (meta) mount(meta, { data: 'metaads', pickers: false, feed: false, ads: true, version: 13 });
+  if (meta) mount(meta, { data: 'metaads', pickers: false, feed: false, ads: true, version: 14 });
   const dia = document.getElementById('usecases-root');
   // `foot: false`: el cierre y su botón se iban justo antes de precios, y ahí
   // el visitante ya tiene cuatro planes con su propio botón a un dedo.
