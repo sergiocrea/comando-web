@@ -72,12 +72,12 @@ const PLAN_LADDER = [
     capabilities: { adsRead: true, adsDiagnosis: true, voice: false, mediaBuyer: 'coming_soon', attribution: 'coming_soon', googleAds: 'coming_soon', tiktokAds: true },
   },
   {
-    id: 'analista', code: 'analista', price: { month: 9, year: 90 }, launch: { month: 14, year: 140 }, agents: ['analystStrategist', 'mediaBuyer'], reports: ['basic'], metrics: true,
+    id: 'analista', code: 'analista', price: { month: 9, year: 90 }, launch: { month: 15, year: 150 }, agents: ['analystStrategist', 'mediaBuyer'], reports: ['basic'], metrics: true,
     adsAccounts: 2, adsRefreshMinutes: 60, commands: 100,
     capabilities: { adsRead: true, adsDiagnosis: true, voice: false, mediaBuyer: 'coming_soon', attribution: 'coming_soon', googleAds: 'coming_soon', tiktokAds: true },
   },
   {
-    id: 'equipo', code: 'equipo', price: { month: 29, year: 290 }, launch: { month: 39, year: 390 }, featured: true, agents: ['analystStrategist', 'mediaBuyer', 'attribution'], reports: ['advanced'], metrics: true,
+    id: 'equipo', code: 'equipo', price: { month: 29, year: 290 }, launch: { month: 49, year: 490 }, featured: true, agents: ['analystStrategist', 'mediaBuyer', 'attribution'], reports: ['advanced'], metrics: true,
     adsAccounts: 3, adsRefreshMinutes: 60, commands: 250, users: 2,
     capabilities: { adsRead: true, adsDiagnosis: true, voice: true, mediaBuyer: 'coming_soon', attribution: 'coming_soon', googleAds: 'coming_soon', tiktokAds: true },
   },
@@ -186,6 +186,10 @@ const PRICING_TEXT = {
     const whole = int(Math.floor(cents / 100));
     return 'US$ ' + (cents % 100 ? whole + DECIMAL + String(cents % 100).padStart(2, '0') : whole);
   };
+  /* El descuento se anuncia en múltiplos de 5 y SIEMPRE hacia abajo: 29 frente a
+     49 es un 40,8 %, y decir «−40 %» es verdad; decir «−41 %» sería exacto pero
+     se lee como un número inventado, y redondear hacia arriba sería falso. */
+  const launchPct = (hoy, despues) => Math.max(5, Math.floor(((1 - hoy / despues) * 100) / 5) * 5);
   const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
   const icon = (id) => `<svg aria-hidden="true"><use href="#${id}"/></svg>`;
   const state = { annual: false };
@@ -204,7 +208,7 @@ const PRICING_TEXT = {
        subirlo sin sorpresa. `launch` es el precio de después, no un «antes». */
     const launchPer = plan.launch ? (state.annual ? plan.launch.year / 12 : plan.launch.month) : 0;
     const launch = launchPer
-      ? `<span class="plan-launch"><b>${esc(T.launchTag(Math.round((1 - perMonth / launchPer) * 100)))}</b> ${esc(T.launchAfter(money(launchPer) + T.perMonth))}</span>`
+      ? `<span class="plan-launch"><b>${esc(T.launchTag(launchPct(perMonth, launchPer)))}</b> ${esc(T.launchAfter(money(launchPer) + T.perMonth))}</span>`
       : '';
     const href = free
       ? `${PRICING_CONFIG.signup}?plan=${plan.code}`
