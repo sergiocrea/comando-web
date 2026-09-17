@@ -148,8 +148,8 @@
     "sha": "93703f5dfbba06a9"
   },
   "css/hibrida.css": {
-    "v": "34",
-    "sha": "34cb813686b93d35"
+    "v": "35",
+    "sha": "01e31930daacdae8"
   },
   "css/legal.css": {
     "v": "1",
@@ -158,6 +158,10 @@
   "docs/demo-data.json": {
     "v": "2",
     "sha": "56278e0bc8807ff3"
+  },
+  "js/atribucion.js": {
+    "v": "1",
+    "sha": "361972b142ff53f8"
   },
   "js/hero2d.js": {
     "v": "5",
@@ -172,8 +176,8 @@
     "sha": "6a89517954a7c2ec"
   },
   "js/pricing.js": {
-    "v": "70",
-    "sha": "b4987cff8342bd16"
+    "v": "71",
+    "sha": "55997a6d034dcd3f"
   },
   "js/screens.js": {
     "v": "17",

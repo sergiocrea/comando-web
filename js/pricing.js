@@ -121,7 +121,6 @@ const PRICING_TEXT = {
       accounts: (n, f) => (n === 1 ? '1 cuenta publicitaria' : `${f(n)} cuentas publicitarias`),
       questions: (n, f) => `${f(n)} comandos al mes`,
       questionsOnce: (n, d, f) => `${f(n)} comandos para empezar`,
-      users: (n) => `${n} usuarios`,
     },
     plans: {
       gratis: { name: 'Gratis', result: 'Pregúntale a tus anuncios', cta: 'Empezar gratis' },
@@ -140,7 +139,6 @@ const PRICING_TEXT = {
       accounts: (n, f) => (n === 1 ? '1 ad account' : `${f(n)} ad accounts`),
       questions: (n, f) => `${f(n)} commands a month`,
       questionsOnce: (n, d, f) => `${f(n)} commands to start`,
-      users: (n) => `${n} users`,
     },
     plans: {
       gratis: { name: 'Free', result: 'Ask your ads', cta: 'Start free' },
@@ -159,7 +157,6 @@ const PRICING_TEXT = {
       accounts: (n, f) => (n === 1 ? '1 conta de anúncios' : `${f(n)} contas de anúncios`),
       questions: (n, f) => `${f(n)} comandos por mês`,
       questionsOnce: (n, d, f) => `${f(n)} comandos para começar`,
-      users: (n) => `${n} usuários`,
     },
     plans: {
       gratis: { name: 'Grátis', result: 'Pergunte aos seus anúncios', cta: 'Começar grátis' },
@@ -207,7 +204,7 @@ const PRICING_TEXT = {
         ${plan.metrics ? `<li>${icon('i-check')}<span>${esc(T.caps.metrics)}<span class="plan-tip"><button type="button" aria-label="${esc(T.caps.metricsTipLabel)}" aria-describedby="tip-metrics-${plan.code}">?</button><span class="plan-tip-text" role="tooltip" id="tip-metrics-${plan.code}">${esc(T.caps.metricsTip(plan.adsRefreshMinutes))}</span></span>${plan.metrics === 'basic' ? `<small class="plan-note">${esc(T.caps.metricsBasic)}</small>` : ''}</span></li>` : ''}
         ${(plan.reports || []).map((r) => `<li>${icon('i-check')}<span>${esc(T.caps.reports[r])}</span></li>`).join('')}
       </ul>
-      <p class="plan-limits">${esc(T.limits.accounts(plan.adsAccounts, int))}<br />${esc(plan.commandsOnceDays ? T.limits.questionsOnce(plan.commands, plan.commandsOnceDays, int) : T.limits.questions(plan.commands, int))}${plan.users > 1 ? `<br />${esc(T.limits.users(plan.users))}` : ''}</p>
+      <p class="plan-limits">${esc(T.limits.accounts(plan.adsAccounts, int))}<br />${esc(plan.commandsOnceDays ? T.limits.questionsOnce(plan.commands, plan.commandsOnceDays, int) : T.limits.questions(plan.commands, int))}</p>
       <a class="btn btn-dark" href="${href}">${esc(words.cta)}</a>
     </article>`;
   }

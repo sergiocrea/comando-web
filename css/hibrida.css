@@ -569,3 +569,106 @@ html:not(.js) .lp .slider-btns { display: none; }
 .lp .plan.star .plan-tip button { color: #a3a3a3; }
 .lp .plan.star .plan-tip-text { background: #fff; color: #161616; }
 @media (prefers-reduced-motion: reduce) { .lp .plan-tip-text { transition: none; } }
+
+/* ---------- atribución (17-sep): animación 2D en cuatro pasos (js/atribucion.js) ---------- */
+.lp .attr { display: grid; grid-template-columns: minmax(0, 1.65fr) minmax(0, 1fr); gap: clamp(1.5rem, 3vw, 2.75rem); align-items: center; }
+.lp .attr-stage { position: relative; width: 100%; aspect-ratio: 1000 / 500; border-radius: 1.5rem; overflow: hidden; color: #fff;
+  background-color: #0f1115;
+  background-image: radial-gradient(circle at 50% 110%, rgba(62, 207, 142, .12), transparent 55%), linear-gradient(rgba(255, 255, 255, .04) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, .04) 1px, transparent 1px);
+  background-size: auto, 28px 28px, 28px 28px; box-shadow: 0 40px 80px -50px rgba(21, 21, 21, .55); }
+.lp .attr-svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; }
+.lp .attr-card, .lp .attr-hub, .lp .attr-chip { position: absolute; box-sizing: border-box; }
+.lp .attr-card { background: #1a1d23; border: 1px solid rgba(255, 255, 255, .14); border-radius: 1rem; padding: clamp(.6rem, 1.4vw, 1rem); display: flex; flex-direction: column; gap: .6rem; transition: border-color .5s, box-shadow .5s; }
+.lp .attr-card-top { display: flex; align-items: center; gap: .4rem; margin: 0 !important; font: 600 clamp(.66rem, 1vw, .8rem)/1 "Jetbrainsmono Variable", monospace; letter-spacing: .04em; text-transform: uppercase; color: #e4e5e4; }
+.lp .attr-card-top img { width: 1.1em; height: 1.1em; }
+.lp .attr-ad { flex: 1; display: flex; flex-direction: column; gap: .4rem; min-height: 0; }
+.lp .attr-ad-img { flex: 1; min-height: 0; border-radius: .6rem; background: linear-gradient(135deg, #2c4fb8, #6b93ff 60%, #9db4ff); opacity: .85; }
+.lp .attr-ad-line { height: .45rem; border-radius: 99px; background: #3b3f47; }
+.lp .attr-ad-line.is-short { width: 60%; }
+.lp .attr-goal { position: relative; margin: 0 !important; min-height: 2.6em; font: 500 clamp(.62rem, .95vw, .76rem)/1.3 "Jetbrainsmono Variable", monospace; color: #c2c5c2; }
+.lp .attr-goal span { position: absolute; inset: 0; transition: opacity .5s; }
+.lp .attr-goal-b { opacity: 0; color: var(--d-ok); }
+.lp .attr.meta-learned .attr-goal-a { opacity: 0; }
+.lp .attr.meta-learned .attr-goal-b { opacity: 1; }
+.lp .attr.meta-learned .attr-meta { border-color: rgba(62, 207, 142, .7); box-shadow: 0 0 0 4px rgba(62, 207, 142, .12), 0 0 40px -8px rgba(62, 207, 142, .45); }
+.lp .attr-count { margin: 0 !important; display: flex; align-items: baseline; gap: .35rem; font: 500 clamp(.66rem, 1vw, .8rem)/1 "Jetbrainsmono Variable", monospace; color: #c2c5c2; }
+.lp .attr-count b { font: 600 clamp(1.6rem, 3.2vw, 2.6rem)/1 Neuemachina, "Space Grotesk", sans-serif; letter-spacing: -.03em; color: var(--d-ok); font-variant-numeric: tabular-nums; }
+.lp .attr-count small { color: #8a8d8a; font-size: 1em; }
+.lp .attr-hub { display: flex; align-items: center; justify-content: center; gap: .45rem; border-radius: 999px; background: #1f3a8a; border: 1px solid #6b93ff; font: 600 clamp(.66rem, 1.05vw, .85rem)/1 "Neuehaasunicaw 1 G", Inter, sans-serif; color: #fff; transition: box-shadow .25s, transform .25s; }
+.lp .attr-hub-mark { font: 700 .9em/1 "Jetbrainsmono Variable", monospace; color: #9db4ff; }
+.lp .attr-hub.is-hot { box-shadow: 0 0 0 6px rgba(62, 207, 142, .2), 0 0 28px rgba(62, 207, 142, .55); transform: scale(1.05); border-color: var(--d-ok); }
+.lp .attr-chip { display: flex; align-items: center; justify-content: center; margin: 0 !important; border-radius: 999px; font: 600 clamp(.58rem, .9vw, .74rem)/1 "Jetbrainsmono Variable", monospace; white-space: nowrap; opacity: 0; transform: translateY(6px); transition: opacity .35s, transform .35s; }
+.lp .attr-chip-lead { background: #2a2e36; color: #e4e5e4; border: 1px solid rgba(255, 255, 255, .2); }
+.lp .attr-chip-sale { background: rgba(62, 207, 142, .16); color: var(--d-ok); border: 1px solid rgba(62, 207, 142, .55); }
+.lp .attr.show-lead .attr-chip-lead, .lp .attr.show-sale .attr-chip-sale { opacity: 1; transform: none; }
+.lp .attr-path { fill: none; stroke: rgba(157, 180, 255, .35); stroke-width: 2; stroke-dasharray: 6 7; vector-effect: non-scaling-stroke; }
+.lp .attr-path.is-back { stroke: rgba(62, 207, 142, .25); transition: stroke .4s; }
+.lp .attr.is-back .attr-path.is-back { stroke: rgba(62, 207, 142, .75); }
+.lp .attr-slot { fill: rgba(255, 255, 255, .03); stroke: rgba(255, 255, 255, .14); stroke-width: 1; stroke-dasharray: 3 3; }
+.lp .attr-dot { fill: #9aa3b5; }
+.lp .attr-tick { fill: none; stroke: #0f1115; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; opacity: 0; }
+.lp .attr-ring { fill: none; stroke: var(--d-ok); stroke-width: 2; opacity: 0; }
+.lp .attr-person.is-sale .attr-dot { fill: var(--d-ok); }
+.lp .attr-person.is-sale .attr-tick { opacity: 1; }
+.lp .attr-signal { fill: var(--d-ok); filter: drop-shadow(0 0 6px rgba(62, 207, 142, .9)); }
+.lp .attr.is-fading .attr-count b { opacity: .5; transition: opacity .4s; }
+
+.lp .attr-steps { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: .35rem; counter-reset: none; }
+.lp .attr-step { position: relative; padding: .85rem 1rem 1rem; border-radius: 1rem; border: 1px solid transparent; transition: background .3s, border-color .3s; }
+.lp .attr-step button { all: unset; box-sizing: border-box; display: flex; align-items: center; gap: .7rem; width: 100%; cursor: pointer; font: 600 1.05rem/1.25 Neuemachina, "Space Grotesk", sans-serif; letter-spacing: -.01em; color: var(--lp-muted); }
+.lp .attr-step button:focus-visible { outline: 2px solid var(--lp-blue); outline-offset: 4px; border-radius: .4rem; }
+.lp .attr-step-n { flex: none; width: 1.7rem; height: 1.7rem; border-radius: 50%; display: grid; place-items: center; border: 1px solid var(--lp-line); font: 600 .78rem/1 "Jetbrainsmono Variable", monospace; color: var(--lp-muted); background: #fff; transition: background .3s, color .3s, border-color .3s; }
+.lp .attr-step p { display: none; margin: .45rem 0 0 2.4rem !important; color: var(--lp-muted); font-size: .95rem; line-height: 1.45; text-wrap: pretty; }
+.lp .attr-bar { display: none; margin: .75rem 0 0 2.4rem; height: 3px; border-radius: 99px; background: var(--lp-line); overflow: hidden; }
+.lp .attr-bar i { display: block; height: 100%; background: var(--lp-blue); transform: scaleX(0); transform-origin: left; }
+.lp .attr-step.is-active { background: #fff; border-color: var(--lp-line); box-shadow: 0 18px 40px -32px rgba(21, 21, 21, .45); }
+.lp .attr-step.is-active button { color: var(--lp-ink); }
+.lp .attr-step.is-active .attr-step-n { background: var(--lp-blue); border-color: var(--lp-blue); color: #fff; }
+.lp .attr-step.is-done .attr-step-n { background: rgba(18, 122, 82, .1); border-color: rgba(18, 122, 82, .35); color: #127a52; }
+.lp .attr-step.is-active p, .lp .attr-step.is-active .attr-bar { display: block; }
+.lp .attr.is-reduced .attr-bar, .lp .attr.is-paused .attr-bar { visibility: hidden; }
+.lp .attr-foot { display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap; margin-top: 1rem; padding: 0 1rem; }
+.lp .attr-pause { display: inline-flex; align-items: center; gap: .45rem; min-height: 2.5rem; padding: 0 .9rem; border-radius: 999px; border: 1px solid var(--lp-line); background: #fff; color: var(--lp-ink); font: 600 .85rem/1 "Neuehaasunicaw 1 G", Inter, sans-serif; cursor: pointer; }
+.lp .attr-pause:focus-visible { outline: 2px solid var(--lp-blue); outline-offset: 2px; }
+.lp .attr-pause svg { width: 14px; height: 14px; }
+.lp .attr-pause .i-play, .lp .attr-pause .attr-pause-b { display: none; }
+.lp .attr.is-paused .attr-pause .i-play, .lp .attr.is-paused .attr-pause .attr-pause-b { display: inline; }
+.lp .attr.is-paused .attr-pause .i-pause, .lp .attr.is-paused .attr-pause .attr-pause-a { display: none; }
+.lp .attr.is-reduced .attr-pause { display: none; }
+.lp .attr-caption { display: none; }
+.lp .attr-note { margin: 0 !important; font: 500 .74rem/1.4 "Jetbrainsmono Variable", monospace; color: var(--lp-soft); }
+
+/* Sin JS no hay animación: quedan los cuatro pasos con su texto. */
+html:not(.js) .lp .attr-stage, html:not(.js) .lp .attr-pause, html:not(.js) .lp .attr-caption { display: none !important; }
+html:not(.js) .lp .attr-step-t { display: inline !important; }
+html:not(.js) .lp .attr { grid-template-columns: minmax(0, 1fr); }
+html:not(.js) .lp .attr-step p { display: block; }
+
+@media (max-width: 991px) {
+  .lp .attr { grid-template-columns: minmax(0, 1fr); }
+}
+/* Móvil: el escenario va en vertical (lo decide el JS con la misma consulta) y la
+   lista enseña solo el paso activo con su texto. */
+@media (max-width: 767px) {
+  .lp .attr-stage { aspect-ratio: 360 / 620; max-width: 26rem; margin: 0 auto; border-radius: 1.25rem; }
+  .lp .attr.is-tall .attr-card { flex-direction: row; flex-wrap: wrap; align-items: center; }
+  .lp .attr.is-tall .attr-meta .attr-card-top { flex-basis: 100%; }
+  .lp .attr.is-tall .attr-ad { flex: 0 0 34%; height: 58%; }
+  .lp .attr.is-tall .attr-goal { flex: 1; font-size: .72rem; min-height: 3.9em; }
+  .lp .attr.is-tall .attr-crm { align-content: flex-start; }
+  .lp .attr.is-tall .attr-crm .attr-card-top { flex: 1; }
+  .lp .attr.is-tall .attr-count b { font-size: 1.9rem; }
+  .lp .attr-steps { flex-direction: row; gap: .5rem; }
+  .lp .attr-step { padding: 0; border: 0; background: none !important; box-shadow: none !important; }
+  .lp .attr-step button { gap: 0; }
+  .lp .attr-step-t, .lp .attr-step.is-active p, .lp .attr-step.is-active .attr-bar { display: none; }
+  .lp .attr-step-n { width: 2.75rem; height: 2.75rem; font-size: .9rem; }
+  .lp .attr-caption { display: block; margin-top: .75rem; padding: 1rem; border-radius: 1rem; background: #fff; border: 1px solid var(--lp-line); }
+  .lp .attr-caption-t { margin: 0 !important; font: 600 1.1rem/1.25 Neuemachina, "Space Grotesk", sans-serif; color: var(--lp-ink); }
+  .lp .attr-caption-p { margin: .4rem 0 0 !important; color: var(--lp-muted); font-size: .95rem; line-height: 1.45; min-height: 2.9em; }
+  .lp .attr-caption .attr-bar { display: block; margin: .75rem 0 0; }
+  .lp .attr-foot { padding: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .lp .attr-card, .lp .attr-hub, .lp .attr-chip, .lp .attr-goal span, .lp .attr-path.is-back { transition: none; }
+}
