@@ -10,6 +10,13 @@
    ============================================================ */
 (function () {
   const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+  /* Los mensajes de Comando se escriben con el estilo real de WhatsApp
+     (docs/style/whatsapp-operator-style.md en comando-pro): `*negrita*` en dos o
+     tres datos y saltos de línea entre bloques. Aquí se pintan igual que en el
+     teléfono del operador; `plano()` los deja en texto corrido para la lista de
+     comandos, donde no cabe el formato. */
+  const wa = (s) => esc(s).replace(/\*([^*\n]+)\*/g, '<b>$1</b>').replace(/\n/g, '<br />');
+  const plano = (s) => esc(String(s).replace(/\*/g, '').replace(/\n/g, ' '));
   const LANG = (document.documentElement.lang || 'es').slice(0, 2);
   // Las etiquetas de la sección: los datos vienen del fichero del idioma, pero
   // estas palabras viven en el markup y también se leen.
@@ -137,11 +144,11 @@
     let step = 0, timer = null, visible = false;
     function msgHtml(m, i, upTo) {
       return `<div class="uc-msg is-user${i < upTo ? ' is-in' : ''}"><div class="uc-bubble">${esc(m.u)}<span class="uc-time">${TIMES[i] || ''} <i>✓✓</i></span></div></div>
-        <div class="uc-msg is-bot${i < upTo ? ' is-in' : ''}"><div class="uc-bubble">${esc(m.r)}<span class="uc-time">${TIMES[i] || ''}</span></div></div>`;
+        <div class="uc-msg is-bot${i < upTo ? ' is-in' : ''}"><div class="uc-bubble">${wa(m.r)}<span class="uc-time">${TIMES[i] || ''}</span></div></div>`;
     }
     function proHtml(c) {
       if (!c.proactivo) return '';
-      return `<div class="uc-msg is-bot${step === -1 ? ' is-in' : ''} is-proactive"><div class="uc-bubble"><b class="uc-pro-tag">${esc(T.proTag)}</b>${esc(c.proactivo)}<span class="uc-time">${PRO_TIME}</span></div></div>`;
+      return `<div class="uc-msg is-bot${step === -1 ? ' is-in' : ''} is-proactive"><div class="uc-bubble"><b class="uc-pro-tag">${esc(T.proTag)}</b>${wa(c.proactivo)}<span class="uc-time">${PRO_TIME}</span></div></div>`;
     }
     function chatHtml(c) { return proHtml(c) + c.comandos.map((m, i) => msgHtml(m, i, step + 1)).join(''); }
     function timelineHtml(c) {
@@ -152,7 +159,7 @@
       // están encendidos en las pestañas, y el título del caso repetía lo que
       // cuentan los mensajes. `meta` del JSON manda si viene.
       return `<div class="uc-card-meta">${esc(c.meta || T.commands)}</div>
-        <ol class="uc-steps">${c.proactivo ? `<li><button type="button" class="uc-step uc-step-pro${step === -1 ? ' is-on' : ''}" data-step="-1"><span class="uc-step-time">${PRO_TIME}</span><span class="uc-step-text"><b>${esc(T.proStep)}</b> ${esc(c.proactivo)}</span></button></li>` : ''}${c.comandos.map((m, i) => `<li><button type="button" class="uc-step${i === step ? ' is-on' : ''}" data-step="${i}"><span class="uc-step-time">${TIMES[i] || ''}</span><span class="uc-step-text">${esc(m.u)}</span></button></li>`).join('')}</ol>
+        <ol class="uc-steps">${c.proactivo ? `<li><button type="button" class="uc-step uc-step-pro${step === -1 ? ' is-on' : ''}" data-step="-1"><span class="uc-step-time">${PRO_TIME}</span><span class="uc-step-text"><b>${esc(T.proStep)}</b> ${plano(c.proactivo)}</span></button></li>` : ''}${c.comandos.map((m, i) => `<li><button type="button" class="uc-step${i === step ? ' is-on' : ''}" data-step="${i}"><span class="uc-step-time">${TIMES[i] || ''}</span><span class="uc-step-text">${esc(m.u)}</span></button></li>`).join('')}</ol>
         ${c.resultado ? `<div class="uc-result">${esc(c.resultado)}</div>` : ''}
   `;
     }
@@ -241,7 +248,7 @@
   }
 
   const meta = document.getElementById('metaads-root');
-  if (meta) mount(meta, { data: 'metaads', pickers: false, feed: false, ads: true, version: 14 });
+  if (meta) mount(meta, { data: 'metaads', pickers: false, feed: false, ads: true, version: 15 });
   const dia = document.getElementById('usecases-root');
   // `foot: false`: el cierre y su botón se iban justo antes de precios, y ahí
   // el visitante ya tiene cuatro planes con su propio botón a un dedo.

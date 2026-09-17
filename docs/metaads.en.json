@@ -23,27 +23,27 @@
    "rol": "Meta Ads",
    "vertical": "Numbers and diagnosis",
    "titulo": "",
-   "proactivo": "☀️ Good morning. Yesterday you spent US$ 214 across 5 campaigns and got 38 leads: US$ 5.60 each, 12% less than last week. \"Remarketing\" has been spending for 3 days with no results. Reply VIEW for the details.",
+   "proactivo": "☀️ Yesterday: *US$ 214* · *38 leads* · US$ 5.60 each\n12 % cheaper than last week.\n\"Remarketing\" has spent 3 days without a single lead.\n\nWant the detail?\nReply *SEE*",
    "comandos": [
     {
      "u": "Which campaign brought the most leads yesterday, and what did each one cost me?",
-     "r": "\"September leads\" brought 21 at US$ 4.10. Next is \"Catalog\" with 11 at US$ 7.30. The other three added up to 6."
+     "r": "*September leads*: 21 leads at *US$ 4.10*\n\"Catalog\": 11 leads at US$ 7.30\nThe other three campaigns: 6 leads in total."
     },
     {
      "u": "Compare this week with last week: spend, leads and cost per lead.",
-     "r": "Spend US$ 1,480 (+6%), 265 leads (+19%), cost per lead US$ 5.58 (−11%). The jump comes from \"September leads\": it doubled leads on the same budget."
+     "r": "This week: *265 leads* at *US$ 5.58*\nSpend US$ 1,480 (+6 %) · leads +19 % · cost −11 %\nThe jump comes from \"September leads\": it doubled leads on the same budget."
     },
     {
      "u": "Which ad is spending and bringing nothing?",
-     "r": "\"Remarketing\" has spent US$ 96 in 3 days without a single lead, at a frequency of 4.8: the audience has seen it too often. At 3 days it is still early to pause it; check the audience and look again on Monday."
+     "r": "🔴 \"Remarketing\": *US$ 96* in 3 days and *0 leads*\nFrequency 4.8: the same people have seen it too often.\n\nShall I pause it or wait until Monday?\nReply *PAUSE* · *WAIT*"
     },
     {
      "u": "Why did the cost per lead of \"Catalog\" go up?",
-     "r": "It paid more per thousand impressions (CPM +22%) and the click-through rate fell from 1.4% to 0.9%: the ad is wearing out. The first thing to check is the creative, not the budget."
+     "r": "\"Catalog\": cost per lead went up\nCPM *+22 %* and clicks fell from *1.4 % to 0.9 %*.\nThe creative is spent: check it before the budget."
     },
     {
      "u": "How much have I spent this month and how many results so far?",
-     "r": "US$ 3,120 in September and 571 results: US$ 5.46 each. \"September leads\" takes 48% of the spend and brings 61% of the results."
+     "r": "September: *US$ 3,120* · *571 results* · US$ 5.46\n\"September leads\" takes 48 % of the spend and brings 61 % of the results."
     }
    ],
    "resultado": "",

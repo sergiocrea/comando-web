@@ -23,27 +23,27 @@
    "rol": "Meta Ads",
    "vertical": "Números y diagnóstico",
    "titulo": "",
-   "proactivo": "☀️ Buenos días. Ayer invertiste US$ 214 en 5 campañas y entraron 38 leads: US$ 5,60 cada uno, 12 % menos que la semana pasada. «Remarketing» lleva 3 días gastando sin resultados. Responde VER para el detalle.",
+   "proactivo": "☀️ Ayer: *US$ 214* · *38 leads* · US$ 5,60 cada uno\n12 % más barato que la semana pasada.\n«Remarketing» lleva 3 días gastando sin un lead.\n\n¿Te paso el detalle?\nResponde *VER*",
    "comandos": [
     {
      "u": "¿Qué campaña trajo más leads ayer y cuánto me costó cada uno?",
-     "r": "«Leads septiembre» trajo 21 a US$ 4,10. Le sigue «Catálogo» con 11 a US$ 7,30. Las otras tres sumaron 6."
+     "r": "*Leads septiembre*: 21 leads a *US$ 4,10*\n«Catálogo»: 11 leads a US$ 7,30\nLas otras tres campañas: 6 leads en total."
     },
     {
      "u": "Compara esta semana con la anterior: inversión, leads y costo por lead.",
-     "r": "Inversión US$ 1.480 (+6 %), 265 leads (+19 %), costo por lead US$ 5,58 (−11 %). El salto viene de «Leads septiembre»: duplicó leads con el mismo presupuesto."
+     "r": "Esta semana: *265 leads* a *US$ 5,58*\nInversión US$ 1.480 (+6 %) · leads +19 % · costo −11 %\nEl salto viene de «Leads septiembre»: duplicó leads con el mismo presupuesto."
     },
     {
      "u": "¿Qué anuncio está gastando y no trae nada?",
-     "r": "«Remarketing» lleva US$ 96 en 3 días sin un solo lead y una frecuencia de 4,8: la audiencia ya lo vio de más. Con 3 días todavía es pronto para pausarla; revisa la audiencia y vuelve a mirarla el lunes."
+     "r": "🔴 «Remarketing»: *US$ 96* en 3 días y *0 leads*\nFrecuencia 4,8: la misma gente ya lo vio de más.\n\n¿La pauso o esperamos al lunes?\nResponde *PAUSAR* · *ESPERAR*"
     },
     {
      "u": "¿Por qué subió el costo por lead de «Catálogo»?",
-     "r": "Pagó más por cada mil impresiones (CPM +22 %) y la tasa de clics bajó de 1,4 % a 0,9 %: el anuncio se está gastando. Lo primero a revisar es el creativo, no el presupuesto."
+     "r": "«Catálogo»: subió el costo por lead\nCPM *+22 %* y los clics bajaron de *1,4 % a 0,9 %*.\nEl creativo se gastó: revísalo antes que el presupuesto."
     },
     {
      "u": "¿Cuánto llevo gastado este mes y cuántos resultados van?",
-     "r": "US$ 3.120 en septiembre y 571 resultados: US$ 5,46 cada uno. «Leads septiembre» se lleva el 48 % del gasto y trae el 61 % de los resultados."
+     "r": "Septiembre: *US$ 3.120* · *571 resultados* · US$ 5,46\n«Leads septiembre» se lleva el 48 % del gasto y trae el 61 % de los resultados."
     }
    ],
    "resultado": "",
