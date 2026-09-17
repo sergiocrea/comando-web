@@ -586,8 +586,8 @@ body.sheet-open { overflow: hidden; }
 #about.is-hero #app.canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100svh; z-index: 2; }
 
 /* hero: prominent badge + corporate primary button */
-.hero-badge { will-change: auto; display: inline-flex; align-items: center; gap: .6rem; background: rgba(77,124,255,.16); border: 1px solid rgba(77,124,255,.55); color: #fff; font-family: "Neuehaasunicaw 1 G", Inter, Arial, sans-serif; font-weight: 600; font-size: 1.05rem; letter-spacing: .01em; text-transform: none; padding: .55rem 1.1rem; border-radius: 999px; margin-bottom: 1.25rem; }
-.hero-badge-dot { width: .6rem; height: .6rem; border-radius: 50%; background: #4d7cff; box-shadow: 0 0 0 4px rgba(77,124,255,.25); }
+.hero-badge { will-change: auto; display: inline-flex; align-items: center; gap: .6rem; background: rgba(245,244,239,.08); border: 1px solid rgba(245,244,239,.22); color: #fff; font-family: "Neuehaasunicaw 1 G", Inter, Arial, sans-serif; font-weight: 600; font-size: 1.05rem; letter-spacing: .01em; text-transform: none; padding: .55rem 1.1rem; border-radius: 999px; margin-bottom: 1.25rem; }
+.hero-badge-dot { width: .6rem; height: .6rem; border-radius: 50%; background: #315fef; }
 .btn-primary { display: inline-flex; align-items: center; gap: .6rem; background: #4d7cff; color: #fff; font-family: "Neuehaasunicaw 1 G", Inter, Arial, sans-serif; font-weight: 600; font-size: 1.05rem; padding: 1rem 1.75rem; border-radius: .75rem; text-decoration: none; box-shadow: 0 10px 30px rgba(77,124,255,.35); transition: background .2s, transform .2s, box-shadow .2s; }
 .btn-primary:hover { background: #3d6cf0; transform: translateY(-1px); box-shadow: 0 14px 34px rgba(77,124,255,.45); }
 .btn-primary .btn-arrow { transition: transform .2s; }
@@ -848,7 +848,7 @@ html { scroll-behavior: smooth; }
   inset: 0;
   background:
     linear-gradient(90deg, rgba(248, 247, 243, .95) 0%, rgba(248, 247, 243, .88) 29%, rgba(248, 247, 243, .62) 39%, rgba(248, 247, 243, .14) 52%, rgba(248, 247, 243, .02) 100%),
-    radial-gradient(circle at 75% 38%, rgba(49, 95, 239, .1), transparent 27%),
+    radial-gradient(circle at 75% 38%, rgba(49, 95, 239, 0), transparent 27%),
     linear-gradient(180deg, rgba(255, 255, 255, .04), transparent 62%, rgba(243, 241, 234, .2));
   pointer-events: none;
 }
@@ -1110,7 +1110,7 @@ html { scroll-behavior: smooth; }
   color: #151515;
   background-color: #f3f1ea;
   background-image:
-    radial-gradient(circle at 19% 44%, rgba(49, 95, 239, .16), transparent 31%),
+    radial-gradient(circle at 19% 44%, rgba(49, 95, 239, 0), transparent 31%),
     linear-gradient(rgba(34, 34, 34, .055) 1px, transparent 1px),
     linear-gradient(90deg, rgba(34, 34, 34, .055) 1px, transparent 1px);
   background-size: auto, 40px 40px, 40px 40px;
@@ -1224,7 +1224,7 @@ html { scroll-behavior: smooth; }
   color: #151515;
   background-color: #f3f1ea;
   background-image:
-    radial-gradient(circle at 82% 30%, rgba(49, 95, 239, .14), transparent 34%),
+    radial-gradient(circle at 82% 30%, rgba(49, 95, 239, 0), transparent 34%),
     linear-gradient(rgba(34, 34, 34, .055) 1px, transparent 1px),
     linear-gradient(90deg, rgba(34, 34, 34, .055) 1px, transparent 1px);
   background-size: auto, 40px 40px, 40px 40px;
@@ -1267,7 +1267,7 @@ html { scroll-behavior: smooth; }
   color: #151515;
   background-color: #f3f1ea;
   background-image:
-    radial-gradient(circle at 78% 38%, rgba(49, 95, 239, .16), transparent 34%),
+    radial-gradient(circle at 78% 38%, rgba(49, 95, 239, 0), transparent 34%),
     linear-gradient(rgba(34, 34, 34, .055) 1px, transparent 1px),
     linear-gradient(90deg, rgba(34, 34, 34, .055) 1px, transparent 1px);
   background-size: auto, 40px 40px, 40px 40px;
@@ -1419,7 +1419,7 @@ html { scroll-behavior: smooth; }
 
 /* Precio de lista tachado y el ahorro, para el plan con descuento de lanzamiento. */
 .price-amount s { margin-left: .5rem; font-family: "Jetbrainsmono Variable", monospace; font-size: .95rem; font-weight: 400; color: #7d7d7d; text-decoration-thickness: 1px; }
-.price-off { display: inline-block; align-self: flex-start; width: fit-content; margin-top: .45rem; padding: .18rem .5rem; border-radius: .3rem; background: rgba(77, 124, 255, .16); color: #8fb0ff; font-family: "Jetbrainsmono Variable", monospace; font-size: .68rem; letter-spacing: .06em; text-transform: uppercase; }
+.price-off { display: inline-block; align-self: flex-start; width: fit-content; margin-top: .45rem; padding: .18rem .5rem; border-radius: .3rem; background: rgba(245, 244, 239, .1); color: #e4e2dc; font-family: "Jetbrainsmono Variable", monospace; font-size: .68rem; letter-spacing: .06em; text-transform: uppercase; }
 
 /* ============================================================
    La barra de navegación: menú y selector de idioma
@@ -2297,7 +2297,7 @@ html { scroll-behavior: smooth; }
 .section_trust { position: relative; z-index: 3; background: #0b0b0b; color: #fff; padding: 5.5rem 0; }
 .trust-layout { display: grid; grid-template-columns: minmax(0, 25rem) minmax(0, 42rem); justify-content: space-between; gap: 3rem; align-items: start; }
 .trust-title { margin: 0; font-family: Neuemachina, "Space Grotesk", Inter, sans-serif; font-weight: 600; font-size: clamp(2rem, 3.6vw, 3rem); line-height: 1.02; letter-spacing: -.04em; text-wrap: balance; }
-.trust-title span { display: block; color: #7f9dff; }
+.trust-title span { display: block; color: #c9c6bd; }
 .trust-list { list-style: none; margin: 0; padding: 0; border-top: 1px solid #262626; }
 .trust-list li { display: grid; grid-template-columns: minmax(0, 15rem) minmax(0, 1fr); gap: .35rem 2rem; padding: 1.2rem 0; border-bottom: 1px solid #262626; }
 .trust-list strong { font-family: "Neuehaasunicaw 1 G", Inter, sans-serif; font-weight: 600; font-size: 1.02rem; line-height: 1.35; color: #fff; }
@@ -2310,7 +2310,7 @@ html { scroll-behavior: smooth; }
 
 /* Lo que todavía no existe se dice: «Próximamente», nunca como disponible. */
 .connector-available { display: inline-block; margin: .45rem 0 .2rem; padding: .16rem .5rem; border: 1px solid rgba(0, 168, 132, .55); border-radius: 999px; font-family: "Jetbrainsmono Variable", monospace; font-size: .64rem; letter-spacing: .08em; text-transform: uppercase; color: #3fd1a8; }
-.connector-soon { display: inline-block; margin: .45rem 0 .2rem; padding: .16rem .5rem; border: 1px solid rgba(77, 124, 255, .5); border-radius: 999px; font-family: "Jetbrainsmono Variable", monospace; font-size: .64rem; letter-spacing: .08em; text-transform: uppercase; color: #7f9dff; }
+.connector-soon { display: inline-block; margin: .45rem 0 .2rem; padding: .16rem .5rem; border: 1px dashed rgba(245, 244, 239, .35); border-radius: 999px; font-family: "Jetbrainsmono Variable", monospace; font-size: .64rem; letter-spacing: .08em; text-transform: uppercase; color: #c9c6bd; }
 .uc-ads-cards li.is-soon .uc-feed-logo, .uc-ads-cards li.is-soon > span { opacity: .55; }
 .uc-soon { display: block; margin-top: .2rem; font-family: "Jetbrainsmono Variable", monospace; font-size: .58rem; letter-spacing: .06em; text-transform: uppercase; color: #8a8a8a; }
 /* El CTA del héroe ahora dice «Empieza con 14 días de Operador»: en dos

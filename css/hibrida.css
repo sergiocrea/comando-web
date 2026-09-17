@@ -219,8 +219,8 @@
   --lp-ink: #151515; --lp-muted: #5f625f; --lp-soft: #8a8c88; --lp-blue: #315fef; --lp-line: #dedbd2;
   --lp-cream: #f3f1ea; --lp-paper: #fbfaf6;
   --wa-bg: #0b141a; --wa-in: #202c33; --wa-out: #005c4b; --wa-green: #00a884;
-  --ok: #127a52; --soon: #5b3fd1;
-  --d-ok: #3fbf84; --d-warn: #e9b949; --d-bad: #f06a64; --d-soon: #c9b4ff;
+  --ok: #127a52; --soon: #5f625f;
+  --d-ok: #3fbf84; --d-warn: #e9b949; --d-bad: #f06a64; --d-soon: #b8b5ad;
   /* Grafito (17-sep): las superficies oscuras son neutros cálidos, primos de la
      tinta #151515 y del crema #f3f1ea. Nada de azul-lavanda ni de halos: el único
      acento es el azul de marca, sólido, y sólo marca acción o «esto lo hace Comando».
@@ -273,7 +273,7 @@
 .lp .badge { display: inline-flex; align-items: center; gap: .45rem; font: 500 .7rem/1 "Jetbrainsmono Variable", ui-monospace, monospace; letter-spacing: .04em; padding: .42rem .65rem; border-radius: 999px; white-space: nowrap; }
 .lp .badge::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
 .lp .badge.ok { color: var(--ok); background: rgba(18, 122, 82, .08); border: 1px solid rgba(18, 122, 82, .25); }
-.lp .badge.soon { color: var(--soon); background: rgba(91, 63, 209, .07); border: 1px solid rgba(91, 63, 209, .25); }
+.lp .badge.soon { color: var(--soon); background: rgba(21, 21, 21, .04); border: 1px dashed rgba(21, 21, 21, .28); }
 .lp .badge.soon::before { background: transparent; border: 1.5px dashed currentColor; }
 .lp-dark .badge.soon { color: var(--gt-2); background: rgba(243, 241, 234, .05); border-color: var(--gl-2); }
 
@@ -292,11 +292,11 @@
 /* ---------- equipo de agentes ---------- */
 .lp-agents { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.25rem; }
 .lp-agent { background: #fff; border: 1px solid var(--lp-line); border-radius: 1.4rem; padding: 1.6rem; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); gap: 1.5rem; box-shadow: 0 24px 50px -40px rgba(21, 21, 21, .35); }
-.lp-agent.is-soon { background: repeating-linear-gradient(135deg, #fbfaf7 0 14px, #f5f3ee 14px 28px); border-style: dashed; border-color: #cdc6de; box-shadow: none; }
+.lp-agent.is-soon { background: repeating-linear-gradient(135deg, #fbfaf7 0 14px, #f5f3ee 14px 28px); border-style: dashed; border-color: #d6d2c8; box-shadow: none; }
 .lp-agent-meta { display: flex; flex-direction: column; min-width: 0; }
 .lp-agent-top { display: flex; align-items: center; justify-content: space-between; gap: .75rem; }
 .lp-agent-icon { width: 3rem; height: 3rem; border-radius: .9rem; display: grid; place-items: center; background: rgba(49, 95, 239, .1); color: var(--lp-blue); flex: none; }
-.lp-agent.is-soon .lp-agent-icon { background: rgba(91, 63, 209, .1); color: var(--soon); }
+.lp-agent.is-soon .lp-agent-icon { background: rgba(21, 21, 21, .06); color: var(--soon); }
 .lp-agent-icon svg { width: 1.75rem; height: 1.75rem; }
 .lp-agent h3 { font-size: 1.75rem; margin: 1rem 0 .5rem; }
 .lp-agent p { color: var(--lp-muted); }
@@ -441,7 +441,7 @@ html:not(.js) .lp .slider-btns { display: none; }
 .lp .plan li.soon svg { color: var(--soon); }
 .lp .plan.star li.soon svg { color: var(--d-soon); }
 .lp .plan li .badge { margin-top: .35rem; font-size: .62rem; padding: .32rem .5rem; }
-.lp .plan.star li .badge.soon { color: var(--d-soon); background: rgba(155, 123, 255, .12); border-color: rgba(155, 123, 255, .35); }
+.lp .plan.star li .badge.soon { color: var(--d-soon); background: rgba(245, 244, 239, .06); border-color: rgba(245, 244, 239, .3); border-style: dashed; }
 .lp .plan-limits { margin-top: auto !important; padding-top: .9rem; border-top: 1px solid var(--lp-line); font: 500 .76rem/1.7 "Jetbrainsmono Variable", monospace; color: var(--lp-muted); }
 .lp .plan.star .plan-limits { border-color: #2a2a2a; color: #a3a3a3; }
 .lp .btn { display: inline-flex; align-items: center; justify-content: center; gap: .55rem; min-height: 3.1rem; padding: .8rem 1.2rem; border-radius: 999px; font: 650 .95rem/1.1 "Neuehaasunicaw 1 G", Inter, sans-serif; text-decoration: none; border: 1px solid transparent; cursor: pointer; text-align: center; transition: transform .2s ease, background .2s ease, color .2s ease; }
