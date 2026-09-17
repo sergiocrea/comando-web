@@ -47,6 +47,9 @@
  * decidido no llama a la IA ni descuenta cupo (`OperatorCommandPipeline.confirm`),
  * así que el tope real es el de comandos; los reportes con IA descuentan del
  * mismo cupo.
+ * REPORTES (17-sep): Esencial suma «Reportes Básicos» (resumen semanal); Pro sigue con
+ * Avanzados y Empresas con Personalizados.
+ *
  * CUPOS (17-sep, tarde): Esencial 100 comandos y Comando Pro 250 (antes 150 y 300).
  *
  * NOMBRES (17-sep): Gratis · Esencial (`analista`) · Comando Pro (`equipo`) · Empresas;
@@ -69,7 +72,7 @@ const PLAN_LADDER = [
     capabilities: { adsRead: true, adsDiagnosis: true, voice: false, mediaBuyer: 'coming_soon', attribution: 'coming_soon', googleAds: 'coming_soon', tiktokAds: true },
   },
   {
-    id: 'analista', code: 'analista', price: { month: 9, year: 90 }, agents: ['analystStrategist', 'mediaBuyer'], metrics: true,
+    id: 'analista', code: 'analista', price: { month: 9, year: 90 }, agents: ['analystStrategist', 'mediaBuyer'], reports: ['basic'], metrics: true,
     adsAccounts: 2, adsRefreshMinutes: 60, commands: 100,
     capabilities: { adsRead: true, adsDiagnosis: true, voice: false, mediaBuyer: 'coming_soon', attribution: 'coming_soon', googleAds: 'coming_soon', tiktokAds: true },
   },
@@ -118,7 +121,7 @@ const PRICING_TEXT = {
     trial: () => 'Empiezas gratis, sin tarjeta',
     talk: 'Habla con nosotros',
     enterprise: { name: 'Empresas', result: 'Todas tus cuentas, a tu medida', items: (plan, n) => [`Todo lo de ${plan}`, `Más de ${n} cuentas publicitarias`, 'Comandos y usuarios a medida', 'Reportes Personalizados', 'Soporte prioritario'], limits: 'Precio según cuentas y uso' },
-    caps: { analystStrategist: 'Agentes Analista y Estratega', mediaBuyer: 'Agente Media Buyer', attribution: 'Agente de Atribución (CRM)', metrics: 'Métricas & KPIs', metricsBasic: 'básicas', metricsTipLabel: '¿Cada cuánto se actualizan los datos?', metricsTip: (min) => (min >= 1440 ? 'Los datos de Meta se sincronizan 1 vez al día.' : 'Los datos de Meta se sincronizan cada hora.'), reports: { advanced: 'Reportes Avanzados', custom: 'Reportes Personalizados' } },
+    caps: { analystStrategist: 'Agentes Analista y Estratega', mediaBuyer: 'Agente Media Buyer', attribution: 'Agente de Atribución (CRM)', metrics: 'Métricas & KPIs', metricsBasic: 'básicas', metricsTipLabel: '¿Cada cuánto se actualizan los datos?', metricsTip: (min) => (min >= 1440 ? 'Los datos de Meta se sincronizan 1 vez al día.' : 'Los datos de Meta se sincronizan cada hora.'), reports: { basic: 'Reportes Básicos', advanced: 'Reportes Avanzados', custom: 'Reportes Personalizados' } },
     limits: {
       accounts: (n, f) => (n === 1 ? '1 cuenta publicitaria' : `${f(n)} cuentas publicitarias`),
       questions: (n, f) => `${f(n)} comandos al mes`,
@@ -136,7 +139,7 @@ const PRICING_TEXT = {
     trial: () => 'You start free, no card',
     talk: 'Talk to us',
     enterprise: { name: 'Enterprise', result: 'All your accounts, tailored to you', items: (plan, n) => [`Everything in ${plan}`, `More than ${n} ad accounts`, 'Commands and users to fit', 'Custom Reports', 'Priority support'], limits: 'Priced by accounts and usage' },
-    caps: { analystStrategist: 'Analyst & Strategist Agents', mediaBuyer: 'Media Buyer Agent', attribution: 'Attribution Agent (CRM)', metrics: 'Metrics & KPIs', metricsBasic: 'basic', metricsTipLabel: 'How often is the data updated?', metricsTip: (min) => (min >= 1440 ? 'Meta data syncs once a day.' : 'Meta data syncs every hour.'), reports: { advanced: 'Advanced Reports', custom: 'Custom Reports' } },
+    caps: { analystStrategist: 'Analyst & Strategist Agents', mediaBuyer: 'Media Buyer Agent', attribution: 'Attribution Agent (CRM)', metrics: 'Metrics & KPIs', metricsBasic: 'basic', metricsTipLabel: 'How often is the data updated?', metricsTip: (min) => (min >= 1440 ? 'Meta data syncs once a day.' : 'Meta data syncs every hour.'), reports: { basic: 'Basic Reports', advanced: 'Advanced Reports', custom: 'Custom Reports' } },
     limits: {
       accounts: (n, f) => (n === 1 ? '1 ad account' : `${f(n)} ad accounts`),
       questions: (n, f) => `${f(n)} commands a month`,
@@ -154,7 +157,7 @@ const PRICING_TEXT = {
     trial: () => 'Você começa grátis, sem cartão',
     talk: 'Fale com a gente',
     enterprise: { name: 'Empresas', result: 'Todas as suas contas, sob medida', items: (plan, n) => [`Tudo do ${plan}`, `Mais de ${n} contas de anúncios`, 'Comandos e usuários sob medida', 'Relatórios Personalizados', 'Suporte prioritário'], limits: 'Preço conforme contas e uso' },
-    caps: { analystStrategist: 'Agentes Analista e Estrategista', mediaBuyer: 'Agente Comprador de mídia', attribution: 'Agente de Atribuição (CRM)', metrics: 'Métricas e KPIs', metricsBasic: 'básicas', metricsTipLabel: 'Com que frequência os dados são atualizados?', metricsTip: (min) => (min >= 1440 ? 'Os dados da Meta são sincronizados 1 vez por dia.' : 'Os dados da Meta são sincronizados a cada hora.'), reports: { advanced: 'Relatórios Avançados', custom: 'Relatórios Personalizados' } },
+    caps: { analystStrategist: 'Agentes Analista e Estrategista', mediaBuyer: 'Agente Comprador de mídia', attribution: 'Agente de Atribuição (CRM)', metrics: 'Métricas e KPIs', metricsBasic: 'básicas', metricsTipLabel: 'Com que frequência os dados são atualizados?', metricsTip: (min) => (min >= 1440 ? 'Os dados da Meta são sincronizados 1 vez por dia.' : 'Os dados da Meta são sincronizados a cada hora.'), reports: { basic: 'Relatórios Básicos', advanced: 'Relatórios Avançados', custom: 'Relatórios Personalizados' } },
     limits: {
       accounts: (n, f) => (n === 1 ? '1 conta de anúncios' : `${f(n)} contas de anúncios`),
       questions: (n, f) => `${f(n)} comandos por mês`,
