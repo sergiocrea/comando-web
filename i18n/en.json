@@ -157,7 +157,7 @@
   "¿Qué negocios llevan 15 días parados?": "Which deals have been stuck for 15 days?",
   "Actualiza con CONFIRMAR y deshaz si te equivocas.": "Update with CONFIRM and undo if you make a mistake.",
   "Resumen del día y alertas de lo que se enfría.": "Daily summary and alerts about what is going cold.",
-  "Próximamente: conecta tus ventas con Meta para medir el ROI real.": "Coming soon: connect your sales with Meta to measure real ROI.",
+  "Próximamente: conecta tus ventas con Meta para medir el ROI real.": "Coming soon: connect your sales with Meta to measure your real ROAS.",
   "Ver conectores →": "See connectors →",
   "¿Cuánto cuesta con tu CRM?": "How much with your CRM?",
   "Tu CRM": "Your CRM",
@@ -498,5 +498,10 @@
   "Analista, estratega y media buyer en tu WhatsApp: Comando te dice qué funciona en tus anuncios de Meta y TikTok y qué cambiar, en segundos. Empieza gratis.": "Analyst, strategist and media buyer on your WhatsApp: Comando tells you what works in your Meta and TikTok ads and what to change, in seconds. Start free.",
   "Tu equipo de marketing en tu WhatsApp": "Your marketing team on your WhatsApp",
   "Pregúntale cómo van tus anuncios de Meta y TikTok: te responde con los números, un semáforo y qué cambiar. Empieza gratis.": "Ask how your Meta and TikTok ads are doing: it answers with the numbers, a traffic light and what to change. Start free.",
-  "Comando: analista, estratega y media buyer en tu WhatsApp": "Comando: analyst, strategist and media buyer on your WhatsApp"
+  "Comando: analista, estratega y media buyer en tu WhatsApp": "Comando: analyst, strategist and media buyer on your WhatsApp",
+  "ROAS según Meta": "ROAS per Meta",
+  "US$&nbsp;3,20 atribuidos por Meta": "US$&nbsp;3.20 credited by Meta",
+  "Lo que Meta dice que vendieron tus campañas de venta, por cada dólar.": "What Meta says your sales campaigns sold, per dollar.",
+  "ROAS real (CRM)": "Real ROAS (CRM)",
+  "Lo que de verdad vendiste por cada dólar, según tu CRM.": "What you actually sold for every dollar, per your CRM."
 }

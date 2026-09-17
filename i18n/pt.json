@@ -157,7 +157,7 @@
   "¿Qué negocios llevan 15 días parados?": "Quais negócios estão parados há 15 dias?",
   "Actualiza con CONFIRMAR y deshaz si te equivocas.": "Atualize com CONFIRMAR e desfaça se errar.",
   "Resumen del día y alertas de lo que se enfría.": "Resumo do dia e alertas do que está esfriando.",
-  "Próximamente: conecta tus ventas con Meta para medir el ROI real.": "Em breve: conecte suas vendas com a Meta para medir o ROI real.",
+  "Próximamente: conecta tus ventas con Meta para medir el ROI real.": "Em breve: conecte suas vendas com a Meta para medir seu ROAS real.",
   "Ver conectores →": "Ver conectores →",
   "¿Cuánto cuesta con tu CRM?": "Quanto custa com seu CRM?",
   "Tu CRM": "Seu CRM",
@@ -498,5 +498,10 @@
   "Analista, estratega y media buyer en tu WhatsApp: Comando te dice qué funciona en tus anuncios de Meta y TikTok y qué cambiar, en segundos. Empieza gratis.": "Analista, estrategista e comprador de mídia no seu WhatsApp: o Comando diz o que funciona nos seus anúncios da Meta e do TikTok e o que mudar, em segundos. Comece grátis.",
   "Tu equipo de marketing en tu WhatsApp": "Sua equipe de marketing no seu WhatsApp",
   "Pregúntale cómo van tus anuncios de Meta y TikTok: te responde con los números, un semáforo y qué cambiar. Empieza gratis.": "Pergunte como vão seus anúncios da Meta e do TikTok: ele responde com os números, um semáforo e o que mudar. Comece grátis.",
-  "Comando: analista, estratega y media buyer en tu WhatsApp": "Comando: analista, estrategista e comprador de mídia no seu WhatsApp"
+  "Comando: analista, estratega y media buyer en tu WhatsApp": "Comando: analista, estrategista e comprador de mídia no seu WhatsApp",
+  "ROAS según Meta": "ROAS segundo a Meta",
+  "US$&nbsp;3,20 atribuidos por Meta": "US$&nbsp;3,20 atribuídos pela Meta",
+  "Lo que Meta dice que vendieron tus campañas de venta, por cada dólar.": "O que a Meta diz que suas campanhas de venda venderam, por dólar.",
+  "ROAS real (CRM)": "ROAS real (CRM)",
+  "Lo que de verdad vendiste por cada dólar, según tu CRM.": "O que você realmente vendeu por cada dólar, segundo seu CRM."
 }
