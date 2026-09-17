@@ -47,6 +47,9 @@
  * decidido no llama a la IA ni descuenta cupo (`OperatorCommandPipeline.confirm`),
  * así que el tope real es el de comandos; los reportes con IA descuentan del
  * mismo cupo.
+ * NOMBRES (17-sep): Gratis · Esencial (`analista`) · Comando Pro (`equipo`) · Empresas;
+ * antes Starter y Growth. El motor sigue diciendo Analista y Equipo.
+ *
  * TRES PLANES + EMPRESAS (17-sep): Scale (`agencia`) deja de publicarse y Growth
  * absorbe lo suyo —Atribución y reportes personalizados— a US$ 29 (anual 290, lo
  * que ya cobra el motor por `equipo`) con 3 cuentas, 300 comandos y 2 usuarios
@@ -123,8 +126,8 @@ const PRICING_TEXT = {
     },
     plans: {
       gratis: { name: 'Gratis', result: 'Pregúntale a tus anuncios', cta: 'Empezar gratis' },
-      analista: { name: 'Starter', result: 'Te dice qué revisar primero', cta: 'Elegir Starter' },
-      equipo: { name: 'Growth', result: 'Pausa y mueve presupuesto', cta: 'Elegir Growth' },
+      analista: { name: 'Esencial', result: 'Te dice qué revisar primero', cta: 'Elegir Esencial' },
+      equipo: { name: 'Comando Pro', result: 'Pausa y mueve presupuesto', cta: 'Elegir Comando Pro' },
     },
   },
   en: {
@@ -143,8 +146,8 @@ const PRICING_TEXT = {
     },
     plans: {
       gratis: { name: 'Free', result: 'Ask your ads', cta: 'Start free' },
-      analista: { name: 'Starter', result: 'Tells you what to check first', cta: 'Choose Starter' },
-      equipo: { name: 'Growth', result: 'Pauses and moves budget', cta: 'Choose Growth' },
+      analista: { name: 'Essential', result: 'Tells you what to check first', cta: 'Choose Essential' },
+      equipo: { name: 'Comando Pro', result: 'Pauses and moves budget', cta: 'Choose Comando Pro' },
     },
   },
   pt: {
@@ -163,8 +166,8 @@ const PRICING_TEXT = {
     },
     plans: {
       gratis: { name: 'Grátis', result: 'Pergunte aos seus anúncios', cta: 'Começar grátis' },
-      analista: { name: 'Starter', result: 'Diz o que revisar primeiro', cta: 'Escolher Starter' },
-      equipo: { name: 'Growth', result: 'Pausa e move orçamento', cta: 'Escolher Growth' },
+      analista: { name: 'Essencial', result: 'Diz o que revisar primeiro', cta: 'Escolher Essencial' },
+      equipo: { name: 'Comando Pro', result: 'Pausa e move orçamento', cta: 'Escolher Comando Pro' },
     },
   },
 };
