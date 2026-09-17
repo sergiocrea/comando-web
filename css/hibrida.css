@@ -674,5 +674,5 @@ html:not(.js) .lp .attr-step p { display: block; }
   .lp .attr-card, .lp .attr-hub, .lp .attr-chip, .lp .attr-goal span, .lp .attr-path.is-back { transition: none; }
 }
 
-/* Atribución sigue a «Tu equipo» con el mismo fondo: sin el hueco doble entre las dos. */
-.lp-section.is-continued { padding-top: 0; }
+/* Atribución va dentro de «Tu equipo»: mismo fondo, sin costura entre las dos. */
+.lp-subsection { margin-top: clamp(4.5rem, 9vw, 7.5rem); scroll-margin-top: calc(var(--nav-height, 5rem) + .5rem); }
