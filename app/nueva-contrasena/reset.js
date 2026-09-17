@@ -3,7 +3,7 @@
      POST /v1/auth/password/reset { token, password }
    Al guardar, el motor invalida el token y las sesiones abiertas, así que se
    vuelve a /app/ para entrar con la contraseña nueva. Sin build. */
-import '/app/strings.js?v=25';
+import '/app/strings.js?v=26';
 import { initLocale, mountLanguagePicker, onLocaleChange, t } from '/app/i18n.js?v=1';
 
 initLocale();

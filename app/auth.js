@@ -8,7 +8,7 @@
      POST /v1/auth/password/forgot  { email } → siempre 202
    La contraseña nueva se pone en /app/nueva-contrasena/ con el token del correo.
    Sin build. */
-import '/app/strings.js?v=25';
+import '/app/strings.js?v=26';
 import { initLocale, mountLanguagePicker, onLocaleChange, t } from '/app/i18n.js?v=1';
 
 initLocale();

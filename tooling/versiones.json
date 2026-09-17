@@ -4,8 +4,8 @@
     "sha": "b0c2e0198ed8653a"
   },
   "app/auth.js": {
-    "v": "24",
-    "sha": "57b652ceb9f43cf6"
+    "v": "25",
+    "sha": "2b548fdb5bad7ddc"
   },
   "app/dashboard/dashboard.css": {
     "v": "1",
@@ -36,8 +36,8 @@
     "sha": "d5840242432dc134"
   },
   "app/nueva-contrasena/reset.js": {
-    "v": "1",
-    "sha": "26c46c571c65522e"
+    "v": "2",
+    "sha": "7ee41c5ce60175f4"
   },
   "app/onboarding.css": {
     "v": "7",
@@ -65,7 +65,7 @@
   },
   "app/panel/panel.js": {
     "v": "34",
-    "sha": "0edf153ee1f54dc4"
+    "sha": "15e4ae6a60e5df51"
   },
   "app/panel/sections.js": {
     "v": "31",
@@ -84,8 +84,8 @@
     "sha": "643bc4a65b2bd765"
   },
   "app/strings.js": {
-    "v": "25",
-    "sha": "8d5fe5e5751fa5b7"
+    "v": "26",
+    "sha": "c08a25c63534f81b"
   },
   "assets/img/clientes/alamo.svg": {
     "v": "2",
