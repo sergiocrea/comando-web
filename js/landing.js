@@ -75,7 +75,7 @@
   });
 
   /* ---------- métricas: semáforo y contador al entrar ---------- */
-  const NUMBERS = { es: 'es-PE', en: 'en-US', pt: 'pt-BR' }[LANG] || 'es-PE';
+  const NUMBERS = { es: 'es', en: 'en-US', pt: 'pt-BR' }[LANG] || 'es';
   const fmt = (v, dec) => v.toLocaleString(NUMBERS, { minimumFractionDigits: dec, maximumFractionDigits: dec });
   // Un número sin letras no pasa por los catálogos de i18n: se formatea aquí según el idioma de la página («4,8» → «4.8»).
   d.querySelectorAll('[data-num], .metric [data-to]:not(.light)').forEach((el) => {
