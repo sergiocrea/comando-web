@@ -382,7 +382,7 @@
    estado sale una sola vez, junto al número, con luces + palabra (cómo va).
    Así el estado no depende solo del color y la fila no parece un arcoíris. */
 #metricas .lp-lede { color: var(--gt-2); max-width: 40rem; }
-.lp .metric { scroll-snap-align: start; flex: 0 0 18.75rem; background: linear-gradient(180deg, var(--g-850), var(--g-900)); border: 1px solid var(--gl-1); border-radius: 1.25rem; padding: 1.4rem; display: flex; flex-direction: column; min-height: 22rem; box-shadow: 0 1px 0 rgba(243, 241, 234, .05) inset, 0 18px 40px -24px rgba(0, 0, 0, .8); }
+.lp .metric { scroll-snap-align: start; flex: 0 0 18.75rem; background: linear-gradient(180deg, #262624, #1e1e1c); border: 1px solid var(--gl-2); border-radius: 1.25rem; padding: 1.4rem; display: flex; flex-direction: column; min-height: 22rem; box-shadow: 0 1px 0 rgba(243, 241, 234, .05) inset, 0 18px 40px -24px rgba(0, 0, 0, .8); }
 .lp .metric-top { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: .6rem; min-height: 2.1rem; }
 .lp .metric-name { display: inline-flex; align-items: center; padding: .42rem .7rem; border-radius: .5rem; font: 600 .86rem/1.15 "Jetbrainsmono Variable", monospace; letter-spacing: .05em; color: var(--gt-1); text-transform: uppercase; white-space: nowrap; background: rgba(243, 241, 234, .05); border: 1px solid var(--gl-2); }
 .lp .metric-value { font: 600 3rem/1 Neuemachina, "Space Grotesk", sans-serif; letter-spacing: -.04em; color: var(--gt-1); margin: 1.3rem 0 .75rem; font-variant-numeric: tabular-nums; white-space: nowrap; }
@@ -685,7 +685,16 @@ html:not(.js) .lp .attr-step p { display: block; }
 }
 
 /* Atribución va dentro de «Tu equipo»: mismo fondo, sin costura entre las dos. */
-.lp-subsection { margin-top: clamp(4.5rem, 9vw, 7.5rem); scroll-margin-top: calc(var(--nav-height, 5rem) + .5rem); }
+/* Atribución es el cuarto agente: la misma tarjeta que Analista, Estratega y Media Buyer,
+   a todo el ancho y pegada a ellos (mismo hueco que entre tarjetas). */
+.lp-subsection { margin-top: 1.25rem; scroll-margin-top: calc(var(--nav-height, 5rem) + .5rem); background: #fffdf8; border: 1px solid var(--lp-line); border-radius: 1.4rem; padding: clamp(1.3rem, 2.4vw, 1.6rem); box-shadow: 0 24px 50px -40px rgba(21, 21, 21, .35); }
+.lp .attr-head { text-align: left; max-width: none; margin: 0 0 clamp(1.5rem, 3vw, 2.25rem); }
+.lp .attr-agent { display: flex; align-items: center; gap: .9rem; margin-bottom: 1.25rem; }
+.lp .attr-agent .lp-agent-icon { background: #151515; color: #fff; }
+.lp .attr-agent h3 { margin: 0; font-size: 1.75rem; }
+.lp .attr-head h2 { font-size: clamp(1.6rem, 2.6vw, 2.4rem); }
+.lp .attr-head .lp-lede { max-width: 44rem; }
+@media (max-width: 767px) { .lp .attr-agent h3 { font-size: 1.55rem; } }
 /* «Agente de Atribución» destacado: sello en tinta con su icono, como los iconos de los agentes. */
 .lp-eyebrow.is-badge { display: inline-flex; align-items: center; gap: .6rem; padding: .7rem 1.1rem .7rem .8rem; border-radius: 999px; background: #151515; color: #fff; font-size: .85rem; letter-spacing: .12em; box-shadow: 0 14px 30px -18px rgba(21, 21, 21, .6); margin-bottom: 1.75rem !important; }
 .lp-eyebrow.is-badge svg { width: 1.35rem; height: 1.35rem; color: var(--gt-2); }
