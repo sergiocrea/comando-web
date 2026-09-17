@@ -4,8 +4,8 @@
     "sha": "5c5fb97213bddd5f"
   },
   "app/auth.js": {
-    "v": "22",
-    "sha": "c619cc546536652c"
+    "v": "23",
+    "sha": "17f571fc9d4bf771"
   },
   "app/dashboard/dashboard.css": {
     "v": "1",
@@ -60,8 +60,8 @@
     "sha": "a25e840e58819333"
   },
   "app/panel/panel.js": {
-    "v": "33",
-    "sha": "4b9d8163764a8df6"
+    "v": "34",
+    "sha": "da0fe9e56f0eebe1"
   },
   "app/panel/sections.js": {
     "v": "31",
@@ -80,8 +80,64 @@
     "sha": "643bc4a65b2bd765"
   },
   "app/strings.js": {
-    "v": "23",
-    "sha": "e0eb4bd163f3fd22"
+    "v": "24",
+    "sha": "47cbab8bfb151684"
+  },
+  "assets/img/clientes/alamo.svg": {
+    "v": "2",
+    "sha": "afbcbcc064c819ff"
+  },
+  "assets/img/clientes/aws.svg": {
+    "v": "2",
+    "sha": "8a21ac54c325ac3d"
+  },
+  "assets/img/clientes/claro.svg": {
+    "v": "2",
+    "sha": "db6cf266a5fa4ca9"
+  },
+  "assets/img/clientes/domestika.svg": {
+    "v": "2",
+    "sha": "e248dad131867065"
+  },
+  "assets/img/clientes/falabella.svg": {
+    "v": "2",
+    "sha": "f5f6e460c4764a3f"
+  },
+  "assets/img/clientes/ibm.svg": {
+    "v": "2",
+    "sha": "04ccc60c25201666"
+  },
+  "assets/img/clientes/marriott.svg": {
+    "v": "2",
+    "sha": "3db5be145e77ce11"
+  },
+  "assets/img/clientes/miniso.svg": {
+    "v": "2",
+    "sha": "cb365cc43d570b42"
+  },
+  "assets/img/clientes/nestle.svg": {
+    "v": "2",
+    "sha": "b0435af4d2152667"
+  },
+  "assets/img/clientes/planetfitness.png": {
+    "v": "2",
+    "sha": "1de6dd933b07e83a"
+  },
+  "assets/img/clientes/popeyes.svg": {
+    "v": "2",
+    "sha": "965445eccfbae3ba"
+  },
+  "assets/img/clientes/remax.svg": {
+    "v": "2",
+    "sha": "a92e0c18d9c27836"
+  },
+  "assets/img/clientes/ripley.svg": {
+    "v": "2",
+    "sha": "890805833d54c74a"
+  },
+  "assets/img/clientes/wallstreetenglish.png": {
+    "v": "2",
+    "sha": "c28dee41e94baa85"
   },
   "assets/img/og-image.jpg": {
     "v": "4",
@@ -92,8 +148,8 @@
     "sha": "93703f5dfbba06a9"
   },
   "css/hibrida.css": {
-    "v": "8",
-    "sha": "726bfab42cffeba1"
+    "v": "32",
+    "sha": "cf6f11ece9568f46"
   },
   "css/legal.css": {
     "v": "1",
@@ -112,19 +168,19 @@
     "sha": "081a7ada95ca0bf6"
   },
   "js/main.js": {
-    "v": "38",
-    "sha": "bc309a0061a6e8ed"
+    "v": "40",
+    "sha": "6a89517954a7c2ec"
   },
   "js/pricing.js": {
-    "v": "41",
-    "sha": "cd4fbe3e81b7a152"
+    "v": "61",
+    "sha": "d8476d9a6113096e"
   },
   "js/screens.js": {
     "v": "17",
     "sha": "cda2eba6f36bdbdd"
   },
   "js/usecases.js": {
-    "v": "51",
-    "sha": "b4271735574c3033"
+    "v": "53",
+    "sha": "a25158bc223450ac"
   }
 }
