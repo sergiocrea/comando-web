@@ -48,12 +48,12 @@
  * así que el tope real es el de comandos; los reportes con IA descuentan del
  * mismo cupo.
  * TRES PLANES + EMPRESAS (17-sep): Scale (`agencia`) deja de publicarse y Growth
- * absorbe lo suyo —Atribución, reportes personalizados, 2 números de WhatsApp
- * (`whatsappNumbers`)— a US$ 29 (anual 290, lo que ya cobra el motor por
- * `equipo`) con 5 cuentas y 500 comandos. En su lugar va la tarjeta «Empresas»
+ * absorbe lo suyo —Atribución y reportes personalizados— a US$ 29 (anual 290, lo
+ * que ya cobra el motor por `equipo`) con 3 cuentas, 300 comandos y 2 usuarios
+ * (`users`: personas que le escriben a Comando desde su WhatsApp). En su lugar va la tarjeta «Empresas»
  * (`ENTERPRISE`), sin precio: se cotiza con margen ≥ 55 % en el peor caso.
  * Starter: 2 cuentas y 150 comandos. El motor sigue con los cupos y cuentas del
- * catálogo del 15-sep, un solo número por cuenta y `agencia` activo. Gratis incluye Analista y
+ * catálogo del 15-sep, un solo usuario por cuenta y `agencia` activo. Gratis incluye Analista y
  * Estratega con 30 comandos al crear la cuenta, válidas 30 días y sin renovación
  * (`commandsOnceDays`); en el motor el cupo de Gratis todavía se renueva cada mes.
  */
@@ -70,7 +70,7 @@ const PLAN_LADDER = [
   },
   {
     id: 'equipo', code: 'equipo', price: { month: 29, year: 290 }, featured: true, agents: ['analyst', 'strategist', 'mediaBuyer', 'attribution'], reports: ['advanced', 'custom'], metrics: true,
-    adsAccounts: 5, adsRefreshMinutes: 60, commands: 500, whatsappNumbers: 2,
+    adsAccounts: 3, adsRefreshMinutes: 60, commands: 300, users: 2,
     capabilities: { adsRead: true, adsDiagnosis: true, voice: true, mediaBuyer: 'coming_soon', attribution: 'coming_soon', googleAds: 'coming_soon', tiktokAds: true },
   },
 ];
@@ -112,14 +112,14 @@ const PRICING_TEXT = {
     perMonth: '/mes', perYear: (a) => `${a} al año`, recommended: 'Recomendado', soon: 'Próximamente',
     trial: () => 'Empiezas gratis, sin tarjeta',
     talk: 'Habla con nosotros',
-    enterprise: { name: 'Empresas', result: 'A la medida de tu operación', price: 'Hablemos', items: (plan, n) => [`Todo lo de ${plan}`, `Más de ${n} cuentas publicitarias`, 'Comandos y números de WhatsApp a medida', 'Tu CRM y atribución a escala', 'Soporte prioritario'], limits: 'Precio según cuentas y uso' },
+    enterprise: { name: 'Empresas', result: 'A la medida de tu operación', price: 'Hablemos', items: (plan, n) => [`Todo lo de ${plan}`, `Más de ${n} cuentas publicitarias`, 'Comandos y usuarios a medida', 'Tu CRM y atribución a escala', 'Soporte prioritario'], limits: 'Precio según cuentas y uso' },
     caps: { analyst: 'Agente Analista', strategist: 'Agente Estratega', mediaBuyer: 'Agente Media Buyer', attribution: 'Agente de Atribución (CRM)', metrics: 'Métricas & KPIs', metricsBasic: 'básicas', reports: { advanced: 'Reportes Avanzados', custom: 'Reportes Personalizados' } },
     limits: {
       accounts: (n, f) => (n === 1 ? '1 cuenta publicitaria' : `${f(n)} cuentas publicitarias`),
       refresh: (min) => (min >= 1440 ? 'Datos 1 vez al día' : 'Datos cada hora'),
       questions: (n, f) => `${f(n)} comandos al mes`,
       questionsOnce: (n, d, f) => `${f(n)} comandos para empezar (${d} días)`,
-      whatsapp: (n) => `${n} números de WhatsApp`,
+      users: (n) => `${n} usuarios`,
     },
     plans: {
       gratis: { name: 'Gratis', result: 'Pregúntale a tus anuncios', cta: 'Empezar gratis' },
@@ -132,14 +132,14 @@ const PRICING_TEXT = {
     perMonth: '/mo', perYear: (a) => `${a} a year`, recommended: 'Recommended', soon: 'Coming soon',
     trial: () => 'You start free, no card',
     talk: 'Talk to us',
-    enterprise: { name: 'Enterprise', result: 'Built around your operation', price: "Let's talk", items: (plan, n) => [`Everything in ${plan}`, `More than ${n} ad accounts`, 'Commands and WhatsApp numbers to fit', 'Your CRM and attribution at scale', 'Priority support'], limits: 'Priced by accounts and usage' },
+    enterprise: { name: 'Enterprise', result: 'Built around your operation', price: "Let's talk", items: (plan, n) => [`Everything in ${plan}`, `More than ${n} ad accounts`, 'Commands and users to fit', 'Your CRM and attribution at scale', 'Priority support'], limits: 'Priced by accounts and usage' },
     caps: { analyst: 'Analyst Agent', strategist: 'Strategist Agent', mediaBuyer: 'Media Buyer Agent', attribution: 'Attribution Agent (CRM)', metrics: 'Metrics & KPIs', metricsBasic: 'basic', reports: { advanced: 'Advanced Reports', custom: 'Custom Reports' } },
     limits: {
       accounts: (n, f) => (n === 1 ? '1 ad account' : `${f(n)} ad accounts`),
       refresh: (min) => (min >= 1440 ? 'Data once a day' : 'Data every hour'),
       questions: (n, f) => `${f(n)} commands a month`,
       questionsOnce: (n, d, f) => `${f(n)} commands to start (${d} days)`,
-      whatsapp: (n) => `${n} WhatsApp numbers`,
+      users: (n) => `${n} users`,
     },
     plans: {
       gratis: { name: 'Free', result: 'Ask your ads', cta: 'Start free' },
@@ -152,14 +152,14 @@ const PRICING_TEXT = {
     perMonth: '/mês', perYear: (a) => `${a} por ano`, recommended: 'Recomendado', soon: 'Em breve',
     trial: () => 'Você começa grátis, sem cartão',
     talk: 'Fale com a gente',
-    enterprise: { name: 'Empresas', result: 'Sob medida para a sua operação', price: 'A combinar', items: (plan, n) => [`Tudo do ${plan}`, `Mais de ${n} contas de anúncios`, 'Comandos e números de WhatsApp sob medida', 'Seu CRM e atribuição em escala', 'Suporte prioritário'], limits: 'Preço conforme contas e uso' },
+    enterprise: { name: 'Empresas', result: 'Sob medida para a sua operação', price: 'A combinar', items: (plan, n) => [`Tudo do ${plan}`, `Mais de ${n} contas de anúncios`, 'Comandos e usuários sob medida', 'Seu CRM e atribuição em escala', 'Suporte prioritário'], limits: 'Preço conforme contas e uso' },
     caps: { analyst: 'Agente Analista', strategist: 'Agente Estrategista', mediaBuyer: 'Agente Comprador de mídia', attribution: 'Agente de Atribuição (CRM)', metrics: 'Métricas e KPIs', metricsBasic: 'básicas', reports: { advanced: 'Relatórios Avançados', custom: 'Relatórios Personalizados' } },
     limits: {
       accounts: (n, f) => (n === 1 ? '1 conta de anúncios' : `${f(n)} contas de anúncios`),
       refresh: (min) => (min >= 1440 ? 'Dados 1 vez por dia' : 'Dados a cada hora'),
       questions: (n, f) => `${f(n)} comandos por mês`,
       questionsOnce: (n, d, f) => `${f(n)} comandos para começar (${d} dias)`,
-      whatsapp: (n) => `${n} números de WhatsApp`,
+      users: (n) => `${n} usuários`,
     },
     plans: {
       gratis: { name: 'Grátis', result: 'Pergunte aos seus anúncios', cta: 'Começar grátis' },
@@ -207,7 +207,7 @@ const PRICING_TEXT = {
         ${plan.metrics ? `<li>${icon('i-check')}<span>${esc(T.caps.metrics)}${plan.metrics === 'basic' ? `<small class="plan-note">${esc(T.caps.metricsBasic)}</small>` : ''}</span></li>` : ''}
         ${(plan.reports || []).map((r) => `<li>${icon('i-check')}<span>${esc(T.caps.reports[r])}</span></li>`).join('')}
       </ul>
-      <p class="plan-limits">${esc(T.limits.accounts(plan.adsAccounts, int))}<br />${esc(T.limits.refresh(plan.adsRefreshMinutes))}<br />${esc(plan.commandsOnceDays ? T.limits.questionsOnce(plan.commands, plan.commandsOnceDays, int) : T.limits.questions(plan.commands, int))}${plan.whatsappNumbers > 1 ? `<br />${esc(T.limits.whatsapp(plan.whatsappNumbers))}` : ''}</p>
+      <p class="plan-limits">${esc(T.limits.accounts(plan.adsAccounts, int))}<br />${esc(T.limits.refresh(plan.adsRefreshMinutes))}<br />${esc(plan.commandsOnceDays ? T.limits.questionsOnce(plan.commands, plan.commandsOnceDays, int) : T.limits.questions(plan.commands, int))}${plan.users > 1 ? `<br />${esc(T.limits.users(plan.users))}` : ''}</p>
       <a class="btn btn-dark" href="${href}">${esc(words.cta)}</a>
     </article>`;
   }
