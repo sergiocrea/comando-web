@@ -129,7 +129,7 @@ const PRICING_TEXT = {
     },
     plans: {
       gratis: { name: 'Gratis', result: 'Entiende cómo van tus anuncios', cta: 'Empezar gratis' },
-      analista: { name: 'Esencial', result: 'Decide y aplica los cambios por WhatsApp', cta: 'Elegir Esencial' },
+      analista: { name: 'Esencial', result: 'Decide y aplica los cambios al instante', cta: 'Elegir Esencial' },
       equipo: { name: 'Comando Pro', result: 'Mide ventas reales y trae más compradores', cta: 'Elegir Comando Pro' },
     },
   },
@@ -147,7 +147,7 @@ const PRICING_TEXT = {
     },
     plans: {
       gratis: { name: 'Free', result: 'Understand how your ads are doing', cta: 'Start free' },
-      analista: { name: 'Essential', result: 'Decide and apply changes on WhatsApp', cta: 'Choose Essential' },
+      analista: { name: 'Essential', result: 'Decide and apply changes instantly', cta: 'Choose Essential' },
       equipo: { name: 'Comando Pro', result: 'Measure real sales and bring more buyers', cta: 'Choose Comando Pro' },
     },
   },
@@ -165,7 +165,7 @@ const PRICING_TEXT = {
     },
     plans: {
       gratis: { name: 'Grátis', result: 'Entenda como vão seus anúncios', cta: 'Começar grátis' },
-      analista: { name: 'Essencial', result: 'Decida e aplique mudanças no WhatsApp', cta: 'Escolher Essencial' },
+      analista: { name: 'Essencial', result: 'Decida e aplique mudanças na hora', cta: 'Escolher Essencial' },
       equipo: { name: 'Comando Pro', result: 'Meça vendas reais e traga mais compradores', cta: 'Escolher Comando Pro' },
     },
   },
