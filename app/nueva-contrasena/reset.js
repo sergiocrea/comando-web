@@ -3,8 +3,8 @@
      POST /v1/auth/password/reset { token, password }
    Al guardar, el motor invalida el token y las sesiones abiertas, así que se
    vuelve a /app/ para entrar con la contraseña nueva. Sin build. */
-import '../strings.js?v=25';
-import { initLocale, mountLanguagePicker, onLocaleChange, t } from '../i18n.js?v=1';
+import '/app/strings.js?v=25';
+import { initLocale, mountLanguagePicker, onLocaleChange, t } from '/app/i18n.js?v=1';
 
 initLocale();
 
@@ -50,7 +50,7 @@ function paint() {
       if (res.ok && data && data.ok) {
         $('reset-form').hidden = true;
         ok(t('auth.passwordSaved'));
-        setTimeout(() => location.replace('../'), 1800);
+        setTimeout(() => location.replace('/app'), 1800);
         return;
       }
       err(data && data.error === 'password_debil' ? t('auth.weak') : t('auth.tokenBad'));

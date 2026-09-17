@@ -1,0 +1,5 @@
+# Cloudflare Pages. /app sirve el acceso SIN barra final (17-sep): la página
+# vive en app/index.html y aquí se reescribe (200, no redirección) para que la
+# URL que ve el cliente sea comando.pro/app. Por eso app/index.html usa rutas
+# absolutas: con /app las relativas se resolverían contra la raíz.
+/app  /app/index.html  200

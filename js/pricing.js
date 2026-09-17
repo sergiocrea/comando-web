@@ -107,7 +107,7 @@ const ENTERPRISE = { from: 'equipo' };
 
 const PRICING_CONFIG = {
   annualMonths: 10,           // anual = 10 meses: 2 gratis
-  signup: '/app/',
+  signup: '/app',
   // Plan Empresas (más que el plan mayor): sin formulario. No hay número de WhatsApp de ventas publicado; correo del sitio.
   contact: 'mailto:hola@comando.pro?subject=Plan%20personalizado',
 };

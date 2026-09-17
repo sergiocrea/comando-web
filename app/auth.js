@@ -1,4 +1,4 @@
-/* Acceso a Comando (/app/): correo y contraseña contra el motor, y pasar al panel.
+/* Acceso a Comando (/app): correo y contraseña contra el motor, y pasar al panel.
    Los pasos siguientes (vincular WhatsApp, conectar Meta Ads) viven dentro de /app/panel/.
 
    Desde el 17-sep no se usa Clerk: Sergio crea la cuenta y manda por correo el
@@ -8,8 +8,8 @@
      POST /v1/auth/password/forgot  { email } → siempre 202
    La contraseña nueva se pone en /app/nueva-contrasena/ con el token del correo.
    Sin build. */
-import './strings.js?v=25';
-import { initLocale, mountLanguagePicker, onLocaleChange, t } from './i18n.js?v=1';
+import '/app/strings.js?v=25';
+import { initLocale, mountLanguagePicker, onLocaleChange, t } from '/app/i18n.js?v=1';
 
 initLocale();
 
@@ -23,8 +23,8 @@ function paint() {
   const terms = document.getElementById('auth-terms');
   if (terms) {
     terms.innerHTML = t('auth.foot', {
-      terms: `<a href="../terminos.html">${t('auth.terms')}</a>`,
-      privacy: `<a href="../privacidad.html">${t('auth.privacy')}</a>`,
+      terms: `<a href="/terminos.html">${t('auth.terms')}</a>`,
+      privacy: `<a href="/privacidad.html">${t('auth.privacy')}</a>`,
     });
   }
 }
@@ -36,7 +36,7 @@ function paint() {
   const params = new URLSearchParams(location.search);
   const plan = params.get('plan');
   const interval = params.get('interval');
-  const dest = new URL('panel/', location.href);
+  const dest = new URL('/app/panel/', location.href);
   if (plan) dest.searchParams.set('plan', plan);
   if (plan && interval) dest.searchParams.set('interval', interval);
 
