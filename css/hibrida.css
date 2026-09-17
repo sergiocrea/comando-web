@@ -579,10 +579,13 @@ html:not(.js) .lp .slider-btns { display: none; }
 
 /* ---------- atribución (17-sep): animación 2D en cuatro pasos (js/atribucion.js) ---------- */
 .lp .attr { display: grid; grid-template-columns: minmax(0, 1.65fr) minmax(0, 1fr); gap: clamp(1.5rem, 3vw, 2.75rem); align-items: start; }
-.lp .attr-stage { position: relative; width: 100%; aspect-ratio: 1000 / 500; border-radius: 1.5rem; overflow: hidden; color: #fff;
+/* La caja oscura envuelve la animación y su leyenda al pie. */
+.lp .attr-box { border-radius: 1.5rem; overflow: hidden; color: #fff;
   background-color: var(--g-950);
   background-image: linear-gradient(var(--gl-grid) 1px, transparent 1px), linear-gradient(90deg, var(--gl-grid) 1px, transparent 1px);
   background-size: 28px 28px, 28px 28px; box-shadow: 0 40px 80px -50px rgba(21, 21, 21, .55); }
+.lp .attr-stage { position: relative; width: 100%; aspect-ratio: 1000 / 500; }
+.lp .attr-legend { margin: 0 !important; padding: 0 clamp(1rem, 2.4vw, 1.75rem) clamp(1rem, 2vw, 1.4rem); font-size: .82rem; line-height: 1.45; color: var(--gt-3); text-wrap: pretty; }
 .lp .attr-svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; }
 .lp .attr-card, .lp .attr-hub, .lp .attr-chip { position: absolute; box-sizing: border-box; }
 .lp .attr-card { background: var(--g-850); border: 1px solid var(--gl-1); border-radius: 1rem; padding: clamp(.6rem, 1.4vw, 1rem); display: flex; flex-direction: column; gap: .6rem; transition: border-color .5s, box-shadow .5s; }
@@ -655,7 +658,9 @@ html:not(.js) .lp .attr-step p { display: block; }
 /* Móvil: el escenario va en vertical (lo decide el JS con la misma consulta) y la
    lista enseña solo el paso activo con su texto. */
 @media (max-width: 767px) {
-  .lp .attr-stage { aspect-ratio: 360 / 510; max-width: 26rem; margin: 0 auto; border-radius: 1.25rem; }
+  .lp .attr-stage { aspect-ratio: 360 / 510; }
+  .lp .attr-box { max-width: 26rem; margin: 0 auto; border-radius: 1.25rem; }
+  .lp .attr-legend { font-size: .76rem; }
   .lp .attr.is-tall .attr-card { flex-direction: row; flex-wrap: wrap; align-items: center; }
   .lp .attr.is-tall .attr-ad { flex: 0 0 44%; align-self: stretch; }
   .lp .attr.is-tall .attr-ad-img { padding: .45rem .55rem; }
