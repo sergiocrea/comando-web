@@ -658,7 +658,7 @@ html:not(.js) .lp .attr-step p { display: block; }
 /* Móvil: el escenario va en vertical (lo decide el JS con la misma consulta) y la
    lista enseña solo el paso activo con su texto. */
 @media (max-width: 767px) {
-  .lp .attr-stage { aspect-ratio: 360 / 490; }
+  .lp .attr-stage { aspect-ratio: 360 / 500; }
   .lp .attr-box { max-width: 26rem; margin: 0 auto; border-radius: 1.25rem; }
   .lp .attr-legend { font-size: .76rem; }
   .lp .attr.is-tall .attr-card { flex-direction: row; flex-wrap: wrap; align-items: center; }
