@@ -2341,16 +2341,19 @@ html { scroll-behavior: smooth; }
 /* Móvil y tableta: las tres plataformas van ARRIBA del teléfono, un 30 % más
    pequeñas, y sus rieles bajan hacia el aparato. */
 @media (max-width: 991px) {
-  .section_metaads .uc-layout { grid-template-areas: "feed timeline" "phone timeline"; }
-  .section_metaads .uc-ads { margin: 0 0 3.2rem; }
+  .section_metaads .uc-layout { grid-template-areas: "feed ." "phone timeline"; }
+  .section_metaads .uc-ads { margin: 1.75rem 0 2.4rem; position: relative; z-index: 1; }
+  .section_metaads .uc-phone { position: relative; z-index: 2; }
   .section_metaads .uc-ads-cards { max-width: 16rem; gap: .45rem; }
   .section_metaads .uc-ads-cards li { padding: .7rem .45rem; gap: .38rem; border-radius: .6rem; }
   .section_metaads .uc-ads-cards .uc-feed-logo { width: 1.47rem; height: 1.47rem; }
   .section_metaads .uc-ads-cards span { font-size: clamp(.42rem, 1.7vw, .48rem); }
-  .section_metaads .uc-wire-card { top: 100%; bottom: auto; height: 3rem; transform-origin: 50% 0; animation-name: uc-flow-card-down; }
+  .section_metaads .uc-wire-card { top: 100%; bottom: auto; height: 4.4rem; transform-origin: 50% 0; animation-name: uc-flow-card-down; }
   .section_metaads .uc-ads-cards li:nth-child(1) .uc-wire-card { transform: rotate(-20deg); }
   .section_metaads .uc-ads-cards li:nth-child(3) .uc-wire-card { transform: rotate(20deg); }
-  .section_metaads .uc-timeline { padding-top: 7.5rem; }
+  /* La línea de tiempo va solo junto al teléfono, centrada a su altura. */
+  .section_metaads .uc-timeline { padding-top: 0; align-self: center; }
+  .section_metaads .uc-timeline li { padding-bottom: 2.6rem; }
   .section_metaads .uc-ads-cards .uc-soon { font-size: .4rem; letter-spacing: .03em; margin-top: 0; }
 }
 @keyframes uc-flow-card-down { to { background-position: 0 19px; } }
