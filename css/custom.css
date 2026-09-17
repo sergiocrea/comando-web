@@ -1873,8 +1873,8 @@ html { scroll-behavior: smooth; }
      sólido, reservado a la acción (botón) y a lo activo o a lo que dice Comando
      (tarjeta y punto activos, aviso de las 7:30). Sin halos ni lavanda. */
   --g-950: #0c0c0b; --g-900: #141413; --g-850: #1a1a18; --g-700: #3a3935; --g-600: #75726b;
-  --gl-grid: rgba(243, 241, 234, .035); --gl-1: rgba(243, 241, 234, .10); --gl-2: rgba(243, 241, 234, .18); --gl-3: rgba(243, 241, 234, .30);
-  --gt-1: #f5f4ef; --gt-2: #c9c6bd; --gt-3: #9a978f;
+  --gl-grid: rgba(243, 241, 234, .035); --gl-1: rgba(243, 241, 234, .16); --gl-2: rgba(243, 241, 234, .28); --gl-3: rgba(243, 241, 234, .50);
+  --gt-1: #fbfaf6; --gt-2: #e2dfd7; --gt-3: #b9b6ae;
   --accent: #315fef; --accent-ring: rgba(49, 95, 239, .30);
   --uc-rail: rgba(243, 241, 234, .34); --uc-rail-glow: none;
   color: var(--gt-1);
