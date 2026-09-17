@@ -704,7 +704,11 @@ html:not(.js) .lp .attr-step p { display: block; }
     background-size: 40px 40px; background-position: center top;
   }
   .b2b-hero-media, .b2b-hero-glow { display: none; }
-  .b2b-hero-padding { justify-content: center; padding-top: calc(var(--nav-height, 5rem) + 2.5rem); padding-bottom: 2.5rem; }
+  /* La franja de logos entra en la primera pantalla: el vídeo toma el alto que queda
+     (pantalla − menú − márgenes − franja ≈ 15,5 rem), entre 20 y 42 rem. Si la pantalla
+     es más baja que eso, la franja queda debajo y no pasa nada. */
+  .b2b-hero { --hero-media-h: clamp(20rem, calc(100svh - var(--nav-height, 5rem) - 15.5rem), 42rem); }
+  .b2b-hero-padding { justify-content: center; padding-top: calc(var(--nav-height, 5rem) + 1.5rem); padding-bottom: 1.5rem; }
   .b2b-hero-grid.is-short { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: center; gap: clamp(2rem, 4vw, 4rem); }
   /* Sin tarjeta (17-sep, tarde): una caja clara al lado del marco del vídeo eran dos
      rectángulos compitiendo. El copy va directo sobre la cuadrícula, más grande. */
@@ -714,7 +718,7 @@ html:not(.js) .lp .attr-step p { display: block; }
   .b2b-hero-grid.is-short .b2b-hero-lede { max-width: 30rem; font-size: clamp(1.05rem, 1.3vw, 1.25rem); }
   .b2b-hero-grid.is-short .b2b-hero-visual { position: relative; width: 100%; margin: 0; padding: 0; display: flex; justify-content: flex-end; align-items: flex-end; }
   .hero-video {
-    display: block; position: relative; flex: none; width: min(60%, calc(min(70svh, 42rem) * 10 / 16)); aspect-ratio: 10 / 16;
+    display: block; position: relative; flex: none; width: min(60%, calc(var(--hero-media-h) * 10 / 16)); aspect-ratio: 10 / 16;
     border-radius: 1.75rem; overflow: hidden; background: #d9d6cc url("../assets/img/benefits-superpowers-poster-v5-mobile.jpg") center 30% / cover no-repeat;
     box-shadow: 0 50px 90px -50px rgba(21, 21, 21, .6);
   }
