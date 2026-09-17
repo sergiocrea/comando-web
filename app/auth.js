@@ -1,8 +1,15 @@
-/* Acceso a Comando (/app/): iniciar sesión o crear cuenta con Clerk y pasar al panel.
+/* Acceso a Comando (/app/): correo y contraseña contra el motor, y pasar al panel.
    Los pasos siguientes (vincular WhatsApp, conectar Meta Ads) viven dentro de /app/panel/.
-   Sin build: ClerkJS se carga desde el Frontend API de la instancia. */
-import './strings.js?v=24';
-import { initLocale, mountLanguagePicker, onLocaleChange, locale, t } from './i18n.js?v=1';
+
+   Desde el 17-sep no se usa Clerk: Sergio crea la cuenta y manda por correo el
+   usuario y una contraseña temporal, así que esta pantalla solo entra (no
+   registra). Contrato del motor:
+     POST /v1/auth/login            { email, password } → cookie de sesión
+     POST /v1/auth/password/forgot  { email } → siempre 202
+   La contraseña nueva se pone en /app/nueva-contrasena/ con el token del correo.
+   Sin build. */
+import './strings.js?v=25';
+import { initLocale, mountLanguagePicker, onLocaleChange, t } from './i18n.js?v=1';
 
 initLocale();
 
@@ -22,118 +29,111 @@ function paint() {
   }
 }
 
-/**
- * Cuántos comandos regala el plan gratis y cuántos días dura la prueba, según
- * el catálogo publicado.
- *
- * El número estaba escrito en el diccionario, en tres idiomas. Coincidía con la
- * base, pero el día que se cambie el plan la pantalla de registro seguiría
- * prometiendo lo de antes, y una promesa comercial equivocada es la peor clase
- * de dato en duro. `GET /v1/public/plans` sirve la misma vista que manda en el
- * cobro, es pública y viene cacheada cinco minutos.
- *
- * Si no llega, NO se inventa un número: el subtítulo se queda sin cifra. Y no
- * se espera indefinidamente: esto va en paralelo con la carga de ClerkJS, así
- * que en la práctica no añade espera, pero si el motor no contesta la pantalla
- * de acceso no se queda colgada por un adorno.
- */
-async function freePlanOffer(engineUrl) {
-  if (!engineUrl) return null;
-  try {
-    const ctl = new AbortController();
-    const timer = setTimeout(() => ctl.abort(), 2500);
-    const res = await fetch(String(engineUrl).replace(/\/$/, '') + '/v1/public/plans', { signal: ctl.signal });
-    clearTimeout(timer);
-    if (!res.ok) return null;
-    const plans = (await res.json()).plans || [];
-    const free = plans.find((x) => x.code === 'free' || x.code === 'gratis');
-    if (!free) return null;
-    const commands = free.limits?.commands?.limit ?? free.commandLimit;
-    const days = free.trial?.days;
-    return typeof commands === 'number' && typeof days === 'number' && days > 0 ? { commands, days } : null;
-  } catch (e) { return null; }
-}
-
 (function () {
-  const cfg = window.COMANDO_CONFIG;
+  const cfg = window.COMANDO_CONFIG || {};
+  const api = String(cfg.engineUrl || '').replace(/\/$/, '');
   const $ = (id) => document.getElementById(id);
   const params = new URLSearchParams(location.search);
   const plan = params.get('plan');
   const interval = params.get('interval');
-  const mode = params.get('mode') || (plan ? 'signup' : 'signin');
   const dest = new URL('panel/', location.href);
   if (plan) dest.searchParams.set('plan', plan);
   if (plan && interval) dest.searchParams.set('interval', interval);
-  const planQ = plan ? '&plan=' + encodeURIComponent(plan) + (interval ? '&interval=' + encodeURIComponent(interval) : '') : '';
 
-  function fatal(msg) { const el = $('auth-error'); el.textContent = msg; el.hidden = false; $('auth-loading').hidden = true; }
+  const err = (msg) => { const el = $('auth-error'); el.textContent = msg || ''; el.hidden = !msg; };
+  const ok = (msg) => { const el = $('auth-ok'); el.textContent = msg || ''; el.hidden = !msg; };
 
-  async function boot() {
-    try {
-      const s = document.createElement('script');
-      s.src = 'https://' + cfg.clerkFrontendApi + '/npm/@clerk/clerk-js@5/dist/clerk.browser.js';
-      s.setAttribute('data-clerk-publishable-key', cfg.clerkPublishableKey);
-      s.async = true; s.crossOrigin = 'anonymous';
-      // Las dos peticiones van juntas: el catálogo no le suma espera a nadie.
-      const [, offer] = await Promise.all([
-        new Promise((res, rej) => { s.onload = res; s.onerror = () => rej(new Error(t('auth.loadFailed'))); document.head.appendChild(s); }),
-        freePlanOffer(cfg.engineUrl),
-      ]);
-      const signUpSub = () => (offer == null ? t('clerk.signUpSubNoLimit') : t('clerk.signUpSub', { n: offer.commands, d: offer.days }));
-      const clerk = window.Clerk;
-      const emailCode = () => ({
-        title: t('clerk.checkEmail'), subtitle: t('clerk.codeSent'),
-        formTitle: t('clerk.codeTitle'), formSubtitle: t('clerk.codeSub'), resendButton: t('clerk.resend'),
-      });
-      await clerk.load({
-        localization: {
-          locale: { es: 'es-ES', en: 'en-US', pt: 'pt-BR' }[locale()] || 'es-ES',
-          socialButtonsBlockButton: t('clerk.social'),
-          dividerText: t('clerk.or'),
-          formButtonPrimary: t('clerk.continue'),
-          formFieldLabel__emailAddress: t('clerk.email'),
-          formFieldInputPlaceholder__emailAddress: t('clerk.emailPlaceholder'),
-          formFieldLabel__firstName: t('clerk.firstName'),
-          formFieldLabel__lastName: t('clerk.lastName'),
-          formFieldInputPlaceholder__firstName: t('clerk.firstName'),
-          formFieldInputPlaceholder__lastName: t('clerk.lastName'),
-          formFieldHintText__optional: t('clerk.optional'),
-          formFieldLabel__emailAddress_username: t('clerk.emailShort'),
-          backButton: t('clerk.back'),
-          signUp: {
-            start: { title: t('clerk.signUpTitle'), subtitle: signUpSub(), actionText: t('clerk.haveAccount'), actionLink: t('clerk.signInLink') },
-            emailCode: emailCode(),
-            continue: { title: t('clerk.completeData'), subtitle: t('clerk.completeSub') },
-          },
-          signIn: {
-            start: { title: t('clerk.signInTitle'), subtitle: t('clerk.signInSub'), actionText: t('clerk.noAccount'), actionLink: t('clerk.signUpLink') },
-            emailCode: emailCode(),
-          },
-        },
-      });
-      if (clerk.user) { location.replace(dest.href); return; }
-      $('auth-loading').hidden = true;
-      const appearance = {
-        variables: { colorPrimary: '#00A76F', colorBackground: '#ffffff', colorText: '#1C252E', colorTextSecondary: '#637381', colorInputBackground: '#ffffff', colorInputText: '#1C252E', borderRadius: '8px', fontFamily: '"Public Sans", Inter, system-ui, sans-serif' },
-        elements: {
-          rootBox: { width: '100%' }, cardBox: { width: '100%', maxWidth: '100%', boxShadow: 'none' }, card: { width: '100%', maxWidth: '100%', padding: '0', boxShadow: 'none', border: '0' },
-          headerTitle: { fontSize: '26px', fontWeight: 700 }, headerSubtitle: { color: '#637381' },
-          socialButtonsBlockButton: { border: '1px solid rgba(145,158,171,.32)', fontWeight: 600, height: '44px' },
-          formFieldInput: { height: '44px', borderColor: 'rgba(145,158,171,.32)' },
-          formButtonPrimary: { backgroundColor: '#00A76F', fontWeight: 700, textTransform: 'none', fontSize: '15px', height: '46px', boxShadow: 'none', '&:hover': { backgroundColor: '#007867' } },
-          footerActionLink: { color: '#007867', fontWeight: 600 },
-          footer: { background: 'transparent' }, footerAction: { background: 'transparent' },
-        },
-      };
-      const common = { appearance, forceRedirectUrl: dest.href, signInUrl: './?mode=signin' + planQ, signUpUrl: './?mode=signup' + planQ };
-      if (mode === 'signup') clerk.mountSignUp($('clerk-root'), common); else clerk.mountSignIn($('clerk-root'), common);
-      clerk.addListener(({ user }) => { if (user) location.replace(dest.href); });
-    } catch (e) { fatal(e.message); }
+  /** Un POST de JSON al motor, con la cookie de sesión. */
+  async function post(path, body) {
+    const res = await fetch(api + path, {
+      method: 'POST',
+      credentials: 'include',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify(body),
+    });
+    let data = null;
+    try { data = await res.json(); } catch (e) { data = null; }
+    return { status: res.status, data };
   }
-  // El formulario de Clerk se monta con su idioma dentro: cambiarlo recarga la
-  // página, que es lo único que garantiza que su copia también cambie.
-  mountLanguagePicker(document.getElementById('lang-host'), { compact: true, onChange: () => location.reload() });
+
+  /** El mensaje que ve quien no pudo entrar. El motor no dice si el correo existe. */
+  function loginError(status, data) {
+    if (status === 429) return t('auth.tooMany');
+    if (status === 401 || (data && data.error === 'credenciales')) return t('auth.badCreds');
+    return t('auth.netFail');
+  }
+
+  function busy(button, on, labelKey) {
+    button.disabled = on;
+    button.textContent = t(on ? labelKey : button.dataset.i18n);
+  }
+
+  // Ver u ocultar la contraseña: quien la recibe por correo la copia a mano.
+  $('login-eye').addEventListener('click', () => {
+    const input = $('login-password');
+    const shown = input.type === 'text';
+    input.type = shown ? 'password' : 'text';
+    const eye = $('login-eye');
+    eye.dataset.i18n = shown ? 'auth.show' : 'auth.hide';
+    eye.textContent = t(eye.dataset.i18n);
+    input.focus();
+  });
+
+  $('login-form').addEventListener('submit', async (ev) => {
+    ev.preventDefault();
+    err(''); ok('');
+    const email = $('login-email').value.trim();
+    const password = $('login-password').value;
+    if (!email || !password) { err(t('auth.missing')); return; }
+    const button = $('login-submit');
+    busy(button, true, 'auth.entering');
+    try {
+      const { status, data } = await post('/v1/auth/login', { email, password });
+      if (status === 200 && data && data.ok) {
+        // Con contraseña temporal, el panel pide cambiarla antes de seguir.
+        if (data.user && data.user.mustChangePassword) dest.searchParams.set('cambiar', '1');
+        location.replace(dest.href);
+        return;
+      }
+      err(loginError(status, data));
+    } catch (e) {
+      err(t('auth.netFail'));
+    }
+    busy(button, false);
+  });
+
+  const show = (which) => {
+    $('login-form').hidden = which !== 'login';
+    $('forgot-form').hidden = which !== 'forgot';
+    err(''); ok('');
+    ($(which === 'login' ? 'login-email' : 'forgot-email')).focus();
+  };
+  $('forgot-open').addEventListener('click', () => {
+    $('forgot-email').value = $('login-email').value.trim();
+    show('forgot');
+  });
+  $('forgot-back').addEventListener('click', () => show('login'));
+
+  $('forgot-form').addEventListener('submit', async (ev) => {
+    ev.preventDefault();
+    err(''); ok('');
+    const email = $('forgot-email').value.trim();
+    if (!email) { err(t('auth.missing')); return; }
+    const button = $('forgot-submit');
+    busy(button, true, 'auth.sending');
+    try {
+      const { status } = await post('/v1/auth/password/forgot', { email });
+      // 202 siempre que el motor recibió la petición: no revela si el correo existe.
+      if (status === 202 || status === 200) ok(t('auth.forgotSent'));
+      else err(status === 429 ? t('auth.tooMany') : t('auth.netFail'));
+    } catch (e) {
+      err(t('auth.netFail'));
+    }
+    busy(button, false);
+  });
+
+  mountLanguagePicker(document.getElementById('lang-host'), { compact: true });
   paint();
   onLocaleChange(paint);
-  boot();
+  $('login-email').focus();
 })();

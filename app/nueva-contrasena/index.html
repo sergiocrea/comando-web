@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title data-i18n="auth.newTitle">Comando — Contraseña nueva</title>
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#ffffff">
+<link rel="icon" href="../../assets/img/favicon-32.png?v=2">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@700&display=swap" rel="stylesheet">
+<link href="../auth.css?v=4" rel="stylesheet">
+<script>
+  window.COMANDO_CONFIG = { engineUrl: 'https://app.comando.pro/api' };
+</script>
+</head>
+<body>
+<div class="auth">
+  <main class="auth-main">
+    <div class="auth-brand">
+      <a class="cmd-wordmark" href="../../" aria-label="Comando"><span aria-hidden="true">comand</span><span class="cmd-o" aria-hidden="true"></span></a>
+      <div class="auth-brand-right"><div id="lang-host"></div><a class="back" href="../" data-i18n="auth.toLogin">← Entrar</a></div>
+    </div>
+    <div class="auth-box">
+      <form class="auth-form" id="reset-form" novalidate>
+        <h1 class="auth-form-title" data-i18n="auth.newTitle">Contraseña nueva</h1>
+        <p class="auth-form-sub" data-i18n="auth.newSub">Elige una contraseña de al menos 10 caracteres.</p>
+        <label class="auth-label" for="p1" data-i18n="auth.newPassword">Contraseña nueva</label>
+        <div class="auth-pass">
+          <input class="auth-input" id="p1" type="password" autocomplete="new-password" minlength="10" required />
+          <button class="auth-eye" id="eye" type="button" data-i18n="auth.show" aria-controls="p1">Ver</button>
+        </div>
+        <label class="auth-label" for="p2" data-i18n="auth.repeatPassword">Repítela</label>
+        <input class="auth-input" id="p2" type="password" autocomplete="new-password" minlength="10" required />
+        <button class="auth-submit" id="reset-submit" type="submit" data-i18n="auth.savePassword">Guardar contraseña</button>
+      </form>
+      <p id="auth-ok" class="auth-ok" role="status" hidden></p>
+      <p id="auth-error" class="auth-error" role="alert" hidden></p>
+    </div>
+  </main>
+</div>
+<script type="module" src="reset.js?v=1"></script>
+</body>
+</html>

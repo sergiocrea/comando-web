@@ -9,14 +9,11 @@
 <link rel="icon" href="../assets/img/favicon-32.png?v=2">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@700&display=swap" rel="stylesheet">
-<link href="auth.css?v=3" rel="stylesheet">
-<!-- Config publica: la clave publishable de Clerk NO es secreta -->
+<link href="auth.css?v=4" rel="stylesheet">
+<!-- Config publica. Desde el 17-sep el acceso es correo + contrasena contra el
+     motor (/v1/auth/*): ya no se carga Clerk. -->
 <script>
   window.COMANDO_CONFIG = {
-    clerkPublishableKey: 'pk_test_cmVsYXhpbmctZm94LTQ3Ni5jbGVyay5hY2NvdW50cy5kZXYk',
-    clerkFrontendApi: 'relaxing-fox-476.clerk.accounts.dev',
-    // Para leer el catalogo publico de planes (sin auth): el limite del plan
-    // gratis que anuncia el registro sale de ahi, no de una constante.
     engineUrl: 'https://app.comando.pro/api',
   };
 </script>
@@ -52,14 +49,34 @@
       <div class="auth-brand-right"><div id="lang-host"></div><a class="back" href="../">← comando.pro</a></div>
     </div>
     <div class="auth-box">
-      <p class="auth-loading" id="auth-loading"><span class="spinner"></span> <span data-i18n="common.loading">Cargando…</span></p>
-      <div id="clerk-root"></div>
+      <form class="auth-form" id="login-form" novalidate>
+        <h1 class="auth-form-title" data-i18n="auth.formTitle">Entra a Comando</h1>
+        <p class="auth-form-sub" data-i18n="auth.formSub">Con el correo y la contraseña que te enviamos.</p>
+        <label class="auth-label" for="login-email" data-i18n="auth.email">Correo</label>
+        <input class="auth-input" id="login-email" name="email" type="email" autocomplete="username" inputmode="email" required />
+        <label class="auth-label" for="login-password" data-i18n="auth.password">Contraseña</label>
+        <div class="auth-pass">
+          <input class="auth-input" id="login-password" name="password" type="password" autocomplete="current-password" required />
+          <button class="auth-eye" id="login-eye" type="button" data-i18n="auth.show" aria-controls="login-password">Ver</button>
+        </div>
+        <button class="auth-submit" id="login-submit" type="submit" data-i18n="auth.enter">Entrar</button>
+        <button class="auth-link" id="forgot-open" type="button" data-i18n="auth.forgot">¿Olvidaste tu contraseña?</button>
+      </form>
+      <form class="auth-form" id="forgot-form" novalidate hidden>
+        <h1 class="auth-form-title" data-i18n="auth.forgotTitle">Recupera tu contraseña</h1>
+        <p class="auth-form-sub" data-i18n="auth.forgotSub">Escribe tu correo y te enviamos un enlace para crear una nueva.</p>
+        <label class="auth-label" for="forgot-email" data-i18n="auth.email">Correo</label>
+        <input class="auth-input" id="forgot-email" name="email" type="email" autocomplete="username" inputmode="email" required />
+        <button class="auth-submit" id="forgot-submit" type="submit" data-i18n="auth.sendLink">Enviar enlace</button>
+        <button class="auth-link" id="forgot-back" type="button" data-i18n="auth.back">Volver</button>
+      </form>
+      <p id="auth-ok" class="auth-ok" role="status" hidden></p>
       <p id="auth-error" class="auth-error" role="alert" hidden></p>
       <p class="auth-foot" id="auth-terms">Al continuar aceptas los <a href="../terminos.html">términos</a> y la <a href="../privacidad.html">política de privacidad</a>. Después vinculas tu WhatsApp y, si quieres, tu CRM.</p>
     </div>
   </main>
 </div>
 <script src="../js/screens.js"></script>
-<script type="module" src="auth.js?v=23"></script>
+<script type="module" src="auth.js?v=24"></script>
 </body>
 </html>

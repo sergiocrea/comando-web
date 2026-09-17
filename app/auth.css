@@ -82,3 +82,20 @@ a { color: var(--primary-dark); }
 }
 .lang-picker select:hover { border-color: #1C252E; }
 .lang-picker select:focus-visible { outline: 2px solid #1C252E; outline-offset: 1px; }
+
+/* Formulario de correo y contraseña (17-sep, en lugar de Clerk). */
+.auth-form { display: grid; gap: 0; }
+.auth-form-title { font-size: 26px; font-weight: 700; line-height: 1.2; margin: 0 0 6px; color: var(--g900); }
+.auth-form-sub { color: var(--g600); font-size: 14.5px; line-height: 1.5; margin: 0 0 22px; }
+.auth-label { font-size: 13px; font-weight: 600; color: var(--g900); margin-bottom: 6px; }
+.auth-input { width: 100%; box-sizing: border-box; height: 46px; padding: 0 12px; font: 400 15px/1 "Public Sans", Inter, system-ui, sans-serif; color: var(--g900); background: #fff; border: 1px solid rgba(145, 158, 171, .32); border-radius: 8px; margin-bottom: 16px; }
+.auth-input:focus-visible { outline: 2px solid var(--primary, #00A76F); outline-offset: 1px; border-color: transparent; }
+.auth-pass { position: relative; }
+.auth-eye { position: absolute; right: 8px; top: 8px; height: 30px; padding: 0 10px; border: 0; border-radius: 6px; background: transparent; color: var(--g600); font: 600 13px/1 "Public Sans", Inter, system-ui, sans-serif; cursor: pointer; }
+.auth-eye:hover { color: var(--g900); background: #F4F6F8; }
+.auth-submit { height: 46px; margin-top: 4px; border: 0; border-radius: 8px; background: var(--primary, #00A76F); color: #fff; font: 700 15px/1 "Public Sans", Inter, system-ui, sans-serif; cursor: pointer; }
+.auth-submit:hover { background: #007867; }
+.auth-submit[disabled] { opacity: .6; cursor: default; }
+.auth-link { justify-self: start; margin-top: 14px; padding: 0; border: 0; background: none; color: #007867; font: 600 14px/1 "Public Sans", Inter, system-ui, sans-serif; cursor: pointer; }
+.auth-link:hover { text-decoration: underline; }
+.auth-ok { color: #007867; font-size: 14px; margin: 12px 0 0; }
