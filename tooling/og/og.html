@@ -1,0 +1,27 @@
+<!doctype html><html><head><meta charset="utf-8"><style>
+@font-face{font-family:D;src:url(/assets/fonts/SpaceGrotesk-Variable.woff2)}
+@font-face{font-family:T;src:url(/assets/fonts/Inter-Variable.woff2)}
+@font-face{font-family:M;src:url(/assets/fonts/JetBrainsMono-Variable.woff2)}
+*{margin:0;box-sizing:border-box}
+body{width:1200px;height:630px;overflow:hidden;background:#f3f1ea;background-image:linear-gradient(rgba(21,21,21,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(21,21,21,.05) 1px,transparent 1px);background-size:40px 40px;font-family:T;color:#151515;position:relative}
+.logo{position:absolute;left:64px;top:56px;font:700 34px/1 D;letter-spacing:-.01em;display:flex;align-items:center;gap:2px}
+.logo i{display:inline-block;width:19px;height:25px;border-radius:5px;background:#315fef;transform:translateY(2px)}
+.copy{position:absolute;left:64px;top:150px;width:620px}
+.roles{font:500 22px/1 M;letter-spacing:.08em;text-transform:uppercase;color:#5f625f;margin-bottom:22px}
+h1{font:600 76px/.98 D;letter-spacing:-.045em}
+h1 b{color:#315fef;font-weight:600;display:block}
+p{margin-top:26px;font-size:25px;line-height:1.35;color:#3f423f;max-width:520px}
+.url{position:absolute;left:64px;bottom:50px;font:500 20px/1 M;letter-spacing:.06em;color:#5f625f}
+.frame{position:absolute;right:64px;top:48px;width:330px;height:534px;border-radius:30px;overflow:hidden;background:#ccc url(/assets/img/benefits-superpowers-poster-v5-mobile.jpg) center 30%/cover;box-shadow:0 40px 70px -40px rgba(21,21,21,.6)}
+.bub{position:absolute;font-size:19px;line-height:1.35;border-radius:18px;box-shadow:0 18px 40px rgba(9,20,30,.3);color:#e9edef}
+.q{right:190px;bottom:300px;width:290px;padding:14px 16px;background:#005c4b;border-top-right-radius:4px}
+.a{right:210px;bottom:120px;width:300px;padding:14px 16px;background:#202c33;border-top-left-radius:4px}
+.a strong{color:#fff}
+</style></head><body>
+<div class="logo">comand<i></i></div>
+<div class="copy"><div class="roles">{{roles}}</div><h1><b>{{title1}}</b>{{title2}}</h1><p>{{sub}}</p></div>
+<div class="url">comando.pro</div>
+<div class="frame"></div>
+<div class="bub q">{{q}}</div>
+<div class="bub a">{{a}}</div>
+</body></html>

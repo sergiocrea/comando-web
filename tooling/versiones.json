@@ -143,17 +143,37 @@
     "v": "1",
     "sha": "3b61bfcb862be09b"
   },
-  "assets/img/og-image.jpg": {
-    "v": "4",
-    "sha": "9487f74b6a3f63e4"
+  "assets/img/favicon-32.png": {
+    "v": "2",
+    "sha": "2ffdad6eb0b226f5"
+  },
+  "assets/img/favicon.svg": {
+    "v": "2",
+    "sha": "4527673673e514b8"
+  },
+  "assets/img/og-image-en.jpg": {
+    "v": "5",
+    "sha": "6e83d97f780beb0d"
+  },
+  "assets/img/og-image-es.jpg": {
+    "v": "5",
+    "sha": "c0d2e9db6c6bebc6"
+  },
+  "assets/img/og-image-pt.jpg": {
+    "v": "5",
+    "sha": "46bb72e9aefa3f2c"
+  },
+  "assets/img/webclip.png": {
+    "v": "2",
+    "sha": "496340abc6a36420"
   },
   "css/custom.css": {
-    "v": "191",
-    "sha": "ba9452aca351fc2f"
+    "v": "192",
+    "sha": "9e1cb420b59e4e74"
   },
   "css/hibrida.css": {
-    "v": "57",
-    "sha": "0e68272cd33cb8fa"
+    "v": "58",
+    "sha": "29b8d005d5e88e81"
   },
   "css/legal.css": {
     "v": "1",

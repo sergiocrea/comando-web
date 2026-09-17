@@ -228,6 +228,9 @@ function head(html, locale) {
       (whole, before, path, after) => `<link rel="canonical" href="https://comando.pro/${locale}/${path}${after}`,
     )
     .replace(/<meta property="og:locale" content="es_LA" \/>/, `<meta property="og:locale" content="${ogLocale}" />`)
+    // La imagen para compartir va en el idioma de la página (tooling/og/build.mjs).
+    .replace(/og-image-es\.jpg/g, `og-image-${locale}.jpg`)
+    .replace(`<meta property="og:locale:alternate" content="${ogLocale}" />`, '<meta property="og:locale:alternate" content="es_LA" />')
     .replace(
       /(<meta property="og:url" content="https:\/\/comando\.pro\/)([^"]*)(" \/>)/,
       (whole, before, path, after) => `<meta property="og:url" content="https://comando.pro/${locale}/${path}${after}`,

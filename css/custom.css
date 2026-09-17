@@ -1229,7 +1229,7 @@ html { scroll-behavior: smooth; }
     linear-gradient(90deg, rgba(34, 34, 34, .055) 1px, transparent 1px);
   background-size: auto, 40px 40px, 40px 40px;
 }
-.section_usecases .section_features-eyebrow { color: #315fef; }
+.section_usecases .section_features-eyebrow { color: #5f625f; }
 .section_usecases .section_features-heading { color: #151515; }
 .uc-subtitle { color: #5f625f; }
 /* Pestañas y chips: sobre fondo claro el contraste se invierte. */
@@ -1241,7 +1241,7 @@ html { scroll-behavior: smooth; }
 .uc-tab:focus-visible, .uc-chip:focus-visible, .uc-step:focus-visible { outline-color: #315fef; }
 /* El teléfono sigue oscuro: es un teléfono. Solo gana sombra para separarse del fondo. */
 .uc-phone { box-shadow: 0 0 0 1px rgba(21, 21, 21, .06), 0 34px 70px -30px rgba(24, 37, 80, .45); }
-.uc-card-meta { color: #315fef; }
+.uc-card-meta { color: #5f625f; }
 .uc-card-title { color: #151515; }
 .uc-step { border-color: rgba(21, 21, 21, .12); color: #5f625f; background: rgba(255, 255, 255, .55); }
 .uc-step:hover { border-color: rgba(21, 21, 21, .22); color: #2b2e2b; }
@@ -1896,6 +1896,7 @@ html { scroll-behavior: smooth; }
 .section_metaads .uc-step-pro b { color: var(--gt-1); }
 .section_metaads .uc-step:focus-visible { outline-color: var(--gt-1); }
 .section_metaads .uc-result { color: var(--gt-2); border-color: var(--accent); }
+@media (min-width: 768px) { .section_metaads .uc-chat { height: 21rem; } }
 .section_metaads .uc-phone { border-color: #2a2a27; box-shadow: 0 0 0 1px rgba(243, 241, 234, .05), 0 40px 80px -40px rgba(0, 0, 0, .95); }
 .section_metaads .uc-msg.is-proactive .uc-bubble { border-left-color: var(--accent); }
 .section_metaads .uc-pro-tag { color: #aebac1; }
