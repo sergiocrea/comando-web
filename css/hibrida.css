@@ -677,5 +677,5 @@ html:not(.js) .lp .attr-step p { display: block; }
 /* Atribución va dentro de «Tu equipo»: mismo fondo, sin costura entre las dos. */
 .lp-subsection { margin-top: clamp(4.5rem, 9vw, 7.5rem); scroll-margin-top: calc(var(--nav-height, 5rem) + .5rem); }
 /* «Agente de Atribución» destacado: sello en tinta con su icono, como los iconos de los agentes. */
-.lp-eyebrow.is-badge { display: inline-flex; align-items: center; gap: .6rem; padding: .7rem 1.1rem .7rem .8rem; border-radius: 999px; background: #151515; color: #fff; font-size: .85rem; letter-spacing: .12em; box-shadow: 0 14px 30px -18px rgba(21, 21, 21, .6); }
+.lp-eyebrow.is-badge { display: inline-flex; align-items: center; gap: .6rem; padding: .7rem 1.1rem .7rem .8rem; border-radius: 999px; background: #151515; color: #fff; font-size: .85rem; letter-spacing: .12em; box-shadow: 0 14px 30px -18px rgba(21, 21, 21, .6); margin-bottom: 1.75rem !important; }
 .lp-eyebrow.is-badge svg { width: 1.35rem; height: 1.35rem; color: #9db4ff; }
