@@ -585,7 +585,7 @@ html:not(.js) .lp .slider-btns { display: none; }
 .lp .attr-ad-img { flex: 1; min-height: 0; border-radius: .6rem; background: linear-gradient(135deg, #2c4fb8, #6b93ff 60%, #9db4ff); opacity: .85; }
 .lp .attr-ad-line { height: .45rem; border-radius: 99px; background: #3b3f47; }
 .lp .attr-ad-line.is-short { width: 60%; }
-.lp .attr-goal { position: relative; margin: 0 !important; min-height: 2.6em; font: 500 clamp(.62rem, .95vw, .76rem)/1.3 "Jetbrainsmono Variable", monospace; color: #c2c5c2; }
+.lp .attr-goal { position: relative; margin: 0 !important; min-height: 2.6em; font: 500 clamp(.8rem, 1.15vw, .95rem)/1.3 "Neuehaasunicaw 1 G", Inter, sans-serif; color: #e4e5e4; }
 .lp .attr-goal span { position: absolute; inset: 0; transition: opacity .5s; }
 .lp .attr-goal-b { opacity: 0; color: var(--d-ok); }
 .lp .attr.meta-learned .attr-goal-a { opacity: 0; }
@@ -654,7 +654,7 @@ html:not(.js) .lp .attr-step p { display: block; }
   .lp .attr.is-tall .attr-card { flex-direction: row; flex-wrap: wrap; align-items: center; }
   .lp .attr.is-tall .attr-meta .attr-card-top { flex-basis: 100%; }
   .lp .attr.is-tall .attr-ad { flex: 0 0 34%; height: 58%; }
-  .lp .attr.is-tall .attr-goal { flex: 1; font-size: .72rem; min-height: 3.9em; }
+  .lp .attr.is-tall .attr-goal { flex: 1; font-size: .9rem; min-height: 2.6em; }
   .lp .attr.is-tall .attr-crm { align-content: flex-start; }
   .lp .attr.is-tall .attr-crm .attr-card-top { flex: 1; }
   .lp .attr.is-tall .attr-count b { font-size: 1.6rem; }
