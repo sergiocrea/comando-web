@@ -631,20 +631,12 @@ html:not(.js) .lp .slider-btns { display: none; }
 .lp .attr-step.is-active .attr-step-n { background: var(--lp-blue); border-color: var(--lp-blue); color: #fff; }
 .lp .attr-step.is-done .attr-step-n { background: rgba(18, 122, 82, .1); border-color: rgba(18, 122, 82, .35); color: #127a52; }
 .lp .attr-step.is-active p, .lp .attr-step.is-active .attr-bar { display: block; }
-.lp .attr.is-reduced .attr-bar, .lp .attr.is-paused .attr-bar { visibility: hidden; }
-.lp .attr-foot { display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap; margin-top: 1rem; padding: 0 1rem; }
-.lp .attr-pause { display: inline-flex; align-items: center; gap: .45rem; min-height: 2.5rem; padding: 0 .9rem; border-radius: 999px; border: 1px solid var(--lp-line); background: #fff; color: var(--lp-ink); font: 600 .85rem/1 "Neuehaasunicaw 1 G", Inter, sans-serif; cursor: pointer; }
-.lp .attr-pause:focus-visible { outline: 2px solid var(--lp-blue); outline-offset: 2px; }
-.lp .attr-pause svg { width: 14px; height: 14px; }
-.lp .attr-pause .i-play, .lp .attr-pause .attr-pause-b { display: none; }
-.lp .attr.is-paused .attr-pause .i-play, .lp .attr.is-paused .attr-pause .attr-pause-b { display: inline; }
-.lp .attr.is-paused .attr-pause .i-pause, .lp .attr.is-paused .attr-pause .attr-pause-a { display: none; }
-.lp .attr.is-reduced .attr-pause { display: none; }
+.lp .attr.is-reduced .attr-bar { visibility: hidden; }
 .lp .attr-caption { display: none; }
 .lp .attr-note { margin: 0 !important; font: 500 .74rem/1.4 "Jetbrainsmono Variable", monospace; color: var(--lp-soft); }
 
 /* Sin JS no hay animación: quedan los cuatro pasos con su texto. */
-html:not(.js) .lp .attr-stage, html:not(.js) .lp .attr-pause, html:not(.js) .lp .attr-caption { display: none !important; }
+html:not(.js) .lp .attr-stage, html:not(.js) .lp .attr-caption { display: none !important; }
 html:not(.js) .lp .attr-step-t { display: inline !important; }
 html:not(.js) .lp .attr { grid-template-columns: minmax(0, 1fr); }
 html:not(.js) .lp .attr-step p { display: block; }
@@ -660,7 +652,8 @@ html:not(.js) .lp .attr-step p { display: block; }
   .lp .attr.is-tall .attr-ad { flex: 0 0 44%; align-self: stretch; }
   .lp .attr.is-tall .attr-ad-img { padding: .45rem .55rem; }
   .lp .attr.is-tall .attr-ad-line { height: .35rem; }
-  .lp .attr.is-tall .attr-goal { flex: 1; font-size: .9rem; min-height: 2.6em; }
+  .lp .attr.is-tall .attr-goal { flex: 1; align-self: stretch; margin-left: .75rem !important; font-size: .95rem; font-weight: 600; min-height: 2.6em; }
+  .lp .attr.is-tall .attr-goal span { display: flex; align-items: center; justify-content: center; text-align: center; text-wrap: balance; }
   .lp .attr.is-tall .attr-crm { align-content: flex-start; }
   .lp .attr.is-tall .attr-crm .attr-card-top { flex: 1; }
   .lp .attr.is-tall .attr-count b { font-size: 1.6rem; }
@@ -674,7 +667,6 @@ html:not(.js) .lp .attr-step p { display: block; }
   .lp .attr-caption-t { margin: 0 !important; font: 600 1.1rem/1.25 Neuemachina, "Space Grotesk", sans-serif; color: var(--lp-ink); }
   .lp .attr-caption-p { margin: .4rem 0 0 !important; color: var(--lp-muted); font-size: .95rem; line-height: 1.45; min-height: 2.9em; }
   .lp .attr-caption .attr-bar { display: block; margin: .75rem 0 0; }
-  .lp .attr-foot { padding: 0; }
 }
 @media (prefers-reduced-motion: reduce) {
   .lp .attr-card, .lp .attr-hub, .lp .attr-chip, .lp .attr-goal span, .lp .attr-path.is-back { transition: none; }

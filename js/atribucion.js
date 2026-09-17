@@ -6,7 +6,7 @@
      3. Comando manda esas ventas de vuelta a Meta.
      4. Meta busca gente parecida: llegan 10 contactos nuevos y compran 5.
    Todo sale de `render(t)`: una función pura del segundo del bucle. Así un clic
-   en un paso, la pausa y `prefers-reduced-motion` solo cambian `t`.
+   en un paso y `prefers-reduced-motion` solo cambian `t`.
    Los textos están en index.html (los traduce tooling/i18n.mjs); aquí solo se
    dibuja. Las cajas HTML se colocan con la misma geometría que el SVG.
    Sin dependencias.
@@ -18,7 +18,6 @@
   const svg = root.querySelector('[data-attr-svg]');
   const salesOut = root.querySelector('[data-attr-sales]');
   const steps = [...root.querySelectorAll('.attr-step')];
-  const pauseBtn = root.querySelector('[data-attr-pause]');
   // En móvil la lista enseña solo los números; el texto del paso activo se copia aquí.
   const caption = root.querySelector('.attr-caption');
   let shownPhase = -1;
@@ -215,10 +214,9 @@
   // ---- Reproducción ----
   let t = 0;
   let last = 0;
-  let paused = false;
   let visible = false;
   let raf = 0;
-  // El cuadro que representa cada paso en pausa: el final, salvo el 3, que se ve mejor con las ventas en camino.
+  // El cuadro que representa cada paso sin movimiento (prefers-reduced-motion): el final, salvo el 3, que se ve mejor con las ventas en camino.
   const STILLS = [PHASES[1] - 0.6, PHASES[2] - 0.6, 11, LOOP - 0.6];
   const still = (i) => STILLS[i];
 
@@ -231,23 +229,17 @@
     loop();
   }
   function loop() {
-    const run = visible && !paused && !reduce.matches && !document.hidden;
+    const run = visible && !reduce.matches && !document.hidden;
     if (run && !raf) raf = requestAnimationFrame(tick);
     if (!run) { if (raf) cancelAnimationFrame(raf); raf = 0; last = 0; }
   }
 
   steps.forEach((s, i) => s.querySelector('button').addEventListener('click', () => {
-    t = paused || reduce.matches ? still(i) : PHASES[i];
+    t = reduce.matches ? still(i) : PHASES[i];
     last = 0;
     render(t);
     loop();
   }));
-  pauseBtn.addEventListener('click', () => {
-    paused = !paused;
-    pauseBtn.setAttribute('aria-pressed', String(paused));
-    root.classList.toggle('is-paused', paused);
-    loop();
-  });
 
   new IntersectionObserver((entries) => {
     visible = entries.some((e) => e.isIntersecting);
