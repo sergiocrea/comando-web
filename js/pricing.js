@@ -21,7 +21,7 @@
  *
  * `code` es el código del plan en el motor (`/v1/public/plans`). Límites con los
  * nombres del catálogo público: `adsAccounts`, `adsRefreshMinutes` (1440 = una
- * vez al día), `commands` (preguntas al mes). Precios en dólares: `month` y
+ * vez al día), `commands` (comandos al mes). Precios en dólares: `month` y
  * `year` (anual = 10 meses).
  *
  * Capacidades: `true` incluido hoy; `'coming_soon'` todavía no existe en el
@@ -43,13 +43,14 @@
  * que el catálogo se cambie en la consola de administración. Además, la web
  * anuncia reportes por plan (`reports`: avanzados en Growth; avanzados y
  * personalizados en Scale), que el catálogo del motor no distingue, y ya no nombra las notas de voz.
- * El Media Buyer anuncia cambios al mes (`mediaBuyerChanges`: 10 en Starter,
- * 100 en Growth, 200 en Scale), un límite que el motor todavía no aplica.
- * Preguntas al mes (16-sep, modelo económico): Starter 150, Growth 350,
- * Scale 500 compartidas entre 2 números de WhatsApp (`whatsappNumbers`); los
- * reportes con IA descuentan del mismo cupo. El motor sigue con los cupos del
- * catálogo del 15-sep y un solo número por cuenta. Gratis incluye Analista y
- * Estratega con 30 preguntas al crear la cuenta, válidas 30 días y sin renovación
+ * El Media Buyer no anuncia límite de cambios (17-sep): ejecutar un cambio ya
+ * decidido no llama a la IA ni descuenta cupo (`OperatorCommandPipeline.confirm`),
+ * así que el tope real es el de comandos. Comandos al mes (16/17-sep, modelo
+ * económico): Starter 150, Growth 300, Scale 500 compartidos entre 2 números de
+ * WhatsApp (`whatsappNumbers`); los reportes con IA descuentan del mismo cupo.
+ * El motor sigue con los cupos del catálogo del 15-sep y un solo número por
+ * cuenta. Gratis incluye Analista y
+ * Estratega con 30 comandos al crear la cuenta, válidas 30 días y sin renovación
  * (`commandsOnceDays`); en el motor el cupo de Gratis todavía se renueva cada mes.
  */
 const PLAN_LADDER = [
@@ -59,17 +60,17 @@ const PLAN_LADDER = [
     capabilities: { adsRead: true, adsDiagnosis: true, voice: false, mediaBuyer: 'coming_soon', attribution: 'coming_soon', googleAds: 'coming_soon', tiktokAds: true },
   },
   {
-    id: 'analista', code: 'analista', price: { month: 9, year: 90 }, agents: ['analyst', 'strategist', 'mediaBuyerLimited'], mediaBuyerChanges: 10, metrics: true,
+    id: 'analista', code: 'analista', price: { month: 9, year: 90 }, agents: ['analyst', 'strategist', 'mediaBuyer'], metrics: true,
     adsAccounts: 2, adsRefreshMinutes: 60, commands: 150,
     capabilities: { adsRead: true, adsDiagnosis: true, voice: false, mediaBuyer: 'coming_soon', attribution: 'coming_soon', googleAds: 'coming_soon', tiktokAds: true },
   },
   {
-    id: 'equipo', code: 'equipo', price: { month: 19, year: 190 }, featured: true, agents: ['analyst', 'strategist', 'mediaBuyer'], mediaBuyerChanges: 100, reports: ['advanced'], metrics: true,
-    adsAccounts: 10, adsRefreshMinutes: 60, commands: 350,
+    id: 'equipo', code: 'equipo', price: { month: 19, year: 190 }, featured: true, agents: ['analyst', 'strategist', 'mediaBuyer'], reports: ['advanced'], metrics: true,
+    adsAccounts: 10, adsRefreshMinutes: 60, commands: 300,
     capabilities: { adsRead: true, adsDiagnosis: true, voice: true, mediaBuyer: 'coming_soon', attribution: 'coming_soon', googleAds: 'coming_soon', tiktokAds: true },
   },
   {
-    id: 'agencia', code: 'agencia', price: { month: 49, year: 490 }, agents: ['analyst', 'strategist', 'mediaBuyer', 'attribution'], mediaBuyerChanges: 200, reports: ['advanced', 'custom'], metrics: true,
+    id: 'agencia', code: 'agencia', price: { month: 49, year: 490 }, agents: ['analyst', 'strategist', 'mediaBuyer', 'attribution'], reports: ['advanced', 'custom'], metrics: true,
     adsAccounts: 20, adsRefreshMinutes: 60, commands: 500, whatsappNumbers: 2,
     capabilities: { adsRead: true, adsDiagnosis: true, voice: true, mediaBuyer: 'coming_soon', attribution: 'coming_soon', googleAds: 'coming_soon', tiktokAds: true },
   },
@@ -109,18 +110,18 @@ const PRICING_TEXT = {
     perMonth: '/mes', perYear: (a) => `${a} al año`, recommended: 'Recomendado', soon: 'Próximamente',
     trial: () => 'Empiezas gratis, sin tarjeta',
     more: 'Plan personalizado', talk: 'Habla con nosotros',
-    caps: { analyst: 'Agente Analista', strategist: 'Agente Estratega', mediaBuyer: 'Agente Media Buyer', mediaBuyerLimited: 'Agente Media Buyer', mediaBuyerNote: (n) => `${n} cambios al mes`, attribution: 'Agente de Atribución (CRM)', metrics: 'Métricas & KPIs', metricsBasic: 'básicas', reports: { advanced: 'Reportes Avanzados', custom: 'Reportes Personalizados' } },
+    caps: { analyst: 'Agente Analista', strategist: 'Agente Estratega', mediaBuyer: 'Agente Media Buyer', attribution: 'Agente de Atribución (CRM)', metrics: 'Métricas & KPIs', metricsBasic: 'básicas', reports: { advanced: 'Reportes Avanzados', custom: 'Reportes Personalizados' } },
     limits: {
       accounts: (n, f) => (n === 1 ? '1 cuenta publicitaria' : `${f(n)} cuentas publicitarias`),
       refresh: (min) => (min >= 1440 ? 'Datos 1 vez al día' : 'Datos cada hora'),
-      questions: (n, f) => `${f(n)} preguntas al mes`,
-      questionsOnce: (n, d, f) => `${f(n)} preguntas para empezar (${d} días)`,
+      questions: (n, f) => `${f(n)} comandos al mes`,
+      questionsOnce: (n, d, f) => `${f(n)} comandos para empezar (${d} días)`,
       whatsapp: (n) => `${n} números de WhatsApp`,
     },
     plans: {
       gratis: { name: 'Gratis', result: 'Pregúntale a tus anuncios', cta: 'Empezar gratis' },
       analista: { name: 'Starter', result: 'Te dice qué revisar primero', cta: 'Elegir Starter' },
-      equipo: { name: 'Growth', result: 'Pausa y mueve presupuesto con tu CONFIRMAR', cta: 'Elegir Growth' },
+      equipo: { name: 'Growth', result: 'Pausa y mueve presupuesto', cta: 'Elegir Growth' },
       agencia: { name: 'Scale', result: 'Tus ventas del CRM, cruzadas con Meta', cta: 'Elegir Scale' },
     },
   },
@@ -129,18 +130,18 @@ const PRICING_TEXT = {
     perMonth: '/mo', perYear: (a) => `${a} a year`, recommended: 'Recommended', soon: 'Coming soon',
     trial: () => 'You start free, no card',
     more: 'Custom plan', talk: 'Talk to us',
-    caps: { analyst: 'Analyst Agent', strategist: 'Strategist Agent', mediaBuyer: 'Media Buyer Agent', mediaBuyerLimited: 'Media Buyer Agent', mediaBuyerNote: (n) => `${n} changes a month`, attribution: 'Attribution Agent (CRM)', metrics: 'Metrics & KPIs', metricsBasic: 'basic', reports: { advanced: 'Advanced Reports', custom: 'Custom Reports' } },
+    caps: { analyst: 'Analyst Agent', strategist: 'Strategist Agent', mediaBuyer: 'Media Buyer Agent', attribution: 'Attribution Agent (CRM)', metrics: 'Metrics & KPIs', metricsBasic: 'basic', reports: { advanced: 'Advanced Reports', custom: 'Custom Reports' } },
     limits: {
       accounts: (n, f) => (n === 1 ? '1 ad account' : `${f(n)} ad accounts`),
       refresh: (min) => (min >= 1440 ? 'Data once a day' : 'Data every hour'),
-      questions: (n, f) => `${f(n)} questions a month`,
-      questionsOnce: (n, d, f) => `${f(n)} questions to start (${d} days)`,
+      questions: (n, f) => `${f(n)} commands a month`,
+      questionsOnce: (n, d, f) => `${f(n)} commands to start (${d} days)`,
       whatsapp: (n) => `${n} WhatsApp numbers`,
     },
     plans: {
       gratis: { name: 'Free', result: 'Ask your ads', cta: 'Start free' },
       analista: { name: 'Starter', result: 'Tells you what to check first', cta: 'Choose Starter' },
-      equipo: { name: 'Growth', result: 'Pauses and moves budget when you CONFIRM', cta: 'Choose Growth' },
+      equipo: { name: 'Growth', result: 'Pauses and moves budget', cta: 'Choose Growth' },
       agencia: { name: 'Scale', result: 'Your CRM sales, matched with Meta', cta: 'Choose Scale' },
     },
   },
@@ -149,18 +150,18 @@ const PRICING_TEXT = {
     perMonth: '/mês', perYear: (a) => `${a} por ano`, recommended: 'Recomendado', soon: 'Em breve',
     trial: () => 'Você começa grátis, sem cartão',
     more: 'Plano personalizado', talk: 'Fale com a gente',
-    caps: { analyst: 'Agente Analista', strategist: 'Agente Estrategista', mediaBuyer: 'Agente Comprador de mídia', mediaBuyerLimited: 'Agente Comprador de mídia', mediaBuyerNote: (n) => `${n} alterações por mês`, attribution: 'Agente de Atribuição (CRM)', metrics: 'Métricas e KPIs', metricsBasic: 'básicas', reports: { advanced: 'Relatórios Avançados', custom: 'Relatórios Personalizados' } },
+    caps: { analyst: 'Agente Analista', strategist: 'Agente Estrategista', mediaBuyer: 'Agente Comprador de mídia', attribution: 'Agente de Atribuição (CRM)', metrics: 'Métricas e KPIs', metricsBasic: 'básicas', reports: { advanced: 'Relatórios Avançados', custom: 'Relatórios Personalizados' } },
     limits: {
       accounts: (n, f) => (n === 1 ? '1 conta de anúncios' : `${f(n)} contas de anúncios`),
       refresh: (min) => (min >= 1440 ? 'Dados 1 vez por dia' : 'Dados a cada hora'),
-      questions: (n, f) => `${f(n)} perguntas por mês`,
-      questionsOnce: (n, d, f) => `${f(n)} perguntas para começar (${d} dias)`,
+      questions: (n, f) => `${f(n)} comandos por mês`,
+      questionsOnce: (n, d, f) => `${f(n)} comandos para começar (${d} dias)`,
       whatsapp: (n) => `${n} números de WhatsApp`,
     },
     plans: {
       gratis: { name: 'Grátis', result: 'Pergunte aos seus anúncios', cta: 'Começar grátis' },
       analista: { name: 'Starter', result: 'Diz o que revisar primeiro', cta: 'Escolher Starter' },
-      equipo: { name: 'Growth', result: 'Pausa e move orçamento com o seu CONFIRMAR', cta: 'Escolher Growth' },
+      equipo: { name: 'Growth', result: 'Pausa e move orçamento', cta: 'Escolher Growth' },
       agencia: { name: 'Scale', result: 'Suas vendas do CRM, cruzadas com a Meta', cta: 'Escolher Scale' },
     },
   },
@@ -200,7 +201,7 @@ const PRICING_TEXT = {
       <p class="plan-price">${price}</p>
       <p class="plan-year">${year}</p>
       <ul>
-        ${plan.agents.map((a) => `<li class="${prev && !prev.agents.includes(a) ? 'is-new' : ''}">${icon('i-check')}<span>${esc(T.caps[a])}${(a === 'mediaBuyer' || a === 'mediaBuyerLimited') && plan.mediaBuyerChanges ? `<small class="plan-note">${esc(T.caps.mediaBuyerNote(plan.mediaBuyerChanges))}</small>` : ''}</span></li>`).join('')}
+        ${plan.agents.map((a) => `<li class="${prev && !prev.agents.includes(a) ? 'is-new' : ''}">${icon('i-check')}<span>${esc(T.caps[a])}</span></li>`).join('')}
         ${plan.metrics ? `<li>${icon('i-check')}<span>${esc(T.caps.metrics)}${plan.metrics === 'basic' ? `<small class="plan-note">${esc(T.caps.metricsBasic)}</small>` : ''}</span></li>` : ''}
         ${(plan.reports || []).map((r) => `<li>${icon('i-check')}<span>${esc(T.caps.reports[r])}</span></li>`).join('')}
       </ul>
