@@ -650,14 +650,15 @@ html:not(.js) .lp .attr-step p { display: block; }
 /* Móvil: el escenario va en vertical (lo decide el JS con la misma consulta) y la
    lista enseña solo el paso activo con su texto. */
 @media (max-width: 767px) {
-  .lp .attr-stage { aspect-ratio: 360 / 620; max-width: 26rem; margin: 0 auto; border-radius: 1.25rem; }
+  .lp .attr-stage { aspect-ratio: 360 / 440; max-width: 26rem; margin: 0 auto; border-radius: 1.25rem; }
   .lp .attr.is-tall .attr-card { flex-direction: row; flex-wrap: wrap; align-items: center; }
   .lp .attr.is-tall .attr-meta .attr-card-top { flex-basis: 100%; }
   .lp .attr.is-tall .attr-ad { flex: 0 0 34%; height: 58%; }
   .lp .attr.is-tall .attr-goal { flex: 1; font-size: .72rem; min-height: 3.9em; }
   .lp .attr.is-tall .attr-crm { align-content: flex-start; }
   .lp .attr.is-tall .attr-crm .attr-card-top { flex: 1; }
-  .lp .attr.is-tall .attr-count b { font-size: 1.9rem; }
+  .lp .attr.is-tall .attr-count b { font-size: 1.6rem; }
+  .lp .attr.is-tall .attr-card { padding: .6rem .75rem; gap: .35rem; }
   .lp .attr-steps { flex-direction: row; gap: .5rem; }
   .lp .attr-step { padding: 0; border: 0; background: none !important; box-shadow: none !important; }
   .lp .attr-step button { gap: 0; }
