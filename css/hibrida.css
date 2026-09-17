@@ -744,9 +744,9 @@ html:not(.js) .lp .attr-step p { display: block; }
   .hero-video video { width: 100%; height: 100%; display: block; object-fit: cover; object-position: 50% 30%; filter: saturate(1.05) contrast(1.04); }
   /* Las burbujas, más chicas y pegadas a la base: tapaban media persona. */
   /* Las burbujas van a la izquierda del vídeo y solo montan su borde (3 rem). */
-  .b2b-hero-grid.is-short .power-panel { position: relative; order: -1; flex: 0 1 18rem; min-width: 0; margin: 0 -3rem 2.5rem 0; z-index: 3; }
-  .b2b-hero-grid.is-short .power-context p { font-size: .74rem; }
-  .b2b-hero-grid.is-short .power-reply { font-size: .74rem; padding: .65rem .8rem 1.25rem; }
+  .b2b-hero-grid.is-short .power-panel { position: relative; order: -1; flex: 0 1 21rem; min-width: 0; margin: 0 -3rem 2.5rem 0; z-index: 3; }
+  .b2b-hero-grid.is-short .power-context p { font-size: .82rem; }
+  .b2b-hero-grid.is-short .power-reply { font-size: .82rem; padding: .7rem .85rem 1.35rem; }
 }
 @media (min-width: 768px) and (prefers-reduced-motion: reduce) { .hero-video video { display: none; } }
 
