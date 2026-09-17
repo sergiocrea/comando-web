@@ -120,7 +120,7 @@ const PRICING_TEXT = {
     limits: {
       accounts: (n, f) => (n === 1 ? '1 cuenta publicitaria' : `${f(n)} cuentas publicitarias`),
       questions: (n, f) => `${f(n)} comandos al mes`,
-      questionsOnce: (n, d, f) => `${f(n)} comandos para empezar (${d} días)`,
+      questionsOnce: (n, d, f) => `${f(n)} comandos para empezar`,
       users: (n) => `${n} usuarios`,
     },
     plans: {
@@ -139,7 +139,7 @@ const PRICING_TEXT = {
     limits: {
       accounts: (n, f) => (n === 1 ? '1 ad account' : `${f(n)} ad accounts`),
       questions: (n, f) => `${f(n)} commands a month`,
-      questionsOnce: (n, d, f) => `${f(n)} commands to start (${d} days)`,
+      questionsOnce: (n, d, f) => `${f(n)} commands to start`,
       users: (n) => `${n} users`,
     },
     plans: {
@@ -158,7 +158,7 @@ const PRICING_TEXT = {
     limits: {
       accounts: (n, f) => (n === 1 ? '1 conta de anúncios' : `${f(n)} contas de anúncios`),
       questions: (n, f) => `${f(n)} comandos por mês`,
-      questionsOnce: (n, d, f) => `${f(n)} comandos para começar (${d} dias)`,
+      questionsOnce: (n, d, f) => `${f(n)} comandos para começar`,
       users: (n) => `${n} usuários`,
     },
     plans: {
