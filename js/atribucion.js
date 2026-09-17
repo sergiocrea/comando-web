@@ -39,22 +39,18 @@
       meta: { x: 30, y: 50, w: 250, h: 330 },
       crm: { x: 720, y: 50, w: 250, h: 330 },
       hub: { cx: 500, cy: 432, w: 176, h: 52 },
-      chipLead: { cx: 500, cy: 30, w: 170, h: 30 },
-      chipSale: { cx: 500, cy: 355, w: 190, h: 30 },
       forward: 'M280 140 C 420 30, 580 30, 720 140',
       back: 'M720 330 C 600 470, 400 470, 280 330',
       slots: { xs: [760, 805, 850, 895, 940], ys: [245, 305], r: 15 },
     },
     tall: {
-      w: 360, h: 510,
-      meta: { x: 12, y: 12, w: 336, h: 196 },
-      crm: { x: 12, y: 360, w: 336, h: 138 },
-      hub: { cx: 250, cy: 284, w: 126, h: 40 },
-      chipLead: { cx: 116, cy: 284, w: 128, h: 26 },
-      chipSale: { cx: 252, cy: 238, w: 144, h: 26 },
-      forward: 'M90 208 C 46 258, 46 310, 90 360',
-      back: 'M270 360 C 314 310, 314 258, 270 208',
-      slots: { xs: [60, 120, 180, 240, 300], ys: [432, 474], r: 16 },
+      w: 360, h: 490,
+      meta: { x: 12, y: 12, w: 336, h: 176 },
+      crm: { x: 12, y: 340, w: 336, h: 138 },
+      hub: { cx: 250, cy: 264, w: 126, h: 40 },
+      forward: 'M90 188 C 46 238, 46 290, 90 340',
+      back: 'M270 340 C 314 290, 314 238, 270 188',
+      slots: { xs: [60, 120, 180, 240, 300], ys: [412, 454], r: 16 },
     },
   };
 
@@ -95,8 +91,6 @@
     place(root.querySelector('.attr-meta'), L.meta);
     place(root.querySelector('.attr-crm'), L.crm);
     place(root.querySelector('.attr-hub'), L.hub);
-    place(root.querySelector('.attr-chip-lead'), L.chipLead);
-    place(root.querySelector('.attr-chip-sale'), L.chipSale);
 
     svg.textContent = '';
     pathF = el('path', { d: L.forward, class: 'attr-path' }, svg);
@@ -208,8 +202,6 @@
     });
     hubPulse.classList.toggle('is-hot', hubHot);
 
-    root.classList.toggle('show-lead', t > 0.3 && t < 4.2);
-    root.classList.toggle('show-sale', t > 9.3 && t < 13);
     root.classList.toggle('is-back', t >= 9 && t < 13.5);
     root.classList.toggle('meta-learned', t >= 11.6 && t < 19.3);
     root.classList.toggle('is-fading', t >= 19);

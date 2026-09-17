@@ -658,7 +658,7 @@ html:not(.js) .lp .attr-step p { display: block; }
 /* Móvil: el escenario va en vertical (lo decide el JS con la misma consulta) y la
    lista enseña solo el paso activo con su texto. */
 @media (max-width: 767px) {
-  .lp .attr-stage { aspect-ratio: 360 / 510; }
+  .lp .attr-stage { aspect-ratio: 360 / 490; }
   .lp .attr-box { max-width: 26rem; margin: 0 auto; border-radius: 1.25rem; }
   .lp .attr-legend { font-size: .76rem; }
   .lp .attr.is-tall .attr-card { flex-direction: row; flex-wrap: wrap; align-items: center; }
@@ -755,7 +755,8 @@ html:not(.js) .lp .attr-step p { display: block; }
 .lp .attr-meta-step { display: none; }
 @media (max-width: 767px) {
   .lp .attr.is-tall .attr-caption, .lp .attr.is-tall .attr-goal { display: none; }
-  .lp .attr.is-tall .attr-ad { flex: 0 0 34%; align-self: stretch; }
+  .lp .attr.is-tall .attr-ad { flex: 0 0 34%; align-self: center; }
+  .lp .attr.is-tall .attr-ad-img { flex: none; height: 5.75rem; }
   .lp .attr.is-tall .attr-ad-img .attr-card-top { white-space: nowrap; font-size: .62rem; }
   .lp .attr.is-tall .attr-meta-step { display: flex; flex-direction: column; justify-content: center; flex: 1; min-width: 0; align-self: stretch; margin-left: .75rem; }
   .lp .attr-meta-step-t { margin: 0 !important; font: 600 .95rem/1.2 Neuemachina, "Space Grotesk", sans-serif; color: var(--gt-1); }
