@@ -7,7 +7,7 @@
     <meta content="width=device-width, initial-scale=1" name="viewport" />
     <meta
       name="description"
-      content="Analista, estratega y media buyer en tu WhatsApp: Comando te dice qué funciona en tus anuncios de Meta y TikTok y qué cambiar, en segundos. Empieza gratis."
+      content="Diagnóstico gratis de tu cuenta de Meta: en dólares, cuánto se fue en anuncios que no trajeron resultados y qué cambiar. Agentes de IA que te escriben por WhatsApp."
     />
     <meta name="facebook-domain-verification" content="m184ug3x2jy17xd0nuhlfpf58o5nhm" />
     <link rel="canonical" href="https://comando.pro/propuesta" />
@@ -51,10 +51,83 @@
       .b2b-hero-grid.is-short .b2b-hero-title { white-space: normal; max-width: 24ch; font-size: clamp(2.6rem, 4.4vw, 4.4rem); }
       .b2b-hero-grid.is-short .b2b-hero-lede { max-width: 34rem; }
       .b2b-hero-note { max-width: 34rem; }
+      /* El aviso sin JavaScript de #casos vive fuera de `.lp`: sin esto hereda el
+         color del sistema viejo y se pierde sobre el grafito. */
+      #casos .plans-noscript { margin: 2rem auto 0; max-width: 46rem; text-align: center; font-size: 1.05rem; color: #e2dfd7; }
+      #casos .plans-noscript a { color: #fff; text-decoration: underline; }
+
+      /* La segunda línea del hero (canales y conectores) baja de rango: es dato
+         técnico, no la promesa. La de arriba —lo que cuesta pulsar el botón— se
+         queda en el tamaño normal. */
+      .b2b-hero-note.is-fine { margin-top: .5rem; max-width: 42rem; font-size: .78rem; color: #7c7f7b; }
+      @media (max-width: 767px) { .b2b-hero-note.is-fine { font-size: .7rem; } }
+
       /* Las tarjetas blancas dentro de la sección oscura heredaban el blanco del
-         texto y los títulos quedaban invisibles. */
-      #agencias .lp-agent, #agencias .lp-agent h3 { color: var(--lp-ink); }
-      #agencias .lp-agent p { color: var(--lp-muted); }
+         texto y los títulos quedaban invisibles. (Era #agencias; el 18-sep esa
+         sección se fusionó con #rutas y se mudó al final de la página.) */
+      #rutas .lp-agent, #rutas .lp-agent h3 { color: var(--lp-ink); }
+      #rutas .lp-agent p { color: var(--lp-muted); }
+      /* Dos tarjetas en una rejilla de tres columnas dejaban un tercio vacío a la
+         derecha (el bug estaba ya en la vieja sección de rutas). */
+      @media (min-width: 992px) { .lp-agents.is-two { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+      #rutas .lp-agent .foot { border-top: 1px solid var(--lp-line); margin-top: 1.25rem; }
+
+      /* ---------- #diagnostico: pedirlo, y ver qué llega ---------- */
+      /* La sección describía el proceso en tres tarjetas y no enseñaba nunca el
+         entregable. Esta franja pone a la izquierda los tres pasos para pedirlo
+         (con el botón) y a la derecha el mensaje tal como llega. */
+      .lp .dx-ask {
+        margin-top: 1.5rem; display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, .95fr);
+        gap: clamp(1.5rem, 3.5vw, 3rem); align-items: center;
+        background: #fff; border: 1px solid var(--lp-line); border-radius: 1.4rem;
+        padding: clamp(1.4rem, 2.6vw, 2.25rem); box-shadow: 0 24px 50px -40px rgba(21, 21, 21, .35);
+      }
+      .lp .dx-ask h3 { font-size: clamp(1.4rem, 2.2vw, 1.9rem); }
+      .lp .dx-steps { list-style: none; counter-reset: dx; margin: 1.25rem 0 1.75rem; padding: 0; display: grid; gap: .85rem; }
+      .lp .dx-steps li { position: relative; padding-left: 2.35rem; color: var(--lp-muted); text-wrap: pretty; }
+      .lp .dx-steps li b { color: var(--lp-ink); font-weight: 650; }
+      .lp .dx-steps li::before {
+        counter-increment: dx; content: counter(dx);
+        position: absolute; left: 0; top: .1em; width: 1.7rem; height: 1.7rem; border-radius: 50%;
+        display: grid; place-items: center; background: rgba(49, 95, 239, .1); color: var(--lp-blue);
+        font: 600 .8rem/1 "Jetbrainsmono Variable", ui-monospace, monospace;
+      }
+      .lp .dx-note { margin-top: 1rem !important; font-size: .88rem; color: var(--lp-soft); text-wrap: pretty; }
+      .lp .dx-note a { color: var(--lp-muted); text-decoration: underline; }
+      .lp .dx-demo-label, .lp .dx-demo-note { font: 500 .72rem/1.4 "Jetbrainsmono Variable", ui-monospace, monospace; letter-spacing: .1em; text-transform: uppercase; color: var(--lp-soft); }
+      .lp .dx-demo-label { margin-bottom: .6rem !important; }
+      .lp .dx-demo-note { margin-top: .6rem !important; letter-spacing: .04em; text-transform: none; }
+      /* El chat, con ancho de teléfono: a lo ancho de media sección la burbuja
+         dejaba de parecer un WhatsApp y parecía un párrafo con fondo. */
+      .lp .dx-ask-demo .mini-chat { max-width: 27rem; margin-inline: auto; padding: 1.1rem .85rem; }
+      .lp .dx-ask-demo .bubble { font-size: .92rem; }
+      @media (max-width: 860px) {
+        .lp .dx-ask { grid-template-columns: minmax(0, 1fr); }
+        .lp .dx-ask .btn { width: 100%; }
+      }
+
+      /* La objeción de dar acceso a la cuenta no estaba contestada en ninguna parte. */
+      .lp .dx-trust { list-style: none; margin: 1.5rem 0 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1.25rem; }
+      .lp .dx-trust li { position: relative; padding-top: 1rem; border-top: 1px solid var(--lp-line); font-size: .92rem; color: var(--lp-muted); text-wrap: pretty; }
+      .lp .dx-trust b { color: var(--lp-ink); font-weight: 650; }
+      @media (max-width: 860px) { .lp .dx-trust { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+      @media (max-width: 520px) { .lp .dx-trust { grid-template-columns: minmax(0, 1fr); gap: .9rem; } }
+
+      /* La bajada de las secciones oscuras iba en el gris de las claras
+         (#5f625f sobre #0c0c0b): se leía a duras penas. */
+      .lp-dark .lp-lede { color: var(--gt-2); }
+
+      /* ---------- cierre: la página acababa sin ninguna acción ---------- */
+      .lp .dx-close { margin-top: clamp(2rem, 4vw, 3rem); padding-top: clamp(1.75rem, 3vw, 2.25rem); border-top: 1px solid var(--gl-1); display: grid; gap: 1.25rem; justify-items: center; text-align: center; }
+      .lp .dx-close p { max-width: 42rem; color: var(--gt-2); text-wrap: pretty; }
+      .lp .dx-close-actions { display: flex; flex-wrap: wrap; gap: .75rem; justify-content: center; }
+      /* Negro sobre negro no es un botón. */
+      .lp-dark .btn-dark { background: #fff; color: #151515; }
+      .lp-dark .btn-dark:hover { background: var(--lp-blue); color: #fff; }
+      .lp .btn-line { border-color: var(--gl-2); color: var(--gt-1); }
+      .lp .btn-line:hover { border-color: var(--gt-1); }
+      @media (max-width: 520px) { .lp .dx-close-actions { display: grid; width: 100%; } }
+
     </style>
   </head>
   <body>
@@ -326,8 +399,8 @@
                     data-wf-component-context="%5B%7B%22componentId%22%3A%22396176c6-906a-9f74-c6d0-8a4663dfdea9%22%2C%22instanceId%22%3A%22ad43a7dc-e35f-2320-39af-52425e607e28%22%7D%5D"
                     class="nav_menu_link w-nav-link"
                     >INICIO</a
-                  ><a href="#casos" class="nav_menu_link w-nav-link"
-                    >CASOS</a
+                  ><a href="#diagnostico" class="nav_menu_link w-nav-link"
+                    >DIAGNÓSTICO</a
                   ><a href="#equipo" class="nav_menu_link w-nav-link"
                     >EQUIPO</a
                   ><a
@@ -412,18 +485,23 @@
           <div class="padding-global b2b-hero-padding">
             <div class="container-large">
               <!-- Hero corto, al estilo de 11x (16-sep): rol + canal en el titular,
-                   una frase de bajada y «Mira un ejemplo». «Pruébalo gratis» se
-                   ocultó a petición de Sergio (el registro sigue en el menú y en
-                   precios). A la derecha vuelve el panel de Meta. -->
+                   una frase de bajada y «Mira un ejemplo». A la derecha, el panel de Meta.
+                   18-sep: el botón principal deja de ser un ancla y va a /app —antes
+                   costaba dos clics llegar al registro— y va en negro sólido, que dos
+                   botones con el mismo contorno no son una jerarquía. Fuera Google Ads
+                   de la bajada: la sección de abajo lo marca «Próximamente» y prometer
+                   un canal que no existe en una página que vende auditoría es tirarse
+                   piedras al tejado. -->
               <div class="b2b-hero-grid is-short">
                 <div class="b2b-hero-copy">
                   <h1 id="b2b-hero-title" class="b2b-hero-title">Deja de pagar anuncios que no traen ventas.</h1>
-                  <p class="b2b-hero-lede">Agentes de IA que revisan tus campañas de Meta, TikTok y Google Ads todos los días, te dicen dónde se va el presupuesto y ejecutan el cambio cuando tú confirmas.</p>
+                  <p class="b2b-hero-lede">Agentes de IA que revisan tus campañas de Meta y TikTok todos los días, te dicen por WhatsApp dónde se va el presupuesto y ejecutan el cambio cuando tú respondes CONFIRMAR.</p>
                   <div class="b2b-hero-actions">
-                    <a href="#informe" class="b2b-button">Pide tu informe de desperdicio</a>
-                    <a href="#rutas" class="b2b-button is-secondary">Ver cómo funciona <span aria-hidden="true">↓</span></a>
+                    <a href="/app" class="b2b-button is-primary">Pide tu diagnóstico gratis</a>
+                    <a href="#casos" class="b2b-button is-secondary">Ver cómo funciona <span aria-hidden="true">↓</span></a>
                   </div>
-                  <p class="b2b-hero-note"><span>Meta Ads · TikTok Ads · Google Ads</span> · <span>Se conecta con tu CRM y tu WhatsApp</span></p>
+                  <p class="b2b-hero-note"><span>Gratis y sin tarjeta</span> · <span>Sin llamada de ventas</span> · <span>Conectar toma 2 minutos</span></p>
+                  <p class="b2b-hero-note is-fine">Meta Ads · TikTok Ads · Google Ads (próximamente) · Se conecta con tu CRM y tu WhatsApp</p>
                 </div>
                 <!-- El panel de la derecha: un mensaje se convierte en tres tareas.
                      Oculto en móvil por CSS (`.b2b-hero-visual { display: none }`
@@ -468,89 +546,102 @@
             </div>
           </div>
           <!-- Franja de respaldo al pie del hero (16-sep): programas y empresas que
-               eligió Sergio. Logos de Wikimedia Commons, recortados a su contenido. -->
+               eligió Sergio. Logos de Wikimedia Commons, recortados a su contenido.
+               HUECO DE PRUEBA (18-sep): aquí es donde tiene que ir la prueba social y
+               hoy no hay ninguna en toda la página. Solo entra cuando exista de verdad
+               y con permiso: logos de clientes que autoricen su nombre, o una cifra
+               agregada y verificable (cuentas auditadas, US$ revisados al mes). Nada
+               inventado. -->
         </section>
-        <div class="lp">
-          <section class="lp-section lp-cream" id="rutas" aria-labelledby="rutas-title">
-            <div class="padding-global"><div class="container-large">
-              <header class="lp-head">
-                <p class="lp-eyebrow">Por dónde empezar</p>
-                <h2 id="rutas-title">Dos formas de trabajar con Comando.</h2>
-                <p class="lp-lede">El problema es el mismo —presupuesto que se va sin traer ventas—, pero no se resuelve igual si manejas tú la pauta o si ya tienes una agencia.</p>
-              </header>
-              <div class="lp-agents">
-                <article class="lp-agent">
-                  <div class="lp-agent-meta">
-                    <div class="lp-agent-top"><span class="lp-agent-icon"><svg aria-hidden="true"><use href="#i-comprador"/></svg></span></div>
-                    <h3>Vendo en mi zona</h3>
-                    <p>Concesionarios, distribuidores y negocios locales que hacen su propia pauta y venden por WhatsApp.</p>
-                    <ul class="lp-route-list">
-                      <li>Qué campaña trajo ventas de verdad, no solo formularios.</li>
-                      <li>Presupuesto que se mueve solo del anuncio que no rinde al que sí.</li>
-                      <li>Un reporte que puedes enseñarle al dueño.</li>
-                      <li>No toca la pauta oficial de la marca: trabaja tu zona, tu stock y tu punto de venta.</li>
-                    </ul>
-                    <p class="foot">Base fija + parte del ahorro que se demuestre</p>
-                  </div>
-                </article>
-                <article class="lp-agent">
-                  <div class="lp-agent-meta">
-                    <div class="lp-agent-top"><span class="lp-agent-icon"><svg aria-hidden="true"><use href="#i-shield"/></svg></span></div>
-                    <h3>Ya tengo agencia</h3>
-                    <p>Marcas y equipos de marketing que no quieren cambiar de agencia, quieren control sobre lo que se ejecuta.</p>
-                    <ul class="lp-route-list">
-                      <li>Auditoría continua de la cuenta: desperdicio, duplicados y nombres fuera de estándar.</li>
-                      <li>Alertas el día que pasa, no en el reporte de fin de mes.</li>
-                      <li>Tus datos y tu histórico quedan en tu casa, no en la de la agencia.</li>
-                      <li>El trabajo repetitivo y de alto volumen lo hace el agente; la estrategia sigue siendo de tu equipo.</li>
-                    </ul>
-                    <p class="foot">Precio por cuenta publicitaria + parte del ahorro</p>
-                  </div>
-                </article>
-              </div>
-            </div></div>
-          </section>
-        </div>
         <div id="casos" class="section_usecases section_metaads">
           <div class="padding-global">
-            <div class="container-large"><div id="metaads-root"></div></div>
+            <div class="container-large"><div id="metaads-root"></div>
+              <!-- Esta sección la pinta js/usecases.js. Sin JavaScript era un hueco
+                   en blanco, y desde el 18-sep está en segundo lugar: el hueco caía
+                   justo debajo del hero. -->
+              <noscript><p class="plans-noscript">Le preguntas por WhatsApp cómo van tus anuncios de Meta y TikTok y te responde con el gasto, los leads, el costo por lead y qué cambiar primero. <a href="/app">Pide tu diagnóstico gratis</a></p></noscript>
+            </div>
           </div>
         </div>
         <div class="lp">
-          <section class="lp-section lp-paper" id="informe" aria-labelledby="informe-title">
+          <!-- «El informe de desperdicio» se renombró «diagnóstico» el 18-sep. Tres
+               razones: (1) nadie pide por su nombre un informe de su propio
+               desperdicio; (2) el nombre acusaba al lector —la jefa de marketing es
+               quien aprobó ese gasto, así que pedirlo era confesar—; (3) «diagnóstico»
+               ya está en su vocabulario, sube bien a gerencia («mandé a hacer un
+               diagnóstico de la cuenta») y cabe en un botón. El riesgo del nombre es
+               que suena a la llamada de una agencia, así que la página dice dos veces
+               que no hay llamada de ventas.
+               La sección subió al segundo lugar: antes iba cuarta, detrás de dos
+               secciones que pedían al lector clasificarse antes de saber qué hace
+               esto. -->
+          <section class="lp-section lp-paper" id="diagnostico" aria-labelledby="diagnostico-title">
             <div class="padding-global"><div class="container-large">
               <header class="lp-head">
                 <p class="lp-eyebrow">Empieza por aquí</p>
-                <h2 id="informe-title">El informe de desperdicio, gratis.</h2>
-                <p class="lp-lede">Conectas tu cuenta publicitaria en dos minutos y en 14 días te decimos, en dólares, cuánto se está yendo sin traer resultados. Sin tarjeta y sin compromiso.</p>
+                <h2 id="diagnostico-title">Diagnóstico gratis de tu cuenta publicitaria.</h2>
+                <p class="lp-lede">Conectas tu cuenta de Meta en dos minutos. Al día siguiente te decimos, en dólares, cuánto se fue en anuncios que no trajeron un solo resultado y qué cambiar primero. Sin tarjeta y sin llamada de ventas.</p>
               </header>
               <div class="lp-agents">
                 <article class="lp-agent">
                   <div class="lp-agent-meta">
                     <div class="lp-agent-top"><span class="lp-agent-icon"><svg aria-hidden="true"><use href="#i-analista"/></svg></span></div>
-                    <h3>Qué revisamos</h3>
-                    <p>Campañas y anuncios que gastan sin resultados, audiencias que ya vieron el anuncio de más, costos que subieron y presupuesto puesto donde peor rinde.</p>
-                    <p class="foot">Últimos 90 días de tu cuenta</p>
+                    <h3>Qué miramos</h3>
+                    <p>Campañas y anuncios que gastan sin traer resultados, audiencias que ya vieron el anuncio de más, costos que subieron y presupuesto puesto donde peor rinde.</p>
+                    <p class="foot">Últimos 90 días · la cifra, del último mes</p>
                   </div>
                 </article>
                 <article class="lp-agent">
                   <div class="lp-agent-meta">
                     <div class="lp-agent-top"><span class="lp-agent-icon"><svg aria-hidden="true"><use href="#i-report"/></svg></span></div>
-                    <h3>Qué recibes</h3>
-                    <p>Una cifra: cuánto se desperdició en el periodo. Debajo, la lista de dónde y qué cambio recomienda cada agente, ordenada por lo que más pesa.</p>
-                    <p class="foot">Se mide contra tu propio histórico</p>
+                    <h3>Qué te llega</h3>
+                    <p>Un número: cuánto se fue el mes pasado sin traer un solo resultado. Debajo, dónde se fue y qué cambio hacer en cada caso, empezando por lo que más pesa.</p>
+                    <p class="foot">En una pantalla, no en un PDF de 30 páginas</p>
                   </div>
                 </article>
                 <article class="lp-agent">
                   <div class="lp-agent-meta">
                     <div class="lp-agent-top"><span class="lp-agent-icon"><svg aria-hidden="true"><use href="#i-decide"/></svg></span></div>
-                    <h3>Y después</h3>
-                    <p>Decides tú. Puedes aplicar los cambios uno por uno desde el chat, dejar que el agente los proponga cada día, o quedarte solo con el informe.</p>
+                    <h3>Tú decides</h3>
+                    <p>Aplicas los cambios uno por uno desde el chat, dejas que el agente te los proponga cada mañana, o te quedas solo con el diagnóstico y no haces nada.</p>
                     <p class="foot">Nada se ejecuta sin tu CONFIRMAR</p>
                   </div>
                 </article>
               </div>
-              <p class="lp-soon-note"><a class="btn btn-dark" href="/app">Pide tu informe</a></p>
+              <!-- HUECO DE PRUEBA (18-sep): tres tarjetas describen el proceso, pero la
+                   página nunca ENSEÑA el entregable. Aquí debajo va un pantallazo real
+                   de un diagnóstico entregado, con la cuenta anonimizada y con permiso
+                   del cliente. Mientras no exista, queda el ejemplo de conversación de
+                   la derecha, que es una maqueta y se lee como tal. -->
+              <div class="dx-ask">
+                <div class="dx-ask-copy">
+                  <h3>Tres pasos y queda pedido</h3>
+                  <ol class="dx-steps">
+                    <li><b>Entras con tu cuenta de Meta.</b> El mismo «Iniciar sesión con Facebook» que ya usas para el Ads Manager.</li>
+                    <li><b>Eliges la cuenta publicitaria.</b> Comando pide permiso de lectura: mira, no toca.</li>
+                    <li><b>Al día siguiente te escribe por WhatsApp</b> con el diagnóstico.</li>
+                  </ol>
+                  <a class="btn btn-dark" href="/app">Pide tu diagnóstico gratis</a>
+                  <p class="dx-note">Gratis, sin tarjeta y sin llamada. Puedes desconectar la cuenta y <a href="eliminar-datos.html">borrar tus datos</a> cuando quieras.</p>
+                </div>
+                <div class="dx-ask-demo">
+                  <p class="dx-demo-label">Así llega</p>
+                  <div class="mini-chat" role="group" aria-label="Ejemplo del diagnóstico que llega por WhatsApp">
+                    <div class="msg bot"><div class="bubble">🔴 <b>US$&nbsp;612</b> de los US$&nbsp;3.120 que invertiste el mes pasado se fueron en anuncios sin un solo lead: el <b>19&nbsp;%</b>.<br /><br />Lo más pesado: «Remarketing», <b>US$&nbsp;96</b> en 3 días y 0 leads. Ya lo vieron 4,8 veces.<br /><br />¿Te paso la lista completa?<time>08:15</time></div></div>
+                    <div class="msg me"><div class="bubble">Sí, pásamela.<time>08:16</time></div></div>
+                  </div>
+                  <p class="dx-demo-note">Ejemplo con datos de muestra.</p>
+                </div>
+              </div>
+              <!-- La objeción real en este punto no es el precio: es «le voy a dar
+                   acceso a la cuenta publicitaria de la empresa». La página no la
+                   contestaba en ningún sitio. -->
+              <ul class="dx-trust">
+                <li><b>Permiso de lectura para mirar.</b> Para cambiar algo, tu CONFIRMAR por escrito.</li>
+                <li><b>Cada cambio queda registrado:</b> qué había antes y qué quedó después.</li>
+                <li><b>Tus datos no se mezclan</b> con los de otro cliente.</li>
+                <li><b>Sin permanencia.</b> Desconectas la cuenta cuando quieras.</li>
+              </ul>
             </div></div>
           </section>
         </div>
@@ -559,7 +650,11 @@
             <div class="padding-global"><div class="container-large">
               <header class="lp-head">
                 <p class="lp-eyebrow">Tu equipo</p>
-                <h2 id="equipo-title">Un equipo de marketing que trabaja para tu empresa 24/7.</h2>
+                <!-- Fuera el «24/7» (18-sep): la cuenta se revisa a diario, no cada
+                     minuto, y prometer 24/7 en una página que vende auditoría se
+                     desmonta en la primera semana de uso. -->
+                <h2 id="equipo-title">Tres agentes trabajando en tu cuenta, todos los días.</h2>
+                <p class="lp-lede">No es otro tablero al que entrar. Te escriben por WhatsApp, te contestan cuando preguntas y esperan tu respuesta para tocar algo.</p>
               </header>
               <div class="lp-agents">
                 <article class="lp-agent">
@@ -579,7 +674,7 @@
                     <div class="lp-agent-top"><span class="lp-agent-icon"><svg aria-hidden="true"><use href="#i-estratega"/></svg></span></div>
                     <h3>Agente Estratega</h3>
                     <p>Diagnostica cada campaña y te dice qué revisar primero.</p>
-                    <p class="foot">Metodología de 3 preguntas · semáforo</p>
+                    <p class="foot">Semáforo: verde, amarillo o rojo, con el motivo</p>
                   </div>
                   <div class="mini-chat" role="group" aria-label="Ejemplo de conversación">
                     <div class="msg me"><div class="bubble">¿Por qué subió mi costo por lead?<time>11:15</time></div></div>
@@ -589,9 +684,13 @@
                 <article class="lp-agent">
                   <div class="lp-agent-meta">
                     <div class="lp-agent-top"><span class="lp-agent-icon"><svg aria-hidden="true"><use href="#i-comprador"/></svg></span></div>
-                    <h3>Agente Media Buyer</h3>
+                    <h3>Agente de Pauta</h3>
                     <p>Pausa campañas y mueve presupuesto cuando tú confirmas.</p>
-                    <p class="foot">Siempre con tu CONFIRMAR</p>
+                    <!-- 18-sep: el titular deja de decir «Media Buyer» (el ICP no usa
+                         esa palabra), pero el nombre del catálogo sigue en el pie: las
+                         tarjetas de precios de esta misma página lo pintan desde
+                         js/pricing.js, que es del home y no se toca aquí. -->
+                    <p class="foot">Media Buyer · siempre con tu CONFIRMAR</p>
                   </div>
                   <div class="mini-chat" role="group" aria-label="Ejemplo de conversación">
                     <div class="msg me"><div class="bubble">Baja Remarketing a US$&nbsp;10 al día.<time>12:30</time></div></div>
@@ -648,19 +747,12 @@
                 <header class="lp-head is-left">
                   <p class="lp-eyebrow">Métricas</p>
                   <h2 id="metricas-title">Las métricas que importan, con semáforo.</h2>
-                  <p class="lp-lede">Pregúntale por WhatsApp cómo van tus anuncios: te responde con cada número en verde, amarillo o rojo, y qué cambiar.</p>
+                  <p class="lp-lede">Pregúntale por WhatsApp cómo van tus anuncios: te responde con cada número en verde, amarillo o rojo, y qué cambiar. Incluido el que Meta no te da: cuánto vendiste de verdad, según tu CRM.</p>
                 </header>
                 <div class="slider-btns"><button type="button" aria-label="Anterior"><svg aria-hidden="true"><use href="#i-arrow-l"/></svg></button><button type="button" aria-label="Siguiente"><svg aria-hidden="true"><use href="#i-arrow-r"/></svg></button></div>
               </div>
             </div></div>
         <div class="rail" tabindex="0" role="region" aria-label="Métricas">
-          <article class="metric">
-            <div class="metric-top"><h3 class="metric-name">ROAS según Meta</h3></div>
-            <div class="metric-value"><span data-to="3.2" data-dec="1">3,2</span><small>×</small></div>
-            <p class="metric-state is-ok"><span class="lights" aria-hidden="true"><i class="light"></i><i class="light"></i><i class="light" data-to="ok"></i></span><span>Bien</span></p>
-            <div class="metric-viz"><svg viewBox="0 0 260 56" aria-hidden="true"><rect x="0" y="30" width="70" height="26" rx="6" fill="#262626"/><rect x="90" y="0" width="170" height="56" rx="6" fill="rgba(63,191,132,.18)" stroke="#3fbf84"/></svg><p class="viz-cap">US$&nbsp;1 → <span class="ok">US$&nbsp;3,20 atribuidos por Meta</span></p></div>
-            <p class="desc">Lo que Meta dice que vendieron tus campañas de venta, por cada dólar.</p>
-          </article>
           <article class="metric">
             <div class="metric-top"><h3 class="metric-name">Costo por resultado</h3></div>
             <div class="metric-value"><small class="pre">US$</small><span data-to="5.46" data-dec="2">5,46</span></div>
@@ -669,17 +761,24 @@
             <p class="desc">Lo que pagas por cada lead, mensaje o compra, contra tu objetivo.</p>
           </article>
           <article class="metric">
-            <div class="metric-top"><h3 class="metric-name">CTR</h3></div>
-            <div class="metric-value"><span data-to="0.9" data-dec="1">0,9</span><small>%</small></div>
-            <p class="metric-state is-bad"><span class="lights" aria-hidden="true"><i class="light" data-to="bad"></i><i class="light"></i><i class="light"></i></span><span>Revisar</span></p>
-            <div class="metric-viz"><svg viewBox="0 0 260 56" aria-hidden="true"><g fill="#262626"><circle cx="5.0" cy="7" r="3.4"/><circle cx="15.4" cy="7" r="3.4"/><circle cx="25.8" cy="7" r="3.4"/><circle cx="36.3" cy="7" r="3.4"/><circle cx="46.7" cy="7" r="3.4"/><circle cx="57.1" cy="7" r="3.4"/><circle cx="67.5" cy="7" r="3.4"/><circle cx="77.9" cy="7" r="3.4"/><circle cx="88.4" cy="7" r="3.4"/><circle cx="98.8" cy="7" r="3.4"/><circle cx="109.2" cy="7" r="3.4"/><circle cx="119.6" cy="7" r="3.4"/><circle cx="130.0" cy="7" r="3.4"/><circle cx="140.5" cy="7" r="3.4"/><circle cx="150.9" cy="7" r="3.4"/><circle cx="161.3" cy="7" r="3.4"/><circle cx="171.7" cy="7" r="3.4"/><circle cx="182.1" cy="7" r="3.4"/><circle cx="192.6" cy="7" r="3.4"/><circle cx="203.0" cy="7" r="3.4"/><circle cx="213.4" cy="7" r="3.4"/><circle cx="223.8" cy="7" r="3.4"/><circle cx="234.2" cy="7" r="3.4"/><circle cx="244.7" cy="7" r="3.4"/><circle cx="255.1" cy="7" r="3.4"/><circle cx="5.0" cy="21" r="3.4"/><circle cx="15.4" cy="21" r="3.4"/><circle cx="25.8" cy="21" r="3.4"/><circle cx="36.3" cy="21" r="3.4"/><circle cx="46.7" cy="21" r="3.4"/><circle cx="57.1" cy="21" r="3.4"/><circle cx="67.5" cy="21" r="3.4"/><circle cx="77.9" cy="21" r="3.4"/><circle cx="88.4" cy="21" r="3.4"/><circle cx="98.8" cy="21" r="3.4"/><circle cx="109.2" cy="21" r="3.4"/><circle cx="119.6" cy="21" r="3.4"/><circle cx="130.0" cy="21" r="3.4"/><circle cx="140.5" cy="21" r="3.4"/><circle cx="150.9" cy="21" r="3.4"/><circle cx="161.3" cy="21" r="3.4"/><circle cx="171.7" cy="21" r="3.4"/><circle cx="182.1" cy="21" r="3.4"/><circle cx="192.6" cy="21" r="3.4"/><circle cx="203.0" cy="21" r="3.4"/><circle cx="213.4" cy="21" r="3.4"/><circle cx="223.8" cy="21" r="3.4"/><circle cx="234.2" cy="21" r="3.4"/><circle cx="244.7" cy="21" r="3.4"/><circle cx="255.1" cy="21" r="3.4"/><circle cx="5.0" cy="35" r="3.4"/><circle cx="15.4" cy="35" r="3.4"/><circle cx="25.8" cy="35" r="3.4"/><circle cx="36.3" cy="35" r="3.4"/><circle cx="46.7" cy="35" r="3.4"/><circle cx="57.1" cy="35" r="3.4"/><circle cx="67.5" cy="35" r="3.4"/><circle cx="77.9" cy="35" r="3.4"/><circle cx="88.4" cy="35" r="3.4"/><circle cx="98.8" cy="35" r="3.4"/><circle cx="109.2" cy="35" r="3.4"/><circle cx="119.6" cy="35" r="3.4"/><circle cx="130.0" cy="35" r="3.4"/><circle cx="140.5" cy="35" r="3.4"/><circle cx="150.9" cy="35" r="3.4"/><circle cx="161.3" cy="35" r="3.4"/><circle cx="171.7" cy="35" r="3.4"/><circle cx="182.1" cy="35" r="3.4"/><circle cx="192.6" cy="35" r="3.4"/><circle cx="203.0" cy="35" r="3.4"/><circle cx="213.4" cy="35" r="3.4"/><circle cx="223.8" cy="35" r="3.4"/><circle cx="234.2" cy="35" r="3.4"/><circle cx="244.7" cy="35" r="3.4"/><circle cx="255.1" cy="35" r="3.4"/><circle cx="5.0" cy="49" r="3.4"/><circle cx="15.4" cy="49" r="3.4"/><circle cx="25.8" cy="49" r="3.4"/><circle cx="36.3" cy="49" r="3.4"/><circle cx="46.7" cy="49" r="3.4"/><circle cx="57.1" cy="49" r="3.4"/><circle cx="67.5" cy="49" r="3.4"/><circle cx="77.9" cy="49" r="3.4"/><circle cx="88.4" cy="49" r="3.4"/><circle cx="98.8" cy="49" r="3.4"/><circle cx="109.2" cy="49" r="3.4"/><circle cx="119.6" cy="49" r="3.4"/><circle cx="130.0" cy="49" r="3.4"/><circle cx="140.5" cy="49" r="3.4"/><circle cx="150.9" cy="49" r="3.4"/><circle cx="161.3" cy="49" r="3.4"/><circle cx="171.7" cy="49" r="3.4"/><circle cx="182.1" cy="49" r="3.4"/><circle cx="192.6" cy="49" r="3.4"/><circle cx="203.0" cy="49" r="3.4"/><circle cx="213.4" cy="49" r="3.4"/><circle cx="223.8" cy="49" r="3.4"/><circle cx="234.2" cy="49" r="3.4"/><circle cx="244.7" cy="49" r="3.4"/></g><circle cx="255.1" cy="49" r="3.8" fill="#f06a64"/></svg><p class="viz-cap">De cada 100 que lo ven, menos de 1 hace clic</p></div>
-            <p class="desc">Si tu anuncio consigue clics.</p>
+            <div class="metric-top"><h3 class="metric-name">ROAS según Meta</h3></div>
+            <div class="metric-value"><span data-to="3.2" data-dec="1">3,2</span><small>×</small></div>
+            <p class="metric-state is-ok"><span class="lights" aria-hidden="true"><i class="light"></i><i class="light"></i><i class="light" data-to="ok"></i></span><span>Bien</span></p>
+            <div class="metric-viz"><svg viewBox="0 0 260 56" aria-hidden="true"><rect x="0" y="30" width="70" height="26" rx="6" fill="#262626"/><rect x="90" y="0" width="170" height="56" rx="6" fill="rgba(63,191,132,.18)" stroke="#3fbf84"/></svg><p class="viz-cap">US$&nbsp;1 → <span class="ok">US$&nbsp;3,20 atribuidos por Meta</span></p></div>
+            <p class="desc">Lo que Meta dice que vendieron tus campañas de venta, por cada dólar.</p>
+          </article>
+          <article class="metric">
+            <div class="metric-top"><h3 class="metric-name">ROAS real (CRM)</h3></div>
+            <div class="metric-value"><span data-to="2.4" data-dec="1">2,4</span><small>× en ventas</small></div>
+            <p class="metric-state is-ok"><span class="lights" aria-hidden="true"><i class="light"></i><i class="light"></i><i class="light" data-to="ok"></i></span><span>Bien</span></p>
+            <div class="metric-viz"><svg viewBox="0 0 260 56" aria-hidden="true"><rect x="2" y="6" width="80" height="44" rx="8" fill="rgba(243,241,234,.06)" stroke="#75726b" stroke-width="1.5"/><rect x="178" y="6" width="80" height="44" rx="8" fill="rgba(63,191,132,.18)" stroke="#3fbf84" stroke-width="1.5"/><path d="M90 28h78" stroke="#c2c5c2" stroke-width="2"/><path d="M162 22l7 6-7 6" fill="none" stroke="#c2c5c2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><g font-family="Jetbrainsmono Variable, monospace" font-size="13" font-weight="600" text-anchor="middle"><text x="42" y="33" fill="#fff">Meta</text><text x="218" y="33" fill="#fff">CRM</text></g></svg><p class="viz-cap">US$&nbsp;1 en anuncios → <span class="ok">US$&nbsp;2,40 en ventas cerradas</span></p></div>
+            <p class="desc">Lo que de verdad vendiste por cada dólar, según tu CRM.</p>
           </article>
           <article class="metric">
             <div class="metric-top"><h3 class="metric-name">Presupuesto desperdiciado</h3></div>
             <div class="metric-value"><small class="pre">US$</small><span data-to="612" data-dec="0">612</span></div>
             <p class="metric-state is-bad"><span class="lights" aria-hidden="true"><i class="light" data-to="bad"></i><i class="light"></i><i class="light"></i></span><span>Revisar</span></p>
-            <div class="metric-viz"><svg viewBox="0 0 260 56" aria-hidden="true"><rect x="0" y="16" width="260" height="24" rx="6" fill="#4a4944"/><rect x="0" y="16" width="96" height="24" rx="6" fill="#f06a64"/></svg><p class="viz-cap"><span class="bad">37 % de lo que invertiste este mes</span></p></div>
+            <div class="metric-viz"><svg viewBox="0 0 260 56" aria-hidden="true"><rect x="0" y="16" width="260" height="24" rx="6" fill="#4a4944"/><rect x="0" y="16" width="50" height="24" rx="6" fill="#f06a64"/></svg><p class="viz-cap"><span class="bad">19 % de lo que invertiste este mes</span></p></div>
             <p class="desc">Lo que se fue en anuncios sin un solo resultado.</p>
           </article>
           <article class="metric">
@@ -690,18 +789,18 @@
             <p class="desc">Si tu audiencia ya se cansó del anuncio.</p>
           </article>
           <article class="metric">
-            <div class="metric-top"><h3 class="metric-name">Embudo</h3></div>
-            <div class="metric-value"><span data-to="62" data-dec="0">62</span><small>% se pierde</small></div>
-            <p class="metric-state is-warn"><span class="lights" aria-hidden="true"><i class="light"></i><i class="light" data-to="warn"></i><i class="light"></i></span><span>Atención</span></p>
-            <div class="metric-viz"><svg viewBox="0 0 260 56" aria-hidden="true"><rect x="0" y="0" width="260" height="10" rx="4" fill="#3a3935"/><rect x="0" y="15" width="190" height="10" rx="4" fill="#57554f"/><rect x="0" y="30" width="72" height="10" rx="4" fill="#e9b949"/><rect x="0" y="45" width="40" height="10" rx="4" fill="#c9c6bd"/></svg><p class="viz-cap">Clic → visita → <span class="warn">carrito</span> → compra</p></div>
-            <p class="desc">Dónde se pierde la gente: clic, visita, carrito, compra.</p>
+            <div class="metric-top"><h3 class="metric-name">CTR</h3></div>
+            <div class="metric-value"><span data-to="0.9" data-dec="1">0,9</span><small>%</small></div>
+            <p class="metric-state is-bad"><span class="lights" aria-hidden="true"><i class="light" data-to="bad"></i><i class="light"></i><i class="light"></i></span><span>Revisar</span></p>
+            <div class="metric-viz"><svg viewBox="0 0 260 56" aria-hidden="true"><g fill="#262626"><circle cx="5.0" cy="7" r="3.4"/><circle cx="15.4" cy="7" r="3.4"/><circle cx="25.8" cy="7" r="3.4"/><circle cx="36.3" cy="7" r="3.4"/><circle cx="46.7" cy="7" r="3.4"/><circle cx="57.1" cy="7" r="3.4"/><circle cx="67.5" cy="7" r="3.4"/><circle cx="77.9" cy="7" r="3.4"/><circle cx="88.4" cy="7" r="3.4"/><circle cx="98.8" cy="7" r="3.4"/><circle cx="109.2" cy="7" r="3.4"/><circle cx="119.6" cy="7" r="3.4"/><circle cx="130.0" cy="7" r="3.4"/><circle cx="140.5" cy="7" r="3.4"/><circle cx="150.9" cy="7" r="3.4"/><circle cx="161.3" cy="7" r="3.4"/><circle cx="171.7" cy="7" r="3.4"/><circle cx="182.1" cy="7" r="3.4"/><circle cx="192.6" cy="7" r="3.4"/><circle cx="203.0" cy="7" r="3.4"/><circle cx="213.4" cy="7" r="3.4"/><circle cx="223.8" cy="7" r="3.4"/><circle cx="234.2" cy="7" r="3.4"/><circle cx="244.7" cy="7" r="3.4"/><circle cx="255.1" cy="7" r="3.4"/><circle cx="5.0" cy="21" r="3.4"/><circle cx="15.4" cy="21" r="3.4"/><circle cx="25.8" cy="21" r="3.4"/><circle cx="36.3" cy="21" r="3.4"/><circle cx="46.7" cy="21" r="3.4"/><circle cx="57.1" cy="21" r="3.4"/><circle cx="67.5" cy="21" r="3.4"/><circle cx="77.9" cy="21" r="3.4"/><circle cx="88.4" cy="21" r="3.4"/><circle cx="98.8" cy="21" r="3.4"/><circle cx="109.2" cy="21" r="3.4"/><circle cx="119.6" cy="21" r="3.4"/><circle cx="130.0" cy="21" r="3.4"/><circle cx="140.5" cy="21" r="3.4"/><circle cx="150.9" cy="21" r="3.4"/><circle cx="161.3" cy="21" r="3.4"/><circle cx="171.7" cy="21" r="3.4"/><circle cx="182.1" cy="21" r="3.4"/><circle cx="192.6" cy="21" r="3.4"/><circle cx="203.0" cy="21" r="3.4"/><circle cx="213.4" cy="21" r="3.4"/><circle cx="223.8" cy="21" r="3.4"/><circle cx="234.2" cy="21" r="3.4"/><circle cx="244.7" cy="21" r="3.4"/><circle cx="255.1" cy="21" r="3.4"/><circle cx="5.0" cy="35" r="3.4"/><circle cx="15.4" cy="35" r="3.4"/><circle cx="25.8" cy="35" r="3.4"/><circle cx="36.3" cy="35" r="3.4"/><circle cx="46.7" cy="35" r="3.4"/><circle cx="57.1" cy="35" r="3.4"/><circle cx="67.5" cy="35" r="3.4"/><circle cx="77.9" cy="35" r="3.4"/><circle cx="88.4" cy="35" r="3.4"/><circle cx="98.8" cy="35" r="3.4"/><circle cx="109.2" cy="35" r="3.4"/><circle cx="119.6" cy="35" r="3.4"/><circle cx="130.0" cy="35" r="3.4"/><circle cx="140.5" cy="35" r="3.4"/><circle cx="150.9" cy="35" r="3.4"/><circle cx="161.3" cy="35" r="3.4"/><circle cx="171.7" cy="35" r="3.4"/><circle cx="182.1" cy="35" r="3.4"/><circle cx="192.6" cy="35" r="3.4"/><circle cx="203.0" cy="35" r="3.4"/><circle cx="213.4" cy="35" r="3.4"/><circle cx="223.8" cy="35" r="3.4"/><circle cx="234.2" cy="35" r="3.4"/><circle cx="244.7" cy="35" r="3.4"/><circle cx="255.1" cy="35" r="3.4"/><circle cx="5.0" cy="49" r="3.4"/><circle cx="15.4" cy="49" r="3.4"/><circle cx="25.8" cy="49" r="3.4"/><circle cx="36.3" cy="49" r="3.4"/><circle cx="46.7" cy="49" r="3.4"/><circle cx="57.1" cy="49" r="3.4"/><circle cx="67.5" cy="49" r="3.4"/><circle cx="77.9" cy="49" r="3.4"/><circle cx="88.4" cy="49" r="3.4"/><circle cx="98.8" cy="49" r="3.4"/><circle cx="109.2" cy="49" r="3.4"/><circle cx="119.6" cy="49" r="3.4"/><circle cx="130.0" cy="49" r="3.4"/><circle cx="140.5" cy="49" r="3.4"/><circle cx="150.9" cy="49" r="3.4"/><circle cx="161.3" cy="49" r="3.4"/><circle cx="171.7" cy="49" r="3.4"/><circle cx="182.1" cy="49" r="3.4"/><circle cx="192.6" cy="49" r="3.4"/><circle cx="203.0" cy="49" r="3.4"/><circle cx="213.4" cy="49" r="3.4"/><circle cx="223.8" cy="49" r="3.4"/><circle cx="234.2" cy="49" r="3.4"/><circle cx="244.7" cy="49" r="3.4"/></g><circle cx="255.1" cy="49" r="3.8" fill="#f06a64"/></svg><p class="viz-cap">De cada 100 que lo ven, menos de 1 hace clic</p></div>
+            <p class="desc">Si tu anuncio consigue clics.</p>
           </article>
           <article class="metric">
-            <div class="metric-top"><h3 class="metric-name">ROAS real (CRM)</h3></div>
-            <div class="metric-value"><span data-to="2.4" data-dec="1">2,4</span><small>× en ventas</small></div>
-            <p class="metric-state is-ok"><span class="lights" aria-hidden="true"><i class="light"></i><i class="light"></i><i class="light" data-to="ok"></i></span><span>Bien</span></p>
-            <div class="metric-viz"><svg viewBox="0 0 260 56" aria-hidden="true"><rect x="2" y="6" width="80" height="44" rx="8" fill="rgba(243,241,234,.06)" stroke="#75726b" stroke-width="1.5"/><rect x="178" y="6" width="80" height="44" rx="8" fill="rgba(63,191,132,.18)" stroke="#3fbf84" stroke-width="1.5"/><path d="M90 28h78" stroke="#c2c5c2" stroke-width="2"/><path d="M162 22l7 6-7 6" fill="none" stroke="#c2c5c2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><g font-family="Jetbrainsmono Variable, monospace" font-size="13" font-weight="600" text-anchor="middle"><text x="42" y="33" fill="#fff">Meta</text><text x="218" y="33" fill="#fff">CRM</text></g></svg><p class="viz-cap">US$&nbsp;1 en anuncios → <span class="ok">US$&nbsp;2,40 en ventas cerradas</span></p></div>
-            <p class="desc">Lo que de verdad vendiste por cada dólar, según tu CRM.</p>
+            <div class="metric-top"><h3 class="metric-name">Dónde se cae la gente</h3></div>
+            <div class="metric-value"><span data-to="62" data-dec="0">62</span><small>% se pierde</small></div>
+            <p class="metric-state is-warn"><span class="lights" aria-hidden="true"><i class="light"></i><i class="light" data-to="warn"></i><i class="light"></i></span><span>Atención</span></p>
+            <div class="metric-viz"><svg viewBox="0 0 260 56" aria-hidden="true"><rect x="0" y="0" width="260" height="10" rx="4" fill="#3a3935"/><rect x="0" y="15" width="190" height="10" rx="4" fill="#57554f"/><rect x="0" y="30" width="72" height="10" rx="4" fill="#e9b949"/><rect x="0" y="45" width="40" height="10" rx="4" fill="#c9c6bd"/></svg><p class="viz-cap">Clic → visita → <span class="warn">formulario</span> → venta</p></div>
+            <p class="desc">En qué paso se caen: clic, visita, formulario, venta.</p>
           </article>
         </div>
           </section>
@@ -711,18 +810,27 @@
             <div class="padding-global"><div class="container-large">
               <header class="lp-head">
                 <p class="lp-eyebrow">Precios</p>
-                <h2 id="precios-title">Tus anuncios revisados todos los días, no una vez al mes.</h2>
-                <p class="lp-lede">Analista, estratega y media buyer en un mismo chat, por un precio fijo.</p>
+                <!-- 18-sep: el titular de la sección de precios no hablaba de
+                     precio. Quien llega aquí desde el menú «PRECIOS» viene a saber
+                     cuánto cuesta y qué compromiso pide. Los números siguen viviendo
+                     una sola vez, en js/pricing.js. -->
+                <h2 id="precios-title">Precio fijo al mes, sin contrato anual y sin mínimo de inversión.</h2>
+                <p class="lp-lede">Empieza gratis y sube de plan solo si te sirve. Analista, estratega y pauta en el mismo chat de WhatsApp.</p>
               </header>
               <!-- Las tarjetas las pinta js/pricing.js desde PLAN_LADDER (la única copia de los números). -->
               <div id="pricing-root">
                 <noscript><p class="plans-noscript">Gratis, Esencial US$&nbsp;9 y Comando Pro US$&nbsp;29 al mes; Empresas, a medida. <a href="/app">Empieza gratis</a></p></noscript>
               </div>
+              <!-- Los dos modelos a medida (base + parte del ahorro, y precio por
+                   cuenta auditada) se fueron con la sección «A medida» del final:
+                   aquí abrían un tercer y un cuarto precio en la misma pantalla en la
+                   que el lector intenta elegir entre tres planes. -->
               <div class="lp-models">
-                <p><b>Concesionarios y distribuidores:</b> base fija desde US$ 29 al mes por cuenta publicitaria más el 15 % del ahorro que se demuestre contra tu propio histórico. Si no ahorras, solo pagas la base.</p>
-                <p><b>Marcas con agencia:</b> precio por cuenta publicitaria auditada, con informe continuo y tus datos en tu casa. Cotizado según cuentas y volumen.</p>
-                <p class="lp-models-note">Los planes de arriba son autoservicio y de precio fijo. Estos dos modelos se cierran hablando con nosotros.</p>
+                <p><b>¿Varias sucursales, varias cuentas publicitarias o una agencia de por medio?</b> Eso no se resuelve con un plan de autoservicio: <a href="#rutas">mira los dos modelos a medida</a>.</p>
               </div>
+              <!-- HUECO DE PRUEBA (18-sep): justo antes de los planes es donde más
+                   pesa un testimonio. Hace falta uno real, de un jefe o jefa de
+                   marketing, con nombre, cargo y empresa, autorizado por escrito. -->
               <!-- Fuera el precio del módulo CRM (16-sep): enlazaba a la sección
                    que ahora va oculta, así que además quedaba muerto. -->
 
@@ -742,35 +850,61 @@
           </div>
         </div>
         <div class="lp">
-          <section class="lp-section lp-dark" id="agencias" aria-labelledby="agencias-title">
+          <!-- 18-sep: «Dos formas de trabajar con Comando» (que estaba en el segundo
+               lugar de la página, pidiéndole al lector que se clasificara antes de
+               saber qué hace el producto) y «No reemplazamos a tu agencia» (que decía
+               lo mismo seis secciones después, con tres tarjetas) se fusionan aquí, al
+               final. Quién eres y cómo se cobra se deciden cuando ya sabes qué hace y
+               qué cuesta; y así la página termina con una acción y no con una defensa.
+               Hereda el `lp-dark` de la vieja sección de agencias para que el negro
+               siga enlazando con la cinta y el pie. -->
+          <section class="lp-section lp-dark" id="rutas" aria-labelledby="rutas-title">
             <div class="padding-global"><div class="container-large">
               <header class="lp-head">
-                <p class="lp-eyebrow">Marcas con agencia</p>
-                <h2 id="agencias-title">No reemplazamos a tu agencia. La auditamos.</h2>
-                <p class="lp-lede">Tu agencia sigue haciendo la estrategia y los creativos. Comando revisa todos los días lo que se ejecuta en la cuenta y te lo cuenta a ti, que eres quien paga.</p>
+                <p class="lp-eyebrow">A medida</p>
+                <h2 id="rutas-title">Dos casos que no entran en un plan de autoservicio.</h2>
+                <p class="lp-lede">El problema es el mismo —presupuesto que se va sin traer ventas—, pero no se resuelve igual si manejas tú la pauta o si ya tienes una agencia.</p>
               </header>
-              <div class="lp-agents">
+              <div class="lp-agents is-two">
+                <article class="lp-agent">
+                  <div class="lp-agent-meta">
+                    <div class="lp-agent-top"><span class="lp-agent-icon"><svg aria-hidden="true"><use href="#i-comprador"/></svg></span></div>
+                    <h3>Vendo en mi zona</h3>
+                    <p>Concesionarios, distribuidores y negocios locales que hacen su propia pauta y venden por WhatsApp.</p>
+                    <ul class="lp-route-list">
+                      <li>Qué campaña trajo ventas de verdad, no solo formularios.</li>
+                      <li>Presupuesto que se mueve del anuncio que no rinde al que sí, siempre con tu CONFIRMAR.</li>
+                      <li>Un reporte que puedes enseñarle al dueño el lunes por la mañana.</li>
+                      <li>No toca la pauta oficial de la marca: trabaja tu zona, tu stock y tu punto de venta.</li>
+                    </ul>
+                    <p class="foot">Base fija por cuenta publicitaria + una parte del ahorro que se demuestre contra tu propio histórico. Si no ahorras, solo pagas la base.</p>
+                  </div>
+                </article>
                 <article class="lp-agent">
                   <div class="lp-agent-meta">
                     <div class="lp-agent-top"><span class="lp-agent-icon"><svg aria-hidden="true"><use href="#i-shield"/></svg></span></div>
-                    <h3>Control, no reemplazo</h3>
-                    <p>Ves qué se cambió, cuándo y qué efecto tuvo. Sin pedir un reporte ni esperar la reunión del lunes.</p>
+                    <h3>Ya tengo agencia</h3>
+                    <p>No la reemplazamos: la auditamos. La estrategia y los creativos siguen siendo suyos; tú ves todos los días qué se ejecuta en la cuenta que estás pagando.</p>
+                    <ul class="lp-route-list">
+                      <li>Qué se cambió, cuándo y qué efecto tuvo, sin pedir un reporte ni esperar la reunión del lunes.</li>
+                      <li>Avisos el día que pasa, no en el cierre de mes.</li>
+                      <li>El trabajo de volumen —nomenclatura, revisar miles de anuncios, presupuestos diarios— lo hace el agente.</li>
+                      <li>El histórico y la atribución quedan en tu cuenta: si cambias de agencia, no empiezas de cero.</li>
+                    </ul>
+                    <p class="foot">Precio por cuenta publicitaria auditada, según cuántas cuentas y cuánto volumen.</p>
                   </div>
                 </article>
-                <article class="lp-agent">
-                  <div class="lp-agent-meta">
-                    <div class="lp-agent-top"><span class="lp-agent-icon"><svg aria-hidden="true"><use href="#i-hours"/></svg></span></div>
-                    <h3>El volumen lo hace el agente</h3>
-                    <p>Nomenclatura, revisión de miles de anuncios, presupuestos diarios: el trabajo repetitivo que hoy se cobra caro y se hace lento.</p>
-                  </div>
-                </article>
-                <article class="lp-agent">
-                  <div class="lp-agent-meta">
-                    <div class="lp-agent-top"><span class="lp-agent-icon"><svg aria-hidden="true"><use href="#i-atribucion"/></svg></span></div>
-                    <h3>Tus datos son tuyos</h3>
-                    <p>El histórico, la atribución y los aprendizajes quedan en tu cuenta. Si cambias de agencia, no empiezas de cero.</p>
-                  </div>
-                </article>
+              </div>
+              <!-- HUECO DE PRUEBA (18-sep): un caso con números reales —un concesionario
+                   y una marca con agencia— es lo que cierra esta sección. Con nombre y
+                   permiso, o con el sector y la cifra si el cliente no quiere figurar.
+                   Sin cliente real, nada. -->
+              <div class="dx-close">
+                <p>Dinos cuántas cuentas publicitarias manejas y te decimos qué modelo te sale mejor. O empieza por el diagnóstico gratis y decides después.</p>
+                <div class="dx-close-actions">
+                  <a class="btn btn-dark" href="/app">Pide tu diagnóstico gratis</a>
+                  <a class="btn btn-line" href="mailto:hola@comando.pro">Escríbenos: hola@comando.pro</a>
+                </div>
               </div>
             </div></div>
           </section>
@@ -874,7 +1008,8 @@
                   </div>
                   <div class="footer-col">
                     <div class="footer-col-title">PRODUCTO</div>
-                    <a href="#equipo">Tu equipo</a
+                    <a href="#diagnostico">Diagnóstico gratis</a
+                    ><a href="#equipo">Tu equipo</a
                     ><a href="#precios">Precios</a
                     ><a href="conectores.html">Conectores</a>
                   </div>
