@@ -800,3 +800,11 @@ html:not(.js) .lp .attr-step p { display: block; }
 .lp .plan.star .plan-launch { color: #a3a3a3; }
 .lp .plan.star .plan-launch b { background: rgba(157, 180, 255, .16); color: #b9c8ff; }
 .lp .plan-year:has(.plan-launch) { min-height: 0; }
+/* Propuesta (/propuesta, 18-sep): listas de las dos rutas y los dos modelos de cobro. */
+.lp .lp-route-list { list-style: none; margin: 1rem 0 0; padding: 0; display: grid; gap: .55rem; color: var(--lp-muted); font-size: .95rem; }
+.lp .lp-route-list li { position: relative; padding-left: 1.1rem; text-wrap: pretty; }
+.lp .lp-route-list li::before { content: ""; position: absolute; left: 0; top: .55em; width: .4rem; height: .4rem; border-radius: 50%; background: var(--lp-blue); }
+.lp .lp-models { margin-top: 2.5rem; padding-top: 1.75rem; border-top: 1px solid var(--lp-line); display: grid; gap: .85rem; max-width: 52rem; }
+.lp .lp-models p { margin: 0 !important; color: var(--lp-muted); text-wrap: pretty; }
+.lp .lp-models b { color: var(--lp-ink); }
+.lp .lp-models-note { font: 500 .8rem/1.5 "Jetbrainsmono Variable", monospace; color: var(--lp-soft); }
